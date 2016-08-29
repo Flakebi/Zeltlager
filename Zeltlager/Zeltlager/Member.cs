@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-    class Member
+    public class Member
     {
         public uint Id { get; set; }
         public string Name { get; set; }
         public Tent Tent { get; set; }
         public bool Supervisor { get; set; }
+
+        public string Display { get { return Name; } }
 
         public Member()
         {

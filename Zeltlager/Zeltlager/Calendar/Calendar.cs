@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Calendar
 {
-    class Calendar : IStorable
+    public class Calendar : IStorable
     {
-        Zeltlager zeltlager;
+        Lager lager;
 
-        public Calendar(Zeltlager zeltlager)
+        public Calendar(Lager lager)
         {
-            this.zeltlager = zeltlager;
+            this.lager = lager;
         }
     }
 }

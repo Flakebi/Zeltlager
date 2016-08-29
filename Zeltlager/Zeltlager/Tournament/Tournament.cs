@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Tournament
 {
-    class Tournament : IStorable
+    public class Tournament : IStorable
     {
-        Zeltlager zeltlager;
+        Lager lager;
 
-        public Tournament(Zeltlager zeltlager)
+        public Tournament(Lager lager)
         {
-            this.zeltlager = zeltlager;
+            this.lager = lager;
         }
     }
 }

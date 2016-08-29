@@ -13,7 +13,8 @@ namespace Zeltlager
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new NavigationPage(new MainPage());
+            Lager.CurrentLager = new Lager();
         }
 
         protected override void OnStart()

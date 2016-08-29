@@ -19,7 +19,7 @@ namespace Zeltlager.Windows
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             LoadApplication(new Zeltlager.App());
         }

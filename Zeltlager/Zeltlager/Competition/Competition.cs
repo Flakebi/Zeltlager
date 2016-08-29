@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
-    class Competition : IStorable
+    public class Competition : IStorable
     {
-        Zeltlager zeltlager;
+        Lager lager;
 
-        public Competition(Zeltlager zeltlager)
+        public Competition(Lager lager)
         {
-            this.zeltlager = zeltlager;
+            this.lager = lager;
         }
     }
 }

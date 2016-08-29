@@ -14,6 +14,10 @@ namespace Zeltlager
             InitializeComponent();
         }
 
+        void OnSynchronizeClicked(object sender, EventArgs e)
+        {
+        }
+
         void OnTournamentClicked(object sender, EventArgs e)
         {
         }
@@ -32,6 +36,7 @@ namespace Zeltlager
 
         void OnGeneralClicked(object sender, EventArgs e)
         {
+            Navigation.PushAsync(new GeneralPage());
         }
     }
 }

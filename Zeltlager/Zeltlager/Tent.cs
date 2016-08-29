@@ -6,11 +6,23 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-    class Tent
+    public class Tent
     {
         public uint Number { get; set; }
         public string Name { get; set; }
         public List<Member> Supervisors { get; set; }
+
+        public string Display { get { return Number + " " + Name; } }
+
+        public Tent()
+        {
+        }
+
+        public Tent(uint number, string name)
+        {
+            Number = number;
+            Name = name;
+        }
 
         public override string ToString()
         {

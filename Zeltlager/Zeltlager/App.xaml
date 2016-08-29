@@ -1,10 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Zeltlager;assembly=Zeltlager"
              x:Class="Zeltlager.App">
   <Application.Resources>
 
     <!-- Application resource dictionary -->
+    <ResourceDictionary>
+      <!-- DEFINE ANY CONSTANTS -->
+      <!--<Color x:Key="SeparatorLineColor">#CCCCCC</Color>
+      <Color x:Key="iOSDefaultTintColor">#007aff</Color>
+      <Color x:Key="AndroidDefaultAccentColorColor">#1FAECE</Color>
+      <OnPlatform
+                  x:TypeArguments="Color"
+                  x:Key="AccentColor"
+                  Android="{ StaticResource AndroidDefaultAccentColorColor }"
+                  iOS="{ StaticResource iOSDefaultTintColor }"
+            />-->
+      <!--  BOXVIEW CLASSES -->
+      <!--<Style TargetType="BoxView" Class="HorizontalRule">
+        <Setter Property="BackgroundColor" Value="{ StaticResource SeparatorLineColor }" />
+        <Setter Property="HeightRequest" Value="1" />
+      </Style>
+
+      <Style TargetType="BoxView" Class="Circle">
+        <Setter Property="BackgroundColor" Value="{ StaticResource AccentColor }" />
+        <Setter Property="WidthRequest" Value="34"/>
+        <Setter Property="HeightRequest" Value="34"/>
+        <Setter Property="HorizontalOptions" Value="Start" />
+
+        <Setter Property="local:ThemeEffects.Circle" Value="True" />
+      </Style>-->
+    </ResourceDictionary>
 
   </Application.Resources>
 </Application>

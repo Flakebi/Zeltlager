@@ -21,14 +21,15 @@ namespace Zeltlager.Erwischt
         public Member Target;
     }
 
-    class Erwischt : IStorable
+    public class Erwischt : IStorable
     {
-        Zeltlager zeltlager;
+        Lager lager;
         Dictionary<Member, MemberData> memberData;
 
-        public Erwischt(Zeltlager zeltlager)
+        public Erwischt(Lager lager)
         {
-            this.zeltlager = zeltlager;
+            this.lager = lager;
+            memberData = new Dictionary<Member, MemberData>();
         }
     }
 }
