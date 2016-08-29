@@ -13,5 +13,25 @@ namespace Zeltlager
         {
             InitializeComponent();
         }
+
+        void OnTournamentClicked(object sender, EventArgs e)
+        {
+        }
+
+        void OnCompetitionClicked(object sender, EventArgs e)
+        {
+        }
+
+        void OnErwischtClicked(object sender, EventArgs e)
+        {
+        }
+
+        void OnCalendarClicked(object sender, EventArgs e)
+        {
+        }
+
+        void OnGeneralClicked(object sender, EventArgs e)
+        {
+        }
     }
 }

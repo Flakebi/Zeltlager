@@ -3,9 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Zeltlager"
              x:Class="Zeltlager.MainPage">
-
-  <Label Text="Willkomme zur Zeltlager App"
-           VerticalOptions="Center"
-           HorizontalOptions="Center" />
-
+  <ContentPage.Content>
+    <StackLayout VerticalOptions="FillAndExpand"
+                 HorizontalOptions="FillAndExpand"
+                 Orientation="Vertical"
+                 Spacing="15">
+      <Label Text="Willkomme zur Zeltlager App"/>
+      <Button x:Name="tournamentButton" Text="Turniere" Clicked="OnTournamentClicked"/>
+      <Button x:Name="competitionButton" Text="Wettkämpfe" Clicked="OnCompetitionClicked"/>
+      <Button x:Name="erwischtButton" Text="Erwischt" Clicked="OnErwischtClicked"/>
+      <Button x:Name="calendarButton" Text="Kalender" Clicked="OnCalendarClicked"/>
+      <Button x:Name="generalButton" Text="Allgemeines" Clicked="OnGeneralClicked"/>
+    </StackLayout>
+  </ContentPage.Content>
 </ContentPage>
