@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-    class GeneralDataPacket : DataPacket
-    {
-        enum GeneralDataPacketType
-        {
+	class GeneralDataPacket : DataPacket
+	{
+		public enum PacketType : byte
+		{
+			AddMember,
+			DeleteMember,
+		}
 
-        }
+		public GeneralDataPacket(BinaryReader input, PacketType packetType, Lager zeltlager)
+		{
 
-        public GeneralDataPacket(BinaryReader input, Lager zeltlager)
-        {
-
-        }
-    }
+		}
+	}
 }

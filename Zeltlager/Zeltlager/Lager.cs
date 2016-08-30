@@ -6,42 +6,44 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-    public class Lager : IStorable
-    {
-        public static Lager CurrentLager { get; set; }
-        
-        List<Member> members = new List<Member>();
-        List<Tent> tents = new List<Tent>();
+	public class Lager : IStorable
+	{
+		public static Lager CurrentLager { get; set; }
 
-        public IReadOnlyList<Member> Members { get { return members; } }
-        public IReadOnlyList<Tent> Tents { get { return tents; } }
+		List<Member> members = new List<Member>();
+		List<Tent> tents = new List<Tent>();
+		List<DataPackets.DataPacket> history = new List<DataPackets.DataPacket>();
 
-        // Subspaces
-        public Tournament.Tournament Tournament { get; private set; }
-        public Competition.Competition Competition { get; private set; }
-        public Erwischt.Erwischt Erwischt { get; private set; }
-        public Calendar.Calendar Calendar { get; private set; }
+		public IReadOnlyList<Member> Members { get { return members; } }
+		public IReadOnlyList<Tent> Tents { get { return tents; } }
+		public IReadOnlyList<DataPackets.DataPacket> History { get { return history; } }
 
-        public Lager()
-        {
-            Tournament = new Tournament.Tournament(this);
-            Competition = new Competition.Competition(this);
-            Erwischt = new Erwischt.Erwischt(this);
-            Calendar = new Calendar.Calendar(this);
+		// Subspaces
+		public Tournament.Tournament Tournament { get; private set; }
+		public Competition.Competition Competition { get; private set; }
+		public Erwischt.Erwischt Erwischt { get; private set; }
+		public Calendar.Calendar Calendar { get; private set; }
 
-            members.Add(new Member(0, "Caro", new Tent(0, "Regenbogenforellen"), true));
-        }
+		public Lager()
+		{
+			Tournament = new Tournament.Tournament(this);
+			Competition = new Competition.Competition(this);
+			Erwischt = new Erwischt.Erwischt(this);
+			Calendar = new Calendar.Calendar(this);
 
-        private IStorable[] GetIStorables()
-        {
-            return new IStorable[]
-            {
-                this,
-                Tournament,
-                Competition,
-                Erwischt,
-                Calendar,
-            };
-        }
-    }
+			members.Add(new Member(0, "Caro", new Tent(0, "Regenbogenforellen"), true));
+		}
+
+		private IStorable[] GetIStorables()
+		{
+			return new IStorable[]
+			{
+				this,
+				Tournament,
+				Competition,
+				Erwischt,
+				Calendar,
+			};
+		}
+	}
 }

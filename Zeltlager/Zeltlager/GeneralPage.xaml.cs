@@ -8,20 +8,20 @@ using Xamarin.Forms;
 
 namespace Zeltlager
 {
-    public partial class GeneralPage : ContentPage
-    {
-        public GeneralPage()
-        {
-            InitializeComponent();
-        }
+	public partial class GeneralPage : ContentPage
+	{
+		public GeneralPage()
+		{
+			InitializeComponent();
+		}
 
-        void OnMemberClicked(object sender, EventArgs e)
-        {
-            Navigation.PushAsync(new MembersPage());
-        }
+		void OnMemberClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new MembersPage());
+		}
 
-        void OnTentClicked(object sender, EventArgs e)
-        {
-        }
-    }
+		void OnTentClicked(object sender, EventArgs e)
+		{
+		}
+	}
 }

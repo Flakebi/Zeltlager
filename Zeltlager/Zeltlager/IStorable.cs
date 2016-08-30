@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-    /// <summary>
-    /// Something that can be stored by the Zeltlager.
-    /// </summary>
-    interface IStorable
-    {
-    }
+	/// <summary>
+	/// Something that can be stored by the Zeltlager.
+	/// </summary>
+	interface IStorable
+	{
+	}
 }
