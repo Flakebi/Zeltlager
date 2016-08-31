@@ -39,6 +39,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClientIoProvider.cs" />
+    <Compile Include="Collaborator.cs" />
     <Compile Include="Competition\Competition.cs" />
     <Compile Include="DataPackets\AddMemberPacket.cs" />
     <Compile Include="DataPackets\AddSupervisorToTentPacket.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="DataPackets\DataPacket.cs" />
     <Compile Include="DataPackets\DeleteMemberPacket.cs" />
     <Compile Include="DataPackets\DeleteTentPacket.cs" />
+    <Compile Include="DataPackets\InvalidDataPacket.cs" />
     <Compile Include="Erwischt\Erwischt.cs" />
     <Compile Include="IIoProvider.cs" />
     <Compile Include="MembersPage.xaml.cs">
@@ -63,6 +65,7 @@
       <DependentUpon>MemberList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoutedIoProvider.cs" />
     <Compile Include="ServerIoProvider.cs" />
     <Compile Include="Tent.cs" />
     <Compile Include="Tournament\Tournament.cs" />

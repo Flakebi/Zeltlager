@@ -23,6 +23,9 @@ namespace Zeltlager.DataPackets
 		static Type[] packetTypes = {
 			typeof(AddMemberPacket),
 			typeof(DeleteMemberPacket),
+			typeof(AddTentPacket),
+			typeof(DeleteTentPacket),
+			typeof(AddSupervisorToTentPacket),
 		};
 
 		/// <summary>
@@ -33,11 +36,19 @@ namespace Zeltlager.DataPackets
 		/// <returns>The read packet.</returns>
 		public static DataPacket ReadDataPacket(BinaryReader input, Lager lager)
 		{
-			DateTime timestamp = DateTime.FromBinary(input.ReadInt64());
 			byte packetType = input.ReadByte();
 
 			if (packetType >= packetTypes.Length)
-				throw new IOException("Invalid packet type");
+			{
+				// Create a new InvalidDataPacket
+				byte[] data = new byte[1 + input.BaseStream.Length];
+				data[0] = packetType;
+				input.Read(data, 1, data.Length - 1);
+				return new InvalidDataPacket(data);
+			}
+
+			DateTime timestamp = DateTime.FromBinary(input.ReadInt64());
+
 			DataPacket packet = (DataPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors
 				.First(ctor =>
 				{
@@ -47,23 +58,38 @@ namespace Zeltlager.DataPackets
 						parameters[2].ParameterType == typeof(Lager);
 				}).Invoke(new object[] { input, packetType, lager });
 
-			packet.timestamp = timestamp;
+			packet.Timestamp = timestamp;
 			return packet;
 		}
 
-		protected DateTime timestamp;
+		public DateTime Timestamp { get; protected set; }
+
+		public DataPacket()
+		{
+			Timestamp = new DateTime();
+		}
 
 		public void WritePacket(BinaryWriter output)
 		{
-			output.Write(timestamp.ToBinary());
-			// Write the type of this packet
-			output.Write((byte)Array.IndexOf(packetTypes, GetType()));
+			// Don't write the header for InvalidDataPackets.
+			if (!(this is InvalidDataPacket))
+			{
+				// Write the type of this packet
+				output.Write((byte)Array.IndexOf(packetTypes, GetType()));
+				output.Write(Timestamp.ToBinary());
+			}
 
 			WritePacketData(output);
 		}
 
 		protected abstract void WritePacketData(BinaryWriter output);
-		public abstract void Apply(Lager lager);
+
+		/// <summary>
+		/// Applies the content of this packet to a Lager.
+		/// </summary>
+		/// <param name="lager">The Lager to which this packet should be applied.</param>
+		/// <returns>Return true if it could be applied successfully, false otherwise.</returns>
+		public abstract bool Apply(Lager lager);
 	}
 }
 

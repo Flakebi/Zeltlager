@@ -40,11 +40,15 @@ namespace Zeltlager.DataPackets
 				output.Write(supervisors[i]);
 		}
 
-		public override void Apply(Lager lager)
+		public override bool Apply(Lager lager)
 		{
 			Tent tent = new Tent(number, name);
-			tent.Supervisors = supervisors.Select(id => lager.Members.First(m => m.Id == id)).ToList();
+			List<Member> members = supervisors.Select(id => lager.Members.FirstOrDefault(m => m.Id == id)).ToList();
+			if (members.Any(m => m == null))
+				return false;
+			tent.Supervisors = members;
 			lager.AddTent(tent);
+			return true;
 		}
 	}
 }

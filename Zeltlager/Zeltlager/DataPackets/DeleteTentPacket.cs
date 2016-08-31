@@ -26,10 +26,13 @@ namespace Zeltlager.DataPackets
 			output.Write(number);
 		}
 
-		public override void Apply(Lager lager)
+		public override bool Apply(Lager lager)
 		{
-			Tent tent = lager.Tents.First(t => t.Number == number);
+			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == number);
+			if (tent == null)
+				return false;
 			lager.RemoveTent(tent);
+			return true;
 		}
 	}
 }

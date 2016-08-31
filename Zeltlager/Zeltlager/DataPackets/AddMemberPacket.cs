@@ -38,11 +38,12 @@ namespace Zeltlager.DataPackets
 			output.Write(tentNumber);
 		}
 
-		public override void Apply(Lager lager)
+		public override bool Apply(Lager lager)
 		{
 			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == tentNumber);
 			Member member = new Member(id, name, tent, supervisor);
 			lager.AddMember(member);
+			return true;
 		}
 	}
 }

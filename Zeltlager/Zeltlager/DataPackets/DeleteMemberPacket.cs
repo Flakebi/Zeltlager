@@ -26,10 +26,13 @@ namespace Zeltlager.DataPackets
 			output.Write(id);
 		}
 
-		public override void Apply(Lager lager)
+		public override bool Apply(Lager lager)
 		{
-			Member member = lager.Members.First(m => m.Id == id);
+			Member member = lager.Members.FirstOrDefault(m => m.Id == id);
+			if (member == null)
+				return false;
 			lager.RemoveMember(member);
+			return true;
 		}
 	}
 }

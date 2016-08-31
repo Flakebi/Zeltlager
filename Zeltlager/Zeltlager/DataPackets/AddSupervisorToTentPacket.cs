@@ -30,13 +30,21 @@ namespace Zeltlager.DataPackets
 			output.Write(number);
 		}
 
-		public override void Apply(Lager lager)
+		public override bool Apply(Lager lager)
 		{
-			Member supervisor = lager.Members.First(m => m.Id == id);
-			Tent tent = lager.Tents.First(t => t.Number == number);
+			Member supervisor = lager.Members.FirstOrDefault(m => m.Id == id);
+			if (supervisor == null)
+				return false;
+
+			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == number);
+			if (tent == null)
+				return false;
 			if (tent.Supervisors.Contains(supervisor))
-				throw new InvalidOperationException("The tent already contains the specified supervisor.");
+				// The tent already contains the specified supervisor.
+				return false;
+
 			tent.Supervisors.Add(supervisor);
+			return true;
 		}
 	}
 }

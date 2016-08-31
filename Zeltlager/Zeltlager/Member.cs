@@ -10,6 +10,9 @@ namespace Zeltlager
 	{
 		public ushort Id { get; set; }
 		public string Name { get; set; }
+		/// <summary>
+		/// The tent in which this member lives, this attribute can be null.
+		/// </summary>
 		public Tent Tent { get; set; }
 		public bool Supervisor { get; set; }
 
