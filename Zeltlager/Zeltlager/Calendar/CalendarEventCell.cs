@@ -49,10 +49,10 @@ namespace Zeltlager.Calendar
 			View = horizontalLayout;
 		}
 
-		private void OnEdit(object sender, EventArgs e) {
+		private void OnEdit(object sender, EventArgs e)
+		{
 			//Call edit screen for item
-			this.ParentView.Navigation.PushAsync(new CalendarEventEditPage((CalendarEvent)((MenuItem)sender).CommandParameter));
-		} 
+			ParentView.Navigation.PushAsync(new CalendarEventEditPage((CalendarEvent)((MenuItem)sender).CommandParameter));
+		}
 	}
 }
-

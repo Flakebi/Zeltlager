@@ -15,7 +15,7 @@ namespace Zeltlager.Calendar
 		private TimeSpan timeSpan;
 		public TimeSpan TimeSpan
 		{
-			get { return timeSpan;}
+			get { return timeSpan; }
 			set { timeSpan = value; time = time.Date.Add(value); OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString"); }
 		}
 		public string TimeString
@@ -54,12 +54,8 @@ namespace Zeltlager.Calendar
 
 		public void OnPropertyChanged([CallerMemberName]string propertyName = null)
 		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 		#endregion
 	}
 }
-

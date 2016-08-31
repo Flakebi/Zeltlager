@@ -46,4 +46,3 @@ namespace Zeltlager.Calendar
 		}
 	}
 }
-
