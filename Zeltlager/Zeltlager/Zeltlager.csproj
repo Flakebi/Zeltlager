@@ -38,7 +38,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Calendar\Calendar.cs" />
     <Compile Include="ClientIoProvider.cs" />
     <Compile Include="Competition\Competition.cs" />
     <Compile Include="DataPackets\AddMemberPacket.cs" />
@@ -68,6 +67,19 @@
     <Compile Include="Tent.cs" />
     <Compile Include="Tournament\Tournament.cs" />
     <Compile Include="Lager.cs" />
+    <Compile Include="Calendar\Calendar.cs" />
+    <Compile Include="Calendar\CalendarEvent.cs" />
+    <Compile Include="Calendar\CalendarEventCell.cs" />
+    <Compile Include="Calendar\Day.cs" />
+    <Compile Include="Calendar\CalendarEventEditPage.xaml.cs">
+      <DependentUpon>CalendarEventEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Calendar\CalendarPage.xaml.cs">
+      <DependentUpon>CalendarPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Calendar\DayPage.xaml.cs">
+      <DependentUpon>DayPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -76,6 +88,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Calendar\CalendarEventEditPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Calendar\CalendarPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Calendar\DayPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
