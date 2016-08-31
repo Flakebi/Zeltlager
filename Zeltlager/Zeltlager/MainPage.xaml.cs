@@ -32,6 +32,7 @@ namespace Zeltlager
 
 		void OnCalendarClicked(object sender, EventArgs e)
 		{
+			Navigation.PushAsync(new Calendar.CalendarPage());
 		}
 
 		void OnGeneralClicked(object sender, EventArgs e)

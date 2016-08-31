@@ -4,19 +4,19 @@
 		<StackLayout Spacing="0" Padding="0">
 			<StackLayout Orientation="Horizontal" Padding="5">
 				<Label Text="Titel: "/>
-				<Entry x:Name="titleEntry" HorizontalOptions="FillAndExpand" Text="{Binding Title, Mode=TwoWay}"/>
+				<Entry HorizontalOptions="FillAndExpand" Text="{Binding Title, Mode=TwoWay}"/>
 			</StackLayout>
 			<StackLayout Orientation="Horizontal" Padding="5">
 				<Label Text="Zusatzbeschreibung: "/>
-				<Entry x:Name="detailEntry" HorizontalOptions="FillAndExpand" Text="{Binding Detail, Mode=TwoWay}"/>
+				<Entry HorizontalOptions="FillAndExpand" Text="{Binding Detail, Mode=TwoWay}"/>
 			</StackLayout>
 			<StackLayout Orientation="Horizontal" Padding="5">
 				<Label Text="Tag: "/>
-				<DatePicker x:Name="datePicker" Date="{Binding Time, Mode=TwoWay}"/>
+				<DatePicker Date="{Binding Time, Mode=TwoWay}"/>
 			</StackLayout>
 			<StackLayout Orientation="Horizontal" Padding="5">
 				<Label Text="Uhrzeit: "/>
-				<TimePicker x:Name="timePicker" Time="{Binding TimeSpan, Mode=TwoWay}"/>
+				<TimePicker Time="{Binding TimeSpan, Mode=TwoWay}"/>
 			</StackLayout>
 			<Button Text="Speichern" Clicked="OnSaveClicked"/>
 		</StackLayout>
