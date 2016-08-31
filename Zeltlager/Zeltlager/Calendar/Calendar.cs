@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Calendar
 {
-    public class Calendar : IStorable
+    public class Calendar : ILagerPart
     {
         Lager lager;
 

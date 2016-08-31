@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
-    public class Competition : IStorable
+    public class Competition : ILagerPart
     {
         Lager lager;
 

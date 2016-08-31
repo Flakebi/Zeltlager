@@ -8,7 +8,7 @@ namespace Zeltlager
 {
 	public class Tent
 	{
-		public uint Number { get; set; }
+		public byte Number { get; set; }
 		public string Name { get; set; }
 		public List<Member> Supervisors { get; set; }
 
@@ -18,7 +18,7 @@ namespace Zeltlager
 		{
 		}
 
-		public Tent(uint number, string name)
+		public Tent(byte number, string name)
 		{
 			Number = number;
 			Name = name;

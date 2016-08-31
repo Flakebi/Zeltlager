@@ -13,8 +13,11 @@ namespace Zeltlager
 		{
 			InitializeComponent();
 
+			Lager.IsClient = true;
+			Lager.IoProvider = new ClientIoProvider();
 			// Set the current lager
-			Lager.CurrentLager = new Lager();
+			//TODO
+			Lager.CurrentLager = new Lager("Default");
 			MainPage = new NavigationPage(new MainPage());
 		}
 

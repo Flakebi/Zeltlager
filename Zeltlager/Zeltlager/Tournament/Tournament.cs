@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Tournament
 {
-    public class Tournament : IStorable
+    public class Tournament : ILagerPart
     {
         Lager lager;
 

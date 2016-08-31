@@ -21,7 +21,7 @@ namespace Zeltlager.Erwischt
         public Member Target;
     }
 
-    public class Erwischt : IStorable
+    public class Erwischt : ILagerPart
     {
         Lager lager;
         Dictionary<Member, MemberData> memberData;
