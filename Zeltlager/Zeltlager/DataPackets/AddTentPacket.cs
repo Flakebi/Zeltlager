@@ -42,13 +42,12 @@ namespace Zeltlager.DataPackets
 
 		public override bool Apply(Lager lager)
 		{
-			Tent tent = new Tent(number, name);
 			List<Member> members = supervisors.Select(id => lager.Members.FirstOrDefault(m => m.Id == id)).ToList();
 			if (members.Any(m => m == null))
 				return false;
-			tent.Supervisors = members;
-			lager.AddTent(tent);
-			return true;
+
+			Tent tent = new Tent(number, name, members);
+			return lager.AddTent(tent);
 		}
 	}
 }

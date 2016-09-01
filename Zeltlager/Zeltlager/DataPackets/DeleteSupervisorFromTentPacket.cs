@@ -7,31 +7,40 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	class DeleteTentPacket : DataPacket
+	class DeleteSupervisorFromTentPacket : DataPacket
 	{
+		ushort id;
 		byte number;
 
-		public DeleteTentPacket(BinaryReader input, Lager lager)
+		public DeleteSupervisorFromTentPacket(BinaryReader input, Lager lager)
 		{
+			id = input.ReadUInt16();
 			number = input.ReadByte();
 		}
 
-		public DeleteTentPacket(Tent tent)
+		public DeleteSupervisorFromTentPacket(Member supervisor, Tent tent)
 		{
+			id = supervisor.Id;
 			number = tent.Number;
 		}
 
 		protected override void WritePacketData(BinaryWriter output)
 		{
+			output.Write(id);
 			output.Write(number);
 		}
 
 		public override bool Apply(Lager lager)
 		{
+			Member supervisor = lager.Members.FirstOrDefault(m => m.Id == id);
+			if (supervisor == null)
+				return false;
+
 			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == number);
 			if (tent == null)
 				return false;
-			return lager.RemoveTent(tent);
+
+			return tent.RemoveSupervisor(supervisor);
 		}
 	}
 }

@@ -48,6 +48,7 @@
     <Compile Include="DataPackets\DeleteMemberPacket.cs" />
     <Compile Include="DataPackets\DeleteTentPacket.cs" />
     <Compile Include="DataPackets\InvalidDataPacket.cs" />
+    <Compile Include="DataPackets\DeleteSupervisorFromTentPacket.cs" />
     <Compile Include="Erwischt\Erwischt.cs" />
     <Compile Include="IIoProvider.cs" />
     <Compile Include="MembersPage.xaml.cs">

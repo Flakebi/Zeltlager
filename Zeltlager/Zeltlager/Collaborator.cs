@@ -30,5 +30,10 @@ namespace Zeltlager
 
 			return true;
 		}
+
+		public async Task<bool> Load(IIoProvider io)
+		{
+			return true;
+		}
 	}
 }

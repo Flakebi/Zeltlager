@@ -39,12 +39,8 @@ namespace Zeltlager.DataPackets
 			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == number);
 			if (tent == null)
 				return false;
-			if (tent.Supervisors.Contains(supervisor))
-				// The tent already contains the specified supervisor.
-				return false;
 
-			tent.Supervisors.Add(supervisor);
-			return true;
+			return tent.AddSupervisor(supervisor);
 		}
 	}
 }

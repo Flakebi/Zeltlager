@@ -42,8 +42,7 @@ namespace Zeltlager.DataPackets
 		{
 			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == tentNumber);
 			Member member = new Member(id, name, tent, supervisor);
-			lager.AddMember(member);
-			return true;
+			return lager.AddMember(member);
 		}
 	}
 }

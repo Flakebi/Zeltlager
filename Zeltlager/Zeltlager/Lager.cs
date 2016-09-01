@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,20 @@ namespace Zeltlager
 		List<Member> members = new List<Member>();
 		List<Tent> tents = new List<Tent>();
 		List<Collaborator> collaborators = new List<Collaborator>();
+
+		// Data for the client
+		/// <summary>
+		/// If this instance was synchronized with a server.
+		/// </summary>
+		bool synchronized = false;
+		/// <summary>
+		/// The collaborator that we are.
+		/// </summary>
+		byte ownCollaborator;
+		/// <summary>
+		/// The private key for our own collaborator.
+		/// </summary>
+		byte[] collaboratorPrivateKey;
 
 		public string Name { get; set; }
 		public byte Id { get; set; }
@@ -42,7 +57,7 @@ namespace Zeltlager
 			Calendar = new Calendar.Calendar(this);
 
 			//TODO remove debug code
-			Tent tent = new Tent(1, "Regenbogenforellen");
+			Tent tent = new Tent(1, "Regenbogenforellen", new List<Member>());
 			tents.Add(tent);
 			members.Add(new Member(0, "Caro", tent, true));
 		}
@@ -81,41 +96,66 @@ namespace Zeltlager
 		/// <returns>If the save was successful.</returns>
 		public async Task<bool> Save(IIoProvider io)
 		{
-			string id = Id.ToString();
-			if (!await io.ExistsFolder(id))
-				await io.CreateFolder(id);
+			try
+			{
+				string id = Id.ToString();
+				if (!await io.ExistsFolder(id))
+					await io.CreateFolder(id);
 
-			var rootedIo = new RoutedIoProvider(io, id);
-			// Save packets from collaborators
-			await Task.WhenAll(collaborators.Select(c => c.Save(rootedIo)));
+				var rootedIo = new RoutedIoProvider(io, id);
+				// Save packets from collaborators
+				return (await Task.WhenAll(collaborators.Select(async c => await c.Save(rootedIo)))).All(b => b);
+			}
+			catch (IOException e)
+			{
+				return false;
+			}
+		}
 
+		public async Task<bool> Load(IIoProvider io)
+		{
+			try
+			{
+				string id = Id.ToString();
+
+				var rootedIo = new RoutedIoProvider(io, id);
+				// Load packets of collaborators
+				return (await Task.WhenAll(collaborators.Select(async c => await c.Load(rootedIo)))).All(b => b);
+			}
+			catch (IOException e)
+			{
+				return false;
+			}
+		}
+
+		public bool AddMember(Member member)
+		{
+			if (Members.Any(m => m.Id == member.Id))
+				// A member with this id exists already.
+				return false;
+			members.Add(member);
 			return true;
 		}
 
-		public void AddMember(Member member)
+		public bool RemoveMember(Member member)
 		{
-			if (Members.Any(m => m.Id == member.Id))
-				throw new InvalidOperationException("A member with this id exists already.");
-			members.Add(member);
+			// A member with this id wasn't found for deletion.
+			return members.Remove(member);
 		}
 
-		public void RemoveMember(Member member)
-		{
-			if (!members.Remove(member))
-				throw new InvalidOperationException("A member with this id wasn't found for deletion.");
-		}
-
-		public void AddTent(Tent tent)
+		public bool AddTent(Tent tent)
 		{
 			if (Tents.Any(t => t.Number == tent.Number))
-				throw new InvalidOperationException("A tent with this number exists already.");
+				// A tent with this number exists already.
+				return false;
 			tents.Add(tent);
+			return true;
 		}
 
-		public void RemoveTent(Tent tent)
+		public bool RemoveTent(Tent tent)
 		{
-			if (!tents.Remove(tent))
-				throw new InvalidOperationException("A tent with this number wasn't found for deletion.");
+			// A tent with this number wasn't found for deletion.
+			return tents.Remove(tent);
 		}
 	}
 }

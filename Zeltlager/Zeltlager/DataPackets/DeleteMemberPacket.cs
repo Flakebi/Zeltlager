@@ -31,8 +31,7 @@ namespace Zeltlager.DataPackets
 			Member member = lager.Members.FirstOrDefault(m => m.Id == id);
 			if (member == null)
 				return false;
-			lager.RemoveMember(member);
-			return true;
+			return lager.RemoveMember(member);
 		}
 	}
 }
