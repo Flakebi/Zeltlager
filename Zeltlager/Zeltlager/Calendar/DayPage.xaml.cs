@@ -11,6 +11,9 @@ namespace Zeltlager.Calendar
 		{
 			InitializeComponent();
 
+			ToolbarItems.Add(new ToolbarItem("Add", "Zeltlager.Resources.add.png", () => Navigation.PushAsync(new CalendarEventEditPage(new CalendarEvent(DateTime.Now, ""))), ToolbarItemOrder.Default, 1));
+
+
 			Padding = new Thickness(0, Device.OnPlatform(40, 40, 0), 0, 0);
 
 			var dayNameLabel = new Label

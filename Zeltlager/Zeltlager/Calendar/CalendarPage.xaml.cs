@@ -16,7 +16,11 @@ namespace Zeltlager.Calendar
 				Children.Add(new DayPage(day));
 			}
 			Title = "Kalender";
-			ToolbarItems.Add(new ToolbarItem("Add", "Add.png", async () => { await Navigation.PushModalAsync(new CalendarEventEditPage(new CalendarEvent(DateTime.Now, ""))); }, ToolbarItemOrder.Primary, 10));
+		}
+
+		void OnAddButtonClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new CalendarEventEditPage(new CalendarEvent(DateTime.Now, "")));
 		}
 	}
 }
