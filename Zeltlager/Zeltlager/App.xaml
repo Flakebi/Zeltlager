@@ -31,6 +31,16 @@
 
         <Setter Property="local:ThemeEffects.Circle" Value="True" />
       </Style>-->
+		<Color x:Key="backgroundColor">#181832</Color>
+		<Color x:Key="textColor">White</Color>
+ 
+		<Style x:Key="labelStyle" TargetType="Label">
+           	<Setter Property="TextColor" Value="{DynamicResource textColor}" />
+			<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}"/>
+       	</Style>
+       	<Style x:Key="backgroundStyle" TargetType="VisualElement">
+         	<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}" />
+       	</Style>
     </ResourceDictionary>
 
   </Application.Resources>

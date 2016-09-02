@@ -5,21 +5,7 @@ namespace Zeltlager.Calendar
 {
 	public class Calendar : ILagerPart
 	{
-		Lager lager;
-
-		private static Calendar calendar;
-		public static Calendar Cal
-		{
-			get
-			{
-				if (calendar == null)
-				{
-					calendar = new Calendar(Lager.CurrentLager);
-				}
-				return calendar;
-			}
-		}
-
+		private Lager lager;
 		public List<Day> Days { get; }
 
 		public Calendar(Lager lager)
@@ -58,6 +44,22 @@ namespace Zeltlager.Calendar
 		public static DateTime GetSpecificTime(DateTime day, int newHour, int newMin)
 		{
 			return new DateTime(day.Year, day.Month, day.Day, newHour, newMin, 0);
+		}
+
+		public void InsertNewCalendarEvent(CalendarEvent calendarEvent) 
+		{
+			//find correct day
+			Day d = FindCorrectDay(calendarEvent);
+			d.Events.Add(calendarEvent);
+		}
+
+		public void RemoveCalendarEvent(CalendarEvent caldendarEvent)
+		{
+			FindCorrectDay(caldendarEvent).Events.Remove(caldendarEvent);
+		}
+
+		private Day FindCorrectDay(CalendarEvent ce){
+			return lager.Calendar.Days.Find(x => x.Date.Date == ce.Date.Date);
 		}
 	}
 }

@@ -7,27 +7,41 @@ namespace Zeltlager.Calendar
 {
 	public partial class DayPage : ContentPage
 	{
+		Button leftArrow, rightArrow;
+		public Day Day { get; }
+
 		public DayPage(Day day)
 		{
 			InitializeComponent();
 
-			ToolbarItems.Add(new ToolbarItem("Add", "Zeltlager.Resources.add.png", () => Navigation.PushAsync(new CalendarEventEditPage(new CalendarEvent(DateTime.Now, ""))), ToolbarItemOrder.Default, 1));
+			this.Day = day;
 
-
-			Padding = new Thickness(0, Device.OnPlatform(40, 40, 0), 0, 0);
+			Padding = new Thickness(0, 20, 0, 0);
 
 			var dayNameLabel = new Label
 			{
-				Text = day.Date.ToString("dddd, dd.MM.")
+				Text = day.Date.ToString("dddd, dd.MM."),
+				HorizontalOptions = LayoutOptions.CenterAndExpand
 			};
-			var leftArrow = new Label
+
+			leftArrow = new Button 
+			{ 
+				Text = "←", 
+				FontAttributes = FontAttributes.Bold, 
+				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
+				VerticalOptions = LayoutOptions.CenterAndExpand
+			};
+			leftArrow.Clicked += OnLeftButtonClicked;
+
+			rightArrow = new Button
 			{
-				Text = "<-"
+				Text = "→",
+				FontAttributes = FontAttributes.Bold,
+				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
+				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
-			var rightArrow = new Label
-			{
-				Text = "->"
-			};
+			rightArrow.Clicked += OnRightButtonClicked;
+
 			var header = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal,
@@ -40,12 +54,41 @@ namespace Zeltlager.Calendar
 			var customCell = new DataTemplate(typeof(CalendarEventCell));
 			calendarList.ItemTemplate = customCell;
 			calendarList.ItemsSource = day.Events;
+			calendarList.Header = header;
+			header.HorizontalOptions = LayoutOptions.FillAndExpand;
+			Content = calendarList;
 
-			Content = new StackLayout
+			//Content = new StackLayout
+			//{
+			//	VerticalOptions = LayoutOptions.FillAndExpand,
+			//	Children = { header, calendarList }
+			//};
+			//removeNavButtons();
+		}
+
+		public void removeNavButtons() {
+			//make nav buttons invisible at ends of calendar
+			CarouselPage p = (CalendarPage)Parent;
+			if (p.Children.IndexOf(this) == 0)
 			{
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				Children = { header, calendarList }
-			};
+				leftArrow.IsVisible = false;
+			}
+			else if (p.Children.IndexOf(this) == p.Children.Count-1)
+			{
+				rightArrow.IsVisible = false;
+			}
+		}
+
+		private void OnLeftButtonClicked(object sender, EventArgs e)
+		{
+			CarouselPage p = (CalendarPage)Parent;
+			p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) - 1];
+		}
+
+		private void OnRightButtonClicked(object sender, EventArgs e)
+		{
+			CarouselPage p = (CalendarPage)Parent;
+			p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) + 1];
 		}
 	}
 }

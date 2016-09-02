@@ -109,6 +109,16 @@
     <BundleResource Include="Resources\Icon-Small-40%403x.png" />
     <BundleResource Include="Resources\Icon-Small%403x.png" />
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+    <BundleResource Include="Resources\add.png" />
+    <BundleResource Include="Resources\cancel.png" />
+    <BundleResource Include="Resources\cloud.png" />
+    <BundleResource Include="Resources\correct.png" />
+    <BundleResource Include="Resources\edit.png" />
+    <BundleResource Include="Resources\garbage.png" />
+    <BundleResource Include="Resources\leftarrow.png" />
+    <BundleResource Include="Resources\rightarrow.png" />
+    <BundleResource Include="Resources\settings.png" />
+    <BundleResource Include="Resources\timer.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PCLCrypto, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d4421c8a4786956c, processorArchitecture=MSIL">

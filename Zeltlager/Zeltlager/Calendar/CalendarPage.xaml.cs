@@ -10,17 +10,21 @@ namespace Zeltlager.Calendar
 		public CalendarPage()
 		{
 			InitializeComponent();
-			var days = Calendar.Cal.Days;
+			var days = Lager.CurrentLager.Calendar.Days;
 			foreach (Day day in days)
 			{
-				Children.Add(new DayPage(day));
+				DayPage dp = new DayPage(day);
+				Children.Add(dp);
+			}
+			foreach (ContentPage cp in Children) {
+				((DayPage)cp).removeNavButtons();
 			}
 			Title = "Kalender";
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new CalendarEventEditPage(new CalendarEvent(DateTime.Now, "")));
+			Navigation.PushAsync(new CalendarEventEditPage(new CalendarEvent(((DayPage)CurrentPage).Day.Date, "")));
 		}
 	}
 }

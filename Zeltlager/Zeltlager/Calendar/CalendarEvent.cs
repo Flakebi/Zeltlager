@@ -6,21 +6,22 @@ namespace Zeltlager.Calendar
 {
 	public class CalendarEvent : INotifyPropertyChanged
 	{
-		private DateTime time;
-		public DateTime Time
+		private DateTime date;
+		public DateTime Date
 		{
-			get { return time; }
-			set { time = value; OnPropertyChanged("Time"); }
+			get { return date; }
+			set { date = value; OnPropertyChanged("Date"); }
 		}
 		private TimeSpan timeSpan;
 		public TimeSpan TimeSpan
 		{
 			get { return timeSpan; }
-			set { timeSpan = value; time = time.Date.Add(value); OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString"); }
+			set { timeSpan = value; date = date.Date.Add(value); 
+				OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString"); OnPropertyChanged("Date"); }
 		}
 		public string TimeString
 		{
-			get { return time.ToString("HH:mm"); }
+			get { return date.ToString("HH:mm"); }
 		}
 		private string title;
 		public string Title
@@ -35,18 +36,18 @@ namespace Zeltlager.Calendar
 			set { detail = value; OnPropertyChanged("Detail"); }
 		}
 
-		public CalendarEvent(DateTime time, string title, string detail)
+		public CalendarEvent(DateTime date, string title, string detail)
 		{
-			this.time = time;
+			this.date = date;
 			this.title = title;
 			this.detail = detail;
-			timeSpan = time.TimeOfDay;
+			timeSpan = date.TimeOfDay;
 		}
-		public CalendarEvent(DateTime time, string title)
+		public CalendarEvent(DateTime date, string title)
 		{
-			this.time = time;
+			this.date = date;
 			this.title = title;
-			timeSpan = time.TimeOfDay;
+			timeSpan = date.TimeOfDay;
 		}
 
 		#region INotifyPropertyChanged implementation

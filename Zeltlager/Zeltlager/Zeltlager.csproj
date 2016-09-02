@@ -111,8 +111,8 @@
     <EmbeddedResource Include="Resources\correct.png" />
     <EmbeddedResource Include="Resources\edit.png" />
     <EmbeddedResource Include="Resources\garbage.png" />
-    <EmbeddedResource Include="Resources\left-arrow.png" />
-    <EmbeddedResource Include="Resources\right-arrow.png" />
+    <EmbeddedResource Include="Resources\leftarrow.png" />
+    <EmbeddedResource Include="Resources\rightarrow.png" />
     <EmbeddedResource Include="Resources\settings.png" />
     <EmbeddedResource Include="Resources\timer.png" />
   </ItemGroup>

@@ -28,6 +28,8 @@ namespace Zeltlager.Calendar
 		{
 			StackLayout horizontalLayout = new StackLayout();
 
+			horizontalLayout.Padding = new Thickness(10, 0);
+
 			//set bindings
 			time.SetBinding(Label.TextProperty, "TimeString");
 			title.SetBinding(Label.TextProperty, "Title");
@@ -45,14 +47,24 @@ namespace Zeltlager.Calendar
 			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("."));
 			editAction.Clicked += OnEdit;
 
+			var deleteAction = new MenuItem { Text = "Löschen", IsDestructive = true };
+			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("."));
+			deleteAction.Clicked += OnDelete;
+
 			ContextActions.Add(editAction);
+			ContextActions.Add(deleteAction);
 			View = horizontalLayout;
 		}
 
 		private void OnEdit(object sender, EventArgs e)
 		{
 			//Call edit screen for item
-			ParentView.Navigation.PushAsync(new CalendarEventEditPage((CalendarEvent)((MenuItem)sender).CommandParameter));
+			((View)Parent).Navigation.PushAsync(new CalendarEventEditPage((CalendarEvent)((MenuItem)sender).CommandParameter));
+		}
+
+		private void OnDelete(object sender, EventArgs e)
+		{
+			Lager.CurrentLager.Calendar.RemoveCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter);
 		}
 	}
 }
