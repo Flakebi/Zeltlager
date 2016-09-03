@@ -24,7 +24,7 @@ namespace Zeltlager
 		/// <summary>
 		/// If this instance was synchronized with a server.
 		/// </summary>
-		bool synchronized = false;
+		bool synchronized;
 		/// <summary>
 		/// The collaborator that we are.
 		/// </summary>
@@ -33,6 +33,27 @@ namespace Zeltlager
 		/// The private key for our own collaborator.
 		/// </summary>
 		byte[] collaboratorPrivateKey;
+		/// <summary>
+		/// The number of packets from our own contributor that were already
+		/// sent to the server. This is also the id of the next packet, that
+		/// should be sent.
+		/// </summary>
+		ushort sentPackets;
+
+		// Crypto
+		/// <summary>
+		/// The salt used for the key derivation functions.
+		/// </summary>
+		byte[] salt;
+
+		byte[] publicKey;
+		byte[] privateKey;
+		byte[] symmetricKey;
+
+		/// <summary>
+		/// The password supplied by the user and used to generate the shared keys.
+		/// </summary>
+		string password;
 
 		public string Name { get; set; }
 		public byte Id { get; set; }
@@ -46,20 +67,16 @@ namespace Zeltlager
 		public Erwischt.Erwischt Erwischt { get; private set; }
 		public Calendar.Calendar Calendar { get; private set; }
 
-		public Lager(byte id, string name)
+		public Lager(byte id, string name, string password)
 		{
 			Id = id;
 			Name = name;
+			this.password = password;
 
 			Tournament = new Tournament.Tournament(this);
 			Competition = new Competition.Competition(this);
 			Erwischt = new Erwischt.Erwischt(this);
 			Calendar = new Calendar.Calendar(this);
-
-			//TODO remove debug code
-			Tent tent = new Tent(1, "Regenbogenforellen", new List<Member>());
-			tents.Add(tent);
-			members.Add(new Member(0, "Caro", tent, true));
 		}
 
 		ILagerPart[] GetParts()
@@ -90,72 +107,75 @@ namespace Zeltlager
 		}
 
 		/// <summary>
+		/// Creates a new lager.
+		/// </summary>
+		public void Init()
+		{
+			// Create the keys for this instance
+			salt = Crypto.GetRandom(Crypto.SALT_LENGTH);
+			symmetricKey = Crypto.DeriveSymmetricKey(password, salt);
+			var keys = Crypto.CreateAsymmetricKeys();
+			publicKey = keys.PublicKey;
+			privateKey = keys.PrivateKey;
+
+			synchronized = false;
+			sentPackets = 0;
+			// Create the keys for our own collaborator
+			keys = Crypto.CreateAsymmetricKeys();
+			collaboratorPrivateKey = keys.PrivateKey;
+			Collaborator c = new Collaborator(0, keys.PublicKey);
+			ownCollaborator = 0;
+		}
+
+		/// <summary>
 		/// Stores this instance on the filesystem.
 		/// </summary>
 		/// <param name="io">The used io system.</param>
 		/// <returns>If the save was successful.</returns>
-		public async Task<bool> Save(IIoProvider io)
+		public async Task Save(IIoProvider io)
 		{
-			try
-			{
-				string id = Id.ToString();
-				if (!await io.ExistsFolder(id))
-					await io.CreateFolder(id);
+			string id = Id.ToString();
+			if (!await io.ExistsFolder(id))
+				await io.CreateFolder(id);
 
-				var rootedIo = new RoutedIoProvider(io, id);
-				// Save packets from collaborators
-				return (await Task.WhenAll(collaborators.Select(async c => await c.Save(rootedIo)))).All(b => b);
-			}
-			catch (IOException e)
-			{
-				return false;
-			}
+			var rootedIo = new RootedIoProvider(io, id);
+			// Save packets from collaborators
+			await Task.WhenAll(collaborators.Select(async c => await c.Save(rootedIo, symmetricKey)));
 		}
 
-		public async Task<bool> Load(IIoProvider io)
+		public async Task Load(IIoProvider io)
 		{
-			try
-			{
-				string id = Id.ToString();
+			string id = Id.ToString();
 
-				var rootedIo = new RoutedIoProvider(io, id);
-				// Load packets of collaborators
-				return (await Task.WhenAll(collaborators.Select(async c => await c.Load(rootedIo)))).All(b => b);
-			}
-			catch (IOException e)
-			{
-				return false;
-			}
+			var rootedIo = new RootedIoProvider(io, id);
+			// Load packets of collaborators
+			await Task.WhenAll(collaborators.Select(async c => await c.Load(rootedIo)));
 		}
 
-		public bool AddMember(Member member)
+		public void AddMember(Member member)
 		{
 			if (Members.Any(m => m.Id == member.Id))
-				// A member with this id exists already.
-				return false;
+				throw new InvalidOperationException("A member with this id exists already.");
 			members.Add(member);
-			return true;
 		}
 
-		public bool RemoveMember(Member member)
+		public void RemoveMember(Member member)
 		{
-			// A member with this id wasn't found for deletion.
-			return members.Remove(member);
+			if (!members.Remove(member))
+				throw new InvalidOperationException("A member with this id wasn't found for deletion.");
 		}
 
-		public bool AddTent(Tent tent)
+		public void AddTent(Tent tent)
 		{
 			if (Tents.Any(t => t.Number == tent.Number))
-				// A tent with this number exists already.
-				return false;
+				throw new InvalidOperationException("A tent with this number exists already.");
 			tents.Add(tent);
-			return true;
 		}
 
-		public bool RemoveTent(Tent tent)
+		public void RemoveTent(Tent tent)
 		{
-			// A tent with this number wasn't found for deletion.
-			return tents.Remove(tent);
+			if (!tents.Remove(tent))
+				throw new InvalidOperationException("A tent with this number wasn't found for deletion.");
 		}
 	}
 }

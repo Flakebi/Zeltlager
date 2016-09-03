@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	class AddMemberPacket : DataPacket
+	public class AddMemberPacket : DataPacket
 	{
 		ushort id;
 		string name;
@@ -38,11 +38,11 @@ namespace Zeltlager.DataPackets
 			output.Write(tentNumber);
 		}
 
-		public override bool Apply(Lager lager)
+		public override void Apply(Lager lager)
 		{
-			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == tentNumber);
+			Tent tent = lager.Tents.First(t => t.Number == tentNumber);
 			Member member = new Member(id, name, tent, supervisor);
-			return lager.AddMember(member);
+			lager.AddMember(member);
 		}
 	}
 }

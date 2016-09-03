@@ -67,8 +67,7 @@
       <DependentUpon>MemberList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoutedIoProvider.cs" />
-    <Compile Include="ServerIoProvider.cs" />
+    <Compile Include="RootedIoProvider.cs" />
     <Compile Include="Tent.cs" />
     <Compile Include="Tournament\Tournament.cs" />
     <Compile Include="Lager.cs" />

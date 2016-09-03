@@ -17,7 +17,7 @@ namespace Zeltlager
 			Lager.IoProvider = new ClientIoProvider();
 			// Set the current lager
 			//TODO Don't set default Lager
-			Lager.CurrentLager = new Lager(0, "Default");
+			Lager.CurrentLager = new Lager(0, "Default", "pass");
 			Lager.CurrentLager.Save(Lager.IoProvider);
 			MainPage = new NavigationPage(new MainPage());
 		}

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	class DeleteSupervisorFromTentPacket : DataPacket
+	public class DeleteSupervisorFromTentPacket : DataPacket
 	{
 		ushort id;
 		byte number;
@@ -30,17 +30,11 @@ namespace Zeltlager.DataPackets
 			output.Write(number);
 		}
 
-		public override bool Apply(Lager lager)
+		public override void Apply(Lager lager)
 		{
-			Member supervisor = lager.Members.FirstOrDefault(m => m.Id == id);
-			if (supervisor == null)
-				return false;
-
-			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == number);
-			if (tent == null)
-				return false;
-
-			return tent.RemoveSupervisor(supervisor);
+			Member supervisor = lager.Members.First(m => m.Id == id);
+			Tent tent = lager.Tents.First(t => t.Number == number);
+			tent.RemoveSupervisor(supervisor);
 		}
 	}
 }

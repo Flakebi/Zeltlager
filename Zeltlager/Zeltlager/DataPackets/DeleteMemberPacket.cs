@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	class DeleteMemberPacket : DataPacket
+	public class DeleteMemberPacket : DataPacket
 	{
 		ushort id;
 
@@ -26,12 +26,10 @@ namespace Zeltlager.DataPackets
 			output.Write(id);
 		}
 
-		public override bool Apply(Lager lager)
+		public override void Apply(Lager lager)
 		{
-			Member member = lager.Members.FirstOrDefault(m => m.Id == id);
-			if (member == null)
-				return false;
-			return lager.RemoveMember(member);
+			Member member = lager.Members.First(m => m.Id == id);
+			lager.RemoveMember(member);
 		}
 	}
 }

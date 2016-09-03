@@ -10,7 +10,7 @@ namespace Zeltlager.DataPackets
 	/// <summary>
 	/// Represents an invalid packet. It contains only the raw data.
 	/// </summary>
-	class InvalidDataPacket : DataPacket
+	public class InvalidDataPacket : DataPacket
 	{
 		byte[] data;
 
@@ -19,10 +19,9 @@ namespace Zeltlager.DataPackets
 			this.data = data;
 		}
 
-		public override bool Apply(Lager lager)
+		public override void Apply(Lager lager)
 		{
 			// Just do nothing here
-			return true;
 		}
 
 		protected override void WritePacketData(BinaryWriter output)

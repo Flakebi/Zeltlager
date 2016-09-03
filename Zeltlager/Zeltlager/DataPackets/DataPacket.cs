@@ -63,6 +63,12 @@ namespace Zeltlager.DataPackets
 			return packet;
 		}
 
+		/// <summary>
+		/// Only set when available.
+		/// </summary>
+		public byte[] Signature { get; set; }
+		public byte[] Iv { get; set; }
+
 		public DateTime Timestamp { get; protected set; }
 
 		public DataPacket()
@@ -89,8 +95,7 @@ namespace Zeltlager.DataPackets
 		/// Applies the content of this packet to a Lager.
 		/// </summary>
 		/// <param name="lager">The Lager to which this packet should be applied.</param>
-		/// <returns>Return true if it could be applied successfully, false otherwise.</returns>
-		public abstract bool Apply(Lager lager);
+		public abstract void Apply(Lager lager);
 	}
 }
 

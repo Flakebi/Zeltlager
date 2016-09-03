@@ -27,13 +27,20 @@ namespace Zeltlager
 			List<Member> currentMembers = new List<Member>();
 			var filters = e.NewTextValue.Split(' ');
 
-			foreach (var filter in filters)
+			// Reverse filters so the last processed filter is the most important
+			foreach (var filterIter in filters.Reverse())
 			{
+				// Ignore empty strings, that happens e.g. when the filter text is empty
+				if (string.IsNullOrEmpty(filterIter))
+					continue;
+
+				var filter = filterIter.ToLowerInvariant();
+
 				// Name starts with the filter text
 				for (int i = 0; i < sourceList.Count; i++)
 				{
 					Member m = sourceList[i];
-					if (m.Display.StartsWith(filter))
+					if (m.Display.ToLowerInvariant().StartsWith(filter))
 					{
 						sourceList.RemoveAt(i);
 						currentMembers.Add(m);
@@ -44,7 +51,7 @@ namespace Zeltlager
 				for (int i = 0; i < sourceList.Count; i++)
 				{
 					Member m = sourceList[i];
-					if (m.Display.Contains(filter))
+					if (m.Display.ToLowerInvariant().Contains(filter))
 					{
 						sourceList.RemoveAt(i);
 						currentMembers.Add(m);
@@ -55,7 +62,7 @@ namespace Zeltlager
 				for (int i = 0; i < sourceList.Count; i++)
 				{
 					Member m = sourceList[i];
-					if (m.Tent.Display.StartsWith(filter))
+					if (m.Tent.Display.ToLowerInvariant().StartsWith(filter))
 					{
 						sourceList.RemoveAt(i);
 						currentMembers.Add(m);
@@ -66,17 +73,21 @@ namespace Zeltlager
 				for (int i = 0; i < sourceList.Count; i++)
 				{
 					Member m = sourceList[i];
-					if (m.Tent.Display.Contains(filter))
+					if (m.Tent.Display.ToLowerInvariant().Contains(filter))
 					{
 						sourceList.RemoveAt(i);
 						currentMembers.Add(m);
 						i--;
 					}
 				}
+
+				// Switch lists so all search words have to be contained in the list
+				sourceList = currentMembers;
+				currentMembers = new List<Member>();
 			}
 
-			this.currentMembers = currentMembers;
-			members.ItemsSource = currentMembers;
+			this.currentMembers = sourceList;
+			members.ItemsSource = this.currentMembers;
 		}
 	}
 }

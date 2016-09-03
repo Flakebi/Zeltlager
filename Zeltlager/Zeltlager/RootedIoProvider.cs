@@ -6,12 +6,12 @@ namespace Zeltlager
 	/// <summary>
 	/// An IoProvider that executes everything relative to a root path.
 	/// </summary>
-	public class RoutedIoProvider : IIoProvider
+	public class RootedIoProvider : IIoProvider
 	{
 		IIoProvider ioProvider;
 		string root;
 
-		public RoutedIoProvider(IIoProvider ioProvider, string root)
+		public RootedIoProvider(IIoProvider ioProvider, string root)
 		{
 			this.ioProvider = ioProvider;
 			this.root = root;

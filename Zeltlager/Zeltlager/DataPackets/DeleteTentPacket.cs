@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	class DeleteTentPacket : DataPacket
+	public class DeleteTentPacket : DataPacket
 	{
 		byte number;
 
@@ -26,12 +26,10 @@ namespace Zeltlager.DataPackets
 			output.Write(number);
 		}
 
-		public override bool Apply(Lager lager)
+		public override void Apply(Lager lager)
 		{
-			Tent tent = lager.Tents.FirstOrDefault(t => t.Number == number);
-			if (tent == null)
-				return false;
-			return lager.RemoveTent(tent);
+			Tent tent = lager.Tents.First(t => t.Number == number);
+			lager.RemoveTent(tent);
 		}
 	}
 }

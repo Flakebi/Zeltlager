@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	class AddTentPacket : DataPacket
+	public class AddTentPacket : DataPacket
 	{
 		byte number;
 		string name;
@@ -40,14 +40,11 @@ namespace Zeltlager.DataPackets
 				output.Write(supervisors[i]);
 		}
 
-		public override bool Apply(Lager lager)
+		public override void Apply(Lager lager)
 		{
-			List<Member> members = supervisors.Select(id => lager.Members.FirstOrDefault(m => m.Id == id)).ToList();
-			if (members.Any(m => m == null))
-				return false;
-
+			List<Member> members = supervisors.Select(id => lager.Members.First(m => m.Id == id)).ToList();
 			Tent tent = new Tent(number, name, members);
-			return lager.AddTent(tent);
+			lager.AddTent(tent);
 		}
 	}
 }
