@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using Xamarin.Forms;
 
@@ -23,13 +21,13 @@ namespace Zeltlager
 			Lager lager = new Lager(0, "Default", "pass");
 			Lager.CurrentLager = lager;
 
-			lager.Init();
+			/*lager.Init();
 			Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());
 			DataPacket packet = new AddTentPacket(tent);
 			lager.Collaborators.First().AddPacket(packet);
 			var member = new Member(0, "Caro", tent, true);
 			packet = new AddMemberPacket(member);
-			lager.Collaborators.First().AddPacket(packet);
+			lager.Collaborators.First().AddPacket(packet);*/
 			//lager.AddTent(tent);
 			//lager.AddMember(member);
 			//lager.Load(Lager.IoProvider);

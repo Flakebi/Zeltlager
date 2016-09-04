@@ -49,8 +49,7 @@ namespace Zeltlager.Server
 
 			Task.Delay(3000).Wait();
 			return;
-
-			//Task.Factory.StartNew(async () =>
+			
 			Lager lager = new Lager(0, "default", "pass");
 			Lager.IoProvider = new RootedIoProvider(new ServerIoProvider(), Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Lager"));
 			Lager.CryptoProvider = new BCCryptoProvider();
@@ -61,7 +60,8 @@ namespace Zeltlager.Server
 			lager.Collaborators.First().AddPacket(packet);
 			packet = new AddMemberPacket(new Member(0, "Caro", tent, true));
 			lager.Collaborators.First().AddPacket(packet);
-			//lager.Load(Lager.IoProvider).Wait();
+
+			//lager.Load(Lager.IoProvider).GetAwaiter().GetResult();
 			lager.Save().GetAwaiter().GetResult();
 		}
 	}

@@ -64,7 +64,6 @@
     <Compile Include="AsyncHelper.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerCryptoProvider.cs" />
     <Compile Include="ServerIoProvider.cs" />
   </ItemGroup>
   <ItemGroup>
