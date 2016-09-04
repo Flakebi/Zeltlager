@@ -13,6 +13,7 @@ namespace Zeltlager
 	{
 		List<DataPacket> packets = new List<DataPacket>();
 
+		byte[] modulus;
 		byte[] publicKey;
 		byte[] privateKey;
 
@@ -24,9 +25,10 @@ namespace Zeltlager
 		/// </summary>
 		/// <param name="id">The id of the collaborator.</param>
 		/// <param name="publicKey">The public key of the collaborator.</param>
-		public Collaborator(byte id, byte[] publicKey)
+		public Collaborator(byte id, byte[] modulus, byte[] publicKey)
 		{
 			Id = id;
+			this.modulus = modulus;
 			this.publicKey = publicKey;
 		}
 
@@ -36,7 +38,7 @@ namespace Zeltlager
 		/// <param name="id">The id of the collaborator.</param>
 		/// <param name="publicKey">The public key of the collaborator.</param>
 		/// <param name="privateKey">The private key of the collaborator.</param>
-		public Collaborator(byte id, byte[] publicKey, byte[] privateKey) : this(id, publicKey)
+		public Collaborator(byte id, byte[] modulus, byte[] publicKey, byte[] privateKey) : this(id, modulus, publicKey)
 		{
 			this.privateKey = privateKey;
 		}
@@ -65,7 +67,7 @@ namespace Zeltlager
 
 				if (packet.Iv == null)
 					// Generate iv
-					packet.Iv = Crypto.GetRandom(Crypto.IV_LENGTH);
+					packet.Iv = Lager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 
 				// Write iv and encrypted data
 				mem = new MemoryStream();
@@ -73,14 +75,14 @@ namespace Zeltlager
 				// Write iv
 				writer.Write(packet.Iv);
 				// Write encrypted packet data
-				writer.Write(Crypto.EncryptSymetric(symmetricKey, packet.Iv, data));
+				writer.Write(Lager.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
 				data = mem.ToArray();
 
 				if (packet.Signature == null)
 				{
 					if (privateKey != null)
 						// Generate signature
-						packet.Signature = Crypto.Sign(privateKey, data);
+						packet.Signature = Lager.CryptoProvider.Sign(modulus, privateKey, data);
 					else
 						throw new InvalidOperationException("Found unencrypted packet without private key.");
 				}

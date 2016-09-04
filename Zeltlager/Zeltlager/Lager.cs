@@ -13,6 +13,7 @@ namespace Zeltlager
 	{
 		public static bool IsClient { get; set; }
 		public static IIoProvider IoProvider { get; set; }
+		public static ICryptoProvider CryptoProvider { get; set; }
 
 		public static Lager CurrentLager { get; set; }
 
@@ -30,10 +31,6 @@ namespace Zeltlager
 		/// </summary>
 		byte ownCollaborator;
 		/// <summary>
-		/// The private key for our own collaborator.
-		/// </summary>
-		byte[] collaboratorPrivateKey;
-		/// <summary>
 		/// The number of packets from our own contributor that were already
 		/// sent to the server. This is also the id of the next packet, that
 		/// should be sent.
@@ -46,8 +43,7 @@ namespace Zeltlager
 		/// </summary>
 		byte[] salt;
 
-		byte[] publicKey;
-		byte[] privateKey;
+		KeyPair asymmetricKey;
 		byte[] symmetricKey;
 
 		/// <summary>
@@ -112,19 +108,22 @@ namespace Zeltlager
 		public void Init()
 		{
 			// Create the keys for this instance
-			salt = Crypto.GetRandom(Crypto.SALT_LENGTH);
-			symmetricKey = Crypto.DeriveSymmetricKey(password, salt);
-			var keys = Crypto.CreateAsymmetricKeys();
-			publicKey = keys.PublicKey;
-			privateKey = keys.PrivateKey;
+			salt = CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
+			symmetricKey = CryptoProvider.DeriveSymmetricKey(password, salt);
+			asymmetricKey = CryptoProvider.CreateAsymmetricKeys();
 
 			synchronized = false;
 			sentPackets = 0;
 			// Create the keys for our own collaborator
-			keys = Crypto.CreateAsymmetricKeys();
-			collaboratorPrivateKey = keys.PrivateKey;
-			Collaborator c = new Collaborator(0, keys.PublicKey);
+			var keys = CryptoProvider.CreateAsymmetricKeys();
+			Collaborator c = new Collaborator(0, keys.Modulus, keys.PublicKey, keys.PrivateKey);
+			collaborators.Add(c);
 			ownCollaborator = 0;
+		}
+
+		public Task Save()
+		{
+			return Save(Lager.IoProvider);
 		}
 
 		/// <summary>

@@ -38,10 +38,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BCCryptoProvider.cs" />
     <Compile Include="ClientIoProvider.cs" />
     <Compile Include="Collaborator.cs" />
     <Compile Include="Competition\Competition.cs" />
-    <Compile Include="Crypto.cs" />
+    <Compile Include="ClientCryptoProvider.cs" />
     <Compile Include="DataPackets\AddMemberPacket.cs" />
     <Compile Include="DataPackets\AddSupervisorToTentPacket.cs" />
     <Compile Include="DataPackets\AddTentPacket.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="DataPackets\InvalidDataPacket.cs" />
     <Compile Include="DataPackets\DeleteSupervisorFromTentPacket.cs" />
     <Compile Include="Erwischt\Erwischt.cs" />
+    <Compile Include="ICryptoProvider.cs" />
     <Compile Include="IIoProvider.cs" />
     <Compile Include="MembersPage.xaml.cs">
       <DependentUpon>MembersPage.xaml</DependentUpon>
@@ -116,6 +118,7 @@
     <EmbeddedResource Include="Resources\timer.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="GettingStarted.Xamarin" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -138,6 +141,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="crypto">
+      <HintPath>..\..\lib\crypto.dll</HintPath>
+    </Reference>
     <Reference Include="PCLStorage, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
       <HintPath>..\..\packages\PCLStorage.1.0.2\lib\portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.dll</HintPath>
       <Private>True</Private>
@@ -183,9 +189,7 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
