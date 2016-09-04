@@ -13,6 +13,8 @@ namespace Zeltlager
 		public static IIoProvider IoProvider { get; set; }
 		public static ICryptoProvider CryptoProvider { get; set; }
 
+		public static Client.GlobalSettings ClientGlobalSettings { get; set; }
+
 		public static Lager CurrentLager { get; set; }
 
 		List<Member> members = new List<Member>();

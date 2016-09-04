@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 using PCLStorage;
 
-namespace Zeltlager
+namespace Zeltlager.Client
 {
-	class ClientIoProvider : IIoProvider
+	class IoProvider : IIoProvider
 	{
 		public Task CreateFolder(string path)
 		{
