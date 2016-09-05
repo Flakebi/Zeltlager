@@ -16,16 +16,18 @@ namespace Zeltlager.Calendar
 
 			this.Day = day;
 
-			Padding = new Thickness(5, 20, 5, 0);
+			Padding = new Thickness(0, 20, 15, 0);
 
 			var dayNameLabel = new Label
 			{
 				Text = day.Date.ToString("dddd, dd.MM."),
-				HorizontalOptions = LayoutOptions.CenterAndExpand
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
 
-			leftArrow = new Button 
-			{ 
+			leftArrow = new Button
+			{
+				Margin = new Thickness(15, 0, 0, 0),
 				Text = "←", 
 				FontAttributes = FontAttributes.Bold, 
 				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
@@ -72,11 +74,13 @@ namespace Zeltlager.Calendar
 			CarouselPage p = (CalendarPage)Parent;
 			if (p.Children.IndexOf(this) == 0)
 			{
-				leftArrow.IsVisible = false;
+				//leftArrow.IsVisible = false;
+				leftArrow.Opacity = 0;
 			}
 			else if (p.Children.IndexOf(this) == p.Children.Count-1)
 			{
-				rightArrow.IsVisible = false;
+				//rightArrow.IsVisible = false;
+				rightArrow.Opacity = 0;
 			}
 		}
 

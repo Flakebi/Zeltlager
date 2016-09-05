@@ -11,7 +11,8 @@ namespace Zeltlager.Calendar
 		Label time = new Label()
 		{
 			VerticalTextAlignment = TextAlignment.Center,
-			HorizontalTextAlignment = TextAlignment.End
+			HorizontalTextAlignment = TextAlignment.End,
+			TextColor = (Color)Application.Current.Resources["whiteColor"]
 		};
 		Label title = new Label()
 		{
@@ -21,7 +22,8 @@ namespace Zeltlager.Calendar
 		Label detail = new Label()
 		{
 			VerticalTextAlignment = TextAlignment.Center,
-			HorizontalTextAlignment = TextAlignment.End
+			HorizontalTextAlignment = TextAlignment.End,
+			TextColor = (Color)Application.Current.Resources["textColorSecondary"]
 		};
 
 		public CalendarEventCell()
