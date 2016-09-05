@@ -12,7 +12,7 @@ namespace Zeltlager.DataPackets
 		ushort id;
 		byte number;
 
-		public DeleteSupervisorFromTentPacket(BinaryReader input, Lager lager)
+		public DeleteSupervisorFromTentPacket(BinaryReader input)
 		{
 			id = input.ReadUInt16();
 			number = input.ReadByte();

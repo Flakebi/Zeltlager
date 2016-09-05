@@ -33,9 +33,17 @@ namespace Zeltlager.Client
 
 		public async Task<BinaryWriter> WriteFile(string path)
 		{
-			var folder = await FileSystem.Current.LocalStorage.GetFolderAsync(Path.GetDirectoryName(path));
-			var f = await folder.CreateFileAsync(Path.GetFileName(path), CreationCollisionOption.ReplaceExisting);
-			var stream = await f.OpenAsync(FileAccess.ReadAndWrite);
+			var directory = Path.GetDirectoryName(path);
+			IFile file;
+			if (!string.IsNullOrEmpty(directory))
+			{
+				var folder = await FileSystem.Current.LocalStorage.GetFolderAsync(directory);
+				file = await folder.CreateFileAsync(Path.GetFileName(path), CreationCollisionOption.ReplaceExisting);
+			}
+			else
+				file = await FileSystem.Current.LocalStorage.CreateFileAsync(Path.GetFileName(path), CreationCollisionOption.ReplaceExisting);
+
+			var stream = await file.OpenAsync(FileAccess.ReadAndWrite);
 			return new BinaryWriter(stream);
 		}
 	}

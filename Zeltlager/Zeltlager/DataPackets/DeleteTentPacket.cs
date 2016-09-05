@@ -11,7 +11,7 @@ namespace Zeltlager.DataPackets
 	{
 		byte number;
 
-		public DeleteTentPacket(BinaryReader input, Lager lager)
+		public DeleteTentPacket(BinaryReader input)
 		{
 			number = input.ReadByte();
 		}

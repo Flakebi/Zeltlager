@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,14 @@ namespace Zeltlager
 {
 	public class Lager : ILagerPart
 	{
+		public enum InitStatus
+		{
+			CreateSymmetricKey,
+			CreateGameAsymmetricKey,
+			CreateCollaboratorAsymmetricKey,
+			Ready
+		}
+
 		public static bool IsClient { get; set; }
 		public static IIoProvider IoProvider { get; set; }
 		public static ICryptoProvider CryptoProvider { get; set; }
@@ -16,6 +25,8 @@ namespace Zeltlager
 		public static Client.GlobalSettings ClientGlobalSettings { get; set; }
 
 		public static Lager CurrentLager { get; set; }
+
+		const byte VERSION = 0;
 
 		List<Member> members = new List<Member>();
 		List<Tent> tents = new List<Tent>();
@@ -102,28 +113,39 @@ namespace Zeltlager
 				}).OrderBy(packet => packet.Timestamp).ToList();
 		}
 
+		public void ApplyHistory()
+		{
+			List<DataPacket> history = GetHistory();
+			foreach (var packet in history)
+				packet.Apply(this);
+		}
+
 		/// <summary>
 		/// Creates a new lager.
 		/// </summary>
-		public void Init()
+		public async Task Init(Action<InitStatus> statusUpdate)
 		{
 			// Create the keys for this instance
-			salt = CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
-			symmetricKey = CryptoProvider.DeriveSymmetricKey(password, salt);
-			asymmetricKey = CryptoProvider.CreateAsymmetricKeys();
+			statusUpdate(InitStatus.CreateSymmetricKey);
+			salt = await CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
+			symmetricKey = await CryptoProvider.DeriveSymmetricKey(password, salt);
+			statusUpdate(InitStatus.CreateGameAsymmetricKey);
+			asymmetricKey = await CryptoProvider.CreateAsymmetricKeys();
 
 			synchronized = false;
 			sentPackets = 0;
 			// Create the keys for our own collaborator
-			var keys = CryptoProvider.CreateAsymmetricKeys();
+			statusUpdate(InitStatus.CreateCollaboratorAsymmetricKey);
+			var keys = await CryptoProvider.CreateAsymmetricKeys();
 			Collaborator c = new Collaborator(0, keys.Modulus, keys.PublicKey, keys.PrivateKey);
 			collaborators.Add(c);
 			ownCollaborator = 0;
+			statusUpdate(InitStatus.Ready);
 		}
 
 		public Task Save()
 		{
-			return Save(Lager.IoProvider);
+			return Save(IoProvider);
 		}
 
 		/// <summary>
@@ -136,19 +158,110 @@ namespace Zeltlager
 			string id = Id.ToString();
 			if (!await io.ExistsFolder(id))
 				await io.CreateFolder(id);
-
 			var rootedIo = new RootedIoProvider(io, id);
+
+			// Save general settings
+			using (BinaryWriter output = await rootedIo.WriteFile("lager.conf"))
+			{
+				byte[] iv = await CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
+				output.Write(VERSION);
+				output.Write(asymmetricKey.Modulus);
+				output.Write(salt);
+				output.Write(iv);
+
+				// Encrypt the rest
+				using (MemoryStream mem = new MemoryStream())
+				{
+					using (BinaryWriter writer = new BinaryWriter(mem))
+					{
+						if (IsClient)
+						{
+							writer.Write(synchronized);
+							writer.Write(ownCollaborator);
+							writer.Write(sentPackets);
+							writer.Write(collaborators[ownCollaborator].PrivateKey);
+						}
+						writer.Write(asymmetricKey.PrivateKey);
+						// Write collaborators
+						writer.Write((byte)collaborators.Count);
+						for (int i = 0; i < collaborators.Count; i++)
+						{
+							writer.Write(collaborators[i].Modulus);
+							writer.Write((ushort)collaborators[i].Packets.Count);
+						}
+
+						output.Write(await CryptoProvider.EncryptSymetric(symmetricKey, iv, mem.ToArray()));
+					}
+				}
+			}
+
 			// Save packets from collaborators
 			await Task.WhenAll(collaborators.Select(async c => await c.Save(rootedIo, symmetricKey)));
+		}
+
+		public Task Load()
+		{
+			return Load(IoProvider);
 		}
 
 		public async Task Load(IIoProvider io)
 		{
 			string id = Id.ToString();
-
 			var rootedIo = new RootedIoProvider(io, id);
+
+			byte[] ownCollaboratorPrivateKey = null;
+			ushort[] collaboratorPacketCounts;
+			// Load general settings
+			using (BinaryReader input = await rootedIo.ReadFile("lager.conf"))
+			{
+				if (input.ReadByte() == VERSION)
+				{
+					var modulus = input.ReadBytes(CryptoConstants.MODULUS_LENGTH);
+					salt = input.ReadBytes(CryptoConstants.SALT_LENGTH);
+					var iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
+
+					// The rest is encrypted
+					symmetricKey = await CryptoProvider.DeriveSymmetricKey(password, salt);
+					int length = await CryptoProvider.GetSymmetricEncryptedLength((int)(input.BaseStream.Length - input.BaseStream.Position));
+					using (MemoryStream mem = new MemoryStream(await CryptoProvider.DecryptSymetric(symmetricKey, iv, input.ReadBytes(length))))
+					{
+						using (BinaryReader reader = new BinaryReader(mem))
+						{
+							if (IsClient)
+							{
+								synchronized = reader.ReadBoolean();
+								ownCollaborator = reader.ReadByte();
+								sentPackets = reader.ReadUInt16();
+								ownCollaboratorPrivateKey = reader.ReadBytes(CryptoConstants.PRIVATE_KEY_LENGTH);
+							}
+
+							var privateKey = reader.ReadBytes(CryptoConstants.PRIVATE_KEY_LENGTH);
+							asymmetricKey = new KeyPair(modulus, CryptoConstants.DEFAULT_PUBLIC_KEY, privateKey);
+
+							// Read collaborators
+							byte collaboratorCount = reader.ReadByte();
+							collaboratorPacketCounts = new ushort[collaboratorCount];
+							collaborators.Capacity = collaboratorCount;
+							for (byte i = 0; i < collaboratorCount; i++)
+							{
+								var collaboratorModulus = reader.ReadBytes(CryptoConstants.MODULUS_LENGTH);
+								collaboratorPacketCounts[i] = reader.ReadUInt16();
+								if (i != ownCollaborator && IsClient)
+									collaborators.Add(new Collaborator(i, collaboratorModulus, CryptoConstants.DEFAULT_PUBLIC_KEY));
+								else
+									collaborators.Add(new Collaborator(i, collaboratorModulus, CryptoConstants.DEFAULT_PUBLIC_KEY, ownCollaboratorPrivateKey));
+							}
+						}
+					}
+				}
+				else
+					throw new Exception("Can't read lager with unknown version.");
+			}
+
 			// Load packets of collaborators
-			await Task.WhenAll(collaborators.Select(async c => await c.Load(rootedIo)));
+			await Task.WhenAll(collaborators.Select(async (c, i) => await c.Load(rootedIo, symmetricKey, VERSION, collaboratorPacketCounts[i])));
+
+			ApplyHistory();
 		}
 
 		public void AddMember(Member member)

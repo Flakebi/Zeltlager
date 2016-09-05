@@ -13,7 +13,7 @@ namespace Zeltlager.DataPackets
 		string name;
 		ushort[] supervisors;
 
-		public AddTentPacket(BinaryReader input, Lager lager)
+		public AddTentPacket(BinaryReader input)
 		{
 			number = input.ReadByte();
 			name = input.ReadString();

@@ -14,7 +14,7 @@ namespace Zeltlager.DataPackets
 		bool supervisor;
 		byte tentNumber;
 
-		public AddMemberPacket(BinaryReader input, Lager lager)
+		public AddMemberPacket(BinaryReader input)
 		{
 			id = input.ReadUInt16();
 			name = input.ReadString();

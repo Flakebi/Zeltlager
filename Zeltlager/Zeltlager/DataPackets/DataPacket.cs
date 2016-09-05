@@ -7,7 +7,7 @@ namespace Zeltlager.DataPackets
 {
 	/// <summary>
 	/// A subclass of this type must have a constructor that takes
-	/// (BinaryReader input, Lager lager)
+	/// (BinaryReader input)
 	/// A template for a packet can be found at the end of this file.
 	/// </summary>
 	public abstract class DataPacket
@@ -30,9 +30,8 @@ namespace Zeltlager.DataPackets
 		/// Read a packet. This function can throw an IOException, e.g. if the packet type is invalid.
 		/// </summary>
 		/// <param name="input">The input reader</param>
-		/// <param name="lager">The object where the read packet should be applied.</param>
 		/// <returns>The read packet.</returns>
-		public static DataPacket ReadDataPacket(BinaryReader input, Lager lager)
+		public static DataPacket ReadDataPacket(BinaryReader input)
 		{
 			byte packetType = input.ReadByte();
 
@@ -51,10 +50,9 @@ namespace Zeltlager.DataPackets
 				.First(ctor =>
 				{
 					var parameters = ctor.GetParameters();
-					return parameters.Length == 2 &&
-						parameters[0].ParameterType == typeof(BinaryReader) &&
-						parameters[2].ParameterType == typeof(Lager);
-				}).Invoke(new object[] { input, packetType, lager });
+					return parameters.Length == 1 &&
+						parameters[0].ParameterType == typeof(BinaryReader);
+				}).Invoke(new object[] { input });
 
 			packet.Timestamp = timestamp;
 			return packet;

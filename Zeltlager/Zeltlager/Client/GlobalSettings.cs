@@ -31,18 +31,24 @@ namespace Zeltlager.Client
 			IIoProvider io = Lager.IoProvider;
 			if (await io.ExistsFile(SETTINGS_FILE))
 			{
-				BinaryReader input = await io.ReadFile(SETTINGS_FILE);
-				if (input.ReadByte() == VERSION)
+				using (BinaryReader input = await io.ReadFile(SETTINGS_FILE))
 				{
-					byte lagerCount = input.ReadByte();
-					byte lastLager = input.ReadByte();
-					if (lastLager < lagerCount)
+					if (input.ReadByte() == VERSION)
 					{
-						LastLager = lastLager;
-						// Read list
-						Lagers.Capacity = lagerCount;
-						for (int i = 0; i < lagerCount; i++)
-							Lagers.Add(new Tuple<string, string>(input.ReadString(), input.ReadString()));
+						byte lagerCount = input.ReadByte();
+						byte lastLager = input.ReadByte();
+						if (lastLager < lagerCount)
+						{
+							LastLager = lastLager;
+							// Read list
+							Lagers.Capacity = lagerCount;
+							for (int i = 0; i < lagerCount; i++)
+							{
+								string name = input.ReadString();
+								string pass = input.ReadString();
+								Lagers.Add(new Tuple<string, string>(name, pass));
+							}
+						}
 					}
 				}
 			}
@@ -51,16 +57,18 @@ namespace Zeltlager.Client
 		public async Task Save()
 		{
 			IIoProvider io = Lager.IoProvider;
-			BinaryWriter output = await io.WriteFile(SETTINGS_FILE);
-			output.Write(VERSION);
-			output.Write(Lagers.Count);
-			output.Write(LastLager);
-
-			// Write list
-			for (int i = 0; i < Lagers.Count; i++)
+			using (BinaryWriter output = await io.WriteFile(SETTINGS_FILE))
 			{
-				output.Write(Lagers[i].Item1);
-				output.Write(Lagers[i].Item2);
+				output.Write(VERSION);
+				output.Write((byte)Lagers.Count);
+				output.Write(LastLager);
+
+				// Write list
+				for (int i = 0; i < Lagers.Count; i++)
+				{
+					output.Write(Lagers[i].Item1);
+					output.Write(Lagers[i].Item2);
+				}
 			}
 		}
 	}

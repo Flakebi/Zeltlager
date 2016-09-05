@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 using Zeltlager.DataPackets;
@@ -10,6 +10,14 @@ namespace Zeltlager
 {
 	public partial class App : Application
 	{
+		static readonly string[] INIT_STATUS = new string[]
+		{
+			"Lagerschlüssel erstellen",
+			"Lagerzertifikat erstellen",
+			"Persönliches Zertifikat erstellen",
+			"Fertig"
+		};
+
 		LoadingScreen loadingScreen;
 
 		public App()
@@ -21,12 +29,6 @@ namespace Zeltlager
 			Lager.CryptoProvider = new BCCryptoProvider();
 			Lager.ClientGlobalSettings = new Client.GlobalSettings();
 
-
-			// Set the current lager
-			//TODO Don't set default Lager
-			Lager lager = new Lager(0, "Default", "pass");
-			Lager.CurrentLager = lager;
-
 			/*lager.Init();
 			Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());
 			DataPacket packet = new AddTentPacket(tent);
@@ -34,13 +36,9 @@ namespace Zeltlager
 			var member = new Member(0, "Caro", tent, true);
 			packet = new AddMemberPacket(member);
 			lager.Collaborators.First().AddPacket(packet);*/
-			//lager.AddTent(tent);
-			//lager.AddMember(member);
-			//lager.Load(Lager.IoProvider);
-			//lager.Save();
 
 			loadingScreen = new LoadingScreen();
-			MainPage = loadingScreen;
+			MainPage = new NavigationPage(loadingScreen);
 		}
 
 		protected async override void OnStart()
@@ -65,28 +63,21 @@ namespace Zeltlager
 					byte lagerId = Lager.ClientGlobalSettings.LastLager;
 					var lagerData = Lager.ClientGlobalSettings.Lagers[lagerId];
 					Lager.CurrentLager = new Lager(lagerId, lagerData.Item1, lagerData.Item2);
+					await Lager.CurrentLager.Load();
 				}
 				catch (Exception e)
 				{
 					await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 				}
+				// Go to the main page
+				MainPage = new NavigationPage(new MainPage());
 			}
 			else
 			{
 				// Create lager
-				try
-				{
-					loadingScreen.Status = "Lager erstellen";
-				}
-				catch (Exception e)
-				{
-					await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
-				}
+				loadingScreen.Status = "Lager erstellen";
+				MainPage = new NavigationPage(new CreateLager(this));
 			}
-
-			//FIXME Wait a bit to admire the loading screen ;)
-			await System.Threading.Tasks.Task.Delay(500);
-			MainPage = new NavigationPage(new MainPage());
 		}
 
 		protected override void OnSleep()
@@ -97,6 +88,36 @@ namespace Zeltlager
 		protected override void OnResume()
 		{
 			// Handle when your app resumes
+		}
+
+		void DisplayStatus(Lager.InitStatus status)
+		{
+			loadingScreen.Status = INIT_STATUS[(int)status];
+		}
+
+		public async Task CreateLager(string name, string password)
+		{
+			MainPage = new NavigationPage(loadingScreen);
+			try
+			{
+				Lager.CurrentLager = new Lager((byte)Lager.ClientGlobalSettings.Lagers.Count, name, password);
+				await Lager.CurrentLager.Init(DisplayStatus);
+				loadingScreen.Status = "Lager speichern";
+				await Lager.CurrentLager.Save();
+
+				// Add lager to settings
+				loadingScreen.Status = "Einstellungen speichern";
+				Lager.ClientGlobalSettings.LastLager = (byte)Lager.ClientGlobalSettings.Lagers.Count;
+				Lager.ClientGlobalSettings.Lagers.Add(new Tuple<string, string>(name, password));
+				await Lager.ClientGlobalSettings.Save();
+
+				// Go to the main page
+				MainPage = new NavigationPage(new MainPage());
+			}
+			catch (Exception e)
+			{
+				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
+			}
 		}
 	}
 }

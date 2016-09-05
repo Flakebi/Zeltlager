@@ -11,7 +11,7 @@ namespace Zeltlager.DataPackets
 	{
 		ushort id;
 
-		public DeleteMemberPacket(BinaryReader input, Lager lager)
+		public DeleteMemberPacket(BinaryReader input)
 		{
 			id = input.ReadUInt16();
 		}
