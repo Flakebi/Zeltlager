@@ -3,12 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Zeltlager"
              x:Class="Zeltlager.MainPage"
-             Title="Zeltlager">
+             Title="Zeltlager"
+		 	 Style="{StaticResource BaseStyle}">
   <ContentPage.Content>
     <StackLayout VerticalOptions="FillAndExpand"
                  HorizontalOptions="FillAndExpand"
                  Orientation="Vertical"
-                 Spacing="15">
+                 Spacing="15"
+				Padding="10,10,10,0">
       <Button x:Name="synchronizeButton" Text="Synchronisieren" Clicked="OnSynchronizeClicked"/>
       <Button x:Name="tournamentButton" Text="Turniere" Clicked="OnTournamentClicked"/>
       <Button x:Name="competitionButton" Text="Wettkämpfe" Clicked="OnCompetitionClicked"/>

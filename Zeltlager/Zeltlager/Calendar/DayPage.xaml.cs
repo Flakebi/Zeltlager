@@ -16,7 +16,7 @@ namespace Zeltlager.Calendar
 
 			this.Day = day;
 
-			Padding = new Thickness(0, 20, 0, 0);
+			Padding = new Thickness(5, 20, 5, 0);
 
 			var dayNameLabel = new Label
 			{
@@ -55,6 +55,7 @@ namespace Zeltlager.Calendar
 			calendarList.ItemTemplate = customCell;
 			calendarList.ItemsSource = day.Events;
 			calendarList.Header = header;
+			calendarList.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			header.HorizontalOptions = LayoutOptions.FillAndExpand;
 			Content = calendarList;
 

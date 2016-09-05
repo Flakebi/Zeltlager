@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Calendar
 {
-	public class CalendarEvent : INotifyPropertyChanged
+	public class CalendarEvent : INotifyPropertyChanged, IComparable
 	{
 		private DateTime date;
 		public DateTime Date
@@ -50,12 +50,18 @@ namespace Zeltlager.Calendar
 			timeSpan = date.TimeOfDay;
 		}
 
-		#region INotifyPropertyChanged implementation
+		#region Interface implementations
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public void OnPropertyChanged([CallerMemberName]string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		public int CompareTo(object o)
+		{
+			CalendarEvent other = (CalendarEvent)o;
+			return DateTime.Compare(this.Date, other.Date);
 		}
 		#endregion
 	}

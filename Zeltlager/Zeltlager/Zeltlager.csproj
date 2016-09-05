@@ -90,6 +90,7 @@
       <DependentUpon>DayPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ImageResourceExtension.cs" />
+    <Compile Include="Helpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

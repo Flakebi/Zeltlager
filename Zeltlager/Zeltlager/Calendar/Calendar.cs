@@ -51,6 +51,7 @@ namespace Zeltlager.Calendar
 			//find correct day
 			Day d = FindCorrectDay(calendarEvent);
 			d.Events.Add(calendarEvent);
+			d.Events.Sort();
 		}
 
 		public void RemoveCalendarEvent(CalendarEvent caldendarEvent)

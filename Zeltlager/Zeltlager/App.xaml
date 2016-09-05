@@ -31,16 +31,44 @@
 
         <Setter Property="local:ThemeEffects.Circle" Value="True" />
       </Style>-->
-		<Color x:Key="backgroundColor">#181832</Color>
+		<Color x:Key="backgroundColor">#303030</Color>
 		<Color x:Key="textColor">White</Color>
+		<Color x:Key="buttonColor">#181832</Color>
+		<Color x:Key="textColorStandard">#73bac7</Color>
+		<Color x:Key="textColorButton">#1165e3</Color>
+		<Color x:Key="separatorColor">#be00d7</Color>
+		<Color x:Key="whiteColor">#eeeeee</Color>
  
-		<Style x:Key="labelStyle" TargetType="Label">
-           	<Setter Property="TextColor" Value="{DynamicResource textColor}" />
-			<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}"/>
+       	<Style x:Key="BaseStyle" TargetType="VisualElement">
+         	<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}"/>
        	</Style>
-       	<Style x:Key="backgroundStyle" TargetType="VisualElement">
-         	<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}" />
+		<Style TargetType="Label" BasedOn="{StaticResource BaseStyle}">
+           	<Setter Property="TextColor" Value="{DynamicResource textColorStandard}" />
        	</Style>
+		<Style TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+			<Setter Property="BackgroundColor" Value="{DynamicResource buttonColor}"/>
+			<Setter Property="TextColor" Value="{DynamicResource textColorButton}"/>
+		</Style>
+		<Style TargetType="DatePicker" BasedOn="{StaticResource BaseStyle}">
+           	<Setter Property="TextColor" Value="{DynamicResource textColorStandard}" />
+		</Style>
+		<Style TargetType="Entry" BasedOn="{StaticResource BaseStyle}">
+           	<Setter Property="TextColor" Value="{DynamicResource textColorStandard}" />
+		</Style>
+		<Style TargetType="ListView" BasedOn="{StaticResource BaseStyle}">
+			<Setter Property="SeparatorColor" Value="{DynamicResource separatorColor}"/>
+		</Style>
+		<Style TargetType="SearchBar" BasedOn="{StaticResource BaseStyle}">
+           	<Setter Property="TextColor" Value="{DynamicResource textColorStandard}" />
+		</Style>
+		<Style TargetType="TimePicker" BasedOn="{StaticResource BaseStyle}">
+           	<Setter Property="TextColor" Value="{DynamicResource textColorStandard}" />
+		</Style>
+		<Style TargetType="NavigationPage" BasedOn="{StaticResource BaseStyle}">
+           	<Setter Property="BarTextColor" Value="{DynamicResource whiteColor}" />
+           	<Setter Property="BarBackgroundColor" Value="{DynamicResource backgroundColor}" />
+           	<Setter Property="Tint" Value="{DynamicResource separatorColor}" />
+		</Style>
     </ResourceDictionary>
 
   </Application.Resources>

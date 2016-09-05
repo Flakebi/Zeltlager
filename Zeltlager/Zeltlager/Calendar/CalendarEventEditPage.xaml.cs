@@ -14,8 +14,8 @@ namespace Zeltlager.Calendar
 			InitializeComponent();
 			CalendarEvent = eventToEdit;
 			BindingContext = CalendarEvent;
-			ToolbarItems.Add(new ToolbarItem("Add", "Zeltlager.add.png", () => Navigation.PushAsync(new CalendarEventEditPage(new CalendarEvent(DateTime.Now, ""))), ToolbarItemOrder.Default, 1));
-
+			//Delete Item
+			Lager.CurrentLager.Calendar.RemoveCalendarEvent(eventToEdit);
 		}
 
 		public void OnSaveClicked(object sender, EventArgs e)
