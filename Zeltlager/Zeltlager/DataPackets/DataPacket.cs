@@ -6,9 +6,8 @@ using System.Reflection;
 namespace Zeltlager.DataPackets
 {
 	/// <summary>
-	/// A subclass of this type must have a constructor that takes
-	/// (BinaryReader input)
-	/// A template for a packet can be found at the end of this file.
+	/// A subclass of this type must have a default constructor.
+	/// All possible packet types have to be added to the packetTypes array.
 	/// </summary>
 	public abstract class DataPacket
 	{
@@ -38,23 +37,20 @@ namespace Zeltlager.DataPackets
 			if (packetType >= packetTypes.Length)
 			{
 				// Create a new InvalidDataPacket
-				byte[] data = new byte[1 + input.BaseStream.Length];
+				byte[] data = new byte[1 + input.BaseStream.Length - input.BaseStream.Position];
 				data[0] = packetType;
 				input.Read(data, 1, data.Length - 1);
 				return new InvalidDataPacket(data);
 			}
 
-			DateTime timestamp = DateTime.FromBinary(input.ReadInt64());
-
+			// Create a new packet of the specified type using the default constructor
 			DataPacket packet = (DataPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors
-				.First(ctor =>
-				{
-					var parameters = ctor.GetParameters();
-					return parameters.Length == 1 &&
-						parameters[0].ParameterType == typeof(BinaryReader);
-				}).Invoke(new object[] { input });
+				.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[] { });
 
-			packet.Timestamp = timestamp;
+			// Fill the packet data
+			packet.Timestamp = DateTime.FromBinary(input.ReadInt64());
+			packet.Data = new byte[input.BaseStream.Length - input.BaseStream.Position];
+			input.Read(packet.Data, 0, packet.Data.Length);
 			return packet;
 		}
 
@@ -64,7 +60,8 @@ namespace Zeltlager.DataPackets
 		public byte[] Signature { get; set; }
 		public byte[] Iv { get; set; }
 
-		public DateTime Timestamp { get; protected set; }
+		public DateTime Timestamp { get; private set; }
+		protected byte[] Data { get; set; }
 
 		public DataPacket()
 		{
@@ -73,46 +70,31 @@ namespace Zeltlager.DataPackets
 
 		public void WritePacket(BinaryWriter output)
 		{
+			Serialise();
+
 			// Don't write the header for InvalidDataPackets.
 			if (!(this is InvalidDataPacket))
 			{
 				// Write the type of this packet
-				output.Write((byte)Array.IndexOf(packetTypes, GetType()));
+				var index = Array.IndexOf(packetTypes, GetType());
+				if (index == -1)
+					throw new InvalidOperationException("Trying to write an unknown packet type, you should add this packet to the DataPacket.packetTypes array.");
+				output.Write((byte)index);
 				output.Write(Timestamp.ToBinary());
 			}
-
-			WritePacketData(output);
+			output.Write(Data);
 		}
 
-		protected abstract void WritePacketData(BinaryWriter output);
+		/// <summary>
+		/// Put the packet data into Data.
+		/// </summary>
+		public abstract void Serialise();
 
 		/// <summary>
-		/// Applies the content of this packet to a Lager.
+		/// Applies the content of this packet to a lager.
+		/// The packet has to deserialise itself from Data.
 		/// </summary>
-		/// <param name="lager">The Lager to which this packet should be applied.</param>
-		public abstract void Apply(Lager lager);
+		/// <param name="lager">The lager to which this packet should be applied.</param>
+		public abstract void Deserialise(Lager lager);
 	}
 }
-
-/*******************************************************************************
-
-class XXXDataPacket : DataPacket
-{
-	public XXXDataPacket(BinaryReader input, Lager lager)
-	{
-	}
-
-	public GeneralDataPacket()
-	{
-	}
-
-	protected override void WritePacketData(BinaryWriter output)
-	{
-	}
-
-	public override void Apply(Lager lager)
-	{
-	}
-}
-
-*******************************************************************************/

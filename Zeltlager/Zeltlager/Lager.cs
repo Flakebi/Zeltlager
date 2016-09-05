@@ -117,7 +117,26 @@ namespace Zeltlager
 		{
 			List<DataPacket> history = GetHistory();
 			foreach (var packet in history)
-				packet.Apply(this);
+			{
+				try
+				{
+					packet.Deserialise(this);
+				}
+				catch(Exception e)
+				{
+					//TODO write something into the log
+				}
+			}
+		}
+
+		/// <summary>
+		/// Adds a packet to our own collaborator and applies the packet.
+		/// </summary>
+		public void AddPacket(DataPacket packet)
+		{
+			collaborators[ownCollaborator].AddPacket(packet);
+			packet.Serialise();
+			packet.Deserialise(this);
 		}
 
 		/// <summary>

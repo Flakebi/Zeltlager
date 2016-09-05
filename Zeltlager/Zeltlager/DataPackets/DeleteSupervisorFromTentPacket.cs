@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace Zeltlager.DataPackets
 {
@@ -12,11 +7,7 @@ namespace Zeltlager.DataPackets
 		ushort id;
 		byte number;
 
-		public DeleteSupervisorFromTentPacket(BinaryReader input)
-		{
-			id = input.ReadUInt16();
-			number = input.ReadByte();
-		}
+		public DeleteSupervisorFromTentPacket() { }
 
 		public DeleteSupervisorFromTentPacket(Member supervisor, Tent tent)
 		{
@@ -24,14 +15,17 @@ namespace Zeltlager.DataPackets
 			number = tent.Number;
 		}
 
-		protected override void WritePacketData(BinaryWriter output)
+		public override void Serialise()
 		{
-			output.Write(id);
-			output.Write(number);
+			Data = new byte[3];
+			id.ToBytes(Data, 0);
+			Data[2] = number;
 		}
 
-		public override void Apply(Lager lager)
+		public override void Deserialise(Lager lager)
 		{
+			id = Data.ToUShort(0);
+			number = Data[2];
 			Member supervisor = lager.Members.First(m => m.Id == id);
 			Tent tent = lager.Tents.First(t => t.Number == number);
 			tent.RemoveSupervisor(supervisor);

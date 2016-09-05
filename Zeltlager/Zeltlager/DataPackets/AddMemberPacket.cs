@@ -1,48 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
 	public class AddMemberPacket : DataPacket
 	{
-		ushort id;
-		string name;
-		bool supervisor;
-		byte tentNumber;
+		Member member;
 
-		public AddMemberPacket(BinaryReader input)
-		{
-			id = input.ReadUInt16();
-			name = input.ReadString();
-			supervisor = input.ReadBoolean();
-			tentNumber = input.ReadByte();
-		}
+		public AddMemberPacket() { }
 
 		public AddMemberPacket(Member member)
 		{
-			id = member.Id;
-			name = member.Name;
-			supervisor = member.Supervisor;
-			tentNumber = member.Tent.Number;
+			this.member = member;
 		}
 
-		protected override void WritePacketData(BinaryWriter output)
+		public override void Serialise()
 		{
-			output.Write(id);
-			output.Write(name);
-			output.Write(supervisor);
-			output.Write(tentNumber);
+			using (MemoryStream mem = new MemoryStream())
+			using (BinaryWriter output = new BinaryWriter(mem))
+			{
+				output.Write(member.Id);
+				output.Write(member.Name);
+				output.Write(member.Name);
+				output.Write(member.Tent.Number);
+				Data = mem.ToArray();
+			}
 		}
 
-		public override void Apply(Lager lager)
+		public override void Deserialise(Lager lager)
 		{
-			Tent tent = lager.Tents.First(t => t.Number == tentNumber);
-			Member member = new Member(id, name, tent, supervisor);
-			lager.AddMember(member);
+			using (MemoryStream mem = new MemoryStream(Data))
+			using (BinaryReader input = new BinaryReader(mem))
+			{
+				ushort id = input.ReadUInt16();
+				string name = input.ReadString();
+				bool supervisor = input.ReadBoolean();
+				byte tentNumber = input.ReadByte();
+
+				Tent tent = lager.Tents.First(t => t.Number == tentNumber);
+				lager.AddMember(new Member(id, name, tent, supervisor));
+			}
 		}
 	}
 }

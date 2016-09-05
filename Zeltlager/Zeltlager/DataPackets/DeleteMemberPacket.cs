@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace Zeltlager.DataPackets
 {
@@ -11,25 +6,22 @@ namespace Zeltlager.DataPackets
 	{
 		ushort id;
 
-		public DeleteMemberPacket(BinaryReader input)
-		{
-			id = input.ReadUInt16();
-		}
+		public DeleteMemberPacket() { }
 
 		public DeleteMemberPacket(Member member)
 		{
 			id = member.Id;
 		}
 
-		protected override void WritePacketData(BinaryWriter output)
+		public override void Serialise()
 		{
-			output.Write(id);
+			Data = id.ToBytes();
 		}
 
-		public override void Apply(Lager lager)
+		public override void Deserialise(Lager lager)
 		{
-			Member member = lager.Members.First(m => m.Id == id);
-			lager.RemoveMember(member);
+			id = Data.ToUShort(0);
+			lager.RemoveMember(lager.Members.First(m => m.Id == id));
 		}
 	}
 }
