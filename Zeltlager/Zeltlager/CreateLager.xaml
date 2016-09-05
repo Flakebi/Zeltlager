@@ -4,27 +4,27 @@
              xmlns:local="clr-namespace:Zeltlager"
              x:Class="Zeltlager.CreateLager"
              Title="Lager erstellen">
-  <ContentPage.Content>
-    <StackLayout VerticalOptions="FillAndExpand"
-                 HorizontalOptions="FillAndExpand"
-                 Orientation="Vertical"
-                 Spacing="15">
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+	<ContentPage.Content>
+		<StackLayout VerticalOptions="FillAndExpand"
+					 HorizontalOptions="FillAndExpand"
+					 Orientation="Vertical"
+					 Spacing="15">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
 
-        <Label Text="Name" Grid.Row="0" Grid.Column="0"/>
-        <Entry HorizontalOptions="FillAndExpand" Text="{Binding Name, Mode=TwoWay}" Grid.Row="0" Grid.Column="1"/>
-        <Label Text="Passwort" Grid.Row="1" Grid.Column="0"/>
-        <Entry HorizontalOptions="FillAndExpand" Text="{Binding Password, Mode=TwoWay}" IsPassword="true" Grid.Row="1" Grid.Column="1"/>
-      </Grid>
-      <Button Text="Erstellen" Clicked="OnCreateClicked"/>
-    </StackLayout>
-  </ContentPage.Content>
+				<Label Text="Name" Grid.Row="0" Grid.Column="0"/>
+				<Entry HorizontalOptions="FillAndExpand" Text="{Binding Name, Mode=TwoWay}" Grid.Row="0" Grid.Column="1"/>
+				<Label Text="Passwort" Grid.Row="1" Grid.Column="0"/>
+				<Entry HorizontalOptions="FillAndExpand" Text="{Binding Password, Mode=TwoWay}" IsPassword="true" Grid.Row="1" Grid.Column="1"/>
+			</Grid>
+			<Button Text="Erstellen" Clicked="OnCreateClicked"/>
+		</StackLayout>
+	</ContentPage.Content>
 </ContentPage>

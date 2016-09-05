@@ -5,18 +5,18 @@
              x:Class="Zeltlager.MainPage"
              Title="Zeltlager"
 		 	 Style="{StaticResource BaseStyle}">
-  <ContentPage.Content>
-    <StackLayout VerticalOptions="FillAndExpand"
-                 HorizontalOptions="FillAndExpand"
-                 Orientation="Vertical"
-                 Spacing="15"
-				Padding="10,10,10,0">
-      <Button x:Name="synchronizeButton" Text="Synchronisieren" Clicked="OnSynchronizeClicked"/>
-      <Button x:Name="tournamentButton" Text="Turniere" Clicked="OnTournamentClicked"/>
-      <Button x:Name="competitionButton" Text="Wettkämpfe" Clicked="OnCompetitionClicked"/>
-      <Button x:Name="erwischtButton" Text="Erwischt" Clicked="OnErwischtClicked"/>
-      <Button x:Name="calendarButton" Text="Kalender" Clicked="OnCalendarClicked"/>
-      <Button x:Name="generalButton" Text="Allgemeines" Clicked="OnGeneralClicked"/>
-    </StackLayout>
-  </ContentPage.Content>
+	<ContentPage.Content>
+		<StackLayout VerticalOptions="FillAndExpand"
+					 HorizontalOptions="FillAndExpand"
+					 Orientation="Vertical"
+					 Spacing="15"
+					 Padding="10,10,10,0">
+			<Button x:Name="synchronizeButton" Text="Synchronisieren" Clicked="OnSynchronizeClicked"/>
+			<Button x:Name="tournamentButton" Text="Turniere" Clicked="OnTournamentClicked"/>
+			<Button x:Name="competitionButton" Text="Wettkämpfe" Clicked="OnCompetitionClicked"/>
+			<Button x:Name="erwischtButton" Text="Erwischt" Clicked="OnErwischtClicked"/>
+			<Button x:Name="calendarButton" Text="Kalender" Clicked="OnCalendarClicked"/>
+			<Button x:Name="generalButton" Text="Allgemeines" Clicked="OnGeneralClicked"/>
+		</StackLayout>
+	</ContentPage.Content>
 </ContentPage>

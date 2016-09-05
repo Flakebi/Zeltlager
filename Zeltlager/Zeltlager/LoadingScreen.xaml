@@ -4,13 +4,13 @@
              xmlns:local="clr-namespace:Zeltlager"
              x:Class="Zeltlager.LoadingScreen"
              Title="Zeltlager" Style="{StaticResource BaseStyle}">
-  <ContentPage.Content>
-    <StackLayout VerticalOptions="Center"
-                 HorizontalOptions="FillAndExpand"
-                 Orientation="Vertical"
-                 Spacing="15">
-      <Label Text="{Binding Status}" HorizontalOptions="FillAndExpand" XAlign="Center" Font="30" />
-      <ActivityIndicator Color="Blue" IsRunning="true" HorizontalOptions="FillAndExpand" VerticalOptions="Center" />
-    </StackLayout>
-  </ContentPage.Content>
+	<ContentPage.Content>
+		<StackLayout VerticalOptions="Center"
+					 HorizontalOptions="FillAndExpand"
+					 Orientation="Vertical"
+					 Spacing="15">
+			<Label Text="{Binding Status}" HorizontalOptions="FillAndExpand" XAlign="Center" Font="30" />
+			<ActivityIndicator Color="Blue" IsRunning="true" HorizontalOptions="FillAndExpand" VerticalOptions="Center" />
+		</StackLayout>
+	</ContentPage.Content>
 </ContentPage>

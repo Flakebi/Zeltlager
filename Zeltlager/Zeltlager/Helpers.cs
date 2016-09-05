@@ -7,7 +7,7 @@ namespace Zeltlager
 {
 	public static class Helpers
 	{
-		public static void Sort<T>(this ObservableCollection<T> collection) where T : IComparable
+		public static void Sort<T>(this ObservableCollection<T> collection) where T : IComparable<T>
 		{
 			List<T> sorted = collection.OrderBy(x => x).ToList();
 			for (int i = 0; i < sorted.Count(); i++)

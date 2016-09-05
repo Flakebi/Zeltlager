@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Calendar
 {
-	public class CalendarEvent : INotifyPropertyChanged, IComparable
+	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>
 	{
 		private DateTime date;
 		public DateTime Date
@@ -16,8 +16,11 @@ namespace Zeltlager.Calendar
 		public TimeSpan TimeSpan
 		{
 			get { return timeSpan; }
-			set { timeSpan = value; date = date.Date.Add(value); 
-				OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString"); OnPropertyChanged("Date"); }
+			set
+			{
+				timeSpan = value; date = date.Date.Add(value);
+				OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString"); OnPropertyChanged("Date");
+			}
 		}
 		public string TimeString
 		{
@@ -36,13 +39,6 @@ namespace Zeltlager.Calendar
 			set { detail = value; OnPropertyChanged("Detail"); }
 		}
 
-		public CalendarEvent(DateTime date, string title, string detail)
-		{
-			this.date = date;
-			this.title = title;
-			this.detail = detail;
-			timeSpan = date.TimeOfDay;
-		}
 		public CalendarEvent(DateTime date, string title)
 		{
 			this.date = date;
@@ -50,7 +46,13 @@ namespace Zeltlager.Calendar
 			timeSpan = date.TimeOfDay;
 		}
 
+		public CalendarEvent(DateTime date, string title, string detail) : this(date, title)
+		{
+			this.detail = detail;
+		}
+
 		#region Interface implementations
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public void OnPropertyChanged([CallerMemberName]string propertyName = null)
@@ -58,11 +60,11 @@ namespace Zeltlager.Calendar
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		public int CompareTo(object o)
+		public int CompareTo(CalendarEvent other)
 		{
-			CalendarEvent other = (CalendarEvent)o;
-			return DateTime.Compare(this.Date, other.Date);
+			return Date.CompareTo(other.Date);
 		}
+
 		#endregion
 	}
 }
