@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace Zeltlager
 {
@@ -7,6 +8,11 @@ namespace Zeltlager
 		public MembersPage()
 		{
 			InitializeComponent();
+		}
+
+		private void OnAddButtonClicked(object sender, EventArgs e)
+		{
+			
 		}
 	}
 }

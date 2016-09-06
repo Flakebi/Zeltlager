@@ -57,12 +57,6 @@
     <Compile Include="LoadingScreen.xaml.cs">
       <DependentUpon>LoadingScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MembersPage.xaml.cs">
-      <DependentUpon>MembersPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GeneralPage.xaml.cs">
-      <DependentUpon>GeneralPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ILagerPart.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -91,6 +85,19 @@
     </Compile>
     <Compile Include="ImageResourceExtension.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="General\GeneralPage.xaml.cs">
+      <DependentUpon>GeneralPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="General\MembersPage.xaml.cs">
+      <DependentUpon>MembersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="General\TentsPage.xaml.cs">
+      <DependentUpon>TentsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UAM\UniversalAddModifyPage.cs">
+    </Compile>
+    <Compile Include="UAM\EditableAttribute.cs" />
+    <Compile Include="UAM\IEditable.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -110,13 +117,7 @@
     <EmbeddedResource Include="Calendar\DayPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="GeneralPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Include="MemberList.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MembersPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="LoadingScreen.xaml">
@@ -132,6 +133,15 @@
     <EmbeddedResource Include="Resources\rightarrow.png" />
     <EmbeddedResource Include="Resources\settings.png" />
     <EmbeddedResource Include="Resources\timer.png" />
+    <EmbeddedResource Include="General\GeneralPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\MembersPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\TentsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -162,6 +172,10 @@
       <HintPath>..\..\packages\Xamarin.Forms.2.3.1.114\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.Xaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="General\" />
+    <Folder Include="UAM\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
