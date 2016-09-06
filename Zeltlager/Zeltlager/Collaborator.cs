@@ -52,53 +52,56 @@ namespace Zeltlager
 			if (!await io.ExistsFolder(id))
 				await io.CreateFolder(id);
 
-			for (int i = 0; i < packets.Count; i++)
+			for (ushort i = 0; i < packets.Count; i++)
+				await SavePacket(io, symmetricKey, i);
+		}
+
+		public async Task SavePacket(IIoProvider io, byte[] symmetricKey, ushort i)
+		{
+			using (BinaryWriter output = await io.WriteFile(Path.Combine(Id.ToString(), i.ToString())))
 			{
-				using (BinaryWriter output = await io.WriteFile(Path.Combine(id, i.ToString())))
+				var packet = packets[i];
+
+				byte[] data;
+				// Get packet data
+				using (MemoryStream mem = new MemoryStream())
 				{
-					var packet = packets[i];
+					using (BinaryWriter writer = new BinaryWriter(mem))
+						packet.WritePacket(writer);
 
-					byte[] data;
-					// Get packet data
-					using (MemoryStream mem = new MemoryStream())
-					{
-						using (BinaryWriter writer = new BinaryWriter(mem))
-							packet.WritePacket(writer);
-
-						data = mem.ToArray();
-					}
-
-					if (packet.Iv == null)
-						// Generate iv
-						packet.Iv = await Lager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
-
-					// Write iv and encrypted data
-					using (MemoryStream mem = new MemoryStream())
-					{
-						using (BinaryWriter writer = new BinaryWriter(mem))
-						{
-							// Write iv
-							writer.Write(packet.Iv);
-							// Write encrypted packet data
-							writer.Write(await Lager.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
-						}
-						data = mem.ToArray();
-					}
-
-					if (packet.Signature == null)
-					{
-						if (PrivateKey != null)
-							// Generate signature
-							packet.Signature = await Lager.CryptoProvider.Sign(Modulus, PrivateKey, data);
-						else
-							throw new InvalidOperationException("Found unencrypted packet without private key.");
-					}
-
-					// Write signature
-					output.Write(packet.Signature);
-					// Write iv and encrypted data
-					output.Write(data);
+					data = mem.ToArray();
 				}
+
+				if (packet.Iv == null)
+					// Generate iv
+					packet.Iv = await Lager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
+
+				// Write iv and encrypted data
+				using (MemoryStream mem = new MemoryStream())
+				{
+					using (BinaryWriter writer = new BinaryWriter(mem))
+					{
+						// Write iv
+						writer.Write(packet.Iv);
+						// Write encrypted packet data
+						writer.Write(await Lager.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
+					}
+					data = mem.ToArray();
+				}
+
+				if (packet.Signature == null)
+				{
+					if (PrivateKey != null)
+						// Generate signature
+						packet.Signature = await Lager.CryptoProvider.Sign(Modulus, PrivateKey, data);
+					else
+						throw new InvalidOperationException("Found unencrypted packet without private key.");
+				}
+
+				// Write signature
+				output.Write(packet.Signature);
+				// Write iv and encrypted data
+				output.Write(data);
 			}
 		}
 

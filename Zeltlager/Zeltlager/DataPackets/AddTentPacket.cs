@@ -17,7 +17,7 @@ namespace Zeltlager.DataPackets
 
 		public override void Serialise()
 		{
-			using (MemoryStream mem = new MemoryStream())
+			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 			{
 				output.Write(tent.Number);
@@ -31,7 +31,7 @@ namespace Zeltlager.DataPackets
 
 		public override void Deserialise(Lager lager)
 		{
-			using (MemoryStream mem = new MemoryStream(Data))
+			MemoryStream mem = new MemoryStream(Data);
 			using (BinaryReader input = new BinaryReader(mem))
 			{
 				byte number = input.ReadByte();

@@ -27,6 +27,7 @@ namespace Zeltlager
 		public static Lager CurrentLager { get; set; }
 
 		const byte VERSION = 0;
+		const string GENERAL_SETTINGS_FILE = "lager.conf";
 
 		List<Member> members = new List<Member>();
 		List<Tent> tents = new List<Tent>();
@@ -122,7 +123,7 @@ namespace Zeltlager
 				{
 					packet.Deserialise(this);
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					//TODO write something into the log
 				}
@@ -132,10 +133,17 @@ namespace Zeltlager
 		/// <summary>
 		/// Adds a packet to our own collaborator and applies the packet.
 		/// </summary>
-		public void AddPacket(DataPacket packet)
+		public async Task AddPacket(DataPacket packet)
 		{
-			collaborators[ownCollaborator].AddPacket(packet);
-			packet.Serialise();
+			var collaborator = collaborators[ownCollaborator];
+			collaborator.AddPacket(packet);
+			// First, write the packet to disk (it will be serialised in that process)
+			await collaborator.SavePacket(IoProvider, symmetricKey, (ushort)(collaborator.Packets.Count - 1));
+
+			// Save the updated packet count
+			await SaveGeneralSettings();
+
+			// Then deserialise it to apply it
 			packet.Deserialise(this);
 		}
 
@@ -179,8 +187,20 @@ namespace Zeltlager
 				await io.CreateFolder(id);
 			var rootedIo = new RootedIoProvider(io, id);
 
-			// Save general settings
-			using (BinaryWriter output = await rootedIo.WriteFile("lager.conf"))
+			await SaveGeneralSettings(rootedIo);
+
+			// Save packets from collaborators
+			await Task.WhenAll(collaborators.Select(async c => await c.Save(rootedIo, symmetricKey)));
+		}
+
+		Task SaveGeneralSettings()
+		{
+			return SaveGeneralSettings(new RootedIoProvider(IoProvider, Id.ToString()));
+		}
+
+		async Task SaveGeneralSettings(IIoProvider io)
+		{
+			using (BinaryWriter output = await io.WriteFile(GENERAL_SETTINGS_FILE))
 			{
 				byte[] iv = await CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 				output.Write(VERSION);
@@ -213,9 +233,6 @@ namespace Zeltlager
 					}
 				}
 			}
-
-			// Save packets from collaborators
-			await Task.WhenAll(collaborators.Select(async c => await c.Save(rootedIo, symmetricKey)));
 		}
 
 		public Task Load()
@@ -231,7 +248,7 @@ namespace Zeltlager
 			byte[] ownCollaboratorPrivateKey = null;
 			ushort[] collaboratorPacketCounts;
 			// Load general settings
-			using (BinaryReader input = await rootedIo.ReadFile("lager.conf"))
+			using (BinaryReader input = await rootedIo.ReadFile(GENERAL_SETTINGS_FILE))
 			{
 				if (input.ReadByte() == VERSION)
 				{
