@@ -35,9 +35,6 @@ namespace Zeltlager
 			Navigation.PushAsync(new Calendar.CalendarPage());
 		}
 
-		void OnGeneralClicked(object sender, EventArgs e)
-		{
-			Navigation.PushAsync(new GeneralPage());
-		}
+		void OnGeneralClicked(object sender, EventArgs e) => Navigation.PushAsync(new GeneralPage());
 	}
 }

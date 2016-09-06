@@ -17,6 +17,8 @@ namespace Zeltlager
 		public CreateLager(App app)
 		{
 			this.app = app;
+			Name = "";
+			Password = "";
 
 			InitializeComponent();
 			BindingContext = this;
@@ -24,6 +26,18 @@ namespace Zeltlager
 
 		async void OnCreateClicked(object sender, EventArgs e)
 		{
+			if (string.IsNullOrEmpty(Name))
+			{
+				await DisplayAlert(Title, "Bitte gebe einen Namen ein", "Ok");
+				return;
+			}
+
+			if (string.IsNullOrEmpty(Password))
+			{
+				await DisplayAlert(Title, "Bitte gebe ein Passwort ein", "Ok");
+				return;
+			}
+
 			await app.CreateLager(Name, Password);
 		}
 	}

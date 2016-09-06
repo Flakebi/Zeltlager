@@ -5,16 +5,9 @@ namespace Zeltlager.DataPackets
 {
 	public class AddMemberPacket : DataPacket
 	{
-		Member member;
-
 		public AddMemberPacket() { }
 
 		public AddMemberPacket(Member member)
-		{
-			this.member = member;
-		}
-
-		public override void Serialise()
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))

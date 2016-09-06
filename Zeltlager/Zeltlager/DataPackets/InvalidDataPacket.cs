@@ -12,10 +12,6 @@ namespace Zeltlager.DataPackets
 			Data = data;
 		}
 
-		public override void Serialise()
-		{
-		}
-
 		public override void Deserialise(Lager lager)
 		{
 			// Just do nothing here

@@ -17,29 +17,16 @@ namespace Zeltlager
 			this.root = root;
 		}
 
-		public Task CreateFolder(string path)
-		{
-			return ioProvider.CreateFolder(Path.Combine(root, path));
-		}
+		public Task CreateFolder(string path) => ioProvider.CreateFolder(Path.Combine(root, path));
 
-		public Task<bool> ExistsFile(string path)
-		{
-			return ioProvider.ExistsFile(Path.Combine(root, path));
-		}
+		public Task<bool> ExistsFile(string path) => ioProvider.ExistsFile(Path.Combine(root, path));
 
-		public Task<bool> ExistsFolder(string path)
-		{
-			return ioProvider.ExistsFolder(Path.Combine(root, path));
-		}
+		public Task<bool> ExistsFolder(string path) => ioProvider.ExistsFolder(Path.Combine(root, path));
 
-		public Task<BinaryReader> ReadFile(string path)
-		{
-			return ioProvider.ReadFile(Path.Combine(root, path));
-		}
+		public Task<Stream> ReadFile(string path) => ioProvider.ReadFile(Path.Combine(root, path));
 
-		public Task<BinaryWriter> WriteFile(string path)
-		{
-			return ioProvider.WriteFile(Path.Combine(root, path));
-		}
+		public Task<Stream> WriteFile(string path) => ioProvider.WriteFile(Path.Combine(root, path));
+
+		public Task<Stream> AppendFile(string path) => ioProvider.AppendFile(Path.Combine(root, path));
 	}
 }

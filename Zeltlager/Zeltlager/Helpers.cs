@@ -20,10 +20,7 @@ namespace Zeltlager
 			array[offset + 1] = (byte)value;
 		}
 
-		public static void ToBytes(this short value, byte[] array, int offset)
-		{
-			((ushort)value).ToBytes(array, offset);
-		}
+		public static void ToBytes(this short value, byte[] array, int offset) => ((ushort)value).ToBytes(array, offset);
 
 		public static void ToBytes(this uint value, byte[] array, int offset)
 		{
@@ -33,10 +30,7 @@ namespace Zeltlager
 			array[offset + 3] = (byte)value;
 		}
 
-		public static void ToBytes(this int value, byte[] array, int offset)
-		{
-			((uint)value).ToBytes(array, offset);
-		}
+		public static void ToBytes(this int value, byte[] array, int offset) => ((uint)value).ToBytes(array, offset);
 
 		public static byte[] ToBytes(this ushort value)
 		{
@@ -66,15 +60,9 @@ namespace Zeltlager
 			return bytes;
 		}
 
-		public static ushort ToUShort(this byte[] value, int offset)
-		{
-			return (ushort)((value[offset] << 8) | value[offset + 1]);
-		}
+		public static ushort ToUShort(this byte[] value, int offset) => (ushort)((value[offset] << 8) | value[offset + 1]);
 
-		public static short ToShort(this byte[] value, int offset)
-		{
-			return (short)value.ToUShort(offset);
-		}
+		public static short ToShort(this byte[] value, int offset) => (short)value.ToUShort(offset);
 
 		public static uint ToUInt(this byte[] value, int offset)
 		{
@@ -84,9 +72,6 @@ namespace Zeltlager
 				| value[offset + 3]);
 		}
 
-		public static int ToInt(this byte[] value, int offset)
-		{
-			return (int)value.ToUInt(offset);
-		}
+		public static int ToInt(this byte[] value, int offset) => (int)value.ToUInt(offset);
 	}
 }

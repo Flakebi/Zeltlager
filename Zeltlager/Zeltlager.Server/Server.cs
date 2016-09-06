@@ -55,9 +55,9 @@ namespace Zeltlager.Server
 			Task.Delay(3000).Wait();
 			return;
 
-			Lager lager = new Lager(0, "default", "pass");
 			Lager.IoProvider = new RootedIoProvider(new ServerIoProvider(), Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Lager"));
-			Lager.CryptoProvider = new BCCryptoProvider();
+			await Lager.Log.Load();
+			Lager lager = new Lager(0, "default", "pass");
 
 			await lager.Init(status => { });
 			Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());

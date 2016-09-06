@@ -9,29 +9,11 @@ namespace Zeltlager
 {
 	public class ServerIoProvider : IIoProvider
 	{
-		public async Task CreateFolder(string path)
-		{
-			Directory.CreateDirectory(path);
-		}
-
-		public async Task<bool> ExistsFile(string path)
-		{
-			return File.Exists(path);
-		}
-
-		public async Task<bool> ExistsFolder(string path)
-		{
-			return Directory.Exists(path);
-		}
-
-		public async Task<BinaryReader> ReadFile(string path)
-		{
-			return new BinaryReader(File.Open(path, FileMode.Open));
-		}
-
-		public async Task<BinaryWriter> WriteFile(string path)
-		{
-			return new BinaryWriter(File.Open(path, FileMode.Create));
-		}
+		public async Task CreateFolder(string path) => Directory.CreateDirectory(path);
+		public async Task<bool> ExistsFile(string path) => File.Exists(path);
+		public async Task<bool> ExistsFolder(string path) => Directory.Exists(path);
+		public async Task<Stream> ReadFile(string path) => File.Open(path, FileMode.Open);
+		public async Task<Stream> WriteFile(string path) => File.Open(path, FileMode.Create);
+		public async Task<Stream> AppendFile(string path) => File.Open(path, FileMode.Append);
 	}
 }

@@ -45,7 +45,7 @@ namespace Zeltlager.DataPackets
 
 			// Create a new packet of the specified type using the default constructor
 			DataPacket packet = (DataPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors
-				.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[] { });
+				.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[0]);
 
 			// Fill the packet data
 			packet.Timestamp = DateTime.FromBinary(input.ReadInt64());
@@ -70,8 +70,6 @@ namespace Zeltlager.DataPackets
 
 		public void WritePacket(BinaryWriter output)
 		{
-			Serialise();
-
 			// Don't write the header for InvalidDataPackets.
 			if (!(this is InvalidDataPacket))
 			{
@@ -84,11 +82,6 @@ namespace Zeltlager.DataPackets
 			}
 			output.Write(Data);
 		}
-
-		/// <summary>
-		/// Put the packet data into Data.
-		/// </summary>
-		public abstract void Serialise();
 
 		/// <summary>
 		/// Applies the content of this packet to a lager.

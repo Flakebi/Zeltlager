@@ -31,7 +31,7 @@ namespace Zeltlager.Client
 			IIoProvider io = Lager.IoProvider;
 			if (await io.ExistsFile(SETTINGS_FILE))
 			{
-				using (BinaryReader input = await io.ReadFile(SETTINGS_FILE))
+				using (BinaryReader input = new BinaryReader(await io.ReadFile(SETTINGS_FILE)))
 				{
 					if (input.ReadByte() == VERSION)
 					{
@@ -57,7 +57,7 @@ namespace Zeltlager.Client
 		public async Task Save()
 		{
 			IIoProvider io = Lager.IoProvider;
-			using (BinaryWriter output = await io.WriteFile(SETTINGS_FILE))
+			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(SETTINGS_FILE)))
 			{
 				output.Write(VERSION);
 				output.Write((byte)Lagers.Count);

@@ -6,16 +6,9 @@ namespace Zeltlager.DataPackets
 {
 	public class AddTentPacket : DataPacket
 	{
-		Tent tent;
-
 		public AddTentPacket() { }
 
 		public AddTentPacket(Tent tent)
-		{
-			this.tent = tent;
-		}
-
-		public override void Serialise()
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))

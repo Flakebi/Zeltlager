@@ -24,10 +24,7 @@ namespace Zeltlager
 			this.supervisors = supervisors;
 		}
 
-		public override string ToString()
-		{
-			return Number + " " + Name;
-		}
+		public override string ToString() => Display;
 
 		public bool AddSupervisor(Member supervisor)
 		{
@@ -37,9 +34,6 @@ namespace Zeltlager
 			return true;
 		}
 
-		public bool RemoveSupervisor(Member supervisor)
-		{
-			return supervisors.Remove(supervisor);
-		}
+		public bool RemoveSupervisor(Member supervisor) => supervisors.Remove(supervisor);
 	}
 }

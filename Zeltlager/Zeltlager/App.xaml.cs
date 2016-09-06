@@ -22,7 +22,6 @@ namespace Zeltlager
 
 			Lager.IsClient = true;
 			Lager.IoProvider = new Client.IoProvider();
-			Lager.CryptoProvider = new BCCryptoProvider();
 			Lager.ClientGlobalSettings = new Client.GlobalSettings();
 
 			/*lager.Init();
@@ -44,9 +43,12 @@ namespace Zeltlager
 			{
 				loadingScreen.Status = "Einstellungen laden";
 				await Lager.ClientGlobalSettings.Load();
+				await Lager.Log.Load();
 			}
 			catch (Exception e)
 			{
+				// Log the exception
+				await Lager.Log.Exception("App", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 
@@ -59,10 +61,13 @@ namespace Zeltlager
 					byte lagerId = Lager.ClientGlobalSettings.LastLager;
 					var lagerData = Lager.ClientGlobalSettings.Lagers[lagerId];
 					Lager.CurrentLager = new Lager(lagerId, lagerData.Item1, lagerData.Item2);
-					await Lager.CurrentLager.Load();
+					if (!await Lager.CurrentLager.Load())
+						await MainPage.DisplayAlert(loadingScreen.Status, "Beim laden des Lagers sind Fehler aufgetreten", "Ok");
 				}
 				catch (Exception e)
 				{
+					// Log the exception
+					await Lager.Log.Exception("App", e);
 					await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 				}
 				// Go to the main page
@@ -86,10 +91,7 @@ namespace Zeltlager
 			// Handle when your app resumes
 		}
 
-		void DisplayStatus(Lager.InitStatus status)
-		{
-			loadingScreen.Status = INIT_STATUS[(int)status];
-		}
+		void DisplayStatus(Lager.InitStatus status) => loadingScreen.Status = INIT_STATUS[(int)status];
 
 		public async Task CreateLager(string name, string password)
 		{
@@ -112,6 +114,8 @@ namespace Zeltlager
 			}
 			catch (Exception e)
 			{
+				// Log the exception
+				await Lager.Log.Exception("App", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 		}

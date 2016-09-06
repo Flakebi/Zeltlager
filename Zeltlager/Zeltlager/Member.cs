@@ -26,14 +26,8 @@ namespace Zeltlager
 			Supervisor = supervisor;
 		}
 
-		public override string ToString()
-		{
-			return Name;
-		}
+		public override string ToString() => Display;
 
-		public int CompareTo(Member other)
-		{
-			return Display.ToLowerInvariant().CompareTo(other.Display.ToLowerInvariant());
-		}
+		public int CompareTo(Member other) => Display.ToLowerInvariant().CompareTo(other.Display.ToLowerInvariant());
 	}
 }

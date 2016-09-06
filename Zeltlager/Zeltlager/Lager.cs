@@ -21,6 +21,7 @@ namespace Zeltlager
 		public static bool IsClient { get; set; }
 		public static IIoProvider IoProvider { get; set; }
 		public static ICryptoProvider CryptoProvider { get; set; }
+		public static Log Log { get; set; }
 
 		public static Client.GlobalSettings ClientGlobalSettings { get; set; }
 
@@ -28,6 +29,12 @@ namespace Zeltlager
 
 		const byte VERSION = 0;
 		const string GENERAL_SETTINGS_FILE = "lager.conf";
+
+		static Lager()
+		{
+			CryptoProvider = new BCCryptoProvider();
+			Log = new Log();
+		}
 
 		List<Member> members = new List<Member>();
 		List<Tent> tents = new List<Tent>();
@@ -63,6 +70,12 @@ namespace Zeltlager
 		/// </summary>
 		string password;
 
+		/// <summary>
+		/// Packets that could not be loaded.
+		/// Each tuple contains the collaborator and the packet id.
+		/// </summary>
+		public List<Tuple<byte, ushort>> MissingPackets { get; set; }
+
 		public string Name { get; set; }
 		public byte Id { get; set; }
 		public IReadOnlyList<Member> Members { get { return members; } }
@@ -80,6 +93,8 @@ namespace Zeltlager
 			Id = id;
 			Name = name;
 			this.password = password;
+
+			MissingPackets = new List<Tuple<byte, ushort>>();
 
 			Tournament = new Tournament.Tournament(this);
 			Competition = new Competition.Competition(this);
@@ -114,9 +129,17 @@ namespace Zeltlager
 				}).OrderBy(packet => packet.Timestamp).ToList();
 		}
 
-		public void ApplyHistory()
+		/// <summary>
+		/// Apply the whole history.
+		/// </summary>
+		/// <returns>
+		/// Returns true if the whole history could be applied
+		/// successful, false if an error occured.
+		/// </returns>
+		public bool ApplyHistory()
 		{
 			List<DataPacket> history = GetHistory();
+			bool success = true;
 			foreach (var packet in history)
 			{
 				try
@@ -125,9 +148,12 @@ namespace Zeltlager
 				}
 				catch (Exception e)
 				{
-					//TODO write something into the log
+					// Log the exception
+					Log.Exception("Lager", e);
+					success = false;
 				}
 			}
+			return success;
 		}
 
 		/// <summary>
@@ -170,10 +196,7 @@ namespace Zeltlager
 			statusUpdate(InitStatus.Ready);
 		}
 
-		public Task Save()
-		{
-			return Save(IoProvider);
-		}
+		public Task Save() => Save(IoProvider);
 
 		/// <summary>
 		/// Stores this instance on the filesystem.
@@ -190,17 +213,14 @@ namespace Zeltlager
 			await SaveGeneralSettings(rootedIo);
 
 			// Save packets from collaborators
-			await Task.WhenAll(collaborators.Select(async c => await c.Save(rootedIo, symmetricKey)));
+			await Task.WhenAll(collaborators.Select(async c => await c.SaveAll(rootedIo, symmetricKey)));
 		}
 
-		Task SaveGeneralSettings()
-		{
-			return SaveGeneralSettings(new RootedIoProvider(IoProvider, Id.ToString()));
-		}
+		Task SaveGeneralSettings() => SaveGeneralSettings(new RootedIoProvider(IoProvider, Id.ToString()));
 
 		async Task SaveGeneralSettings(IIoProvider io)
 		{
-			using (BinaryWriter output = await io.WriteFile(GENERAL_SETTINGS_FILE))
+			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(GENERAL_SETTINGS_FILE)))
 			{
 				byte[] iv = await CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 				output.Write(VERSION);
@@ -209,38 +229,37 @@ namespace Zeltlager
 				output.Write(iv);
 
 				// Encrypt the rest
-				using (MemoryStream mem = new MemoryStream())
+				MemoryStream mem = new MemoryStream();
+				using (BinaryWriter writer = new BinaryWriter(mem))
 				{
-					using (BinaryWriter writer = new BinaryWriter(mem))
+					if (IsClient)
 					{
-						if (IsClient)
-						{
-							writer.Write(synchronized);
-							writer.Write(ownCollaborator);
-							writer.Write(sentPackets);
-							writer.Write(collaborators[ownCollaborator].PrivateKey);
-						}
-						writer.Write(asymmetricKey.PrivateKey);
-						// Write collaborators
-						writer.Write((byte)collaborators.Count);
-						for (int i = 0; i < collaborators.Count; i++)
-						{
-							writer.Write(collaborators[i].Modulus);
-							writer.Write((ushort)collaborators[i].Packets.Count);
-						}
-
-						output.Write(await CryptoProvider.EncryptSymetric(symmetricKey, iv, mem.ToArray()));
+						writer.Write(synchronized);
+						writer.Write(ownCollaborator);
+						writer.Write(sentPackets);
+						writer.Write(collaborators[ownCollaborator].PrivateKey);
+					}
+					writer.Write(asymmetricKey.PrivateKey);
+					// Write collaborators
+					writer.Write((byte)collaborators.Count);
+					for (int i = 0; i < collaborators.Count; i++)
+					{
+						writer.Write(collaborators[i].Modulus);
+						writer.Write((ushort)collaborators[i].Packets.Count);
 					}
 				}
+				output.Write(await CryptoProvider.EncryptSymetric(symmetricKey, iv, mem.ToArray()));
 			}
 		}
 
-		public Task Load()
-		{
-			return Load(IoProvider);
-		}
+		public Task<bool> Load() => Load(IoProvider);
 
-		public async Task Load(IIoProvider io)
+		/// <summary>
+		/// Load the collaborators and packets of this lager.
+		/// </summary>
+		/// <param name="io">The io provider.</param>
+		/// <returns>True if everything could be loaded and applied successfully, false otherwise.</returns>
+		public async Task<bool> Load(IIoProvider io)
 		{
 			string id = Id.ToString();
 			var rootedIo = new RootedIoProvider(io, id);
@@ -248,7 +267,7 @@ namespace Zeltlager
 			byte[] ownCollaboratorPrivateKey = null;
 			ushort[] collaboratorPacketCounts;
 			// Load general settings
-			using (BinaryReader input = await rootedIo.ReadFile(GENERAL_SETTINGS_FILE))
+			using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(GENERAL_SETTINGS_FILE)))
 			{
 				if (input.ReadByte() == VERSION)
 				{
@@ -295,9 +314,10 @@ namespace Zeltlager
 			}
 
 			// Load packets of collaborators
-			await Task.WhenAll(collaborators.Select(async (c, i) => await c.Load(rootedIo, symmetricKey, VERSION, collaboratorPacketCounts[i])));
+			bool success = (await Task.WhenAll(collaborators.Select(async (c, i) => await c.Load(rootedIo, symmetricKey, this, VERSION, collaboratorPacketCounts[i])))).All(b => b);
 
-			ApplyHistory();
+			success &= ApplyHistory();
+			return success;
 		}
 
 		public void AddMember(Member member)
