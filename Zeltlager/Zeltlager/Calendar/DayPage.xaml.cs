@@ -87,13 +87,18 @@ namespace Zeltlager.Calendar
 		private void OnLeftButtonClicked(object sender, EventArgs e)
 		{
 			CarouselPage p = (CalendarPage)Parent;
-			p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) - 1];
+
+			// Check for ends of the List
+			if (p.Children.IndexOf(p.CurrentPage) > 0)
+				p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) - 1];
 		}
 
 		private void OnRightButtonClicked(object sender, EventArgs e)
 		{
 			CarouselPage p = (CalendarPage)Parent;
-			p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) + 1];
+
+			if (p.Children.IndexOf(p.CurrentPage) < p.Children.Count-1)
+				p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) + 1];
 		}
 	}
 }

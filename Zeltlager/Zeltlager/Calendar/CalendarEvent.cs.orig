@@ -4,7 +4,11 @@ using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Calendar
 {
-	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>
+<<<<<<< HEAD
+	public class CalendarEvent : INotifyPropertyChanged, IComparable, IEditable<CalendarEvent>
+=======
+	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>
+>>>>>>> a592ff95801e0651394b80ed05258740001e50e0
 	{
 		/// <summary>
 		/// date of the event
@@ -66,11 +70,6 @@ namespace Zeltlager.Calendar
 			this.detail = detail;
 		}
 
-		public CalendarEvent Clone()
-		{
-			return new CalendarEvent(this.date, this.title, this.detail);
-		}
-
 		#region Interface implementations
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -85,17 +84,18 @@ namespace Zeltlager.Calendar
 			return Date.CompareTo(other.Date);
 		}
 
+<<<<<<< HEAD
 		public void OnStartEditing(CalendarEvent obj)
 		{
-			//Delete Item
 			Lager.CurrentLager.Calendar.RemoveCalendarEvent(obj);
 		}
 
 		public void OnFinishEditing(CalendarEvent obj)
 		{
-			//Insert Calendar Event into correct day
 			Lager.CurrentLager.Calendar.InsertNewCalendarEvent(obj);
 		}
+=======
+>>>>>>> a592ff95801e0651394b80ed05258740001e50e0
 		#endregion
 	}
 }

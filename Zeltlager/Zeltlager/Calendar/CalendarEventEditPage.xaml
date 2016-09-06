@@ -18,7 +18,10 @@
 				<Label Text="Uhrzeit: "/>
 				<TimePicker Time="{Binding TimeSpan, Mode=TwoWay}"/>
 			</StackLayout>
+			<StackLayout Orientation="Horizontal" Padding="5">
+			<Button Text="Abbrechen" Clicked="OnCancelClicked"/>
 			<Button Text="Speichern" Clicked="OnSaveClicked"/>
+			</StackLayout>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>
