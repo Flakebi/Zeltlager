@@ -1,4 +1,6 @@
-﻿namespace Zeltlager
+﻿using System.Threading.Tasks;
+
+namespace Zeltlager
 {
 	public static class CryptoConstants
 	{
@@ -10,9 +12,12 @@
 		public const int MAC_LENGTH = HASH_LENGTH;
 		public const int MODULUS_LENGTH = 513;
 		public const int PRIVATE_KEY_LENGTH = 512;
+		public const int SIGNATURE_LENGTH = 512;
 
 		public const int ASYMMETRIC_KEY_SIZE = 4096;
 		public const int KEY_DERIVATION_ITERATIONS = 5000;
+
+		public static readonly byte[] DEFAULT_PUBLIC_KEY = new byte[] { 1, 0, 1 };
 	}
 
 	public struct KeyPair
@@ -31,29 +36,30 @@
 
 	public interface ICryptoProvider
 	{
-		byte[] GetRandom(int length);
-		byte[] Hash(byte[] data);
-		byte[] ComputeMac(byte[] keyMaterial, byte[] data);
-		byte[] DeriveSymmetricKey(string password, byte[] salt);
+		Task<byte[]> GetRandom(int length);
+		Task<byte[]> Hash(byte[] data);
+		Task<byte[]> ComputeMac(byte[] key, byte[] data);
+		Task<byte[]> DeriveSymmetricKey(string password, byte[] salt);
 
-		byte[] EncryptSymetric(byte[] keyMaterial, byte[] iv, byte[] data);
-		byte[] DecryptSymetric(byte[] keyMaterial, byte[] iv, byte[] data);
+		Task<int> GetSymmetricEncryptedLength(int dataLength);
+		Task<byte[]> EncryptSymetric(byte[] key, byte[] iv, byte[] data);
+		Task<byte[]> DecryptSymetric(byte[] key, byte[] iv, byte[] data);
 
 		/// <summary>
 		/// Creates a public and a private key.
 		/// </summary>
 		/// <returns>A tuple of the generated public and private key.</returns>
-		KeyPair CreateAsymmetricKeys();
+		Task<KeyPair> CreateAsymmetricKeys();
 
-		byte[] Sign(byte[] modulus, byte[] privateKey, byte[] data);
-		bool Verify(byte[] modulus, byte[] publicKey, byte[] signature, byte[] data);
+		Task<byte[]> Sign(byte[] modulus, byte[] privateKey, byte[] data);
+		Task<bool> Verify(byte[] modulus, byte[] publicKey, byte[] signature, byte[] data);
 		/// <summary>
-		/// Verify using the default public key {1, 0, 1} (65537)
+		/// Verify using the default public key (65537).
 		/// </summary>
-		/// <param name="modulus"></param>
-		/// <param name="signature"></param>
-		/// <param name="data"></param>
-		/// <returns></returns>
-		bool Verify(byte[] modulus, byte[] signature, byte[] data);
+		/// <param name="modulus">The modulus parameter of the key.</param>
+		/// <param name="signature">The given signature.</param>
+		/// <param name="data">The data that should be verified.</param>
+		/// <returns>If the data could be verified successfully or the signature is incorrect.</returns>
+		Task<bool> Verify(byte[] modulus, byte[] signature, byte[] data);
 	}
 }

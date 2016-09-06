@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace Zeltlager.DataPackets
 {
@@ -11,23 +6,21 @@ namespace Zeltlager.DataPackets
 	{
 		byte number;
 
-		public DeleteTentPacket(BinaryReader input, Lager lager)
-		{
-			number = input.ReadByte();
-		}
+		public DeleteTentPacket() { }
 
 		public DeleteTentPacket(Tent tent)
 		{
 			number = tent.Number;
 		}
 
-		protected override void WritePacketData(BinaryWriter output)
+		public override void Serialise()
 		{
-			output.Write(number);
+			Data = new byte[] { number };
 		}
 
-		public override void Apply(Lager lager)
+		public override void Deserialise(Lager lager)
 		{
+			number = Data[0];
 			Tent tent = lager.Tents.First(t => t.Number == number);
 			lager.RemoveTent(tent);
 		}

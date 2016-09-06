@@ -18,7 +18,7 @@ namespace Zeltlager.Calendar
 			Lager.CurrentLager.Calendar.RemoveCalendarEvent(eventToEdit);
 		}
 
-		public void OnSaveClicked(object sender, EventArgs e)
+		void OnSaveClicked(object sender, EventArgs e)
 		{
 			//Insert Calendar Event into correct day
 			Lager.CurrentLager.Calendar.InsertNewCalendarEvent(CalendarEvent);

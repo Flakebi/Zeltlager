@@ -11,9 +11,9 @@ namespace Zeltlager
 	{
 		List<DataPacket> packets = new List<DataPacket>();
 
-		byte[] modulus;
-		byte[] publicKey;
-		byte[] privateKey;
+		public byte[] Modulus { get; private set; }
+		public byte[] PublicKey { get; private set; }
+		public byte[] PrivateKey { get; private set; }
 
 		public byte Id { get; private set; }
 		public IReadOnlyList<DataPacket> Packets { get { return packets; } }
@@ -26,8 +26,8 @@ namespace Zeltlager
 		public Collaborator(byte id, byte[] modulus, byte[] publicKey)
 		{
 			Id = id;
-			this.modulus = modulus;
-			this.publicKey = publicKey;
+			Modulus = modulus;
+			PublicKey = publicKey;
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace Zeltlager
 		/// <param name="privateKey">The private key of the collaborator.</param>
 		public Collaborator(byte id, byte[] modulus, byte[] publicKey, byte[] privateKey) : this(id, modulus, publicKey)
 		{
-			this.privateKey = privateKey;
+			PrivateKey = privateKey;
 		}
 
 		public void AddPacket(DataPacket packet)
@@ -52,35 +52,48 @@ namespace Zeltlager
 			if (!await io.ExistsFolder(id))
 				await io.CreateFolder(id);
 
-			for (int i = 0; i < packets.Count; i++)
+			for (ushort i = 0; i < packets.Count; i++)
+				await SavePacket(io, symmetricKey, i);
+		}
+
+		public async Task SavePacket(IIoProvider io, byte[] symmetricKey, ushort i)
+		{
+			using (BinaryWriter output = await io.WriteFile(Path.Combine(Id.ToString(), i.ToString())))
 			{
-				var output = await io.WriteFile(Path.Combine(id, i.ToString()));
 				var packet = packets[i];
 
+				byte[] data;
 				// Get packet data
-				MemoryStream mem = new MemoryStream();
-				BinaryWriter writer = new BinaryWriter(mem);
-				packet.WritePacket(writer);
-				byte[] data = mem.ToArray();
+				using (MemoryStream mem = new MemoryStream())
+				{
+					using (BinaryWriter writer = new BinaryWriter(mem))
+						packet.WritePacket(writer);
+
+					data = mem.ToArray();
+				}
 
 				if (packet.Iv == null)
 					// Generate iv
-					packet.Iv = Lager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
+					packet.Iv = await Lager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 
 				// Write iv and encrypted data
-				mem = new MemoryStream();
-				writer = new BinaryWriter(mem);
-				// Write iv
-				writer.Write(packet.Iv);
-				// Write encrypted packet data
-				writer.Write(Lager.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
-				data = mem.ToArray();
+				using (MemoryStream mem = new MemoryStream())
+				{
+					using (BinaryWriter writer = new BinaryWriter(mem))
+					{
+						// Write iv
+						writer.Write(packet.Iv);
+						// Write encrypted packet data
+						writer.Write(await Lager.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
+					}
+					data = mem.ToArray();
+				}
 
 				if (packet.Signature == null)
 				{
-					if (privateKey != null)
+					if (PrivateKey != null)
 						// Generate signature
-						packet.Signature = Lager.CryptoProvider.Sign(modulus, privateKey, data);
+						packet.Signature = await Lager.CryptoProvider.Sign(Modulus, PrivateKey, data);
 					else
 						throw new InvalidOperationException("Found unencrypted packet without private key.");
 				}
@@ -92,8 +105,38 @@ namespace Zeltlager
 			}
 		}
 
-		public async Task Load(IIoProvider io)
+		public async Task Load(IIoProvider io, byte[] symmetricKey, byte version, ushort packetCount)
 		{
+			string id = Id.ToString();
+			for (int i = 0; i < packetCount; i++)
+			{
+				byte[] signature;
+				byte[] allData;
+				using (BinaryReader input = await io.ReadFile(Path.Combine(id, i.ToString())))
+				{
+					// Read signature
+					signature = input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH);
+					var length = (int)(input.BaseStream.Length - input.BaseStream.Position);
+					allData = input.ReadBytes(length);
+				}
+
+				// Verify signature
+				if (!await Lager.CryptoProvider.Verify(Modulus, signature, allData))
+					throw new Exception("Packet has invalid signature.");
+
+				byte[] iv = new byte[CryptoConstants.IV_LENGTH];
+				Array.Copy(allData, 0, iv, 0, iv.Length);
+				byte[] data = new byte[allData.Length - iv.Length];
+				Array.Copy(allData, iv.Length, data, 0, data.Length);
+
+				DataPacket packet;
+				using (MemoryStream mem = new MemoryStream(await Lager.CryptoProvider.DecryptSymetric(symmetricKey, iv, data)))
+					using (BinaryReader reader = new BinaryReader(mem))
+						packet = DataPacket.ReadDataPacket(reader);
+				packet.Iv = iv;
+				packet.Signature = signature;
+				packets.Add(packet);
+			}
 		}
 	}
 }

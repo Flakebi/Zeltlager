@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace Zeltlager.DataPackets
 {
@@ -12,21 +7,18 @@ namespace Zeltlager.DataPackets
 	/// </summary>
 	public class InvalidDataPacket : DataPacket
 	{
-		byte[] data;
-
 		public InvalidDataPacket(byte[] data)
 		{
-			this.data = data;
+			Data = data;
 		}
 
-		public override void Apply(Lager lager)
+		public override void Serialise()
+		{
+		}
+
+		public override void Deserialise(Lager lager)
 		{
 			// Just do nothing here
-		}
-
-		protected override void WritePacketData(BinaryWriter output)
-		{
-			output.Write(data);
 		}
 	}
 }

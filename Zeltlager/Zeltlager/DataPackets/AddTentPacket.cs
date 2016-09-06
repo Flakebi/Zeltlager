@@ -1,50 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
 	public class AddTentPacket : DataPacket
 	{
-		byte number;
-		string name;
-		ushort[] supervisors;
+		Tent tent;
 
-		public AddTentPacket(BinaryReader input, Lager lager)
-		{
-			number = input.ReadByte();
-			name = input.ReadString();
-			ushort length = input.ReadUInt16();
-			supervisors = new ushort[length];
-			for (int i = 0; i < length; i++)
-				supervisors[i] = input.ReadUInt16();
-
-		}
+		public AddTentPacket() { }
 
 		public AddTentPacket(Tent tent)
 		{
-			number = tent.Number;
-			name = tent.Name;
-			supervisors = tent.Supervisors.Select(s => s.Id).ToArray();
+			this.tent = tent;
 		}
 
-		protected override void WritePacketData(BinaryWriter output)
+		public override void Serialise()
 		{
-			output.Write(number);
-			output.Write(name);
-			output.Write(supervisors.Length);
-			for (int i = 0; i < supervisors.Length; i++)
-				output.Write(supervisors[i]);
+			MemoryStream mem = new MemoryStream();
+			using (BinaryWriter output = new BinaryWriter(mem))
+			{
+				output.Write(tent.Number);
+				output.Write(tent.Name);
+				output.Write(tent.Supervisors.Count);
+				for (int i = 0; i < tent.Supervisors.Count; i++)
+					output.Write(tent.Supervisors[i].Id);
+				Data = mem.ToArray();
+			}
 		}
 
-		public override void Apply(Lager lager)
+		public override void Deserialise(Lager lager)
 		{
-			List<Member> members = supervisors.Select(id => lager.Members.First(m => m.Id == id)).ToList();
-			Tent tent = new Tent(number, name, members);
-			lager.AddTent(tent);
+			MemoryStream mem = new MemoryStream(Data);
+			using (BinaryReader input = new BinaryReader(mem))
+			{
+				byte number = input.ReadByte();
+				string name = input.ReadString();
+				ushort length = input.ReadUInt16();
+				List<Member> supervisors = new List<Member>(length);
+				for (int i = 0; i < length; i++)
+				{
+					ushort id = input.ReadUInt16();
+					supervisors.Add(lager.Members.First(m => m.Id == id));
+				}
+
+				Tent tent = new Tent(number, name, supervisors);
+				lager.AddTent(tent);
+			}
 		}
 	}
 }
