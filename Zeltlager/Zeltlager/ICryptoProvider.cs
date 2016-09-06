@@ -10,11 +10,9 @@ namespace Zeltlager
 		public const int IV_LENGTH = 16;
 		public const int HASH_LENGTH = 32;
 		public const int MAC_LENGTH = HASH_LENGTH;
-		public const int MODULUS_LENGTH = 513;
-		public const int PRIVATE_KEY_LENGTH = 512;
-		public const int SIGNATURE_LENGTH = 512;
+		public const int SIGNATURE_LENGTH = 256;
 
-		public const int ASYMMETRIC_KEY_SIZE = 4096;
+		public const int ASYMMETRIC_KEY_SIZE = 2048;
 		public const int KEY_DERIVATION_ITERATIONS = 5000;
 
 		public static readonly byte[] DEFAULT_PUBLIC_KEY = new byte[] { 1, 0, 1 };

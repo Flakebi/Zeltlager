@@ -60,12 +60,15 @@ namespace Zeltlager.DataPackets
 		public byte[] Signature { get; set; }
 		public byte[] Iv { get; set; }
 
+		/// <summary>
+		/// The timestamp in UTC.
+		/// </summary>
 		public DateTime Timestamp { get; private set; }
 		protected byte[] Data { get; set; }
 
 		public DataPacket()
 		{
-			Timestamp = new DateTime();
+			Timestamp = DateTime.UtcNow;
 		}
 
 		public void WritePacket(BinaryWriter output)

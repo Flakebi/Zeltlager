@@ -119,10 +119,6 @@ namespace Zeltlager
 				var modulus = publicKey.Modulus.ToByteArray();
 				var pub = publicKey.Exponent.ToByteArray();
 				var priv = privateKey.Exponent.ToByteArray();
-				if (modulus.Length != MODULUS_LENGTH
-					|| !Enumerable.SequenceEqual(DEFAULT_PUBLIC_KEY, pub)
-					|| priv.Length != PRIVATE_KEY_LENGTH)
-					throw new Exception("The length of the modulus or one of the keys is wrong.");
 				return new KeyPair(modulus, pub, priv);
 			});
 		}

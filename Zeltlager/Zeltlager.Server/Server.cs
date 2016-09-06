@@ -47,10 +47,10 @@ namespace Zeltlager.Server
 			Console.WriteLine("Result: " + Encoding.UTF8.GetString(decrypted));
 
 			// Signature
-			/*var keyPair = await crypto.CreateAsymmetricKeys();
+			var keyPair = await crypto.CreateAsymmetricKeys();
 			var signature = await crypto.Sign(keyPair.Modulus, keyPair.PrivateKey, data);
 			var verification = await crypto.Verify(keyPair.Modulus, keyPair.PublicKey, signature, data);
-			Console.WriteLine("Verification: " + verification);*/
+			Console.WriteLine("Verification: " + verification);
 
 			Task.Delay(3000).Wait();
 			return;

@@ -224,6 +224,7 @@ namespace Zeltlager
 			{
 				byte[] iv = await CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 				output.Write(VERSION);
+				output.Write((ushort)asymmetricKey.Modulus.Length);
 				output.Write(asymmetricKey.Modulus);
 				output.Write(salt);
 				output.Write(iv);
@@ -237,13 +238,16 @@ namespace Zeltlager
 						writer.Write(synchronized);
 						writer.Write(ownCollaborator);
 						writer.Write(sentPackets);
+						writer.Write((ushort)collaborators[ownCollaborator].PrivateKey.Length);
 						writer.Write(collaborators[ownCollaborator].PrivateKey);
 					}
+					writer.Write((ushort)asymmetricKey.PrivateKey.Length);
 					writer.Write(asymmetricKey.PrivateKey);
 					// Write collaborators
 					writer.Write((byte)collaborators.Count);
 					for (int i = 0; i < collaborators.Count; i++)
 					{
+						writer.Write((ushort)collaborators[i].Modulus.Length);
 						writer.Write(collaborators[i].Modulus);
 						writer.Write((ushort)collaborators[i].Packets.Count);
 					}
@@ -266,12 +270,14 @@ namespace Zeltlager
 
 			byte[] ownCollaboratorPrivateKey = null;
 			ushort[] collaboratorPacketCounts;
+			ushort keyLength;
 			// Load general settings
 			using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(GENERAL_SETTINGS_FILE)))
 			{
 				if (input.ReadByte() == VERSION)
 				{
-					var modulus = input.ReadBytes(CryptoConstants.MODULUS_LENGTH);
+					keyLength = input.ReadUInt16();
+					var modulus = input.ReadBytes(keyLength);
 					salt = input.ReadBytes(CryptoConstants.SALT_LENGTH);
 					var iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
 
@@ -287,10 +293,12 @@ namespace Zeltlager
 								synchronized = reader.ReadBoolean();
 								ownCollaborator = reader.ReadByte();
 								sentPackets = reader.ReadUInt16();
-								ownCollaboratorPrivateKey = reader.ReadBytes(CryptoConstants.PRIVATE_KEY_LENGTH);
+								keyLength = reader.ReadUInt16();
+								ownCollaboratorPrivateKey = reader.ReadBytes(keyLength);
 							}
 
-							var privateKey = reader.ReadBytes(CryptoConstants.PRIVATE_KEY_LENGTH);
+							keyLength = reader.ReadUInt16();
+							var privateKey = reader.ReadBytes(keyLength);
 							asymmetricKey = new KeyPair(modulus, CryptoConstants.DEFAULT_PUBLIC_KEY, privateKey);
 
 							// Read collaborators
@@ -299,7 +307,8 @@ namespace Zeltlager
 							collaborators.Capacity = collaboratorCount;
 							for (byte i = 0; i < collaboratorCount; i++)
 							{
-								var collaboratorModulus = reader.ReadBytes(CryptoConstants.MODULUS_LENGTH);
+								keyLength = reader.ReadUInt16();
+								var collaboratorModulus = reader.ReadBytes(keyLength);
 								collaboratorPacketCounts[i] = reader.ReadUInt16();
 								if (i != ownCollaborator && IsClient)
 									collaborators.Add(new Collaborator(i, collaboratorModulus, CryptoConstants.DEFAULT_PUBLIC_KEY));
