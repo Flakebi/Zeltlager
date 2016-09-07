@@ -54,6 +54,9 @@ namespace Zeltlager
 
 		public async Task Load()
 		{
+			if (!await Lager.IoProvider.ExistsFile(FILENAME))
+				return;
+
 			var file = new StreamReader(await Lager.IoProvider.ReadFile(FILENAME));
 			string line;
 			while ((line = file.ReadLine()) != null)

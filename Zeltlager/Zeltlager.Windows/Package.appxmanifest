@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Zeltlager.Windows.App">
-      <m2:VisualElements DisplayName="Zeltlager.Windows" Square150x150Logo="Assets\icon150.png" Square30x30Logo="Assets\SmallLogo.png" Description="Zeltlager.Windows" ForegroundText="light" BackgroundColor="#0fb9de">
+      <m2:VisualElements DisplayName="Zeltlager" Square150x150Logo="Assets\icon150.png" Square30x30Logo="Assets\SmallLogo.png" Description="Zeltlager" ForegroundText="light" BackgroundColor="#0fb9de">
         <m2:SplashScreen Image="Assets\SplashScreen.png" />
       </m2:VisualElements>
     </Application>
