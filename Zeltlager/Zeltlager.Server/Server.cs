@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Sockets.Plugin;
+
 using Zeltlager.DataPackets;
 
 namespace Zeltlager.Server
@@ -34,6 +36,9 @@ namespace Zeltlager.Server
 
 		static async Task AsyncMain(string[] args)
 		{
+			//UdpSocketClient c = new UdpSocketClient();
+			//await c.SendToAsync(new byte[] { 65 }, "192.168.1.100", 44444);
+
 			ICryptoProvider crypto = new BCCryptoProvider();
 			byte[] key = await crypto.GetRandom(CryptoConstants.SYMMETRIC_KEY_LENGTH);
 			byte[] data = Encoding.UTF8.GetBytes("This is a test :)");
