@@ -9,29 +9,27 @@ namespace Zeltlager.Calendar
 	{
 		public CalendarEvent CalendarEvent;
 
-		//if editing is cancelled
-		private CalendarEvent oldCalendarEvent;
+		private CalendarEvent newCalendarEvent;
 
 		public CalendarEventEditPage(CalendarEvent eventToEdit)
 		{
 			InitializeComponent();
 			CalendarEvent = eventToEdit;
-			oldCalendarEvent = eventToEdit.Clone();
-			BindingContext = CalendarEvent;
-			//Delete Item
-			Lager.CurrentLager.Calendar.RemoveCalendarEvent(eventToEdit);
+			newCalendarEvent = eventToEdit.Clone();
+			BindingContext = newCalendarEvent;
 		}
 
 		void OnSaveClicked(object sender, EventArgs e)
 		{
+			//Delete Item
+			Lager.CurrentLager.Calendar.RemoveCalendarEvent(CalendarEvent);
 			//Insert Calendar Event into correct day
-			Lager.CurrentLager.Calendar.InsertNewCalendarEvent(CalendarEvent);
+			Lager.CurrentLager.Calendar.InsertNewCalendarEvent(newCalendarEvent);
 			Navigation.PopModalAsync();
 		}
 
 		void OnCancelClicked(object sender, EventArgs e)
 		{
-			Lager.CurrentLager.Calendar.InsertNewCalendarEvent(oldCalendarEvent);
 			Navigation.PopModalAsync();
 		}
 	}
