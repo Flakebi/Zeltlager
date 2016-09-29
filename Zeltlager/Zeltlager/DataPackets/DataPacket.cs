@@ -12,17 +12,17 @@ namespace Zeltlager.DataPackets
 	public abstract class DataPacket
 	{
 		/// <summary>
-		/// The version of the packet protocol.
+		/// The version of the data packet protocol.
 		/// </summary>
 		static uint VERSION = 0;
 
 		static Type[] packetTypes = {
-			typeof(AddMemberPacket),
-			typeof(DeleteMemberPacket),
-			typeof(AddTentPacket),
-			typeof(DeleteTentPacket),
-			typeof(AddSupervisorToTentPacket),
-			typeof(DeleteSupervisorFromTentPacket),
+			typeof(AddMember),
+			typeof(DeleteMember),
+			typeof(AddTent),
+			typeof(DeleteTent),
+			typeof(AddSupervisorToTent),
+			typeof(DeleteSupervisorFromTent),
 		};
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace Zeltlager.DataPackets
 		/// </summary>
 		/// <param name="input">The input reader</param>
 		/// <returns>The read packet.</returns>
-		public static DataPacket ReadDataPacket(BinaryReader input)
+		public static DataPacket ReadPacket(BinaryReader input)
 		{
 			byte packetType = input.ReadByte();
 

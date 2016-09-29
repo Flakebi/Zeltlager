@@ -2,11 +2,11 @@
 
 namespace Zeltlager.DataPackets
 {
-	public class DeleteTentPacket : DataPacket
+	public class DeleteTent : DataPacket
 	{
-		public DeleteTentPacket() { }
+		public DeleteTent() { }
 
-		public DeleteTentPacket(Tent tent)
+		public DeleteTent(Tent tent)
 		{
 			Data = new byte[] { tent.Number };
 		}

@@ -2,11 +2,11 @@
 
 namespace Zeltlager.DataPackets
 {
-	public class AddSupervisorToTentPacket : DataPacket
+	public class AddSupervisorToTent : DataPacket
 	{
-		public AddSupervisorToTentPacket() { }
+		public AddSupervisorToTent() { }
 
-		public AddSupervisorToTentPacket(Member supervisor, Tent tent)
+		public AddSupervisorToTent(Member supervisor, Tent tent)
 		{
 			Data = new byte[3];
 			supervisor.Id.ToBytes(Data, 0);

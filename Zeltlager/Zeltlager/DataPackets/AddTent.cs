@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Zeltlager.DataPackets
 {
-	public class AddTentPacket : DataPacket
+	public class AddTent : DataPacket
 	{
-		public AddTentPacket() { }
+		public AddTent() { }
 
-		public AddTentPacket(Tent tent)
+		public AddTent(Tent tent)
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))

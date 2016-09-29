@@ -66,9 +66,9 @@ namespace Zeltlager.Server
 
 			await lager.Init(status => { });
 			Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());
-			DataPacket packet = new AddTentPacket(tent);
+			DataPacket packet = new AddTent(tent);
 			lager.Collaborators.First().AddPacket(packet);
-			packet = new AddMemberPacket(new Member(0, "Caro", tent, true));
+			packet = new AddMember(new Member(0, "Caro", tent, true));
 			lager.Collaborators.First().AddPacket(packet);
 
 			//await lager.Load(Lager.IoProvider);

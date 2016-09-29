@@ -2,11 +2,11 @@
 
 namespace Zeltlager.DataPackets
 {
-	public class DeleteMemberPacket : DataPacket
+	public class DeleteMember : DataPacket
 	{
-		public DeleteMemberPacket() { }
+		public DeleteMember() { }
 
-		public DeleteMemberPacket(Member member)
+		public DeleteMember(Member member)
 		{
 			Data = member.Id.ToBytes();
 		}

@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Zeltlager.DataPackets
 {
-	public class AddMemberPacket : DataPacket
+	public class AddMember : DataPacket
 	{
-		public AddMemberPacket() { }
+		public AddMember() { }
 
-		public AddMemberPacket(Member member)
+		public AddMember(Member member)
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))

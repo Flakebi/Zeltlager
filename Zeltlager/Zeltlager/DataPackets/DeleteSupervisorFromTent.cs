@@ -2,11 +2,11 @@
 
 namespace Zeltlager.DataPackets
 {
-	public class DeleteSupervisorFromTentPacket : DataPacket
+	public class DeleteSupervisorFromTent : DataPacket
 	{
-		public DeleteSupervisorFromTentPacket() { }
+		public DeleteSupervisorFromTent() { }
 
-		public DeleteSupervisorFromTentPacket(Member supervisor, Tent tent)
+		public DeleteSupervisorFromTent(Member supervisor, Tent tent)
 		{
 			Data = new byte[3];
 			supervisor.Id.ToBytes(Data, 0);
