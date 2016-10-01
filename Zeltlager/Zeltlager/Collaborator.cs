@@ -144,7 +144,7 @@ namespace Zeltlager
 
 					DataPacket packet;
 					using (BinaryReader reader = new BinaryReader(new MemoryStream(await Lager.CryptoProvider.DecryptSymetric(symmetricKey, iv, data))))
-						packet = DataPacket.ReadDataPacket(reader);
+						packet = DataPacket.ReadPacket(reader);
 					packet.Iv = iv;
 					packet.Signature = signature;
 					packets.Add(packet);
