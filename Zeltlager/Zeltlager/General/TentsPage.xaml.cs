@@ -11,6 +11,11 @@ namespace Zeltlager
 		{
 			InitializeComponent();
 		}
+
+		void OnAddButtonClicked(object sender, EventArgs e)
+		{
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(), true)));
+		}
 	}
 }
 

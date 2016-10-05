@@ -13,8 +13,14 @@ namespace Zeltlager
 
 		static readonly Type[] numtypes = { typeof(ushort), typeof(int), typeof(byte) };
 
-		public UniversalAddModifyPage(T obj)
+		public UniversalAddModifyPage(T obj, bool isAddPage)
 		{
+			// set title of page
+			if (isAddPage)
+				Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name + " hinzufügen";
+			else
+				Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name + " bearbeiten";
+
 			var grid = new Grid();
 			// add two columns to grid (labeling the input elements and the elements themselves)
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
@@ -37,7 +43,7 @@ namespace Zeltlager
 
 				Label label = new Label
 				{
-					Text = pi.GetCustomAttribute<EditableAttribute>().Name
+					Text = pi.GetCustomAttribute<EditableAttribute>().Name + " :"
 				};
 				grid.Children.Add(label, 0, attributeNumber);
 

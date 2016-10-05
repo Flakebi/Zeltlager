@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Calendar
 {
+	[Editable("Termin")]
 	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>
 	{
 		/// <summary>
@@ -90,8 +91,9 @@ namespace Zeltlager.Calendar
 
 		public CalendarEvent CloneDeep()
 		{
-			return new CalendarEvent(this.date, this.title, this.detail);
+			return new CalendarEvent(date, title, detail);
 		}
+
 		#endregion
 	}
 }
