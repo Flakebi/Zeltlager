@@ -15,7 +15,7 @@ namespace Zeltlager.Calendar
 		{
 			InitializeComponent();
 			CalendarEvent = eventToEdit;
-			newCalendarEvent = eventToEdit.Clone();
+			newCalendarEvent = eventToEdit.CloneDeep();
 			BindingContext = newCalendarEvent;
 		}
 

@@ -6,50 +6,143 @@ using System.Linq;
 
 namespace Zeltlager
 {
-	public class UniversalAddModifyPage<T> : ContentPage
+	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
 	{
-		public IEditable<T> Obj { get; }
+		public T Obj { get; }
+		private T oldObj;
 
-		public UniversalAddModifyPage(IEditable<T> obj)
+		static readonly Type[] numtypes = { typeof(ushort), typeof(int), typeof(byte) };
+
+		public UniversalAddModifyPage(T obj, bool isAddPage)
 		{
-			// init surrounding GUI
-			StackLayout vsl = new StackLayout
-			{
-				VerticalOptions = LayoutOptions.CenterAndExpand,
-				HorizontalOptions = LayoutOptions.CenterAndExpand
-			};
+			// set title of page
+			if (isAddPage)
+				Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name + " hinzufügen";
+			else
+				Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name + " bearbeiten";
 
-			this.Obj = obj;
-			Type t = obj.GetType();
-			IEnumerable<PropertyInfo> propInfo = t.GetRuntimeProperties();
+			var grid = new Grid();
+			// add two columns to grid (labeling the input elements and the elements themselves)
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-			foreach (PropertyInfo pi in propInfo)
+			this.oldObj = obj;
+
+			// save old object so we can delete it when save is clicked
+			this.Obj = oldObj.CloneDeep();
+
+			Type type = Obj.GetType();
+			IEnumerable<PropertyInfo> propInfo = type.GetRuntimeProperties();
+
+			// counting in which attribute we are
+			int attributeNumber = 0;
+			foreach (PropertyInfo pi in propInfo.Where(pi => pi.GetCustomAttribute<EditableAttribute>() != null))
 			{
-				if (pi.GetCustomAttributes().Contains(new EditableAttribute("")))
+				// new row for every editable attribute
+				grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+
+				Label label = new Label
 				{
-					StackLayout hsl = new StackLayout
-					{
-						Orientation = StackOrientation.Horizontal
-					};
-					Label label = new Label
-					{
-						Text = ((EditableAttribute)pi.GetCustomAttributes().First()).Name
-					};
+					Text = pi.GetCustomAttribute<EditableAttribute>().Name + " :"
+				};
+				grid.Children.Add(label, 0, attributeNumber);
 
-					View manip;
-					Type vartype = pi.GetType();
-					if (vartype == typeof(string))
+				// create input element matching the type of the current attribute
+				View manip = new Button();
+				Type vartype = pi.PropertyType;
+
+				// set the binding context so the binding of variables work
+				BindingContext = Obj;
+
+				if (vartype == typeof(string))
+				{
+					// use text entry
+					manip = new Entry
 					{
-						// use text entry
-					}
-					else if (vartype == typeof(DateTime))
-					{
-						// use date picker
-					}
+						Keyboard = Keyboard.Text
+					};
+					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
 				}
+				else if (vartype == typeof(DateTime))
+				{
+					// use date picker
+					manip = new DatePicker();
+					manip.SetBinding(DatePicker.DateProperty, new Binding(pi.Name, BindingMode.TwoWay));
+				}
+				else if (vartype == typeof(TimeSpan))
+				{
+					// use time picker
+					manip = new TimePicker();
+					manip.SetBinding(TimePicker.TimeProperty, new Binding(pi.Name, BindingMode.TwoWay));
+				}
+				else if (numtypes.Contains(vartype))
+				{
+					// use entry with num Keyboard
+					manip = new Entry
+					{
+						Keyboard = Keyboard.Numeric
+					};
+					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
+				}
+				else if (vartype == typeof(Tent))
+				{
+					// use picker filled with all tents
+					Picker picker = new Picker();
+					foreach (Tent tent in Lager.CurrentLager.Tents) 
+					{
+						picker.Items.Add(tent.ToString());
+					}
+					picker.SelectedIndexChanged += (sender, args) =>
+					{
+						Tent t = null;
+						// find correct tent from display string
+						foreach (Tent tent in Lager.CurrentLager.Tents)
+						{
+							if (tent.Display == picker.Items[picker.SelectedIndex])
+							{
+								t = tent;
+								break;
+							}
+						}
+						type.GetRuntimeProperty(pi.Name).SetValue(Obj, t, null);
+					};
+				}
+				else if (vartype == typeof(bool))
+				{
+					// use switch
+					manip = new Switch();
+					manip.SetBinding(Switch.IsToggledProperty, new Binding(pi.Name, BindingMode.TwoWay));
+				}
+				else if (vartype == typeof(List<object>))
+				{
+					// use list edit
+					// TODO: Write List edit
+				}
+				else
+				{
+					throw new Exception("Type " + vartype + " not supported by UniversalAddModifyPage");
+				}
+
+				grid.Children.Add(manip, 1, attributeNumber);
+
+				attributeNumber++;
 			}
 
-			Content = vsl;
+			Content = grid;
+			ToolbarItems.Add(new ToolbarItem("Abbrechen", null, OnCancelClicked, ToolbarItemOrder.Primary, 0));
+			ToolbarItems.Add(new ToolbarItem("Speichern", null, OnSaveClicked, ToolbarItemOrder.Primary, 1));
+			Style = (Style)Application.Current.Resources["BaseStyle"];
+		}
+
+		private void OnCancelClicked()
+		{
+			Navigation.PopModalAsync(true);
+		}
+
+		private void OnSaveClicked()
+		{
+			Obj.OnSaveEditing(oldObj);
+			Navigation.PopModalAsync(true);
 		}
 	}
 }

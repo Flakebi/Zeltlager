@@ -10,9 +10,9 @@ namespace Zeltlager
 			InitializeComponent();
 		}
 
-		private void OnAddButtonClicked(object sender, EventArgs e)
+		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(new Member(), true)));
 		}
 	}
 }

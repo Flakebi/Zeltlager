@@ -1,12 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Zeltlager
 {
-	public class Tent
+	[Editable("Zelt")]
+	public class Tent : IEditable<Tent>
 	{
+		[Editable("Zeltnummer")]
 		public byte Number { get; set; }
+
+		[Editable("Zeltname")]
 		public string Name { get; set; }
+
+		[Editable("Zeltbereuer")]
 		List<Member> supervisors = new List<Member>();
 
 		public IReadOnlyList<Member> Supervisors { get { return supervisors; } }
@@ -35,5 +43,20 @@ namespace Zeltlager
 		}
 
 		public bool RemoveSupervisor(Member supervisor) => supervisors.Remove(supervisor);
+
+		#region Interface implementations
+
+		public void OnSaveEditing(Tent oldObject)
+		{
+			Lager.CurrentLager.RemoveTent(oldObject);
+			Lager.CurrentLager.AddTent(this);
+		}
+
+		public Tent CloneDeep()
+		{
+			return new Tent(Number, Name, new List<Member>(supervisors));
+		}
+
+		#endregion
 	}
 }
