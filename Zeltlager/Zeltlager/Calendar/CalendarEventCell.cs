@@ -62,7 +62,7 @@ namespace Zeltlager.Calendar
 		{
 			CalendarEvent ce = (CalendarEvent)((MenuItem)sender).CommandParameter;
 			//Call edit screen for item
-			((View)Parent).Navigation.PushModalAsync(new NavigationPage(new CalendarEventEditPage(ce)));
+			((View)Parent).Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(ce)));
 		}
 
 		private void OnDelete(object sender, EventArgs e)
