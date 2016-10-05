@@ -43,7 +43,10 @@
     <Compile Include="Client\IoProvider.cs" />
     <Compile Include="Collaborator.cs" />
     <Compile Include="CommunicationPackets\CommunicationPacket.cs" />
-    <Compile Include="CommunicationPackets\ListGames.cs" />
+    <Compile Include="CommunicationPackets\Requests\CommunicationRequest.cs" />
+    <Compile Include="CommunicationPackets\Requests\ListGames.cs" />
+    <Compile Include="CommunicationPackets\Responses\CommunicationResponse.cs" />
+    <Compile Include="CommunicationPackets\Responses\ListGames.cs" />
     <Compile Include="Competition\Competition.cs" />
     <Compile Include="DataPackets\AddMember.cs" />
     <Compile Include="DataPackets\AddSupervisorToTent.cs" />
@@ -60,6 +63,7 @@
     <Compile Include="CreateLager.xaml.cs">
       <DependentUpon>CreateLager.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ILagerProvider.cs" />
     <Compile Include="LoadingScreen.xaml.cs">
       <DependentUpon>LoadingScreen.xaml</DependentUpon>
     </Compile>
@@ -72,6 +76,7 @@
     <Compile Include="MemberList.xaml.cs">
       <DependentUpon>MemberList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Network\INetwork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootedIoProvider.cs" />
     <Compile Include="Tent.cs" />

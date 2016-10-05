@@ -17,6 +17,7 @@ namespace Zeltlager.DataPackets
 		static uint VERSION = 0;
 
 		static Type[] packetTypes = {
+			typeof(Bundle),
 			typeof(AddMember),
 			typeof(DeleteMember),
 			typeof(AddTent),
