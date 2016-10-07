@@ -4,18 +4,20 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Zeltlager
+namespace Zeltlager.UAM
 {
 	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
 	{
 		public T Obj { get; }
 		private T oldObj;
+		private bool isAddPage;
 
 		static readonly Type[] numtypes = { typeof(ushort), typeof(int), typeof(byte) };
 
 		public UniversalAddModifyPage(T obj, bool isAddPage)
 		{
 			// set title of page
+			this.isAddPage = isAddPage;
 			if (isAddPage)
 				Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name + " hinzufügen";
 			else
@@ -106,6 +108,7 @@ namespace Zeltlager
 						}
 						type.GetRuntimeProperty(pi.Name).SetValue(Obj, t, null);
 					};
+					manip = picker;
 				}
 				else if (vartype == typeof(bool))
 				{
@@ -132,6 +135,8 @@ namespace Zeltlager
 			ToolbarItems.Add(new ToolbarItem("Abbrechen", null, OnCancelClicked, ToolbarItemOrder.Primary, 0));
 			ToolbarItems.Add(new ToolbarItem("Speichern", null, OnSaveClicked, ToolbarItemOrder.Primary, 1));
 			Style = (Style)Application.Current.Resources["BaseStyle"];
+			// make page not start directly at the top
+			Padding = new Thickness(8, 15, 8, 0);
 		}
 
 		private void OnCancelClicked()
@@ -141,6 +146,8 @@ namespace Zeltlager
 
 		private void OnSaveClicked()
 		{
+			if (isAddPage)
+				oldObj = default(T);
 			Obj.OnSaveEditing(oldObj);
 			Navigation.PopModalAsync(true);
 		}

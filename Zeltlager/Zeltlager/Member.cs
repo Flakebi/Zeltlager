@@ -1,9 +1,10 @@
 ﻿using System;
+using Zeltlager.UAM;
 
 namespace Zeltlager
 {
 	[Editable("Teilnehmer")]
-	public class Member : IComparable<Member>, IEditable<Member>
+	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
 	{
 		public ushort Id { get; set; }
 
@@ -18,7 +19,7 @@ namespace Zeltlager
 		[Editable("Betreuer")]
 		public bool Supervisor { get; set; }
 
-		public string Display { get { return Name; } }
+		public string Display { get { return Name + " " + (Supervisor ? "\ud83d\ude0e" : ""); } }
 
 		public Member() {}
 
@@ -32,19 +33,30 @@ namespace Zeltlager
 
 		public override string ToString() => Display;
 
-		public int CompareTo(Member other) => Display.ToLowerInvariant().CompareTo(other.Display.ToLowerInvariant());
+		public int CompareTo(Member other) => string.Compare(Display, other.Display, StringComparison.OrdinalIgnoreCase);
 
 		#region Interface implementation
 
 		public void OnSaveEditing(Member oldObject)
 		{
-			Lager.CurrentLager.RemoveMember(oldObject);
+			if (oldObject != null)
+				Lager.CurrentLager.RemoveMember(oldObject);
 			Lager.CurrentLager.AddMember(this);
 		}
 
 		public Member CloneDeep()
 		{
 			return new Member(Id, Name, Tent, Supervisor);
+		}
+
+		public string SearchableText
+		{
+			get { return Display; }
+		}
+
+		public string SearchableDetail
+		{
+			get { return Tent.Display; }
 		}
 
 		#endregion
