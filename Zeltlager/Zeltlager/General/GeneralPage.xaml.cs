@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
-namespace Zeltlager
+namespace Zeltlager.General
 {
 	public partial class GeneralPage : ContentPage
 	{
@@ -22,6 +22,7 @@ namespace Zeltlager
 
 		void OnTentClicked(object sender, EventArgs e)
 		{
+			Navigation.PushAsync(new TentsPage());
 		}
 	}
 }

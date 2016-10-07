@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Zeltlager.UAM;
 
 namespace Zeltlager.Calendar
 {
@@ -85,8 +86,11 @@ namespace Zeltlager.Calendar
 
 		public void OnSaveEditing(CalendarEvent oldObj)
 		{
-			//Delete Item
-			LagerClient.CurrentLager.Calendar.RemoveCalendarEvent(oldObj);
+			if (oldObj != null)
+			{
+				//Delete Item
+				LagerClient.CurrentLager.Calendar.RemoveCalendarEvent(oldObj);
+			}
 			//Insert Calendar Event into correct day
 			LagerClient.CurrentLager.Calendar.InsertNewCalendarEvent(this);
 		}

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using Zeltlager.UAM;
 
 using Xamarin.Forms;
 
@@ -63,7 +63,7 @@ namespace Zeltlager.Calendar
 		{
 			CalendarEvent ce = (CalendarEvent)((MenuItem)sender).CommandParameter;
 			//Call edit screen for item
-			((View)Parent).Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(ce, false)));
+			((View)Parent).Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(ce, false)), true);
 		}
 
 		private void OnDelete(object sender, EventArgs e)

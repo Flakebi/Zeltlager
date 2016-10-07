@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Zeltlager
+namespace Zeltlager.UAM
 {
 	public class EditableAttribute : Attribute, IComparable
 	{

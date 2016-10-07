@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Zeltlager.UAM;
 
 namespace Zeltlager
 {
 	using Client;
 
 	[Editable("Zelt")]
-	public class Tent : IEditable<Tent>
+	public class Tent : IEditable<Tent>, ISearchable
 	{
 		[Editable("Zeltnummer")]
 		public TentId Id { get; set; }
@@ -17,13 +19,14 @@ namespace Zeltlager
 		[Editable("Zeltbereuer")]
 		List<Member> supervisors = new List<Member>();
 
+		[Editable("Mädchenzelt")]
+		public bool Girls { get; set; }
+
 		public IReadOnlyList<Member> Supervisors { get { return supervisors; } }
 
-		public string Display { get { return Id + " " + Name; } }
+		public string Display { get { return Id + " " + Name + " " + (Girls ? "♀" : "♂"); } }
 
-		public Tent()
-		{
-		}
+		public Tent() {}
 
 		public Tent(TentId id, string name, List<Member> supervisors)
 		{
@@ -48,7 +51,8 @@ namespace Zeltlager
 
 		public void OnSaveEditing(Tent oldObject)
 		{
-			LagerClient.CurrentLager.RemoveTent(oldObject);
+			if (oldObject != null)
+				LagerClient.CurrentLager.RemoveTent(oldObject);
 			LagerClient.CurrentLager.AddTent(this);
 		}
 
@@ -56,6 +60,16 @@ namespace Zeltlager
 		{
 			return new Tent(Id, Name, new List<Member>(supervisors));
 		}
+
+		public string SearchableText
+		{
+			get { return Display; }
+		}
+
+		public string SearchableDetail
+		{
+			get { return ""; }
+		}	
 
 		#endregion
 	}

@@ -1,4 +1,5 @@
 ﻿using System;
+using Zeltlager.UAM;
 
 using Xamarin.Forms;
 
@@ -26,7 +27,7 @@ namespace Zeltlager.Calendar
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			//Navigation.PushModalAsync(new NavigationPage(new CalendarEventEditPage(new CalendarEvent(((DayPage)CurrentPage).Day.Date, ""))));
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(new CalendarEvent(((DayPage)CurrentPage).Day.Date, ""), true)));
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(new CalendarEvent(((DayPage)CurrentPage).Day.Date, ""), true)), true);
 		}
 	}
 }

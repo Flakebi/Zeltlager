@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+using Zeltlager.UAM;
 
 using Xamarin.Forms;
 
-namespace Zeltlager
+namespace Zeltlager.General
 {
 	public partial class TentsPage : ContentPage
 	{
 		public TentsPage()
 		{
 			InitializeComponent();
+			Content = new SearchableListView<Tent>(Lager.CurrentLager.Tents);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
