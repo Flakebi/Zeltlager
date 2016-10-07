@@ -2,6 +2,8 @@
 
 namespace Zeltlager.DataPackets
 {
+	using Client;
+
 	/// <summary>
 	/// Represents an invalid packet. It contains only the raw data.
 	/// </summary>
@@ -12,7 +14,7 @@ namespace Zeltlager.DataPackets
 			Data = data;
 		}
 
-		public override void Deserialise(Lager lager)
+		public override void Deserialise(LagerClient lager)
 		{
 			// Just do nothing here
 		}

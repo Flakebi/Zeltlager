@@ -8,7 +8,7 @@ namespace Zeltlager.CommunicationPackets.Responses
 {
 	public class ListGames : CommunicationResponse
 	{
-		public ListGames()
+		public ListGames(ILagerServer lagerServer)
 		{
 		}
 	}

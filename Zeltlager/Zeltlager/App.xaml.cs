@@ -4,6 +4,8 @@ using Xamarin.Forms;
 
 namespace Zeltlager
 {
+	using Client;
+
 	public partial class App : Application
 	{
 		static readonly string[] INIT_STATUS = new string[]
@@ -20,9 +22,9 @@ namespace Zeltlager
 		{
 			InitializeComponent();
 
-			Lager.IsClient = true;
-			Lager.IoProvider = new Client.IoProvider();
-			Lager.ClientGlobalSettings = new Client.GlobalSettings();
+			LagerBase.IsClient = true;
+			LagerBase.IoProvider = new Client.IoProvider();
+			LagerClient.ClientGlobalSettings = new Client.GlobalSettings();
 
 			/*lager.Init();
 			Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());
@@ -42,38 +44,35 @@ namespace Zeltlager
 			try
 			{
 				loadingScreen.Status = "Einstellungen laden";
-				await Lager.ClientGlobalSettings.Load();
-				await Lager.Log.Load();
-			}
-			catch (Exception e)
+				await LagerClient.ClientGlobalSettings.Load();
+				await LagerBase.Log.Load();
+			} catch (Exception e)
 			{
 				// Log the exception
-				await Lager.Log.Exception("App", e);
+				await LagerBase.Log.Exception("App", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 
-			if (Lager.ClientGlobalSettings.Lagers.Count > 0)
+			if (LagerClient.ClientGlobalSettings.Lagers.Count > 0)
 			{
 				// Load lager
 				try
 				{
 					loadingScreen.Status = "Lager laden";
-					byte lagerId = Lager.ClientGlobalSettings.LastLager;
-					var lagerData = Lager.ClientGlobalSettings.Lagers[lagerId];
-					Lager.CurrentLager = new Lager(lagerId, lagerData.Item1, lagerData.Item2);
-					if (!await Lager.CurrentLager.Load())
+					byte lagerId = LagerClient.ClientGlobalSettings.LastLager;
+					var lagerData = LagerClient.ClientGlobalSettings.Lagers[lagerId];
+					LagerClient.CurrentLager = new LagerClient(lagerId, lagerData.Item1, lagerData.Item2);
+					if (!await LagerClient.CurrentLager.Load())
 						await MainPage.DisplayAlert(loadingScreen.Status, "Beim laden des Lagers sind Fehler aufgetreten", "Ok");
-				}
-				catch (Exception e)
+				} catch (Exception e)
 				{
 					// Log the exception
-					await Lager.Log.Exception("App", e);
+					await LagerBase.Log.Exception("App", e);
 					await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 				}
 				// Go to the main page
 				MainPage = new NavigationPage(new MainPage());
-			}
-			else
+			} else
 			{
 				// Create lager
 				loadingScreen.Status = "Lager erstellen";
@@ -91,31 +90,30 @@ namespace Zeltlager
 			// Handle when your app resumes
 		}
 
-		void DisplayStatus(Lager.InitStatus status) => loadingScreen.Status = INIT_STATUS[(int)status];
+		void DisplayStatus(LagerClient.InitStatus status) => loadingScreen.Status = INIT_STATUS[(int)status];
 
 		public async Task CreateLager(string name, string password)
 		{
 			MainPage = new NavigationPage(loadingScreen);
 			try
 			{
-				Lager.CurrentLager = new Lager((byte)Lager.ClientGlobalSettings.Lagers.Count, name, password);
-				await Lager.CurrentLager.Init(DisplayStatus);
+				LagerClient.CurrentLager = new LagerClient((byte)LagerClient.ClientGlobalSettings.Lagers.Count, name, password);
+				await LagerClient.CurrentLager.Init(DisplayStatus);
 				loadingScreen.Status = "Lager speichern";
-				await Lager.CurrentLager.Save();
+				await LagerClient.CurrentLager.Save();
 
 				// Add lager to settings
 				loadingScreen.Status = "Einstellungen speichern";
-				Lager.ClientGlobalSettings.LastLager = (byte)Lager.ClientGlobalSettings.Lagers.Count;
-				Lager.ClientGlobalSettings.Lagers.Add(new Tuple<string, string>(name, password));
-				await Lager.ClientGlobalSettings.Save();
+				LagerClient.ClientGlobalSettings.LastLager = (byte)LagerClient.ClientGlobalSettings.Lagers.Count;
+				LagerClient.ClientGlobalSettings.Lagers.Add(new Tuple<string, string>(name, password));
+				await LagerClient.ClientGlobalSettings.Save();
 
 				// Go to the main page
 				MainPage = new NavigationPage(new MainPage());
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				// Log the exception
-				await Lager.Log.Exception("App", e);
+				await LagerBase.Log.Exception("App", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 		}

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Zeltlager
 {
+	using Client;
+
 	[Editable("Zelt")]
 	public class Tent : IEditable<Tent>
 	{
 		[Editable("Zeltnummer")]
-		public byte Number { get; set; }
+		public TentId Id { get; set; }
 
 		[Editable("Zeltname")]
 		public string Name { get; set; }
@@ -19,15 +19,15 @@ namespace Zeltlager
 
 		public IReadOnlyList<Member> Supervisors { get { return supervisors; } }
 
-		public string Display { get { return Number + " " + Name; } }
+		public string Display { get { return Id + " " + Name; } }
 
 		public Tent()
 		{
 		}
 
-		public Tent(byte number, string name, List<Member> supervisors)
+		public Tent(TentId id, string name, List<Member> supervisors)
 		{
-			Number = number;
+			Id = id;
 			Name = name;
 			this.supervisors = supervisors;
 		}
@@ -48,13 +48,13 @@ namespace Zeltlager
 
 		public void OnSaveEditing(Tent oldObject)
 		{
-			Lager.CurrentLager.RemoveTent(oldObject);
-			Lager.CurrentLager.AddTent(this);
+			LagerClient.CurrentLager.RemoveTent(oldObject);
+			LagerClient.CurrentLager.AddTent(this);
 		}
 
 		public Tent CloneDeep()
 		{
-			return new Tent(Number, Name, new List<Member>(supervisors));
+			return new Tent(Id, Name, new List<Member>(supervisors));
 		}
 
 		#endregion

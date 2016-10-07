@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Erwischt
 {
+	using Client;
+
     /// <summary>
     /// Data associated to each member for the Erwischt game.
     /// </summary>
@@ -23,10 +25,10 @@ namespace Zeltlager.Erwischt
 
     public class Erwischt : ILagerPart
     {
-        Lager lager;
+		LagerClient lager;
         Dictionary<Member, MemberData> memberData;
 
-        public Erwischt(Lager lager)
+        public Erwischt(LagerClient lager)
         {
             this.lager = lager;
             memberData = new Dictionary<Member, MemberData>();

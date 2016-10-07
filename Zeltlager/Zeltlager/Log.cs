@@ -54,10 +54,10 @@ namespace Zeltlager
 
 		public async Task Load()
 		{
-			if (!await Lager.IoProvider.ExistsFile(FILENAME))
+			if (!await LagerBase.IoProvider.ExistsFile(FILENAME))
 				return;
 
-			var file = new StreamReader(await Lager.IoProvider.ReadFile(FILENAME));
+			var file = new StreamReader(await LagerBase.IoProvider.ReadFile(FILENAME));
 			string line;
 			while ((line = file.ReadLine()) != null)
 			{
@@ -82,7 +82,7 @@ namespace Zeltlager
 		async Task print(Message message)
 		{
 			messages.Add(message);
-			StreamWriter writer = new StreamWriter(await Lager.IoProvider.AppendFile(FILENAME));
+			StreamWriter writer = new StreamWriter(await LagerBase.IoProvider.AppendFile(FILENAME));
 			writer.WriteLine(message);
 		}
 	}

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Zeltlager.Tournament
+﻿namespace Zeltlager.Tournament
 {
+	using Client;
+
     public class Tournament : ILagerPart
     {
-        Lager lager;
+		LagerClient lager;
 
-        public Tournament(Lager lager)
+        public Tournament(LagerClient lager)
         {
             this.lager = lager;
         }

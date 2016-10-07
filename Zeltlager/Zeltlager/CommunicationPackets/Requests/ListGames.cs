@@ -10,11 +10,9 @@ namespace Zeltlager.CommunicationPackets.Requests
 {
     public class ListGames : CommunicationRequest
     {
-		public ListGames()
-		{
-		}
+		public ListGames() { }
 
-		public override void Apply(INetworkConnection connection, ILagerProvider lagerProvider)
+		public override void Apply(INetworkConnection connection, ILagerServer lagerServer)
 		{
 			// Create a response
 		}

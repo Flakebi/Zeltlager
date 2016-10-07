@@ -28,7 +28,7 @@ namespace Zeltlager.Client
 			LastLager = 0;
 			Lagers.Clear();
 
-			IIoProvider io = Lager.IoProvider;
+			IIoProvider io = LagerClient.IoProvider;
 			if (await io.ExistsFile(SETTINGS_FILE))
 			{
 				using (BinaryReader input = new BinaryReader(await io.ReadFile(SETTINGS_FILE)))
@@ -56,7 +56,7 @@ namespace Zeltlager.Client
 
 		public async Task Save()
 		{
-			IIoProvider io = Lager.IoProvider;
+			IIoProvider io = LagerClient.IoProvider;
 			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(SETTINGS_FILE)))
 			{
 				output.Write(VERSION);

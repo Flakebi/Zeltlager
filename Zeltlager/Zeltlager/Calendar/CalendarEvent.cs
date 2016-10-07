@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Calendar
 {
+	using Client;
+
 	[Editable("Termin")]
 	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>
 	{
@@ -84,9 +86,9 @@ namespace Zeltlager.Calendar
 		public void OnSaveEditing(CalendarEvent oldObj)
 		{
 			//Delete Item
-			Lager.CurrentLager.Calendar.RemoveCalendarEvent(oldObj);
+			LagerClient.CurrentLager.Calendar.RemoveCalendarEvent(oldObj);
 			//Insert Calendar Event into correct day
-			Lager.CurrentLager.Calendar.InsertNewCalendarEvent(this);
+			LagerClient.CurrentLager.Calendar.InsertNewCalendarEvent(this);
 		}
 
 		public CalendarEvent CloneDeep()

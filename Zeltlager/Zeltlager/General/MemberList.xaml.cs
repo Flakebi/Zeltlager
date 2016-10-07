@@ -5,6 +5,8 @@ using Xamarin.Forms;
 
 namespace Zeltlager
 {
+	using Client;
+
 	public partial class MemberList : ContentView
 	{
 		IReadOnlyList<Member> currentMembers;
@@ -12,14 +14,14 @@ namespace Zeltlager
 		public MemberList()
 		{
 			InitializeComponent();
-			currentMembers = Lager.CurrentLager.Members;
+			currentMembers = LagerClient.CurrentLager.Members;
 			members.ItemsSource = currentMembers;
 		}
 
 		void OnSearch(object sender, TextChangedEventArgs e)
 		{
 			// Filter the memberlist
-			List<Member> sourceList = new List<Member>(Lager.CurrentLager.Members);
+			List<Member> sourceList = new List<Member>(LagerClient.CurrentLager.Members);
 			sourceList.Sort();
 			List<Member> currentMembers = new List<Member>();
 			var filters = e.NewTextValue.Split(' ');

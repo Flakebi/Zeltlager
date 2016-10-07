@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using Zeltlager.DataPackets;
 
-namespace Zeltlager
+namespace Zeltlager.Client
 {
-	public class Lager : ILagerPart
+	public class LagerClient : LagerBase, ILagerPart
 	{
 		public enum InitStatus
 		{
@@ -18,29 +18,23 @@ namespace Zeltlager
 			Ready
 		}
 
-		public static bool IsClient { get; set; }
-		public static IIoProvider IoProvider { get; set; }
-		public static ICryptoProvider CryptoProvider { get; set; }
-		public static Log Log { get; set; }
+		public static GlobalSettings ClientGlobalSettings { get; set; }
 
-		public static Client.GlobalSettings ClientGlobalSettings { get; set; }
+		public static LagerClient CurrentLager { get; set; }
 
-		public static Lager CurrentLager { get; set; }
+		public string Name { get; set; }
+		public IReadOnlyList<Member> Members { get { return members; } }
+		public IReadOnlyList<Tent> Tents { get { return tents; } }
 
-		const byte VERSION = 0;
-		const string GENERAL_SETTINGS_FILE = "lager.conf";
-
-		static Lager()
-		{
-			CryptoProvider = new BCCryptoProvider();
-			Log = new Log();
-		}
+		// Subspaces
+		public Tournament.Tournament Tournament { get; private set; }
+		public Competition.Competition Competition { get; private set; }
+		public Erwischt.Erwischt Erwischt { get; private set; }
+		public Calendar.Calendar Calendar { get; private set; }
 
 		List<Member> members = new List<Member>();
 		List<Tent> tents = new List<Tent>();
-		List<Collaborator> collaborators = new List<Collaborator>();
 
-		// Data for the client
 		/// <summary>
 		/// If this instance was synchronized with a server.
 		/// </summary>
@@ -57,12 +51,6 @@ namespace Zeltlager
 		ushort sentPackets;
 
 		// Crypto
-		/// <summary>
-		/// The salt used for the key derivation functions.
-		/// </summary>
-		byte[] salt;
-
-		KeyPair asymmetricKey;
 		byte[] symmetricKey;
 
 		/// <summary>
@@ -70,25 +58,7 @@ namespace Zeltlager
 		/// </summary>
 		string password;
 
-		/// <summary>
-		/// Packets that could not be loaded.
-		/// Each tuple contains the collaborator and the packet id.
-		/// </summary>
-		public List<Tuple<byte, ushort>> MissingPackets { get; set; }
-
-		public string Name { get; set; }
-		public byte Id { get; set; }
-		public IReadOnlyList<Member> Members { get { return members; } }
-		public IReadOnlyList<Tent> Tents { get { return tents; } }
-		public IReadOnlyList<Collaborator> Collaborators { get { return collaborators; } }
-
-		// Subspaces
-		public Tournament.Tournament Tournament { get; private set; }
-		public Competition.Competition Competition { get; private set; }
-		public Erwischt.Erwischt Erwischt { get; private set; }
-		public Calendar.Calendar Calendar { get; private set; }
-
-		public Lager(byte id, string name, string password)
+		public LagerClient(byte id, string name, string password)
 		{
 			Id = id;
 			Name = name;
@@ -125,6 +95,9 @@ namespace Zeltlager
 			return collaborators.SelectMany(col => col.Packets).SelectMany(packet =>
 				{
 					// Flatten bundles here
+					Bundle bundle = packet as Bundle;
+					if (bundle != null)
+						return bundle.GetPackets();
 					return new DataPacket[] { packet };
 				}).OrderBy(packet => packet.Timestamp).ToList();
 		}
@@ -145,8 +118,7 @@ namespace Zeltlager
 				try
 				{
 					packet.Deserialise(this);
-				}
-				catch (Exception e)
+				} catch (Exception e)
 				{
 					// Log the exception
 					Log.Exception("Lager", e);
@@ -317,8 +289,7 @@ namespace Zeltlager
 							}
 						}
 					}
-				}
-				else
+				} else
 					throw new Exception("Can't read lager with unknown version.");
 			}
 
@@ -344,15 +315,15 @@ namespace Zeltlager
 
 		public void AddTent(Tent tent)
 		{
-			if (Tents.Any(t => t.Number == tent.Number))
-				throw new InvalidOperationException("A tent with this number exists already.");
+			if (Tents.Any(t => t.Id == tent.Id))
+				throw new InvalidOperationException("A tent with this id exists already.");
 			tents.Add(tent);
 		}
 
 		public void RemoveTent(Tent tent)
 		{
 			if (!tents.Remove(tent))
-				throw new InvalidOperationException("A tent with this number wasn't found for deletion.");
+				throw new InvalidOperationException("A tent with this id wasn't found for deletion.");
 		}
 	}
 }

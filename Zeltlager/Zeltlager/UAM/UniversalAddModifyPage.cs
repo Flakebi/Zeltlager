@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace Zeltlager
 {
+	using Client;
+
 	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
 	{
 		public T Obj { get; }
@@ -88,7 +90,7 @@ namespace Zeltlager
 				{
 					// use picker filled with all tents
 					Picker picker = new Picker();
-					foreach (Tent tent in Lager.CurrentLager.Tents) 
+					foreach (Tent tent in LagerClient.CurrentLager.Tents) 
 					{
 						picker.Items.Add(tent.ToString());
 					}
@@ -96,7 +98,7 @@ namespace Zeltlager
 					{
 						Tent t = null;
 						// find correct tent from display string
-						foreach (Tent tent in Lager.CurrentLager.Tents)
+						foreach (Tent tent in LagerClient.CurrentLager.Tents)
 						{
 							if (tent.Display == picker.Items[picker.SelectedIndex])
 							{
