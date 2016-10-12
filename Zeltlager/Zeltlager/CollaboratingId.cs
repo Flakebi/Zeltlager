@@ -12,9 +12,10 @@ namespace Zeltlager
 		public T id;
 
 		protected CollaboratingId() { }
-		protected CollaboratingId(LagerClient lager, BinaryReader input)
+		protected CollaboratingId(Collaborator collaborator, T id)
 		{
-			Read(lager, input);
+            this.collaborator = collaborator;
+            this.id = id;
 		}
 
 		public bool Equals(CollaboratingId<T> other)
@@ -22,35 +23,15 @@ namespace Zeltlager
 			return collaborator.Id == other.collaborator.Id && id.Equals(other.id);
 		}
 
-		public void Read(LagerClient lager, BinaryReader input)
-		{
-			byte collaboratorId = input.ReadByte();
-			collaborator = lager.Collaborators.First(c => c.Id == collaboratorId);
-			id = ReadId(lager, input);
-		}
-
-		protected abstract T ReadId(LagerClient lager, BinaryReader input);
-
-		public void Write(BinaryWriter output)
-		{
-			output.Write(collaborator.Id);
-			WriteId(output);
-		}
-
-		protected abstract void WriteId(BinaryWriter output);
+		public abstract void WriteId(BinaryWriter output);
 	}
 
 	public class TentId : CollaboratingId<byte>
 	{
 		public TentId() { }
-		public TentId(LagerClient lager, BinaryReader input) : base(lager, input) { }
+		public TentId(Collaborator collaborator, byte id) : base(collaborator, id) { }
 
-		protected override byte ReadId(LagerClient lager, BinaryReader input)
-		{
-			return input.ReadByte();
-		}
-
-		protected override void WriteId(BinaryWriter output)
+        public override void WriteId(BinaryWriter output)
 		{
 			output.Write(id);
 		}
@@ -59,16 +40,37 @@ namespace Zeltlager
 	public class MemberId : CollaboratingId<ushort>
 	{
 		public MemberId() { }
-		public MemberId(LagerClient lager, BinaryReader input) : base(lager, input) { }
+		public MemberId(Collaborator collaborator, ushort id) : base(collaborator, id) { }
 
-		protected override ushort ReadId(LagerClient lager, BinaryReader input)
-		{
-			return input.ReadUInt16();
-		}
-
-		protected override void WriteId(BinaryWriter output)
+        public override void WriteId(BinaryWriter output)
 		{
 			output.Write(id);
 		}
 	}
+
+    // Extensions for BinaryWriter/Reader
+    public static class CollaboratingHelper
+    {
+        public static void Write<T>(this BinaryWriter output, CollaboratingId<T> id) where T : IEquatable<T>
+        {
+            output.Write(id.collaborator.Id);
+            id.WriteId(output);
+        }
+
+        public static TentId ReadTentId(this BinaryReader input, LagerClient lager)
+        {
+            byte collaboratorId = input.ReadByte();
+            var collaborator = lager.Collaborators.First(c => c.Id == collaboratorId);
+            byte tentId = input.ReadByte();
+            return new TentId(collaborator, tentId);
+        }
+
+        public static MemberId ReadMemberId(this BinaryReader input, LagerClient lager)
+        {
+            byte collaboratorId = input.ReadByte();
+            var collaborator = lager.Collaborators.First(c => c.Id == collaboratorId);
+            byte tentId = input.ReadByte();
+            return new MemberId(collaborator, tentId);
+        }
+    }
 }

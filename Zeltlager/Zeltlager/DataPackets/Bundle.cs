@@ -47,10 +47,10 @@ namespace Zeltlager.DataPackets
 			}
 		}
 
-		public override void Deserialise(LagerClient lager)
+		public override void Deserialise(LagerClient lager, Collaborator collaborator)
 		{
 			foreach (var packet in GetPackets())
-				packet.Deserialise(lager);
+				packet.Deserialise(lager, collaborator);
 		}
     }
 }

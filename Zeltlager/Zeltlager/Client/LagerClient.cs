@@ -89,17 +89,18 @@ namespace Zeltlager.Client
 		/// This orders the packets in chronological order and removes packet bundles.
 		/// </summary>
 		/// <returns>The flat history of packets.</returns>
-		List<DataPacket> GetHistory()
+		List<Tuple<Collaborator, DataPacket>> GetHistory()
 		{
 			// Use OrderBy which is a stable sorting algorithm.
-			return collaborators.SelectMany(col => col.Packets).SelectMany(packet =>
+			return collaborators.SelectMany(col =>
+                col.Packets.Select(p => new Tuple<Collaborator, DataPacket>(col, p))).SelectMany(packet =>
 				{
 					// Flatten bundles here
-					Bundle bundle = packet as Bundle;
+					Bundle bundle = packet.Item2 as Bundle;
 					if (bundle != null)
-						return bundle.GetPackets();
-					return new DataPacket[] { packet };
-				}).OrderBy(packet => packet.Timestamp).ToList();
+						return bundle.GetPackets().Select(p => new Tuple<Collaborator, DataPacket>(packet.Item1, p));
+					return new Tuple<Collaborator, DataPacket>[] { packet };
+				}).OrderBy(packet => packet.Item2.Timestamp).ToList();
 		}
 
 		/// <summary>
@@ -111,13 +112,13 @@ namespace Zeltlager.Client
 		/// </returns>
 		public bool ApplyHistory()
 		{
-			List<DataPacket> history = GetHistory();
+			List<Tuple<Collaborator, DataPacket>> history = GetHistory();
 			bool success = true;
 			foreach (var packet in history)
 			{
 				try
 				{
-					packet.Deserialise(this);
+					packet.Item2.Deserialise(this, packet.Item1);
 				} catch (Exception e)
 				{
 					// Log the exception
@@ -142,7 +143,7 @@ namespace Zeltlager.Client
 			await SaveGeneralSettings();
 
 			// Then deserialise it to apply it
-			packet.Deserialise(this);
+			packet.Deserialise(this, collaborator);
 		}
 
 		/// <summary>

@@ -18,16 +18,26 @@ namespace Zeltlager
 		public byte Id { get; private set; }
 		public IReadOnlyList<DataPacket> Packets { get { return packets; } }
 
-		/// <summary>
-		/// Initialises a new collaborator.
-		/// </summary>
-		/// <param name="id">The id of the collaborator.</param>
-		/// <param name="publicKey">The public key of the collaborator.</param>
-		public Collaborator(byte id, byte[] modulus, byte[] publicKey)
+        /// <summary>
+        /// All tent ids should be unique (per collaborator) so the next free
+        /// member id for this collaborator is saved here.
+        /// </summary>
+        public ushort NextMemberId { get; set; }
+        public byte NextTentId { get; set; }
+
+        /// <summary>
+        /// Initialises a new collaborator.
+        /// </summary>
+        /// <param name="id">The id of the collaborator.</param>
+        /// <param name="publicKey">The public key of the collaborator.</param>
+        public Collaborator(byte id, byte[] modulus, byte[] publicKey)
 		{
 			Id = id;
 			Modulus = modulus;
 			PublicKey = publicKey;
+
+            NextMemberId = 0;
+            NextTentId = 0;
 		}
 
 		/// <summary>

@@ -84,6 +84,6 @@ namespace Zeltlager.DataPackets
 		/// The packet has to deserialise itself from Data.
 		/// </summary>
 		/// <param name="lager">The lager to which this packet should be applied.</param>
-		public abstract void Deserialise(Client.LagerClient lager);
+		public abstract void Deserialise(Client.LagerClient lager, Collaborator collaborator);
 	}
 }
