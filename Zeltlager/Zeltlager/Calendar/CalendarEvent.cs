@@ -2,9 +2,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Zeltlager.UAM;
+using System.IO;
 
 namespace Zeltlager.Calendar
 {
+	using System.Threading.Tasks;
 	using Client;
 
 	[Editable("Termin")]
@@ -23,14 +25,14 @@ namespace Zeltlager.Calendar
 		/// <summary>
 		/// time of the event, used to edit only time
 		/// </summary>
-		private TimeSpan timeSpan;
+		//private TimeSpan timeSpan;
 		[Editable("Uhrzeit")]
 		public TimeSpan TimeSpan
 		{
-			get { return timeSpan; }
+			get { return date.TimeOfDay; }
 			set
 			{
-				timeSpan = value; date = date.Date.Add(value);
+				date = date.Date.Add(value);
 				OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString"); OnPropertyChanged("Date");
 			}
 		}
@@ -62,7 +64,6 @@ namespace Zeltlager.Calendar
 		{
 			this.date = date;
 			this.title = title;
-			timeSpan = date.TimeOfDay;
 		}
 
 		public CalendarEvent(DateTime date, string title, string detail) : this(date, title)
@@ -84,15 +85,15 @@ namespace Zeltlager.Calendar
 			return Date.CompareTo(other.Date);
 		}
 
-		public void OnSaveEditing(CalendarEvent oldObj)
+		public async Task OnSaveEditing(CalendarEvent oldObj)
 		{
 			if (oldObj != null)
 			{
 				//Delete Item
-				LagerClient.CurrentLager.Calendar.RemoveCalendarEvent(oldObj);
+				await LagerClient.CurrentLager.AddPacket(new DeleteCalendarEvent(oldObj));
 			}
 			//Insert Calendar Event into correct day
-			LagerClient.CurrentLager.Calendar.InsertNewCalendarEvent(this);
+			await LagerClient.CurrentLager.AddPacket(new AddCalendarEvent(this));
 		}
 
 		public CalendarEvent CloneDeep()
@@ -101,5 +102,23 @@ namespace Zeltlager.Calendar
 		}
 
 		#endregion
+	}
+
+	public static class CalendarEventHelper 
+	{
+		public static void Write(this BinaryWriter output, CalendarEvent calendarEvent)
+		{
+			output.Write(calendarEvent.Date.ToBinary());
+			output.Write(calendarEvent.Title);
+			output.Write(calendarEvent.Detail);
+		}
+
+		public static CalendarEvent ReadCalendarEvent(this BinaryReader input)
+		{
+			DateTime date = DateTime.FromBinary(input.ReadInt64());
+			string title = input.ReadString();
+			string detail = input.ReadString();
+			return new CalendarEvent(date, title, detail);
+		}
 	}
 }

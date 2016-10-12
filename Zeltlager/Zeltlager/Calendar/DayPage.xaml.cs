@@ -58,6 +58,12 @@ namespace Zeltlager.Calendar
 			calendarList.ItemsSource = day.Events;
 			calendarList.Header = header;
 			calendarList.HorizontalOptions = LayoutOptions.CenterAndExpand;
+			// disable selection
+			calendarList.ItemSelected += (sender, e) =>
+			{
+				((ListView)sender).SelectedItem = null;
+			};
+
 			header.HorizontalOptions = LayoutOptions.FillAndExpand;
 			Content = calendarList;
 

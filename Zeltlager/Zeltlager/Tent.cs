@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Zeltlager.UAM;
+using System.Threading.Tasks;
+using Zeltlager.DataPackets;
 
 namespace Zeltlager
 {
@@ -51,11 +53,11 @@ namespace Zeltlager
 
 		#region Interface implementations
 
-		public void OnSaveEditing(Tent oldObject)
+		public async Task OnSaveEditing(Tent oldObject)
 		{
 			if (oldObject != null)
-				LagerClient.CurrentLager.RemoveTent(oldObject);
-			LagerClient.CurrentLager.AddTent(this);
+				await LagerClient.CurrentLager.AddPacket(new DeleteTent(oldObject));
+			await LagerClient.CurrentLager.AddPacket(new AddTent(this));
 		}
 
 		public Tent CloneDeep()

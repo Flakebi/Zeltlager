@@ -1,8 +1,11 @@
 ﻿using System;
 using Zeltlager.UAM;
+using Org.BouncyCastle.Asn1.IsisMtt.X509;
+using Zeltlager.DataPackets;
 
 namespace Zeltlager
 {
+	using System.Threading.Tasks;
 	using Client;
 
 	[Editable("Teilnehmer")]
@@ -39,11 +42,13 @@ namespace Zeltlager
 
 		#region Interface implementation
 
-		public void OnSaveEditing(Member oldObject)
+		public async Task OnSaveEditing(Member oldObject)
 		{
 			if (oldObject != null)
-				LagerClient.CurrentLager.RemoveMember(oldObject);
-			LagerClient.CurrentLager.AddMember(this);
+			{
+				await LagerClient.CurrentLager.AddPacket(new DeleteMember(oldObject));
+			}
+			await LagerClient.CurrentLager.AddPacket(new AddMember(this));
 		}
 
 		public Member CloneDeep()

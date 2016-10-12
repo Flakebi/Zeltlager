@@ -146,12 +146,12 @@ namespace Zeltlager.UAM
 			Navigation.PopModalAsync(true);
 		}
 
-		private void OnSaveClicked()
+		async void OnSaveClicked()
 		{
 			if (isAddPage)
 				oldObj = default(T);
-			Obj.OnSaveEditing(oldObj);
-			Navigation.PopModalAsync(true);
+			await Obj.OnSaveEditing(oldObj);
+			await Navigation.PopModalAsync(true);
 		}
 	}
 }

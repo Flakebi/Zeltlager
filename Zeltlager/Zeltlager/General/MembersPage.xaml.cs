@@ -4,12 +4,14 @@ using Zeltlager.UAM;
 
 namespace Zeltlager.General
 {
+	using Client;
+
 	public partial class MembersPage : ContentPage
 	{
 		public MembersPage()
 		{
 			InitializeComponent();
-			Content = new SearchableListView<Member>(Lager.CurrentLager.Members);
+			Content = new SearchableListView<Member>(LagerClient.CurrentLager.Members);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)

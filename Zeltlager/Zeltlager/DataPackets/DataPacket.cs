@@ -19,6 +19,8 @@ namespace Zeltlager.DataPackets
 			typeof(DeleteTent),
 			typeof(AddSupervisorToTent),
 			typeof(DeleteSupervisorFromTent),
+			typeof(AddCalendarEvent),
+			typeof(DeleteCalendarEvent),
 		};
 
 		/// <summary>

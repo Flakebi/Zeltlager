@@ -108,6 +108,8 @@
     <Compile Include="UAM\IEditable.cs" />
     <Compile Include="Searchable\ISearchable.cs" />
     <Compile Include="Searchable\SearchableListView.cs" />
+    <Compile Include="DataPackets\AddCalendarEvent.cs" />
+    <Compile Include="DataPackets\DeleteCalendarEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
