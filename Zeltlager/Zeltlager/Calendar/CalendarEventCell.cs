@@ -5,9 +5,10 @@ using Xamarin.Forms;
 
 namespace Zeltlager.Calendar
 {
+	using Client;
+
 	public class CalendarEventCell : ViewCell
 	{
-
 		Label time = new Label()
 		{
 			VerticalTextAlignment = TextAlignment.Center,
@@ -67,7 +68,7 @@ namespace Zeltlager.Calendar
 
 		private void OnDelete(object sender, EventArgs e)
 		{
-			Lager.CurrentLager.Calendar.RemoveCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter);
+			LagerClient.CurrentLager.Calendar.RemoveCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter);
 		}
 	}
 }

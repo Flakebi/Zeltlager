@@ -11,11 +11,6 @@ namespace Zeltlager.DataPackets
 	/// </summary>
 	public abstract class DataPacket
 	{
-		/// <summary>
-		/// The version of the data packet protocol.
-		/// </summary>
-		static uint VERSION = 0;
-
 		static Type[] packetTypes = {
 			typeof(Bundle),
 			typeof(AddMember),
@@ -31,17 +26,14 @@ namespace Zeltlager.DataPackets
 		/// </summary>
 		/// <param name="input">The input reader</param>
 		/// <returns>The read packet.</returns>
-		public static DataPacket ReadPacket(BinaryReader input)
+		public static DataPacket ReadPacket(byte[] input)
 		{
-			byte packetType = input.ReadByte();
+			byte packetType = input[0];
 
 			if (packetType >= packetTypes.Length)
 			{
 				// Create a new InvalidDataPacket
-				byte[] data = new byte[1 + input.BaseStream.Length - input.BaseStream.Position];
-				data[0] = packetType;
-				input.Read(data, 1, data.Length - 1);
-				return new InvalidDataPacket(data);
+				return new InvalidDataPacket(input);
 			}
 
 			// Create a new packet of the specified type using the default constructor
@@ -49,9 +41,9 @@ namespace Zeltlager.DataPackets
 				.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[0]);
 
 			// Fill the packet data
-			packet.Timestamp = DateTime.FromBinary(input.ReadInt64());
-			packet.Data = new byte[input.BaseStream.Length - input.BaseStream.Position];
-			input.Read(packet.Data, 0, packet.Data.Length);
+			packet.Timestamp = DateTime.FromBinary(input.ToLong(1));
+			packet.Data = new byte[input.Length - 9];
+			Array.Copy(input, 9, packet.Data, 0, packet.Data.Length);
 			return packet;
 		}
 
@@ -92,6 +84,6 @@ namespace Zeltlager.DataPackets
 		/// The packet has to deserialise itself from Data.
 		/// </summary>
 		/// <param name="lager">The lager to which this packet should be applied.</param>
-		public abstract void Deserialise(Lager lager);
+		public abstract void Deserialise(Client.LagerClient lager);
 	}
 }

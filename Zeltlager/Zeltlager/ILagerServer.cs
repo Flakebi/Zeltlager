@@ -3,10 +3,10 @@
 namespace Zeltlager
 {
 	/// <summary>
-	/// This represents the server.
+	/// This represents a server.
 	/// </summary>
-	public interface ILagerProvider
+	public interface ILagerServer
 	{
-		IList<Lager> GetLagers();
+		IList<LagerBase> GetLagers();
 	}
 }

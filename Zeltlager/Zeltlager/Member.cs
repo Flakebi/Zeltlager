@@ -3,10 +3,12 @@ using Zeltlager.UAM;
 
 namespace Zeltlager
 {
+	using Client;
+
 	[Editable("Teilnehmer")]
 	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
 	{
-		public ushort Id { get; set; }
+		public MemberId Id { get; set; }
 
 		[Editable("Name")]
 		public string Name { get; set; }
@@ -23,7 +25,7 @@ namespace Zeltlager
 
 		public Member() {}
 
-		public Member(ushort id, string name, Tent tent, bool supervisor)
+		public Member(MemberId id, string name, Tent tent, bool supervisor)
 		{
 			Id = id;
 			Name = name;
@@ -40,8 +42,8 @@ namespace Zeltlager
 		public void OnSaveEditing(Member oldObject)
 		{
 			if (oldObject != null)
-				Lager.CurrentLager.RemoveMember(oldObject);
-			Lager.CurrentLager.AddMember(this);
+				LagerClient.CurrentLager.RemoveMember(oldObject);
+			LagerClient.CurrentLager.AddMember(this);
 		}
 
 		public Member CloneDeep()

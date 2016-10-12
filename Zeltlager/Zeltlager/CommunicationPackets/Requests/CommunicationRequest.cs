@@ -10,7 +10,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 		/// <summary>
 		/// Apply the request to a lager and send a response.
 		/// </summary>
-		/// <param name="lagerProvider"></param>
-		public abstract void Apply(INetworkConnection connection, ILagerProvider lagerProvider);
+		/// <param name="lagerServer"></param>
+		public abstract void Apply(INetworkConnection connection, ILagerServer lagerServer);
 	}
 }

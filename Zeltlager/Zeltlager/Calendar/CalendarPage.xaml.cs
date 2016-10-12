@@ -5,12 +5,14 @@ using Xamarin.Forms;
 
 namespace Zeltlager.Calendar
 {
+	using Client;
+
 	public partial class CalendarPage : CarouselPage
 	{
 		public CalendarPage()
 		{
 			InitializeComponent();
-			var days = Lager.CurrentLager.Calendar.Days;
+			var days = LagerClient.CurrentLager.Calendar.Days;
 			foreach (Day day in days)
 			{
 				DayPage dp = new DayPage(day);

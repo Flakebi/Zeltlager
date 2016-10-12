@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace Zeltlager.DataPackets
 {
+	using Client;
+
 	public class AddMember : DataPacket
 	{
 		public AddMember() { }
@@ -12,25 +14,25 @@ namespace Zeltlager.DataPackets
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 			{
-				output.Write(member.Id);
+				member.Id.Write(output);
 				output.Write(member.Name);
-				output.Write(member.Name);
-				output.Write(member.Tent.Number);
-				Data = mem.ToArray();
+				output.Write(member.Supervisor);
+				member.Tent.Id.Write(output);
 			}
+			Data = mem.ToArray();
 		}
 
-		public override void Deserialise(Lager lager)
+		public override void Deserialise(LagerClient lager)
 		{
 			MemoryStream mem = new MemoryStream(Data);
 			using (BinaryReader input = new BinaryReader(mem))
 			{
-				ushort id = input.ReadUInt16();
+				MemberId id = new MemberId(lager, input);
 				string name = input.ReadString();
 				bool supervisor = input.ReadBoolean();
-				byte tentNumber = input.ReadByte();
+				TentId tentId = new TentId(lager, input);
 
-				Tent tent = lager.Tents.First(t => t.Number == tentNumber);
+				Tent tent = lager.Tents.First(t => t.Id == tentId);
 				lager.AddMember(new Member(id, name, tent, supervisor));
 			}
 		}

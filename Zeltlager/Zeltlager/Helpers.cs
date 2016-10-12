@@ -32,6 +32,20 @@ namespace Zeltlager
 
 		public static void ToBytes(this int value, byte[] array, int offset) => ((uint)value).ToBytes(array, offset);
 
+		public static void ToBytes(this ulong value, byte[] array, int offset)
+		{
+			array[offset] = (byte)(value >> 56);
+			array[offset + 1] = (byte)(value >> 48);
+			array[offset + 2] = (byte)(value >> 40);
+			array[offset + 3] = (byte)(value >> 32);
+			array[offset + 4] = (byte)(value >> 24);
+			array[offset + 5] = (byte)(value >> 16);
+			array[offset + 6] = (byte)(value >> 8);
+			array[offset + 7] = (byte)value;
+		}
+
+		public static void ToBytes(this long value, byte[] array, int offset) => ((ulong)value).ToBytes(array, offset);
+
 		public static byte[] ToBytes(this ushort value)
 		{
 			byte[] bytes = new byte[2];
@@ -66,12 +80,26 @@ namespace Zeltlager
 
 		public static uint ToUInt(this byte[] value, int offset)
 		{
-			return (uint)((value[offset] << 24)
-				| (value[offset + 1] << 24)
-				| (value[offset + 2] << 16)
-				| value[offset + 3]);
+			return ((uint)value[offset] << 24)
+				| ((uint)value[offset + 1] << 16)
+				| ((uint)value[offset + 2] << 8)
+				| value[offset + 3];
 		}
 
 		public static int ToInt(this byte[] value, int offset) => (int)value.ToUInt(offset);
+
+		public static ulong ToULong(this byte[] value, int offset)
+		{
+			return ((ulong)value[offset] << 56)
+				| ((ulong)value[offset + 1] << 48)
+				| ((ulong)value[offset + 2] << 40)
+				| ((ulong)value[offset + 3] << 32)
+				| ((ulong)value[offset + 4] << 24)
+				| ((ulong)value[offset + 5] << 16)
+				| ((ulong)value[offset + 6] << 8)
+				| value[offset + 7];
+		}
+
+		public static long ToLong(this byte[] value, int offset) => (long)value.ToULong(offset);
 	}
 }

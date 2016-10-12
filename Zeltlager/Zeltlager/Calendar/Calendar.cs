@@ -3,12 +3,14 @@ using System.Collections.Generic;
 
 namespace Zeltlager.Calendar
 {
+	using Client;
+
 	public class Calendar : ILagerPart
 	{
-		private Lager lager;
+		private LagerClient lager;
 		public List<Day> Days { get; }
 
-		public Calendar(Lager lager)
+		public Calendar(LagerClient lager)
 		{
 			this.lager = lager;
 			Days = new List<Day>();

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
+	using Client;
+
     public class Competition : ILagerPart
     {
-        Lager lager;
+        LagerClient lager;
 
-        public Competition(Lager lager)
+        public Competition(LagerClient lager)
         {
             this.lager = lager;
         }

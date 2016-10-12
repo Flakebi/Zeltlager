@@ -27,20 +27,20 @@ namespace Zeltlager.CommunicationPackets
 		/// <param name="packetTypes">A list of possible packet types</param>
 		/// <param name="input">The input reader</param>
 		/// <returns>The read packet.</returns>
-		protected static CommunicationPacket ReadPacket(BinaryReader input)
+		protected static CommunicationPacket ReadPacket(byte[] input)
 		{
-			byte packetType = input.ReadByte();
+			byte packetType = input[0];
 
 			if (packetType >= packetTypes.Length)
-				throw new IOException("Invalid packet type");
+				throw new IOException("Invalid communication packet type");
 
 			// Create a new packet of the specified type using the default constructor
 			CommunicationPacket packet = (CommunicationPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors
 				.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[0]);
 
 			// Fill the packet data
-			packet.Data = new byte[input.BaseStream.Length - input.BaseStream.Position];
-			input.Read(packet.Data, 0, packet.Data.Length);
+			packet.Data = new byte[input.Length - 1];
+			Array.Copy(input, 1, packet.Data, 0, packet.Data.Length);
 			return packet;
 		}
 

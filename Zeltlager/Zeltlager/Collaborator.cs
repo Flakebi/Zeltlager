@@ -67,7 +67,7 @@ namespace Zeltlager
 
 			if (packet.Iv == null)
 				// Generate iv
-				packet.Iv = await Lager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
+				packet.Iv = await LagerBase.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 
 			// Write iv and encrypted data
 			mem = new MemoryStream();
@@ -76,7 +76,7 @@ namespace Zeltlager
 				// Write iv
 				writer.Write(packet.Iv);
 				// Write encrypted packet data
-				writer.Write(await Lager.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
+				writer.Write(await LagerBase.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
 			}
 			data = mem.ToArray();
 
@@ -88,20 +88,22 @@ namespace Zeltlager
 					using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
 						packet.WritePacket(output);
 					return;
-				}
-				else if (PrivateKey != null)
+				} else if (PrivateKey != null)
 					// Generate signature
-					packet.Signature = await Lager.CryptoProvider.Sign(Modulus, PrivateKey, data);
+					packet.Signature = await LagerBase.CryptoProvider.Sign(Modulus, PrivateKey, data);
 				else
 					throw new InvalidOperationException("Found unencrypted packet without private key.");
 			}
 
-			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
+			if (packet.Signature != null)
 			{
-				// Write signature
-				output.Write(packet.Signature);
-				// Write iv and encrypted data
-				output.Write(data);
+				using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
+				{
+					// Write signature
+					output.Write(packet.Signature);
+					// Write iv and encrypted data
+					output.Write(data);
+				}
 			}
 		}
 
@@ -114,7 +116,7 @@ namespace Zeltlager
 		/// <param name="version">The version of the saved packets.</param>
 		/// <param name="packetCount">The amount of packets that this contributor has.</param>
 		/// <returns>True if everything was loaded successfully, false otherwise.</returns>
-		public async Task<bool> Load(IIoProvider io, byte[] symmetricKey, Lager lager, byte version, ushort packetCount)
+		public async Task<bool> Load(IIoProvider io, byte[] symmetricKey, LagerBase lager, byte version, ushort packetCount)
 		{
 			bool success = true;
 			string id = Id.ToString();
@@ -133,7 +135,7 @@ namespace Zeltlager
 					}
 
 					// Verify signature
-					if (!await Lager.CryptoProvider.Verify(Modulus, signature, allData))
+					if (!await LagerBase.CryptoProvider.Verify(Modulus, signature, allData))
 						// The packet has an invalid signature
 						throw new Exception("The packet has an invalid signature.");
 
@@ -142,18 +144,15 @@ namespace Zeltlager
 					byte[] data = new byte[allData.Length - iv.Length];
 					Array.Copy(allData, iv.Length, data, 0, data.Length);
 
-					DataPacket packet;
-					using (BinaryReader reader = new BinaryReader(new MemoryStream(await Lager.CryptoProvider.DecryptSymetric(symmetricKey, iv, data))))
-						packet = DataPacket.ReadPacket(reader);
+					DataPacket packet = DataPacket.ReadPacket(await LagerBase.CryptoProvider.DecryptSymetric(symmetricKey, iv, data));
 					packet.Iv = iv;
 					packet.Signature = signature;
 					packets.Add(packet);
-				}
-				catch (Exception e)
+				} catch (Exception e)
 				{
 					success = false;
 					// Log the exception
-					await Lager.Log.Exception("Collaborator", e);
+					await LagerBase.Log.Exception("Collaborator", e);
 					lager.MissingPackets.Add(new Tuple<byte, ushort>(Id, i));
 					// Try to open the file
 					try
@@ -164,8 +163,7 @@ namespace Zeltlager
 							allData = input.ReadBytes((int)input.BaseStream.Length);
 							packets.Add(new InvalidDataPacket(allData));
 						}
-					}
-					catch (Exception)
+					} catch (Exception)
 					{
 						// Insert an empty invalid packet
 						packets.Add(new InvalidDataPacket(new byte[0]));

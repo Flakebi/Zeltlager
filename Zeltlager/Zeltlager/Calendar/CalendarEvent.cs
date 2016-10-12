@@ -5,6 +5,8 @@ using Zeltlager.UAM;
 
 namespace Zeltlager.Calendar
 {
+	using Client;
+
 	[Editable("Termin")]
 	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>
 	{
@@ -87,10 +89,10 @@ namespace Zeltlager.Calendar
 			if (oldObj != null)
 			{
 				//Delete Item
-				Lager.CurrentLager.Calendar.RemoveCalendarEvent(oldObj);
+				LagerClient.CurrentLager.Calendar.RemoveCalendarEvent(oldObj);
 			}
 			//Insert Calendar Event into correct day
-			Lager.CurrentLager.Calendar.InsertNewCalendarEvent(this);
+			LagerClient.CurrentLager.Calendar.InsertNewCalendarEvent(this);
 		}
 
 		public CalendarEvent CloneDeep()
