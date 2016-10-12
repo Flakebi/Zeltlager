@@ -10,8 +10,10 @@ namespace Zeltlager
 	[Editable("Zelt")]
 	public class Tent : IEditable<Tent>, ISearchable
 	{
-		[Editable("Zeltnummer")]
 		public TentId Id { get; set; }
+
+		[Editable("Zeltnummer")]
+		public byte Number { get; set; }
 
 		[Editable("Zeltname")]
 		public string Name { get; set; }
@@ -24,11 +26,11 @@ namespace Zeltlager
 
 		public IReadOnlyList<Member> Supervisors { get { return supervisors; } }
 
-		public string Display { get { return Id + " " + Name + " " + (Girls ? "♀" : "♂"); } }
+		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
 
 		public Tent() {}
 
-		public Tent(TentId id, string name, List<Member> supervisors)
+		public Tent(TentId id, byte Number, string name, List<Member> supervisors)
 		{
 			Id = id;
 			Name = name;
@@ -58,7 +60,7 @@ namespace Zeltlager
 
 		public Tent CloneDeep()
 		{
-			return new Tent(Id, Name, new List<Member>(supervisors));
+			return new Tent(Id, Number, Name, new List<Member>(supervisors));
 		}
 
 		public string SearchableText
