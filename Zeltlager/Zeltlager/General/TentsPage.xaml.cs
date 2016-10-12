@@ -2,6 +2,8 @@
 using Zeltlager.UAM;
 
 using Xamarin.Forms;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Zeltlager.General
 {
@@ -15,7 +17,8 @@ namespace Zeltlager.General
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(), true)));
+			var tentNumber = (byte) (Lager.CurrentLager.Tents.Max(t => t.Number) + 1);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(tentNumber, "", new List<Member>()),true)));
 		}
 	}
 }
