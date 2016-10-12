@@ -14,7 +14,7 @@ namespace Zeltlager.DataPackets
 			Data = data;
 		}
 
-		public override void Deserialise(LagerClient lager)
+		public override void Deserialise(LagerClient lager, Collaborator collaborator)
 		{
 			// Just do nothing here
 		}

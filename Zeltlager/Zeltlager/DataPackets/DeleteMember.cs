@@ -14,17 +14,17 @@ namespace Zeltlager.DataPackets
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 			{
-				member.Id.Write(output);
+                output.Write(member.Id);
 			}
 			Data = mem.ToArray();
 		}
 
-		public override void Deserialise(LagerClient lager)
+		public override void Deserialise(LagerClient lager, Collaborator collaborator)
 		{
 			MemoryStream mem = new MemoryStream(Data);
 			using (BinaryReader input = new BinaryReader(mem))
 			{
-				MemberId id = new MemberId(lager, input);
+				MemberId id = input.ReadMemberId(lager);
 				lager.RemoveMember(lager.Members.First(m => m.Id == id));
 			}
 		}
