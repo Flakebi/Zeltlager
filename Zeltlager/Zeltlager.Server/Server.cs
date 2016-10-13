@@ -60,19 +60,18 @@ namespace Zeltlager.Server
 			Task.Delay(3000).Wait();
 			return;
 
-			Lager.IoProvider = new RootedIoProvider(new ServerIoProvider(), Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Lager"));
-			await Lager.Log.Load();
-			Lager lager = new Lager(0, "default", "pass");
+			LagerBase.IoProvider = new RootedIoProvider(new ServerIoProvider(), Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Lager"));
+			await LagerBase.Log.Load();
+			LagerBase lager = new LagerBase();
 
-			await lager.Init(status => { });
-			Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());
+			/*Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());
 			DataPacket packet = new AddTent(tent);
 			lager.Collaborators.First().AddPacket(packet);
 			packet = new AddMember(new Member(0, "Caro", tent, true));
-			lager.Collaborators.First().AddPacket(packet);
+			lager.Collaborators.First().AddPacket(packet);*/
 
 			//await lager.Load(Lager.IoProvider);
-			await lager.Save();
+			//await lager.Save();
 		}
 	}
 }
