@@ -34,7 +34,6 @@ namespace Zeltlager
 			var dataTemplate = new DataTemplate(typeof(TextCell));
 			dataTemplate.SetBinding(TextCell.TextProperty, new Binding("SearchableText"));
 			dataTemplate.SetBinding(TextCell.DetailProperty, new Binding("SearchableDetail"));
-			dataTemplate.
 
 			listView.ItemTemplate = dataTemplate;
 			listView.BindingContext = items;

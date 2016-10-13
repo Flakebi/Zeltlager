@@ -20,7 +20,7 @@ namespace Zeltlager
 			Data = mem.ToArray();
 		}
 
-		public override void Deserialise(LagerClient lager)
+		public override void Deserialise(LagerClient lager, Collaborator collaborator)
 		{
 			MemoryStream mem = new MemoryStream(Data);
 			using (BinaryReader input = new BinaryReader(mem))
