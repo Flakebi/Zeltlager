@@ -137,7 +137,8 @@ namespace Zeltlager.Client
 			var collaborator = collaborators[ownCollaborator];
 			collaborator.AddPacket(packet);
 			// First, write the packet to disk (it will be serialised in that process)
-			await collaborator.SavePacket(IoProvider, symmetricKey, (ushort)(collaborator.Packets.Count - 1));
+			var rootedIo = new RootedIoProvider(IoProvider, Id.ToString());
+			await collaborator.SavePacket(rootedIo, symmetricKey, (ushort)(collaborator.Packets.Count - 1));
 
 			// Save the updated packet count
 			await SaveGeneralSettings();

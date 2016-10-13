@@ -34,17 +34,16 @@ namespace Zeltlager
 
 			public override string ToString()
 			{
-				return string.Format("{0}|{1}|{2}|{3}", Timestamp, Type, Escape(Section), Escape(Text));
+				return string.Format("{0}|{1}|{2}|{3}", Timestamp, Type, Escape(Section).Replace("|", " "), Escape(Text));
 			}
 
 			static string Escape(string s)
 			{
-				return s.Replace("\n", "    ").Replace("|", " ");
+				return s.Replace("\n", "    ");
 			}
 		}
 
 		const string FILENAME = "log.txt";
-		const string TIMESTAMP_FORMAT = "";
 
 		List<Message> messages = new List<Message>();
 
@@ -82,8 +81,8 @@ namespace Zeltlager
 		async Task print(Message message)
 		{
 			messages.Add(message);
-			StreamWriter writer = new StreamWriter(await LagerBase.IoProvider.AppendFile(FILENAME));
-			writer.WriteLine(message);
+			using (StreamWriter writer = new StreamWriter(await LagerBase.IoProvider.AppendFile(FILENAME)))
+				writer.WriteLine(message);
 		}
 	}
 }

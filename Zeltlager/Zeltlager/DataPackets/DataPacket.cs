@@ -76,7 +76,7 @@ namespace Zeltlager.DataPackets
 				if (index == -1)
 					throw new InvalidOperationException("Trying to write an unknown packet type, you should add this packet to the DataPacket.packetTypes array.");
 				output.Write((byte)index);
-				output.Write(Timestamp.ToBinary());
+				output.Write(Timestamp.ToBinary().ToBytes());
 			}
 			output.Write(Data);
 		}

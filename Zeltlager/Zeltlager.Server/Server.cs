@@ -31,7 +31,8 @@ namespace Zeltlager.Server
 
 		static void Main(string[] args)
 		{
-			Task.Run(async () => await AsyncMain(args)).GetAwaiter().GetResult();
+			//Task.Run(async () => await AsyncMain(args)).GetAwaiter().GetResult();
+			Task.WaitAll(AsyncMain(args));
 		}
 
 		static async Task AsyncMain(string[] args)
@@ -57,11 +58,12 @@ namespace Zeltlager.Server
 			var verification = await crypto.Verify(keyPair.Modulus, keyPair.PublicKey, signature, data);
 			Console.WriteLine("Verification: " + verification);
 
+			LagerBase.IoProvider = new RootedIoProvider(new ServerIoProvider(), Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Lager"));
+			await LagerBase.Log.Load();
+
 			Task.Delay(3000).Wait();
 			return;
 
-			LagerBase.IoProvider = new RootedIoProvider(new ServerIoProvider(), Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Lager"));
-			await LagerBase.Log.Load();
 			LagerBase lager = new LagerBase();
 
 			/*Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());

@@ -74,6 +74,20 @@ namespace Zeltlager
 			return bytes;
 		}
 
+		public static byte[] ToBytes(this ulong value)
+		{
+			byte[] bytes = new byte[8];
+			value.ToBytes(bytes, 0);
+			return bytes;
+		}
+
+		public static byte[] ToBytes(this long value)
+		{
+			byte[] bytes = new byte[8];
+			value.ToBytes(bytes, 0);
+			return bytes;
+		}
+
 		public static ushort ToUShort(this byte[] value, int offset) => (ushort)((value[offset] << 8) | value[offset + 1]);
 
 		public static short ToShort(this byte[] value, int offset) => (short)value.ToUShort(offset);
