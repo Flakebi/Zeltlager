@@ -20,7 +20,8 @@ namespace Zeltlager.Calendar
 		public DateTime Date
 		{
 			get { return date; }
-			set { date = value; OnPropertyChanged("Date"); OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString");}
+			// make date reflect correct time of day (hate to the DatePicker!!!)
+			set { date = value.Date.Add(timeSpan); OnPropertyChanged("Date"); OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString");}
 		}
 		/// <summary>
 		/// time of the event, used to edit only time
