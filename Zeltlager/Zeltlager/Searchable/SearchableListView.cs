@@ -11,8 +11,10 @@ namespace Zeltlager
 		IReadOnlyList<T> currentItems;
 		IReadOnlyList<T> totalItems;
 		ListView listView;
+		Command OnEdit;
+		Command OnDelete;
 
-		public SearchableListView(IReadOnlyList<T> items)
+		public SearchableListView(IReadOnlyList<T> items, Action<object> onEdit, Action<object> onDelete)
 		{
 			totalItems = items;
 			// display everything at the beginning
@@ -31,9 +33,25 @@ namespace Zeltlager
 			stackLayout.Children.Add(searchBar);
 
 			listView = new ListView();
-			var dataTemplate = new DataTemplate(typeof(TextCell));
+			var dataTemplate = new DataTemplate(typeof(SearchableCell));
 			dataTemplate.SetBinding(TextCell.TextProperty, new Binding("SearchableText"));
 			dataTemplate.SetBinding(TextCell.DetailProperty, new Binding("SearchableDetail"));
+
+			// Bind commands for context actions
+			OnEdit = new Command(onEdit);
+			OnDelete = new Command(onDelete);
+			var bindingEdit = new Binding
+			{
+				Source = this,
+				Path = "OnEdit"
+			};
+			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, bindingEdit);
+			var bindingDelete = new Binding
+			{
+				Source = this,
+				Path = "OnDelete"
+			};
+			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, bindingDelete);
 
 			listView.ItemTemplate = dataTemplate;
 			listView.BindingContext = items;

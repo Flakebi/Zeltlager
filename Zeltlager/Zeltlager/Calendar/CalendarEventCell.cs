@@ -59,14 +59,14 @@ namespace Zeltlager.Calendar
 			View = horizontalLayout;
 		}
 
-		private void OnEdit(object sender, EventArgs e)
+		void OnEdit(object sender, EventArgs e)
 		{
 			CalendarEvent ce = (CalendarEvent)((MenuItem)sender).CommandParameter;
 			//Call edit screen for item
 			((View)Parent).Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(ce, false)), true);
 		}
 
-		private async void OnDelete(object sender, EventArgs e)
+		async void OnDelete(object sender, EventArgs e)
 		{
 			await LagerClient.CurrentLager.AddPacket(new DeleteCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter));
 		}

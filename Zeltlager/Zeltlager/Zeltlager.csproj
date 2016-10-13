@@ -110,6 +110,7 @@
     <Compile Include="Searchable\SearchableListView.cs" />
     <Compile Include="DataPackets\AddCalendarEvent.cs" />
     <Compile Include="DataPackets\DeleteCalendarEvent.cs" />
+    <Compile Include="Searchable\SearchableCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

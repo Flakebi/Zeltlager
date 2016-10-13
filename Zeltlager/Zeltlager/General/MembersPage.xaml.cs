@@ -11,12 +11,25 @@ namespace Zeltlager.General
 		public MembersPage()
 		{
 			InitializeComponent();
-			Content = new SearchableListView<Member>(LagerClient.CurrentLager.Members);
+			Content = new SearchableListView<Member>(LagerClient.CurrentLager.Members, OnContextActionEdit, OnContextActionDelete);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(new Member(), true)));
+		}
+
+		void OnContextActionEdit(object sender)
+		{
+			//TODO
+			//Tent t = (Tent)((MenuItem)sender).CommandParameter;
+			//Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(t, false)), true);
+		}
+
+		async void OnContextActionDelete(object sender)
+		{
+			//TODO
+			//await LagerClient.CurrentLager.AddPacket(new DeleteTent((Tent)((MenuItem)sender).CommandParameter));
 		}
 	}
 }
