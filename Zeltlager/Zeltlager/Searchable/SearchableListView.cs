@@ -11,8 +11,8 @@ namespace Zeltlager
 		IReadOnlyList<T> currentItems;
 		IReadOnlyList<T> totalItems;
 		ListView listView;
-		Command OnEdit;
-		Command OnDelete;
+		public Command OnEdit;
+		public Command OnDelete;
 
 		public SearchableListView(IReadOnlyList<T> items, Action<object> onEdit, Action<object> onDelete)
 		{
@@ -40,18 +40,8 @@ namespace Zeltlager
 			// Bind commands for context actions
 			OnEdit = new Command(onEdit);
 			OnDelete = new Command(onDelete);
-			var bindingEdit = new Binding
-			{
-				Source = this,
-				Path = "OnEdit"
-			};
-			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, bindingEdit);
-			var bindingDelete = new Binding
-			{
-				Source = this,
-				Path = "OnDelete"
-			};
-			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, bindingDelete);
+			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, new Binding("OnEdit", source: this));
+			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, new Binding("OnDelete", source: this));
 
 			listView.ItemTemplate = dataTemplate;
 			listView.BindingContext = items;

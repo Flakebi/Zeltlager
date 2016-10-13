@@ -15,10 +15,6 @@ namespace Zeltlager
 		{
 		}
 
-		void OnTournamentClicked(object sender, EventArgs e)
-		{
-		}
-
 		void OnCompetitionClicked(object sender, EventArgs e)
 		{
 		}
@@ -33,5 +29,10 @@ namespace Zeltlager
 		}
 
 		void OnGeneralClicked(object sender, EventArgs e) => Navigation.PushAsync(new GeneralPage());
+
+		void OnSettingsClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new Settings.SettingsPage());
+		}
 	}
 }

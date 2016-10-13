@@ -35,6 +35,7 @@ namespace Zeltlager.General
 
 		async void OnContextActionDelete(object sender)
 		{
+			await DisplayAlert("ContextAction called", "on Delete in TentsPage", "ok");
 			await LagerClient.CurrentLager.AddPacket(new DeleteTent((Tent)((MenuItem)sender).CommandParameter));
 		}
 	}

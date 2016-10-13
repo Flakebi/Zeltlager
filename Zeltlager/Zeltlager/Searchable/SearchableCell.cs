@@ -41,7 +41,7 @@ namespace Zeltlager
 		/// </summary>
 		public static readonly BindableProperty OnEditCommandProperty = BindableProperty.Create("OnEditCommand", typeof(Command), typeof(SearchableCell), null);
 		/// <summary>
-		/// The command which gets executed on tapping the cell
+		/// The command which gets executed on selecting edit on the cell
 		/// </summary>
 		public Command OnEditCommand
 		{
@@ -75,7 +75,7 @@ namespace Zeltlager
 		/// </summary>
 		public static readonly BindableProperty OnDeleteCommandProperty = BindableProperty.Create("OnDeleteCommand", typeof(Command), typeof(SearchableCell), null);
 		/// <summary>
-		/// The command which gets executed on tapping the cell
+		/// The command which gets executed on selecting delete onthe cell
 		/// </summary>
 		public Command OnDeleteCommand
 		{

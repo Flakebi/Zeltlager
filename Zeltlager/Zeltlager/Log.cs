@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace Zeltlager
 {
@@ -83,6 +84,16 @@ namespace Zeltlager
 			messages.Add(message);
 			using (StreamWriter writer = new StreamWriter(await LagerBase.IoProvider.AppendFile(FILENAME)))
 				writer.WriteLine(message);
+		}
+
+		public string printLog()
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (var message in messages)
+			{
+				sb.AppendLine(message.ToString());
+			}
+			return sb.ToString();
 		}
 	}
 }
