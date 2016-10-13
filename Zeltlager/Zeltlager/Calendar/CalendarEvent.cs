@@ -25,6 +25,8 @@ namespace Zeltlager.Calendar
 		/// <summary>
 		/// time of the event, used to edit only time
 		/// </summary>
+		/// private attribute needed, so binding Date to a DatePicker does not fuck up our time
+		/// (changes in the TimeOfDay in Date are not reflected in TimeSpan)
 		private TimeSpan timeSpan;
 		[Editable("Uhrzeit")]
 		public TimeSpan TimeSpan
