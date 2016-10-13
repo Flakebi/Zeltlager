@@ -76,8 +76,12 @@ namespace Zeltlager.UAM
 				else if (vartype == typeof(TimeSpan))
 				{
 					// use time picker
-					manip = new TimePicker();
-					manip.SetBinding(TimePicker.TimeProperty, new Binding(pi.Name, BindingMode.TwoWay));
+					var tp = new TimePicker();
+					tp.SetBinding(TimePicker.TimeProperty, new Binding(pi.Name, BindingMode.TwoWay));
+					/*tp.Time = (TimeSpan) type.GetRuntimeProperty(pi.Name).GetValue(Obj);
+					var text = new Label();
+					text.Text = (tp.Time).ToString("g");*/
+					manip = tp;
 				}
 				else if (numtypes.Contains(vartype))
 				{

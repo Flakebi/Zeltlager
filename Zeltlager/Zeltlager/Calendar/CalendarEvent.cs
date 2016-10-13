@@ -10,7 +10,7 @@ namespace Zeltlager.Calendar
 	using Client;
 
 	[Editable("Termin")]
-	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>
+	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>, IEquatable<CalendarEvent>
 	{
 		/// <summary>
 		/// date of the event
@@ -25,14 +25,14 @@ namespace Zeltlager.Calendar
 		/// <summary>
 		/// time of the event, used to edit only time
 		/// </summary>
-		//private TimeSpan timeSpan;
+		private TimeSpan timeSpan;
 		[Editable("Uhrzeit")]
 		public TimeSpan TimeSpan
 		{
-			get { return date.TimeOfDay; }
+			get { return timeSpan; }
 			set
 			{
-				date = date.Date.Add(value);
+				date = date.Date.Add(value); timeSpan = value;
 				OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString"); OnPropertyChanged("Date");
 			}
 		}
@@ -60,10 +60,11 @@ namespace Zeltlager.Calendar
 			set { detail = value; OnPropertyChanged("Detail"); }
 		}
 
-		public CalendarEvent(DateTime date, string title)
+		private CalendarEvent(DateTime date, string title)
 		{
 			this.date = date;
 			this.title = title;
+			this.timeSpan = date.TimeOfDay;
 		}
 
 		public CalendarEvent(DateTime date, string title, string detail) : this(date, title)
@@ -99,6 +100,19 @@ namespace Zeltlager.Calendar
 		public CalendarEvent CloneDeep()
 		{
 			return new CalendarEvent(date, title, detail);
+		}
+
+		public bool Equals(CalendarEvent other)
+		{
+			if (other == null)
+				return false;
+			bool back = true;
+			if (Title != null && other.Title != null)
+				back = Title.Equals(other.Title) && back;
+			if (Detail != null && other.Detail != null)
+				back = Detail.Equals(other.Detail) && back;
+			back = Date.Equals(other.Date) && back;
+			return back;
 		}
 
 		#endregion

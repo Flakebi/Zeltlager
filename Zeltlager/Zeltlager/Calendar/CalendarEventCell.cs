@@ -66,9 +66,9 @@ namespace Zeltlager.Calendar
 			((View)Parent).Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(ce, false)), true);
 		}
 
-		private void OnDelete(object sender, EventArgs e)
+		private async void OnDelete(object sender, EventArgs e)
 		{
-			LagerClient.CurrentLager.Calendar.RemoveCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter);
+			await LagerClient.CurrentLager.AddPacket(new DeleteCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter));
 		}
 	}
 }

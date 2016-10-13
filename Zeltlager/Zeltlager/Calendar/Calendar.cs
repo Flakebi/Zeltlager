@@ -7,7 +7,7 @@ namespace Zeltlager.Calendar
 
 	public class Calendar : ILagerPart
 	{
-		private LagerClient lager;
+		LagerClient lager;
 		public List<Day> Days { get; }
 
 		public Calendar(LagerClient lager)
@@ -37,7 +37,7 @@ namespace Zeltlager.Calendar
 			//add standard events
 			foreach (Day day in Days)
 			{
-				day.Events.Add(new CalendarEvent(GetSpecificTime(day.Date, 8, 1), "Frühstück"));
+				day.Events.Add(new CalendarEvent(GetSpecificTime(day.Date, 8, 1), "Frühstück", ""));
 				day.Events.Add(new CalendarEvent(GetSpecificTime(day.Date, 12, 30), "Mittagessen", "Maultaschen"));
 				day.Events.Add(new CalendarEvent(GetSpecificTime(day.Date, 18, 30), "Abendessen", "Lagerburger"));
 			}
@@ -61,7 +61,7 @@ namespace Zeltlager.Calendar
 			FindCorrectDay(caldendarEvent).Events.Remove(caldendarEvent);
 		}
 
-		private Day FindCorrectDay(CalendarEvent ce){
+		Day FindCorrectDay(CalendarEvent ce){
 			return lager.Calendar.Days.Find(x => x.Date.Date == ce.Date.Date);
 		}
 	}

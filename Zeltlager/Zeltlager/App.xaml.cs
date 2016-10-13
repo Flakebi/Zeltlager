@@ -63,7 +63,7 @@ namespace Zeltlager
 					var lagerData = LagerClient.ClientGlobalSettings.Lagers[lagerId];
 					LagerClient.CurrentLager = new LagerClient(lagerId, lagerData.Item1, lagerData.Item2);
 					if (!await LagerClient.CurrentLager.Load())
-						await MainPage.DisplayAlert(loadingScreen.Status, "Beim laden des Lagers sind Fehler aufgetreten", "Ok");
+						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden des Lagers sind Fehler aufgetreten", "Ok");
 				} catch (Exception e)
 				{
 					// Log the exception
