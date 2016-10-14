@@ -1,6 +1,5 @@
 ﻿using System;
 using Zeltlager.UAM;
-using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using Zeltlager.DataPackets;
 
 namespace Zeltlager

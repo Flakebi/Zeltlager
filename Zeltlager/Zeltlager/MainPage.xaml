@@ -5,6 +5,10 @@
              x:Class="Zeltlager.MainPage"
              Title="Zeltlager"
 		 	 Style="{StaticResource BaseStyle}">
+	<ContentPage.ToolbarItems>
+		<ToolbarItem x:Name="settingsButton" Text="⚙" Clicked="OnSettingsClicked">
+		</ToolbarItem>
+	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
 		<StackLayout VerticalOptions="FillAndExpand"
 					 HorizontalOptions="FillAndExpand"
@@ -16,7 +20,6 @@
 			<Button x:Name="erwischtButton" Text="Erwischt" Clicked="OnErwischtClicked"/>
 			<Button x:Name="calendarButton" Text="Kalender" Clicked="OnCalendarClicked"/>
 			<Button x:Name="generalButton" Text="Allgemeines" Clicked="OnGeneralClicked"/>
-			<Button x:Name="settingsButton" Text="Einstellungen" Clicked="OnSettingsClicked"/>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

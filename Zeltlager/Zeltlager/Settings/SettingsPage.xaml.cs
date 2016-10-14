@@ -11,7 +11,11 @@ namespace Zeltlager.Settings
 		public SettingsPage()
 		{
 			InitializeComponent();
-			logLabel.Text = LagerBase.Log.printLog();
+		}
+
+		void OnLogClicked(object sender, EventArgs e) 
+		{
+			Navigation.PushAsync(new LogPage());
 		}
 	}
 }

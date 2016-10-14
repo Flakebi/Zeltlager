@@ -9,10 +9,7 @@
 					 Orientation="Vertical"
 					 Spacing="15"
 					 Padding="10,10,10,0">
-			<Label Text="Log: "/>
-			<ScrollView>
-				<Label x:Name="logLabel" VerticalOptions="FillAndExpand"/>
-			</ScrollView>
+			<Button Text="Log" Clicked="OnLogClicked"/>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>
