@@ -81,7 +81,7 @@ namespace Zeltlager
 			using (BinaryWriter writer = new BinaryWriter(mem))
 			{
 				// Write the packet id
-				writer.Write(i);
+				writer.Write(i.ToBytes());
 				packet.WritePacket(writer);
 			}
 

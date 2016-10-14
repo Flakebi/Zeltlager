@@ -24,6 +24,16 @@ namespace Zeltlager
 		}
 
 		public abstract void WriteId(BinaryWriter output);
+
+		public static bool operator ==(CollaboratingId<T> c1, CollaboratingId<T> c2)
+		{
+			return c1.Equals(c2);
+		}
+
+		public static bool operator !=(CollaboratingId<T> c1, CollaboratingId<T> c2)
+		{
+			return !(c1 == c2);
+		}
 	}
 
 	public class TentId : CollaboratingId<byte>

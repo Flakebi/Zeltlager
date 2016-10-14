@@ -40,7 +40,7 @@ namespace Zeltlager
 
 			static string Escape(string s)
 			{
-				return s.Replace("\n", "    ");
+				return s.Replace("\n", "    ").Replace("\r", "");
 			}
 		}
 
