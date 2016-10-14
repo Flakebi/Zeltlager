@@ -53,6 +53,7 @@ namespace Zeltlager
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 
+			bool loadedLager = false;
 			if (LagerClient.ClientGlobalSettings.Lagers.Count > 0)
 			{
 				// Load lager
@@ -64,15 +65,18 @@ namespace Zeltlager
 					LagerClient.CurrentLager = new LagerClient(lagerId, lagerData.Item1, lagerData.Item2);
 					if (!await LagerClient.CurrentLager.Load())
 						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden des Lagers sind Fehler aufgetreten", "Ok");
+					loadedLager = true;
 				} catch (Exception e)
 				{
 					// Log the exception
 					await LagerBase.Log.Exception("App", e);
 					await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 				}
+			}
+			if (loadedLager)
 				// Go to the main page
 				MainPage = new NavigationPage(new MainPage());
-			} else
+			else
 			{
 				// Create lager
 				loadingScreen.Status = "Lager erstellen";

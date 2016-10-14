@@ -107,15 +107,7 @@ namespace Zeltlager.Calendar
 
 		public bool Equals(CalendarEvent other)
 		{
-			if (other == null)
-				return false;
-			bool back = true;
-			if (Title != null && other.Title != null)
-				back = Title.Equals(other.Title) && back;
-			if (Detail != null && other.Detail != null)
-				back = Detail.Equals(other.Detail) && back;
-			back = Date.Equals(other.Date) && back;
-			return back;
+			return Title.Equals(other.Title) && Detail.Equals(other.Detail) && Date.Equals(other.Date);
 		}
 
 		#endregion
