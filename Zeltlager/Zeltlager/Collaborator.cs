@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Zeltlager.DataPackets;
@@ -63,6 +64,13 @@ namespace Zeltlager
 				await SavePacket(io, symmetricKey, i);
 		}
 
+		/// <summary>
+		/// Save the packet with the given id and encrypt it using the supplied symmetric key.
+		/// </summary>
+		/// <param name="io"></param>
+		/// <param name="symmetricKey">The key to encrypt the packet.</param>
+		/// <param name="i">The packet id.</param>
+		/// <returns></returns>
 		public async Task SavePacket(IIoProvider io, byte[] symmetricKey, ushort i)
 		{
 			var packet = packets[i];
@@ -71,7 +79,11 @@ namespace Zeltlager
 			// Get packet data
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter writer = new BinaryWriter(mem))
+			{
+				// Write the packet id
+				writer.Write(i);
 				packet.WritePacket(writer);
+			}
 
 			data = mem.ToArray();
 
@@ -154,7 +166,13 @@ namespace Zeltlager
 					byte[] data = new byte[allData.Length - iv.Length];
 					Array.Copy(allData, iv.Length, data, 0, data.Length);
 
-					DataPacket packet = DataPacket.ReadPacket(await LagerBase.CryptoProvider.DecryptSymetric(symmetricKey, iv, data));
+					data = await LagerBase.CryptoProvider.DecryptSymetric(symmetricKey, iv, data);
+					// Check if the right id
+					ushort packetId = data.ToUShort(0);
+					if (packetId != i)
+						throw new Exception("The packet has an invalid id.");
+
+					DataPacket packet = DataPacket.ReadPacket(data.Skip(2).ToArray());
 					packet.Iv = iv;
 					packet.Signature = signature;
 					packets.Add(packet);
