@@ -17,6 +17,7 @@ namespace Zeltlager.DataPackets
 			{
                 output.Write(tent.Number);
 				output.Write(tent.Name);
+				output.Write(tent.Girls);
 				output.Write((ushort)tent.Supervisors.Count);
                 for (int i = 0; i < tent.Supervisors.Count; i++)
                     output.Write(tent.Supervisors[i].Id);
@@ -35,6 +36,7 @@ namespace Zeltlager.DataPackets
                 tentId.id = collaborator.NextTentId++;
                 byte number = input.ReadByte();
 				string name = input.ReadString();
+				bool girls = input.ReadBoolean();
 				ushort length = input.ReadUInt16();
 				List<Member> supervisors = new List<Member>(length);
 				for (int i = 0; i < length; i++)
@@ -43,7 +45,7 @@ namespace Zeltlager.DataPackets
 					supervisors.Add(lager.Members.First(m => m.Id == id));
 				}
 
-				Tent tent = new Tent(tentId, number, name, supervisors);
+				Tent tent = new Tent(tentId, number, name, girls, supervisors);
 				lager.AddTent(tent);
 			}
 		}

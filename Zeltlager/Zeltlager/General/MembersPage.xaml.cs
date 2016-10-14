@@ -1,6 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 using Zeltlager.UAM;
+using System.Linq;
 
 namespace Zeltlager.General
 {
@@ -16,6 +17,11 @@ namespace Zeltlager.General
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
+			if (!LagerClient.CurrentLager.Tents.Any())
+			{
+				DisplayAlert("Keine Zelte vorhanden", "Bitte füge ein Zelt hinzu. Jeder Teilnehmer muss ein Zelt haben.", "Ok");
+				return;
+			}
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(new Member(), true)));
 		}
 

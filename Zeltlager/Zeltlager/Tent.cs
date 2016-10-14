@@ -32,10 +32,11 @@ namespace Zeltlager
 
 		public Tent() {}
 
-		public Tent(TentId id, byte Number, string name, List<Member> supervisors)
+		public Tent(TentId id, byte Number, string name, bool girls, List<Member> supervisors)
 		{
 			Id = id;
 			Name = name;
+			Girls = girls;
 			this.supervisors = supervisors;
 		}
 
@@ -62,7 +63,7 @@ namespace Zeltlager
 
 		public Tent CloneDeep()
 		{
-			return new Tent(Id, Number, Name, new List<Member>(supervisors));
+			return new Tent(Id, Number, Name, Girls, new List<Member>(supervisors));
 		}
 
 		public string SearchableText

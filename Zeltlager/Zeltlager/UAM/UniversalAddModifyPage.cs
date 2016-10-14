@@ -114,13 +114,16 @@ namespace Zeltlager.UAM
 						}
 						type.GetRuntimeProperty(pi.Name).SetValue(Obj, t, null);
 					};
+					picker.SelectedIndex = 0;
 					manip = picker;
 				}
 				else if (vartype == typeof(bool))
 				{
 					// use switch
-					manip = new Switch();
-					manip.SetBinding(Switch.IsToggledProperty, new Binding(pi.Name, BindingMode.TwoWay));
+					var sw = new Switch();
+					//sw.IsToggled = (bool) type.GetRuntimeProperty(pi.Name).GetValue(Obj);
+					sw.SetBinding(Switch.IsToggledProperty, new Binding(pi.Name, BindingMode.TwoWay));
+					manip = sw;
 				}
 				else if (vartype == typeof(List<object>))
 				{
