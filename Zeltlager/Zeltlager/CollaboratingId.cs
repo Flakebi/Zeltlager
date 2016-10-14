@@ -20,10 +20,37 @@ namespace Zeltlager
 
 		public bool Equals(CollaboratingId<T> other)
 		{
+			if (other == null)
+				return false;
 			return collaborator.Id == other.collaborator.Id && id.Equals(other.id);
 		}
 
+		public override bool Equals(object obj)
+		{
+			CollaboratingId<T> other = obj as CollaboratingId<T>;
+			if (other == null)
+				return false;
+			return Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			return id.GetHashCode() ^ collaborator.Id.GetHashCode();
+		}
+
 		public abstract void WriteId(BinaryWriter output);
+
+		public static bool operator ==(CollaboratingId<T> c1, CollaboratingId<T> c2)
+		{
+			if ((object)c1 == null)
+				return (object)c2 == null;
+			return c1.Equals(c2);
+		}
+
+		public static bool operator !=(CollaboratingId<T> c1, CollaboratingId<T> c2)
+		{
+			return !(c1 == c2);
+		}
 	}
 
 	public class TentId : CollaboratingId<byte>
