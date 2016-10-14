@@ -5,6 +5,25 @@ using System.Linq;
 
 namespace Zeltlager
 {
+	public static class Icons
+	{
+		public const string EDIT = "✏️";
+		public const string DELETE = "\ud83d\uddd1";
+		public const string SETTINGS = "⚙";
+		public const string ADD = "＋";
+
+		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
+		{
+			{DayOfWeek.Monday, "\ud83c\udf19"},
+			{DayOfWeek.Tuesday, "\ud83d\udd25"},
+			{DayOfWeek.Wednesday, "\ud83c\udf0a"},
+			{DayOfWeek.Thursday, "\ud83c\udf33"},
+			{DayOfWeek.Friday, "\ud83c\udfc5"},
+			{DayOfWeek.Saturday, "\ud83c\udf0d"},
+			{DayOfWeek.Sunday, "☀️"},
+		};
+	}
+
 	public static class Helpers
 	{
 		public static void Sort<T>(this ObservableCollection<T> collection) where T : IComparable<T>

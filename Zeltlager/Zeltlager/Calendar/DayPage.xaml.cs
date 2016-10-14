@@ -20,7 +20,7 @@ namespace Zeltlager.Calendar
 
 			var dayNameLabel = new Label
 			{
-				Text = day.Date.ToString("dddd, dd.MM."),
+				Text = day.Date.ToString(Icons.WEEKDAYS[day.Date.DayOfWeek] + " dddd, dd.MM.yy"),
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};

@@ -6,11 +6,11 @@ namespace Zeltlager
 	{
 		public SearchableCell()
 		{
-			var editAction = new MenuItem { Text = "✏️" };
+			var editAction = new MenuItem { Text = Icons.EDIT };
 			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("."));
 			editAction.SetBinding(MenuItem.CommandProperty, new Binding("OnEditCommand"));
 
-			var deleteAction = new MenuItem { Text = "\ud83d\uddd1", IsDestructive = true };
+			var deleteAction = new MenuItem { Text = Icons.DELETE, IsDestructive = true };
 			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("."));
 			deleteAction.SetBinding(MenuItem.CommandProperty, new Binding("OnDeleteCommand"));
 
