@@ -42,9 +42,9 @@ namespace Zeltlager
 			OnEdit = new Command(sender => onEdit((T)sender));
 			OnDelete = new Command(sender => onDelete((T)sender));
 			dataTemplate.SetBinding(SearchableCell.OnEditCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, new Binding("OnEdit", source: this));
+			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
 			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, new Binding("OnDelete", source: this));
+			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 
 			listView.ItemTemplate = dataTemplate;
 			listView.BindingContext = items;

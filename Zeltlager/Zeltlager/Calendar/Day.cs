@@ -15,7 +15,7 @@ namespace Zeltlager.Calendar
 				if (value != events)
 				{
 					events = value;
-					OnPropertyChanged("Events");
+					OnPropertyChanged(nameof(Events));
 				}
 			}
 		}
@@ -27,7 +27,7 @@ namespace Zeltlager.Calendar
 			set
 			{
 				date = value;
-				OnPropertyChanged("Date");
+				OnPropertyChanged(nameof(Date));
 			}
 		}
 

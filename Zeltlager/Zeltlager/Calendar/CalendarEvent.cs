@@ -23,9 +23,9 @@ namespace Zeltlager.Calendar
 			set
 			{
 				date = value.Date.Add(timeSpan);
-				OnPropertyChanged("Date");
-				OnPropertyChanged("TimeSpan");
-				OnPropertyChanged("TimeString");
+				OnPropertyChanged(nameof(Date));
+				OnPropertyChanged(nameof(TimeSpan));
+				OnPropertyChanged(nameof(TimeString));
 			}
 		}
 		/// <summary>
@@ -42,9 +42,9 @@ namespace Zeltlager.Calendar
 			{
 				date = date.Date.Add(value);
 				timeSpan = value;
-				OnPropertyChanged("TimeSpan");
-				OnPropertyChanged("TimeString");
-				OnPropertyChanged("Date");
+				OnPropertyChanged(nameof(Date));
+				OnPropertyChanged(nameof(TimeSpan));
+				OnPropertyChanged(nameof(TimeString));
 			}
 		}
 		/// <summary>
@@ -61,7 +61,7 @@ namespace Zeltlager.Calendar
 		public string Title
 		{
 			get { return title; }
-			set { title = value; OnPropertyChanged("Title"); }
+			set { title = value; OnPropertyChanged(nameof(Title)); }
 		}
 
 		private string detail;
@@ -69,20 +69,15 @@ namespace Zeltlager.Calendar
 		public string Detail
 		{
 			get { return detail; }
-			set { detail = value; OnPropertyChanged("Detail"); }
+			set { detail = value; OnPropertyChanged(nameof(Detail)); }
 		}
 
-		private CalendarEvent(DateTime date, string title)
+		public CalendarEvent(DateTime date, string title, string detail)
 		{
 			this.date = date;
 			this.title = title;
-			detail = "";
-			timeSpan = date.TimeOfDay;
-		}
-
-		public CalendarEvent(DateTime date, string title, string detail) : this(date, title)
-		{
 			this.detail = detail;
+			timeSpan = date.TimeOfDay;
 		}
 
 		#region Interface implementations

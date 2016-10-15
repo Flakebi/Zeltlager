@@ -9,7 +9,7 @@ namespace Zeltlager
 		/// <summary>
 		/// The bindable property implementation
 		/// </summary>
-		public static readonly BindableProperty OnEditCommandParameterProperty = BindableProperty.Create("OnEditCommandParameter", typeof(object), typeof(SearchableCell), null);
+		public static readonly BindableProperty OnEditCommandParameterProperty = BindableProperty.Create(nameof(OnEditCommandParameter), typeof(object), typeof(SearchableCell), null);
 		/// <summary>
 		/// The edit command parameter
 		/// </summary>
@@ -19,13 +19,13 @@ namespace Zeltlager
 			set
 			{
 				SetValue(OnEditCommandParameterProperty, value);
-				OnPropertyChanged("OnEditCommandParameter");
+				OnPropertyChanged(nameof(OnEditCommandParameter));
 			}
 		}
 		/// <summary>
 		/// The bindable property implementation
 		/// </summary>
-		public static readonly BindableProperty OnEditCommandProperty = BindableProperty.Create("OnEditCommand", typeof(Command), typeof(SearchableCell), null);
+		public static readonly BindableProperty OnEditCommandProperty = BindableProperty.Create(nameof(OnEditCommand), typeof(Command), typeof(SearchableCell), null);
 		/// <summary>
 		/// The command which gets executed on selecting edit on the cell
 		/// </summary>
@@ -35,11 +35,11 @@ namespace Zeltlager
 			set
 			{
 				SetValue(OnEditCommandProperty, value);
-				OnPropertyChanged("OnEditCommand");
+				OnPropertyChanged(nameof(OnEditCommand));
 			}
 		}
 
-		public static readonly BindableProperty OnDeleteCommandParameterProperty = BindableProperty.Create("OnDeleteCommandParameter", typeof(object), typeof(SearchableCell), null);
+		public static readonly BindableProperty OnDeleteCommandParameterProperty = BindableProperty.Create(nameof(OnDeleteCommandParameter), typeof(object), typeof(SearchableCell), null);
 		/// <summary>
 		/// The delete command parameter
 		/// </summary>
@@ -49,13 +49,13 @@ namespace Zeltlager
 			set
 			{
 				SetValue(OnEditCommandParameterProperty, value);
-				OnPropertyChanged("OnDeleteCommandParameter");
+				OnPropertyChanged(nameof(OnDeleteCommandParameter));
 			}
 		}
 		/// <summary>
 		/// The bindable property implementation
 		/// </summary>
-		public static readonly BindableProperty OnDeleteCommandProperty = BindableProperty.Create("OnDeleteCommand", typeof(Command), typeof(SearchableCell), null);
+		public static readonly BindableProperty OnDeleteCommandProperty = BindableProperty.Create(nameof(OnDeleteCommand), typeof(Command), typeof(SearchableCell), null);
 		/// <summary>
 		/// The command which gets executed on selecting delete onthe cell
 		/// </summary>
@@ -65,21 +65,21 @@ namespace Zeltlager
 			set
 			{
 				SetValue(OnDeleteCommandProperty, value);
-				OnPropertyChanged("OnDeleteCommand");
+				OnPropertyChanged(nameof(OnDeleteCommand));
 			}
 		}
 
 		public SearchableCell()
 		{
 			var editAction = new MenuItem { Text = Icons.EDIT };
-			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("OnEditCommandParameter"));
-			editAction.SetBinding(MenuItem.CommandProperty, new Binding("OnEditCommand"));
+			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnEditCommandParameter)));
+			editAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnEditCommand)));
 			editAction.BindingContext = this;
 
 			var deleteAction = new MenuItem { Text = Icons.DELETE, IsDestructive = true };
-			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("OnDeleteCommandParameter"));
-			deleteAction.SetBinding(MenuItem.CommandProperty, new Binding("OnDeleteCommand"));
-			editAction.BindingContext = this;
+			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnDeleteCommandParameter)));
+			deleteAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnDeleteCommand)));
+			deleteAction.BindingContext = this;
 
 			ContextActions.Add(editAction);
 			ContextActions.Add(deleteAction);
