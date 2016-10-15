@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Zeltlager.UAM;
 using System.Threading.Tasks;
@@ -30,7 +29,7 @@ namespace Zeltlager
 
 		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
 
-		public Tent() {}
+		public Tent() { }
 
 		public Tent(TentId id, byte Number, string name, bool girls, List<Member> supervisors)
 		{
@@ -74,7 +73,7 @@ namespace Zeltlager
 		public string SearchableDetail
 		{
 			get { return ""; }
-		}	
+		}
 
 		#endregion
 	}

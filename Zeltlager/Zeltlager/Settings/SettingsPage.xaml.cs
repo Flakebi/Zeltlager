@@ -13,7 +13,7 @@ namespace Zeltlager.Settings
 			InitializeComponent();
 		}
 
-		void OnLogClicked(object sender, EventArgs e) 
+		void OnLogClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new LogPage());
 		}

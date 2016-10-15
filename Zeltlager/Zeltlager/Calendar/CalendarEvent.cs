@@ -1,19 +1,19 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Zeltlager.UAM;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Calendar
 {
-	using System.Threading.Tasks;
 	using Client;
+	using UAM;
 
 	[Editable("Termin")]
 	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>, IEquatable<CalendarEvent>
 	{
 		/// <summary>
-		/// date of the event
+		/// The date of this event.
 		/// </summary>
 		private DateTime date;
 		[Editable("Tag")]
@@ -21,12 +21,18 @@ namespace Zeltlager.Calendar
 		{
 			get { return date; }
 			// make date reflect correct time of day (hate to the DatePicker!!!)
-			set { date = value.Date.Add(timeSpan); OnPropertyChanged("Date"); OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString");}
+			set
+			{
+				date = value.Date.Add(timeSpan);
+				OnPropertyChanged("Date");
+				OnPropertyChanged("TimeSpan");
+				OnPropertyChanged("TimeString");
+			}
 		}
 		/// <summary>
-		/// time of the event, used to edit only time
+		/// The time of this event, used to edit only the time.
 		/// </summary>
-		/// private attribute needed, so binding Date to a DatePicker does not fuck up our time
+		/// A private attribute is needed, so binding Date to a DatePicker does not fuck up our time
 		/// (changes in the TimeOfDay in Date are not reflected in TimeSpan)
 		private TimeSpan timeSpan;
 		[Editable("Uhrzeit")]
@@ -35,8 +41,11 @@ namespace Zeltlager.Calendar
 			get { return timeSpan; }
 			set
 			{
-				date = date.Date.Add(value); timeSpan = value;
-				OnPropertyChanged("TimeSpan"); OnPropertyChanged("TimeString"); OnPropertyChanged("Date");
+				date = date.Date.Add(value);
+				timeSpan = value;
+				OnPropertyChanged("TimeSpan");
+				OnPropertyChanged("TimeString");
+				OnPropertyChanged("Date");
 			}
 		}
 		/// <summary>
@@ -55,6 +64,7 @@ namespace Zeltlager.Calendar
 			get { return title; }
 			set { title = value; OnPropertyChanged("Title"); }
 		}
+
 		private string detail;
 		[Editable("Beschreibung")]
 		public string Detail
@@ -67,7 +77,8 @@ namespace Zeltlager.Calendar
 		{
 			this.date = date;
 			this.title = title;
-			this.timeSpan = date.TimeOfDay;
+			detail = "";
+			timeSpan = date.TimeOfDay;
 		}
 
 		public CalendarEvent(DateTime date, string title, string detail) : this(date, title)
@@ -93,10 +104,10 @@ namespace Zeltlager.Calendar
 		{
 			if (oldObj != null)
 			{
-				//Delete Item
+				// Delete Item
 				await LagerClient.CurrentLager.AddPacket(new DeleteCalendarEvent(oldObj));
 			}
-			//Insert Calendar Event into correct day
+			// Insert Calendar Event into correct day
 			await LagerClient.CurrentLager.AddPacket(new AddCalendarEvent(this));
 		}
 
@@ -113,7 +124,7 @@ namespace Zeltlager.Calendar
 		#endregion
 	}
 
-	public static class CalendarEventHelper 
+	public static class CalendarEventHelper
 	{
 		public static void Write(this BinaryWriter output, CalendarEvent calendarEvent)
 		{

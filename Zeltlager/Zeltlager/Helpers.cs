@@ -30,7 +30,11 @@ namespace Zeltlager
 		{
 			List<T> sorted = collection.OrderBy(x => x).ToList();
 			for (int i = 0; i < sorted.Count(); i++)
-				collection.Move(collection.IndexOf(sorted[i]), i);
+			{
+				int newIndex = collection.IndexOf(sorted[i]);
+				if (newIndex != i)
+					collection.Move(newIndex, i);
+			}
 		}
 
 		public static void ToBytes(this ushort value, byte[] array, int offset)

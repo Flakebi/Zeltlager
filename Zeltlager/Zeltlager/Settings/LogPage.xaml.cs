@@ -7,30 +7,33 @@ namespace Zeltlager
 {
 	public partial class LogPage : ContentPage
 	{
-		public bool info{ get; set; }
-		public bool warning{ get; set; }
-		public bool error{ get; set; }
-		public bool exception { get; set; }
+		public bool Info { get; set; }
+		public bool Warning { get; set; }
+		public bool Error { get; set; }
+		public bool Exception { get; set; }
 		public LogPage()
 		{
 			InitializeComponent();
-			info = false;
-			warning = false;
-			error = true;
-			exception = true;
+
+			// Only display errors and exceptions by default
+			Info = false;
+			Warning = false;
+			Error = true;
+			Exception = true;
+
 			BindingContext = this;
-			updateUI(null, null);
+			UpdateUI(null, null);
 		}
 
-		void updateUI(object sender, EventArgs e)
+		void UpdateUI(object sender, EventArgs e)
 		{
-			logLabel.Text = LagerBase.Log.PrintLog(info, warning, error, exception);
+			logLabel.Text = LagerBase.Log.Print(Info, Warning, Error, Exception);
 		}
 
 		async void OnDeleteClicked(object sender, EventArgs e)
 		{
-			await LagerBase.Log.ClearLog();
-			updateUI(null, null);
+			await LagerBase.Log.Clear();
+			UpdateUI(null, null);
 		}
 	}
 }

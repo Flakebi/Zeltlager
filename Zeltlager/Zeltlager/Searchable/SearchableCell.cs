@@ -1,5 +1,5 @@
-﻿using System;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
+
 namespace Zeltlager
 {
 	public class SearchableCell : TextCell
@@ -29,11 +29,12 @@ namespace Zeltlager
 		{
 			get
 			{
-				return this.GetValue(OnEditCommandParameterProperty);
+				return GetValue(OnEditCommandParameterProperty);
 			}
+
 			set
 			{
-				this.SetValue(OnEditCommandParameterProperty, value);
+				SetValue(OnEditCommandParameterProperty, value);
 			}
 		}
 		/// <summary>
@@ -47,11 +48,12 @@ namespace Zeltlager
 		{
 			get
 			{
-				return (Command)this.GetValue(OnEditCommandProperty);
+				return (Command)GetValue(OnEditCommandProperty);
 			}
+
 			set
 			{
-				this.SetValue(OnEditCommandProperty, value);
+				SetValue(OnEditCommandProperty, value);
 			}
 		}
 
@@ -63,11 +65,12 @@ namespace Zeltlager
 		{
 			get
 			{
-				return this.GetValue(OnDeleteCommandParameterProperty);
+				return GetValue(OnDeleteCommandParameterProperty);
 			}
+
 			set
 			{
-				this.SetValue(OnEditCommandParameterProperty, value);
+				SetValue(OnEditCommandParameterProperty, value);
 			}
 		}
 		/// <summary>
@@ -81,11 +84,12 @@ namespace Zeltlager
 		{
 			get
 			{
-				return (Command)this.GetValue(OnDeleteCommandProperty);
+				return (Command)GetValue(OnDeleteCommandProperty);
 			}
+
 			set
 			{
-				this.SetValue(OnDeleteCommandProperty, value);
+				SetValue(OnDeleteCommandProperty, value);
 			}
 		}
 	}

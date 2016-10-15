@@ -1,8 +1,8 @@
 ﻿using System;
-
-using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq;
+
+using Xamarin.Forms;
 
 namespace Zeltlager
 {
@@ -11,6 +11,7 @@ namespace Zeltlager
 		IReadOnlyList<T> currentItems;
 		IReadOnlyList<T> totalItems;
 		ListView listView;
+
 		public Command OnEdit;
 		public Command OnDelete;
 

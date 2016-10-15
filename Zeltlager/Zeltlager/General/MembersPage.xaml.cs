@@ -1,11 +1,12 @@
 ﻿using System;
-using Xamarin.Forms;
-using Zeltlager.UAM;
 using System.Linq;
+
+using Xamarin.Forms;
 
 namespace Zeltlager.General
 {
 	using Client;
+	using UAM;
 
 	public partial class MembersPage : ContentPage
 	{

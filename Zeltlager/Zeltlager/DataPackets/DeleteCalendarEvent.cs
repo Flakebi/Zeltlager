@@ -1,14 +1,14 @@
-﻿using System;
-using Zeltlager.Client;
-using Zeltlager.DataPackets;
-using Zeltlager.Calendar;
-using System.IO;
+﻿using System.IO;
 
 namespace Zeltlager
 {
+	using Calendar;
+	using Client;
+	using DataPackets;
+
 	public class DeleteCalendarEvent : DataPacket
 	{
-		public DeleteCalendarEvent() {}
+		public DeleteCalendarEvent() { }
 
 		public DeleteCalendarEvent(CalendarEvent calendarEvent)
 		{

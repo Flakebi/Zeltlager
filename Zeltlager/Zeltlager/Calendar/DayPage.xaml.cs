@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Xamarin.Forms;
 
@@ -14,7 +13,7 @@ namespace Zeltlager.Calendar
 		{
 			InitializeComponent();
 
-			this.Day = day;
+			Day = day;
 
 			Padding = new Thickness(0, 20, 15, 0);
 
@@ -28,8 +27,8 @@ namespace Zeltlager.Calendar
 			leftArrow = new Button
 			{
 				Margin = new Thickness(15, 0, 0, 0),
-				Text = "←", 
-				FontAttributes = FontAttributes.Bold, 
+				Text = "←",
+				FontAttributes = FontAttributes.Bold,
 				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
@@ -75,15 +74,15 @@ namespace Zeltlager.Calendar
 			//removeNavButtons();
 		}
 
-		public void removeNavButtons() {
-			//make nav buttons invisible at ends of calendar
-			CarouselPage p = (CalendarPage)Parent;
+		public void removeNavButtons()
+		{
+			// Make nav buttons invisible at ends of calendar
+			CarouselPage p = (CarouselPage)Parent;
 			if (p.Children.IndexOf(this) == 0)
 			{
 				//leftArrow.IsVisible = false;
 				leftArrow.Opacity = 0;
-			}
-			else if (p.Children.IndexOf(this) == p.Children.Count-1)
+			} else if (p.Children.IndexOf(this) == p.Children.Count - 1)
 			{
 				//rightArrow.IsVisible = false;
 				rightArrow.Opacity = 0;
@@ -92,7 +91,7 @@ namespace Zeltlager.Calendar
 
 		private void OnLeftButtonClicked(object sender, EventArgs e)
 		{
-			CarouselPage p = (CalendarPage)Parent;
+			CarouselPage p = (CarouselPage)Parent;
 
 			// Check for ends of the List
 			if (p.Children.IndexOf(p.CurrentPage) > 0)
@@ -101,9 +100,9 @@ namespace Zeltlager.Calendar
 
 		private void OnRightButtonClicked(object sender, EventArgs e)
 		{
-			CarouselPage p = (CalendarPage)Parent;
+			CarouselPage p = (CarouselPage)Parent;
 
-			if (p.Children.IndexOf(p.CurrentPage) < p.Children.Count-1)
+			if (p.Children.IndexOf(p.CurrentPage) < p.Children.Count - 1)
 				p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) + 1];
 		}
 	}
