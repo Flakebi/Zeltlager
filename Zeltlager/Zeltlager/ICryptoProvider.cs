@@ -49,8 +49,8 @@ namespace Zeltlager
 		public static void WritePrivateKey(this BinaryWriter output, KeyPair keys)
 		{
 			output.WritePublicKey(keys);
-			output.Write((ushort)keys.Modulus.Length);
-			output.Write(keys.Modulus);
+			output.Write((ushort)keys.PrivateKey.Length);
+			output.Write(keys.PrivateKey);
 		}
 
 		public static KeyPair ReadPublicKey(this BinaryReader input)

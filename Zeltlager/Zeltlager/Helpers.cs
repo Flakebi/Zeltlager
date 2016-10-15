@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 
 namespace Zeltlager
 {
@@ -138,5 +139,13 @@ namespace Zeltlager
 		}
 
 		public static long ToLong(this byte[] value, int offset) => (long)value.ToULong(offset);
+
+		public static string ToHexString(this byte[] bytes)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (var b in bytes)
+				sb.Append(b.ToString("X2"));
+			return sb.ToString();
+		}
 	}
 }
