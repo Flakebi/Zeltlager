@@ -12,13 +12,13 @@ namespace Zeltlager
 		IReadOnlyList<T> totalItems;
 		ListView listView;
 
-		public Command OnEdit;
-		public Command OnDelete;
+		public Command OnEdit { get; set; }
+		public Command OnDelete { get; set; }
 
-		public SearchableListView(IReadOnlyList<T> items, Action<object> onEdit, Action<object> onDelete)
+		public SearchableListView(IReadOnlyList<T> items, Action<T> onEdit, Action<T> onDelete)
 		{
 			totalItems = items;
-			// display everything at the beginning
+			// Display everything at the beginning
 			currentItems = totalItems;
 
 			// build Layout
@@ -39,9 +39,11 @@ namespace Zeltlager
 			dataTemplate.SetBinding(TextCell.DetailProperty, new Binding("SearchableDetail"));
 
 			// Bind commands for context actions
-			OnEdit = new Command(onEdit);
-			OnDelete = new Command(onDelete);
+			OnEdit = new Command(sender => onEdit((T)sender));
+			OnDelete = new Command(sender => onDelete((T)sender));
+			dataTemplate.SetBinding(SearchableCell.OnEditCommandParameterProperty, new Binding("."));
 			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, new Binding("OnEdit", source: this));
+			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandParameterProperty, new Binding("."));
 			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, new Binding("OnDelete", source: this));
 
 			listView.ItemTemplate = dataTemplate;
@@ -55,18 +57,18 @@ namespace Zeltlager
 
 		void OnSearch(object sender, TextChangedEventArgs e)
 		{
-			// set current items to only show ones matching to the search text
+			// Set current items to only show ones matching to the search text
 			List<T> newTotalItems = new List<T>(totalItems);
 			newTotalItems.Sort();
 			List<T> newCurrentItems = new List<T>();
-			// get the words to filter for
+			// Get the words to filter for
 			var filters = e.NewTextValue.Split(' ');
 
-			// go through totalItems and remove everything not conforming to all search tags
-			// reverse list, so most result is sorted for most important tag last
+			// Go through totalItems and remove everything not conforming to all search tags
+			// Reverse list, so most result is sorted for most important tag last
 			foreach (var filter in filters.Reverse())
 			{
-				// ignore empty tags
+				// Ignore empty tags
 				if (string.IsNullOrEmpty(filter))
 					continue;
 
@@ -84,11 +86,11 @@ namespace Zeltlager
 				// Detail text contains the filter tag
 				FilterForCondition(newTotalItems, newCurrentItems, t => t.SearchableDetail.ToLowerInvariant().Contains(filterTag));
 
-				// switch lists so next round we only search in the list of things conforming to the current tag (and all old ones)
+				// Switch lists so next round we only search in the list of things conforming to the current tag (and all old ones)
 				newTotalItems = newCurrentItems;
 				newCurrentItems = new List<T>();
 			}
-			// fill displayed list completely filtered items
+			// Fill displayed list completely filtered items
 			currentItems = newTotalItems;
 			listView.ItemsSource = currentItems;
 		}

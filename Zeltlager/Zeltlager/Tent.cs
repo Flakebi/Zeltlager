@@ -31,9 +31,10 @@ namespace Zeltlager
 
 		public Tent() { }
 
-		public Tent(TentId id, byte Number, string name, bool girls, List<Member> supervisors)
+		public Tent(TentId id, byte number, string name, bool girls, List<Member> supervisors)
 		{
 			Id = id;
+			Number = number;
 			Name = name;
 			Girls = girls;
 			this.supervisors = supervisors;

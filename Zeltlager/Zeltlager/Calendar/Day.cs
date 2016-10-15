@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Calendar
 {
@@ -20,6 +19,7 @@ namespace Zeltlager.Calendar
 				}
 			}
 		}
+
 		private DateTime date;
 		public DateTime Date
 		{
@@ -41,7 +41,7 @@ namespace Zeltlager.Calendar
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public void OnPropertyChanged([CallerMemberName]string propertyName = null)
+		public void OnPropertyChanged(string propertyName)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}

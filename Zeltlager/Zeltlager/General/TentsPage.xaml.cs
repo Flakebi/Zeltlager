@@ -1,14 +1,14 @@
 ﻿using System;
-using Zeltlager.UAM;
+using System.Collections.Generic;
+using System.Linq;
 
 using Xamarin.Forms;
-using System.Linq;
-using System.Collections.Generic;
-using Zeltlager.DataPackets;
 
 namespace Zeltlager.General
 {
 	using Client;
+	using DataPackets;
+	using UAM;
 
 	public partial class TentsPage : ContentPage
 	{
@@ -26,17 +26,15 @@ namespace Zeltlager.General
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(new TentId(), tentNumber, "", true, new List<Member>()), true)));
 		}
 
-		void OnContextActionEdit(object sender)
+		void OnContextActionEdit(Tent tent)
 		{
-			DisplayAlert("ContextAction called", "on Edit in TentsPage", "ok");
-			Tent t = (Tent)((MenuItem)sender).CommandParameter;
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(t, false)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(tent, false)), true);
 		}
 
-		async void OnContextActionDelete(object sender)
+		async void OnContextActionDelete(Tent tent)
 		{
 			await DisplayAlert("ContextAction called", "on Delete in TentsPage", "ok");
-			await LagerClient.CurrentLager.AddPacket(new DeleteTent((Tent)((MenuItem)sender).CommandParameter));
+			await LagerClient.CurrentLager.AddPacket(new DeleteTent(tent));
 		}
 	}
 }
