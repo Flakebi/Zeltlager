@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 using Org.BouncyCastle.Crypto;
@@ -102,11 +101,7 @@ namespace Zeltlager
 			});
 		}
 
-		/// <summary>
-		/// Creates a public and a private key.
-		/// </summary>
-		/// <returns>A tuple of the generated public and private key.</returns>
-		public Task<KeyPair> CreateAsymmetricKeys()
+		public Task<KeyPair> CreateAsymmetricKey()
 		{
 			return Task.Run(() =>
 			{
@@ -123,34 +118,29 @@ namespace Zeltlager
 			});
 		}
 
-		public Task<byte[]> Sign(byte[] modulus, byte[] privateKey, byte[] data)
+		public Task<byte[]> Sign(KeyPair key, byte[] data)
 		{
 			return Task.Run(async () =>
 			{
 				// Hash data
 				var hash = await Hash(data);
 				// Encrypt hash
-				asymmetricCipher.Init(true, new RsaKeyParameters(true, new BigInteger(modulus), new BigInteger(privateKey)));
+				asymmetricCipher.Init(true, new RsaKeyParameters(true, new BigInteger(key.Modulus), new BigInteger(key.PrivateKey)));
 				return asymmetricCipher.ProcessBlock(hash, 0, hash.Length);
 			});
 		}
 
-		public Task<bool> Verify(byte[] modulus, byte[] publicKey, byte[] signature, byte[] data)
+		public Task<bool> Verify(KeyPair key, byte[] signature, byte[] data)
 		{
 			return Task.Run(async () =>
 			{
 				// Hash data
 				var hash = await Hash(data);
 				// Decrypt hash
-				asymmetricCipher.Init(false, new RsaKeyParameters(true, new BigInteger(modulus), new BigInteger(publicKey)));
+				asymmetricCipher.Init(false, new RsaKeyParameters(true, new BigInteger(key.Modulus), new BigInteger(key.PublicKey)));
 				var result = asymmetricCipher.ProcessBlock(signature, 0, signature.Length);
 				return Enumerable.SequenceEqual(hash, result);
 			});
-		}
-
-		public Task<bool> Verify(byte[] modulus, byte[] signature, byte[] data)
-		{
-			return Task.Run(() => Verify(modulus, DEFAULT_PUBLIC_KEY, signature, data));
 		}
 	}
 }

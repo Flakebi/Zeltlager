@@ -1,7 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	/// <summary>
+	/// Constants used for the cryptographic functions.
+	/// All LENGTH values are an amount of bytes,
+	/// all SIZE values are an amount of bits.
+	/// </summary>
 	public static class CryptoConstants
 	{
 		public const int SYMMETRIC_KEY_LENGTH = 32;
@@ -10,9 +16,9 @@ namespace Zeltlager
 		public const int IV_LENGTH = 16;
 		public const int HASH_LENGTH = 32;
 		public const int MAC_LENGTH = HASH_LENGTH;
-		public const int SIGNATURE_LENGTH = 256;
+		public const int SIGNATURE_LENGTH = 128;
 
-		public const int ASYMMETRIC_KEY_SIZE = 2048;
+		public const int ASYMMETRIC_KEY_SIZE = 1024;
 		public const int KEY_DERIVATION_ITERATIONS = 5000;
 
 		public static readonly byte[] DEFAULT_PUBLIC_KEY = new byte[] { 1, 0, 1 };
@@ -32,6 +38,36 @@ namespace Zeltlager
 		}
 	}
 
+	public static class KeyPairHelper
+	{
+		public static void WritePublicKey(this BinaryWriter output, KeyPair keys)
+		{
+			output.Write((ushort)keys.Modulus.Length);
+			output.Write(keys.Modulus);
+		}
+
+		public static void WritePrivateKey(this BinaryWriter output, KeyPair keys)
+		{
+			output.WritePublicKey(keys);
+			output.Write((ushort)keys.Modulus.Length);
+			output.Write(keys.Modulus);
+		}
+
+		public static KeyPair ReadPublicKey(this BinaryReader input)
+		{
+			ushort length = input.ReadUInt16();
+			return new KeyPair(input.ReadBytes(length), CryptoConstants.DEFAULT_PUBLIC_KEY, null);
+		}
+
+		public static KeyPair ReadPrivateKey(this BinaryReader input)
+		{
+			var key = input.ReadPublicKey();
+			ushort length = input.ReadUInt16();
+			key.PrivateKey = input.ReadBytes(length);
+			return key;
+		}
+	}
+
 	public interface ICryptoProvider
 	{
 		Task<byte[]> GetRandom(int length);
@@ -47,17 +83,23 @@ namespace Zeltlager
 		/// Creates a public and a private key.
 		/// </summary>
 		/// <returns>A tuple of the generated public and private key.</returns>
-		Task<KeyPair> CreateAsymmetricKeys();
+		Task<KeyPair> CreateAsymmetricKey();
 
-		Task<byte[]> Sign(byte[] modulus, byte[] privateKey, byte[] data);
-		Task<bool> Verify(byte[] modulus, byte[] publicKey, byte[] signature, byte[] data);
 		/// <summary>
-		/// Verify using the default public key (65537).
+		/// Sign the given data.
 		/// </summary>
-		/// <param name="modulus">The modulus parameter of the key.</param>
+		/// <param name="key">The key that should be used for signing.</param>
+		/// <param name="data">The data that should be signed.</param>
+		/// <returns>The created signature.</returns>
+		Task<byte[]> Sign(KeyPair key, byte[] data);
+
+		/// <summary>
+		/// Verify the signature of some data.
+		/// </summary>
+		/// <param name="key">The used key.</param>
 		/// <param name="signature">The given signature.</param>
 		/// <param name="data">The data that should be verified.</param>
 		/// <returns>If the data could be verified successfully or the signature is incorrect.</returns>
-		Task<bool> Verify(byte[] modulus, byte[] signature, byte[] data);
+		Task<bool> Verify(KeyPair key, byte[] signature, byte[] data);
 	}
 }
