@@ -27,7 +27,7 @@ namespace Zeltlager.Client
 		public IReadOnlyList<Tent> Tents { get { return tents; } }
 
 		// Subspaces
-		public Competition.Competition Competition { get; private set; }
+		public Competition.CompetitionHandler CompetitionHandler { get; private set; }
 		public Erwischt.Erwischt Erwischt { get; private set; }
 		public Calendar.Calendar Calendar { get; private set; }
 
@@ -65,7 +65,7 @@ namespace Zeltlager.Client
 
 			MissingPackets = new List<Tuple<byte, ushort>>();
 
-			Competition = new Competition.Competition(this);
+			CompetitionHandler = new Competition.CompetitionHandler(this);
 			Erwischt = new Erwischt.Erwischt(this);
 			Calendar = new Calendar.Calendar(this);
 		}
@@ -75,7 +75,7 @@ namespace Zeltlager.Client
 			return new ILagerPart[]
 			{
 				this,
-				Competition,
+				CompetitionHandler,
 				Erwischt,
 				Calendar,
 			};

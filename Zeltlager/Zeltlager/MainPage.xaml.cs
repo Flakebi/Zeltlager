@@ -13,6 +13,7 @@ namespace Zeltlager
 
 		void OnSynchronizeClicked(object sender, EventArgs e)
 		{
+			Navigation.PushAsync(new Competition.CompetitionHandlerPage());
 		}
 
 		void OnCompetitionClicked(object sender, EventArgs e)

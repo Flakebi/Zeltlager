@@ -5,7 +5,9 @@
              x:Class="Zeltlager.General.MembersPage"
              Title="Teilnehmer" Style="{StaticResource BaseStyle}">
 	<ContentPage.ToolbarItems>
-		<ToolbarItem x:Name="AddButton" Name="Hinzufügen" Clicked="OnAddButtonClicked">
+		<ToolbarItem x:Name="AddButton" 
+				Name="Hinzufügen" 
+				Clicked="OnAddButtonClicked">
 		</ToolbarItem>
 	</ContentPage.ToolbarItems>
 </ContentPage>

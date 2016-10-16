@@ -116,6 +116,16 @@
     <Compile Include="Settings\LogPage.xaml.cs">
       <DependentUpon>LogPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Competition\CompetitionHandler.cs" />
+    <Compile Include="Competition\Participant.cs" />
+    <Compile Include="Competition\Station.cs" />
+    <Compile Include="Competition\CompetitionResult.cs" />
+    <Compile Include="Competition\CompetitionPages\CompetitionHandlerPage.xaml.cs">
+      <DependentUpon>CompetitionHandlerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Competition\CompetitionPages\CompetitionPage.xaml.cs">
+      <DependentUpon>CompetitionPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -163,6 +173,12 @@
     <EmbeddedResource Include="Settings\LogPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="Competition\CompetitionPages\CompetitionHandlerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Competition\CompetitionPages\CompetitionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -202,6 +218,7 @@
   <ItemGroup>
     <Folder Include="Searchable\" />
     <Folder Include="Settings\" />
+    <Folder Include="Competition\CompetitionPages\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.2.127\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.2.127\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />

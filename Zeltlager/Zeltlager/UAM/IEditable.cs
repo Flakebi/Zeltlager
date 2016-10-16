@@ -5,9 +5,6 @@ namespace Zeltlager.UAM
 {
 	public interface IEditable<T>
 	{
-		// stuff that should be done if editing is cancelled
-		//void OnCancelEditing();
-
 		// stuff that should be done if editing is finished
 		// if null is passed, nothing should be deleted
 		Task OnSaveEditing(T oldObject);

@@ -2,6 +2,7 @@
 using Xamarin.Forms;
 using Zeltlager.UAM;
 using System.Linq;
+using Zeltlager.DataPackets;
 
 namespace Zeltlager.General
 {
@@ -27,15 +28,13 @@ namespace Zeltlager.General
 
 		void OnContextActionEdit(object sender)
 		{
-			//TODO
-			//Tent t = (Tent)((MenuItem)sender).CommandParameter;
-			//Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(t, false)), true);
+			Member m = (Member)((MenuItem)sender).CommandParameter;
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(m, false)), true);
 		}
 
 		async void OnContextActionDelete(object sender)
 		{
-			//TODO
-			//await LagerClient.CurrentLager.AddPacket(new DeleteTent((Tent)((MenuItem)sender).CommandParameter));
+			await LagerClient.CurrentLager.AddPacket(new DeleteMember((Member)((MenuItem)sender).CommandParameter));
 		}
 	}
 }
