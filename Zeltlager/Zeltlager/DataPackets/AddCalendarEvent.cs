@@ -1,4 +1,3 @@
-using System;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
 using Zeltlager.Calendar;
@@ -8,7 +7,7 @@ namespace Zeltlager
 {
 	public class AddCalendarEvent : DataPacket
 	{
-		public AddCalendarEvent() {}
+		public AddCalendarEvent() { }
 
 		public AddCalendarEvent(CalendarEvent calendarEvent)
 		{

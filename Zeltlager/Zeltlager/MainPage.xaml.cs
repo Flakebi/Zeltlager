@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Xamarin.Forms;
 using Zeltlager.General;
 
@@ -13,11 +13,11 @@ namespace Zeltlager
 
 		void OnSynchronizeClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new Competition.CompetitionHandlerPage());
 		}
 
 		void OnCompetitionClicked(object sender, EventArgs e)
 		{
+			Navigation.PushAsync(new Competition.CompetitionHandlerPage());
 		}
 
 		void OnErwischtClicked(object sender, EventArgs e)

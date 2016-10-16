@@ -1,8 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Zeltlager.Competition
 {
-	using System;
 	using System.Threading.Tasks;
 	using Client;
 	using UAM;
