@@ -72,42 +72,42 @@ namespace Zeltlager
 
 		public static byte[] ToBytes(this ushort value)
 		{
-			byte[] bytes = new byte[2];
+			byte[] bytes = new byte[sizeof(ushort)];
 			value.ToBytes(bytes, 0);
 			return bytes;
 		}
 
 		public static byte[] ToBytes(this short value)
 		{
-			byte[] bytes = new byte[2];
+			byte[] bytes = new byte[sizeof(short)];
 			value.ToBytes(bytes, 0);
 			return bytes;
 		}
 
 		public static byte[] ToBytes(this uint value)
 		{
-			byte[] bytes = new byte[4];
+			byte[] bytes = new byte[sizeof(uint)];
 			value.ToBytes(bytes, 0);
 			return bytes;
 		}
 
 		public static byte[] ToBytes(this int value)
 		{
-			byte[] bytes = new byte[4];
+			byte[] bytes = new byte[sizeof(int)];
 			value.ToBytes(bytes, 0);
 			return bytes;
 		}
 
 		public static byte[] ToBytes(this ulong value)
 		{
-			byte[] bytes = new byte[8];
+			byte[] bytes = new byte[sizeof(ulong)];
 			value.ToBytes(bytes, 0);
 			return bytes;
 		}
 
 		public static byte[] ToBytes(this long value)
 		{
-			byte[] bytes = new byte[8];
+			byte[] bytes = new byte[sizeof(long)];
 			value.ToBytes(bytes, 0);
 			return bytes;
 		}

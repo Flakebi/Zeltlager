@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="ILagerServer.cs" />
     <Compile Include="LagerBase.cs" />
+    <Compile Include="LagerStatus.cs" />
     <Compile Include="LoadingScreen.xaml.cs">
       <DependentUpon>LoadingScreen.xaml</DependentUpon>
     </Compile>
@@ -78,6 +79,10 @@
     <Compile Include="Network\INetwork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootedIoProvider.cs" />
+    <Compile Include="Serialisation\ISerialisable.cs" />
+    <Compile Include="Serialisation\SerialisationAttribute.cs" />
+    <Compile Include="Serialisation\SerialisationContext.cs" />
+    <Compile Include="Serialisation\Serialiser.cs" />
     <Compile Include="Tent.cs" />
     <Compile Include="Client\LagerClient.cs" />
     <Compile Include="Calendar\Calendar.cs" />
