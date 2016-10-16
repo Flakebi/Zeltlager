@@ -25,7 +25,12 @@ namespace Zeltlager
 
 		public string Display { get { return Name + " " + (Supervisor ? "\ud83d\ude0e" : ""); } }
 
-		public Member() {}
+		public Member()
+		{
+			Id = new MemberId();
+			Name = "";
+			Supervisor = false;
+		}
 
 		public Member(MemberId id, string name, Tent tent, bool supervisor)
 		{

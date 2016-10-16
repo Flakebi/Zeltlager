@@ -20,7 +20,7 @@ namespace Zeltlager
 		public string Name { get; set; }
 
 		[Editable("Zeltbereuer")]
-		List<Member> supervisors = new List<Member>();
+		List<Member> supervisors;
 
 		[Editable("Mädchenzelt")]
 		public bool Girls { get; set; }
@@ -29,7 +29,14 @@ namespace Zeltlager
 
 		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
 
-		public Tent() { }
+		public Tent()
+		{
+			Id = new TentId();
+			Number = 0;
+			Name = "";
+			Girls = false;
+			supervisors = new List<Member>();
+		}
 
 		public Tent(TentId id, byte number, string name, bool girls, List<Member> supervisors)
 		{
