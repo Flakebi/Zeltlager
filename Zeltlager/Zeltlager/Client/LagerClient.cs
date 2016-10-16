@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Zeltlager.DataPackets;
-
 namespace Zeltlager.Client
 {
+	using DataPackets;
+
 	public class LagerClient : LagerBase, ILagerPart
 	{
 		public enum InitStatus
