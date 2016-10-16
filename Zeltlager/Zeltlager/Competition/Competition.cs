@@ -6,9 +6,12 @@ namespace Zeltlager.Competition
 	using Client;
 	using UAM;
 
+	[Editable("Wettkampf")]
 	public class Competition : IEditable<Competition>, ISearchable
 	{
 		public LagerClient Lager;
+
+		[Editable("Name")]
 		public string Name;
 		public List<Participant> Participants;
 		public List<Station> Stations;

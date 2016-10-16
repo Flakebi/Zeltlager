@@ -15,7 +15,7 @@ namespace Zeltlager.Competition
 			Content = new SearchableListView<Competition>(LagerClient.CurrentLager.CompetitionHandler.Competitions, OnEdit, OnDelete);
 		}
 
-		void OnAddButtonClicked()
+		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Competition>(new Competition(LagerClient.CurrentLager, ""), true)),true);
 		}

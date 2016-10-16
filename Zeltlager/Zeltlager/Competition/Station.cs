@@ -8,24 +8,31 @@ namespace Zeltlager.Competition
 	/// <summary>
 	/// represents one station in the competition and the results achieved there
 	/// </summary>
+	[Editable("Station")]
 	public class Station : ISearchable, IEditable<Station>
 	{
 		Competition competition;
 
 		[Editable("Name")]
 		string name;
-		List<CompetitionResult> results;
+
+		Dictionary<Participant, CompetitionResult> results;
 
 		public Station(string name, Competition competition)
 		{
 			this.name = name;
 			this.competition = competition;
-			results = new List<CompetitionResult>();
+			results = new Dictionary<Participant, CompetitionResult>();
 		}
 
-		private Station(string name, Competition competition, List<CompetitionResult> results) : this(name, competition)
+		Station(string name, Competition competition, Dictionary<Participant, CompetitionResult> results) : this(name, competition)
 		{
 			this.results = results;
+		}
+
+		public void AddResult(Participant participant, int points, int? place)
+		{
+			results[participant] = new CompetitionResult(points, place);
 		}
 
 		#region Interface implementation

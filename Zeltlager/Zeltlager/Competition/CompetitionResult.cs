@@ -5,9 +5,9 @@ namespace Zeltlager.Competition
 	public class CompetitionResult
 	{
 		int points;
-		int place;
+		int? place;
 
-		public CompetitionResult(int points, int place)
+		public CompetitionResult(int points, int? place)
 		{
 			this.points = points;
 			this.place = place;
