@@ -15,8 +15,12 @@ namespace Zeltlager
 
 		protected List<Collaborator> collaborators = new List<Collaborator>();
 
+		//TODO Use the lager status
+		public LagerStatus Status { get; set; }
+
 		/// <summary>
-		/// Packets that could not be loaded.
+		/// Packets that could not be loaded or are not yet available
+		/// and should be fetched from the server.
 		/// Each tuple contains the collaborator and the packet id.
 		/// </summary>
 		public List<Tuple<byte, ushort>> MissingPackets { get; set; }
@@ -41,6 +45,11 @@ namespace Zeltlager
 		{
 			CryptoProvider = new BCCryptoProvider();
 			Log = new Log();
+		}
+
+		public LagerBase()
+		{
+			Status = new LagerStatus();
 		}
 	}
 }

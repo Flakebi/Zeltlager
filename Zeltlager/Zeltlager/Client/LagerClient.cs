@@ -210,7 +210,9 @@ namespace Zeltlager.Client
 						writer.WritePrivateKey(ownCollaborator.Key);
 					}
 					writer.WritePrivateKey(asymmetricKey);
-					// Write collaborators
+					//TODO Write status
+
+					// Write collaborator keys
 					writer.Write((byte)collaborators.Count);
 					for (int i = 0; i < collaborators.Count; i++)
 					{

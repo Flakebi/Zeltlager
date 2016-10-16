@@ -23,7 +23,7 @@ namespace Zeltlager
 		[Editable("Betreuer")]
 		public bool Supervisor { get; set; }
 
-		public string Display { get { return Name + " " + (Supervisor ? "\ud83d\ude0e" : ""); } }
+		public string Display { get { return Name + (Supervisor ? " \ud83d\ude0e" : ""); } }
 
 		public Member()
 		{
