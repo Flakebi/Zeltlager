@@ -1,8 +1,9 @@
-﻿using System;
-using Xamarin.Forms;
-using System.Reflection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+
+using Xamarin.Forms;
 
 namespace Zeltlager.UAM
 {
@@ -14,33 +15,34 @@ namespace Zeltlager.UAM
 		private T oldObj;
 		private bool isAddPage;
 
-		static readonly Type[] numtypes = { typeof(ushort), typeof(int), typeof(byte) };
+		static readonly Type[] numtypes = { typeof(byte), typeof(ushort), typeof(int) };
 
 		public UniversalAddModifyPage(T obj, bool isAddPage)
 		{
-			// set title of page
+			// Set title of page
 			this.isAddPage = isAddPage;
-			if (isAddPage)
-				Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name + " hinzufügen";
-			else
-				Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name + " bearbeiten";
+			Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name +
+				(isAddPage ? " hinzufügen" : " bearbeiten");
 
 			var grid = new Grid();
-			// add two columns to grid (labeling the input elements and the elements themselves)
+			// Add two columns to grid (labeling the input elements and the elements themselves)
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-			this.oldObj = obj;
+			oldObj = obj;
 
-			// save old object so we can delete it when save is clicked
-			this.Obj = oldObj.CloneDeep();
+			// Save old object so we can delete it when save is clicked
+			Obj = oldObj.CloneDeep();
+
+			// Set the binding context so the binding of variables work
+			BindingContext = Obj;
 
 			Type type = Obj.GetType();
-			IEnumerable<PropertyInfo> propInfo = type.GetRuntimeProperties();
+			IEnumerable<PropertyInfo> propInfo = type.GetRuntimeProperties().Where(pi => pi.GetCustomAttribute<EditableAttribute>() != null);
 
-			// counting in which attribute we are
+			// Counting in which attribute we are
 			int attributeNumber = 0;
-			foreach (PropertyInfo pi in propInfo.Where(pi => pi.GetCustomAttribute<EditableAttribute>() != null))
+			foreach (PropertyInfo pi in propInfo)
 			{
 				// new row for every editable attribute
 				grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
@@ -55,9 +57,6 @@ namespace Zeltlager.UAM
 				View manip = new Button();
 				Type vartype = pi.PropertyType;
 
-				// set the binding context so the binding of variables work
-				BindingContext = Obj;
-
 				if (vartype == typeof(string))
 				{
 					// use text entry
@@ -66,24 +65,18 @@ namespace Zeltlager.UAM
 						Keyboard = Keyboard.Text
 					};
 					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
-				}
-				else if (vartype == typeof(DateTime))
+				} else if (vartype == typeof(DateTime))
 				{
 					// use date picker
 					manip = new DatePicker();
 					manip.SetBinding(DatePicker.DateProperty, new Binding(pi.Name, BindingMode.TwoWay));
-				}
-				else if (vartype == typeof(TimeSpan))
+				} else if (vartype == typeof(TimeSpan))
 				{
 					// use time picker
 					var tp = new TimePicker();
 					tp.SetBinding(TimePicker.TimeProperty, new Binding(pi.Name, BindingMode.TwoWay));
-					/*tp.Time = (TimeSpan) type.GetRuntimeProperty(pi.Name).GetValue(Obj);
-					var text = new Label();
-					text.Text = (tp.Time).ToString("g");*/
 					manip = tp;
-				}
-				else if (numtypes.Contains(vartype))
+				} else if (numtypes.Contains(vartype))
 				{
 					// use entry with num Keyboard
 					manip = new Entry
@@ -91,12 +84,11 @@ namespace Zeltlager.UAM
 						Keyboard = Keyboard.Numeric
 					};
 					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
-				}
-				else if (vartype == typeof(Tent))
+				} else if (vartype == typeof(Tent))
 				{
 					// use picker filled with all tents
 					Picker picker = new Picker();
-					foreach (Tent tent in LagerClient.CurrentLager.Tents) 
+					foreach (Tent tent in LagerClient.CurrentLager.Tents)
 					{
 						picker.Items.Add(tent.ToString());
 					}
@@ -112,25 +104,22 @@ namespace Zeltlager.UAM
 								break;
 							}
 						}
-						type.GetRuntimeProperty(pi.Name).SetValue(Obj, t, null);
+						type.GetRuntimeProperty(pi.Name).SetValue(Obj, t);
 					};
 					picker.SelectedIndex = 0;
 					manip = picker;
-				}
-				else if (vartype == typeof(bool))
+				} else if (vartype == typeof(bool))
 				{
 					// use switch
 					var sw = new Switch();
 					//sw.IsToggled = (bool) type.GetRuntimeProperty(pi.Name).GetValue(Obj);
 					sw.SetBinding(Switch.IsToggledProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = sw;
-				}
-				else if (vartype == typeof(List<object>))
+				} else if (vartype == typeof(List<object>))
 				{
 					// use list edit
 					// TODO: Write List edit
-				}
-				else
+				} else
 				{
 					throw new Exception("Type " + vartype + " not supported by UniversalAddModifyPage");
 				}
@@ -162,4 +151,3 @@ namespace Zeltlager.UAM
 		}
 	}
 }
-

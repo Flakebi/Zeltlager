@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,44 +12,33 @@ namespace Zeltlager
 	{
 		List<DataPacket> packets = new List<DataPacket>();
 
-		public byte[] Modulus { get; private set; }
-		public byte[] PublicKey { get; private set; }
-		public byte[] PrivateKey { get; private set; }
+		public KeyPair Key { get; private set; }
 
 		public byte Id { get; private set; }
 		public IReadOnlyList<DataPacket> Packets { get { return packets; } }
 
-        /// <summary>
-        /// All tent ids should be unique (per collaborator) so the next free
-        /// member id for this collaborator is saved here.
-        /// </summary>
-        public ushort NextMemberId { get; set; }
-        public byte NextTentId { get; set; }
-
-        /// <summary>
-        /// Initialises a new collaborator.
-        /// </summary>
-        /// <param name="id">The id of the collaborator.</param>
-        /// <param name="publicKey">The public key of the collaborator.</param>
-        public Collaborator(byte id, byte[] modulus, byte[] publicKey)
-		{
-			Id = id;
-			Modulus = modulus;
-			PublicKey = publicKey;
-
-            NextMemberId = 0;
-            NextTentId = 0;
-		}
+		/// <summary>
+		/// All tent ids should be unique (per collaborator) so the next free
+		/// member id for this collaborator is saved here.
+		/// </summary>
+		public ushort NextMemberId { get; set; }
+		public byte NextTentId { get; set; }
 
 		/// <summary>
-		/// Initialises our ownnew collaborator.
+		/// Initialises a new collaborator.
 		/// </summary>
 		/// <param name="id">The id of the collaborator.</param>
-		/// <param name="publicKey">The public key of the collaborator.</param>
-		/// <param name="privateKey">The private key of the collaborator.</param>
-		public Collaborator(byte id, byte[] modulus, byte[] publicKey, byte[] privateKey) : this(id, modulus, publicKey)
+		/// <param name="publicKey">
+		/// The public key of the collaborator and also the
+		/// private key if our own contributor is initialised.
+		/// </param>
+		public Collaborator(byte id, KeyPair key)
 		{
-			PrivateKey = privateKey;
+			Id = id;
+			Key = key;
+
+			NextMemberId = 0;
+			NextTentId = 0;
 		}
 
 		public void AddPacket(DataPacket packet) => packets.Add(packet);
@@ -79,11 +68,7 @@ namespace Zeltlager
 			// Get packet data
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter writer = new BinaryWriter(mem))
-			{
-				// Write the packet id
-				writer.Write(i.ToBytes());
 				packet.WritePacket(writer);
-			}
 
 			data = mem.ToArray();
 
@@ -91,10 +76,12 @@ namespace Zeltlager
 				// Generate iv
 				packet.Iv = await LagerBase.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 
-			// Write iv and encrypted data
+			// Write id, iv and encrypted data
 			mem = new MemoryStream();
 			using (BinaryWriter writer = new BinaryWriter(mem))
 			{
+				// Write the packet id
+				writer.Write(i.ToBytes());
 				// Write iv
 				writer.Write(packet.Iv);
 				// Write encrypted packet data
@@ -110,22 +97,18 @@ namespace Zeltlager
 					using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
 						packet.WritePacket(output);
 					return;
-				} else if (PrivateKey != null)
+				} else if (Key.PrivateKey != null)
 					// Generate signature
-					packet.Signature = await LagerBase.CryptoProvider.Sign(Modulus, PrivateKey, data);
+					packet.Signature = await LagerBase.CryptoProvider.Sign(Key, data);
 				else
-					throw new InvalidOperationException("Found unencrypted packet without private key.");
+					throw new InvalidOperationException("Found unsigned packet without private key.");
 			}
-
-			if (packet.Signature != null)
+			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
 			{
-				using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
-				{
-					// Write signature
-					output.Write(packet.Signature);
-					// Write iv and encrypted data
-					output.Write(data);
-				}
+				// Write signature
+				output.Write(packet.Signature);
+				// Write id, iv and encrypted data
+				output.Write(data);
 			}
 		}
 
@@ -157,25 +140,30 @@ namespace Zeltlager
 					}
 
 					// Verify signature
-					if (!await LagerBase.CryptoProvider.Verify(Modulus, signature, allData))
+					if (!await LagerBase.CryptoProvider.Verify(Key, signature, allData))
 						// The packet has an invalid signature
 						throw new Exception("The packet has an invalid signature.");
 
-					byte[] iv = new byte[CryptoConstants.IV_LENGTH];
-					Array.Copy(allData, 0, iv, 0, iv.Length);
-					byte[] data = new byte[allData.Length - iv.Length];
-					Array.Copy(allData, iv.Length, data, 0, data.Length);
-
-					data = await LagerBase.CryptoProvider.DecryptSymetric(symmetricKey, iv, data);
-					// Check if the right id
-					ushort packetId = data.ToUShort(0);
+					ushort packetId = allData.ToUShort(0);
+					// Check if the packet has the right id
 					if (packetId != i)
 						throw new Exception("The packet has an invalid id.");
 
-					DataPacket packet = DataPacket.ReadPacket(data.Skip(2).ToArray());
+					byte[] iv = new byte[CryptoConstants.IV_LENGTH];
+					Array.Copy(allData, 2, iv, 0, iv.Length);
+					byte[] data = new byte[allData.Length - iv.Length - 2];
+					Array.Copy(allData, 2 + iv.Length, data, 0, data.Length);
+
+					data = await LagerBase.CryptoProvider.DecryptSymetric(symmetricKey, iv, data);
+
+					DataPacket packet = DataPacket.ReadPacket(data.ToArray());
 					packet.Iv = iv;
 					packet.Signature = signature;
 					packets.Add(packet);
+
+					// Check if we only parsed an invalid packet
+					if (packet is InvalidDataPacket)
+						success = false;
 				} catch (Exception e)
 				{
 					success = false;

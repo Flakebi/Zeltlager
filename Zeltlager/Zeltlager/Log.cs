@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -67,50 +67,67 @@ namespace Zeltlager
 						// Parse log line
 						var parts = line.Split(new char[] { '|' }, 4);
 						messages.Add(new Message(DateTime.Parse(parts[0]), (LogType)Enum.Parse(typeof(LogType), parts[1]), parts[2], parts[3]));
-					}
-					catch (Exception)
+					} catch (Exception)
 					{
 						messages.Add(new Message(LogType.Error, "", line));
 					}
 				}
 			}
+			await Info("Log", "Loaded the log");
 		}
 
-		public Task Info(string section, string message) => print(new Message(LogType.Info, section, message));
-		public Task Warning(string section, string message) => print(new Message(LogType.Warning, section, message));
-		public Task Error(string section, string message) => print(new Message(LogType.Error, section, message));
-		public Task Exception(string section, Exception e) => print(new Message(LogType.Exception, section, e.ToString()));
+		public Task Info(string section, string message) => AddMessage(new Message(LogType.Info, section, message));
+		public Task Warning(string section, string message) => AddMessage(new Message(LogType.Warning, section, message));
+		public Task Error(string section, string message) => AddMessage(new Message(LogType.Error, section, message));
+		public Task Exception(string section, Exception e) => AddMessage(new Message(LogType.Exception, section, e.ToString()));
 
-		public async Task ClearLog()
+		/// <summary>
+		/// Clear all messages from the log.
+		/// </summary>
+		public async Task Clear()
 		{
 			messages.Clear();
+
+			// Clear the log file
 			if (!await LagerBase.IoProvider.ExistsFile(FILENAME))
 				return;
 
 			using (var file = await LagerBase.IoProvider.WriteFile(FILENAME))
-			{}
+			{ }
 		}
 
-		async Task print(Message message)
+		/// <summary>
+		/// Add a log message and write it to the log file.
+		/// </summary>
+		/// <param name="message">The message that should be saved.</param>
+		async Task AddMessage(Message message)
 		{
 			messages.Add(message);
 			using (StreamWriter writer = new StreamWriter(await LagerBase.IoProvider.AppendFile(FILENAME)))
 				writer.WriteLine(message);
 		}
 
-		// prints the whole log
-		public string PrintLog()
+		/// <summary>
+		/// Format the whole log into one string.
+		/// </summary>
+		/// <returns>A string containing the log.</returns>
+		public string Print()
 		{
 			StringBuilder sb = new StringBuilder();
 			foreach (var message in messages)
-			{
 				sb.AppendLine(message.ToString());
-			}
 			return sb.ToString();
 		}
 
-		// prints just the message types specified
-		public string PrintLog(bool printInfo, bool printWarning, bool printError, bool printException)
+		/// <summary>
+		/// Format selected messages of the log into a string.
+		/// </summary>
+		/// <param name="printInfo">True, if info messages should appear in the returned message.</param>
+		/// <param name="printWarning">True, if warnings should appear in the returned message.</param>
+		/// <param name="printError">True, if errors should appear in the returned message.</param>
+		/// <param name="printException">True, if exceptions should appear in the returned message.</param>
+		/// <returns></returns>
+		public string Print(bool printInfo, bool printWarning, bool printError, bool printException)
 		{
 			StringBuilder sb = new StringBuilder();
 			foreach (var message in messages)
@@ -118,16 +135,20 @@ namespace Zeltlager
 				switch (message.Type)
 				{
 					case LogType.Info:
-						if (printInfo) { sb.AppendLine(message.ToString()); }
+						if (printInfo)
+							sb.AppendLine(message.ToString());
 						break;
 					case LogType.Warning:
-						if (printWarning) { sb.AppendLine(message.ToString()); }
+						if (printWarning)
+							sb.AppendLine(message.ToString());
 						break;
 					case LogType.Error:
-						if (printError) { sb.AppendLine(message.ToString()); }
+						if (printError)
+							sb.AppendLine(message.ToString());
 						break;
 					case LogType.Exception:
-						if (printException) { sb.AppendLine(message.ToString()); }
+						if (printException)
+							sb.AppendLine(message.ToString());
 						break;
 				}
 			}

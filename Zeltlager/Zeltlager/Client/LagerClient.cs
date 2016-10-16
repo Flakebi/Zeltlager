@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Zeltlager.DataPackets;
-
 namespace Zeltlager.Client
 {
+	using DataPackets;
+
 	public class LagerClient : LagerBase, ILagerPart
 	{
 		public enum InitStatus
@@ -41,7 +41,7 @@ namespace Zeltlager.Client
 		/// <summary>
 		/// The collaborator that we are.
 		/// </summary>
-		byte ownCollaborator;
+		Collaborator ownCollaborator;
 		/// <summary>
 		/// The number of packets from our own contributor that were already
 		/// sent to the server. This is also the id of the next packet, that
@@ -90,7 +90,7 @@ namespace Zeltlager.Client
 		{
 			// Use OrderBy which is a stable sorting algorithm.
 			return collaborators.SelectMany(col =>
-                col.Packets.Select(p => new Tuple<Collaborator, DataPacket>(col, p))).SelectMany(packet =>
+				col.Packets.Select(p => new Tuple<Collaborator, DataPacket>(col, p))).SelectMany(packet =>
 				{
 					// Flatten bundles here
 					Bundle bundle = packet.Item2 as Bundle;
@@ -131,17 +131,16 @@ namespace Zeltlager.Client
 		/// </summary>
 		public async Task AddPacket(DataPacket packet)
 		{
-			var collaborator = collaborators[ownCollaborator];
-			collaborator.AddPacket(packet);
+			ownCollaborator.AddPacket(packet);
 			// First, write the packet to disk (it will be serialised in that process)
 			var rootedIo = new RootedIoProvider(IoProvider, Id.ToString());
-			await collaborator.SavePacket(rootedIo, symmetricKey, (ushort)(collaborator.Packets.Count - 1));
+			await ownCollaborator.SavePacket(rootedIo, symmetricKey, (ushort)(ownCollaborator.Packets.Count - 1));
 
 			// Save the updated packet count
 			await SaveGeneralSettings();
 
 			// Then deserialise it to apply it
-			packet.Deserialise(this, collaborator);
+			packet.Deserialise(this, ownCollaborator);
 		}
 
 		/// <summary>
@@ -154,16 +153,16 @@ namespace Zeltlager.Client
 			salt = await CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
 			symmetricKey = await CryptoProvider.DeriveSymmetricKey(password, salt);
 			statusUpdate(InitStatus.CreateGameAsymmetricKey);
-			asymmetricKey = await CryptoProvider.CreateAsymmetricKeys();
+			asymmetricKey = await CryptoProvider.CreateAsymmetricKey();
 
 			synchronized = false;
 			sentPackets = 0;
 			// Create the keys for our own collaborator
 			statusUpdate(InitStatus.CreateCollaboratorAsymmetricKey);
-			var keys = await CryptoProvider.CreateAsymmetricKeys();
-			Collaborator c = new Collaborator(0, keys.Modulus, keys.PublicKey, keys.PrivateKey);
+			var key = await CryptoProvider.CreateAsymmetricKey();
+			Collaborator c = new Collaborator(0, key);
 			collaborators.Add(c);
-			ownCollaborator = 0;
+			ownCollaborator = c;
 			statusUpdate(InitStatus.Ready);
 		}
 
@@ -195,8 +194,7 @@ namespace Zeltlager.Client
 			{
 				byte[] iv = await CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 				output.Write(VERSION);
-				output.Write((ushort)asymmetricKey.Modulus.Length);
-				output.Write(asymmetricKey.Modulus);
+				output.WritePublicKey(asymmetricKey);
 				output.Write(salt);
 				output.Write(iv);
 
@@ -207,19 +205,16 @@ namespace Zeltlager.Client
 					if (IsClient)
 					{
 						writer.Write(synchronized);
-						writer.Write(ownCollaborator);
+						writer.Write(ownCollaborator.Id);
 						writer.Write(sentPackets);
-						writer.Write((ushort)collaborators[ownCollaborator].PrivateKey.Length);
-						writer.Write(collaborators[ownCollaborator].PrivateKey);
+						writer.WritePrivateKey(ownCollaborator.Key);
 					}
-					writer.Write((ushort)asymmetricKey.PrivateKey.Length);
-					writer.Write(asymmetricKey.PrivateKey);
+					writer.WritePrivateKey(asymmetricKey);
 					// Write collaborators
 					writer.Write((byte)collaborators.Count);
 					for (int i = 0; i < collaborators.Count; i++)
 					{
-						writer.Write((ushort)collaborators[i].Modulus.Length);
-						writer.Write(collaborators[i].Modulus);
+						writer.WritePublicKey(collaborators[i].Key);
 						writer.Write((ushort)collaborators[i].Packets.Count);
 					}
 				}
@@ -239,16 +234,13 @@ namespace Zeltlager.Client
 			string id = Id.ToString();
 			var rootedIo = new RootedIoProvider(io, id);
 
-			byte[] ownCollaboratorPrivateKey = null;
 			ushort[] collaboratorPacketCounts;
-			ushort keyLength;
 			// Load general settings
 			using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(GENERAL_SETTINGS_FILE)))
 			{
 				if (input.ReadByte() == VERSION)
 				{
-					keyLength = input.ReadUInt16();
-					var modulus = input.ReadBytes(keyLength);
+					asymmetricKey = input.ReadPublicKey();
 					salt = input.ReadBytes(CryptoConstants.SALT_LENGTH);
 					var iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
 
@@ -259,18 +251,17 @@ namespace Zeltlager.Client
 					{
 						using (BinaryReader reader = new BinaryReader(mem))
 						{
+							KeyPair ownCollaboratorPrivateKey = new KeyPair(null, null, null);
+							byte ownCollaboratorId = 0;
 							if (IsClient)
 							{
 								synchronized = reader.ReadBoolean();
-								ownCollaborator = reader.ReadByte();
+								ownCollaboratorId = reader.ReadByte();
 								sentPackets = reader.ReadUInt16();
-								keyLength = reader.ReadUInt16();
-								ownCollaboratorPrivateKey = reader.ReadBytes(keyLength);
+								ownCollaboratorPrivateKey = reader.ReadPrivateKey();
 							}
 
-							keyLength = reader.ReadUInt16();
-							var privateKey = reader.ReadBytes(keyLength);
-							asymmetricKey = new KeyPair(modulus, CryptoConstants.DEFAULT_PUBLIC_KEY, privateKey);
+							asymmetricKey = reader.ReadPrivateKey();
 
 							// Read collaborators
 							byte collaboratorCount = reader.ReadByte();
@@ -278,13 +269,14 @@ namespace Zeltlager.Client
 							collaborators.Capacity = collaboratorCount;
 							for (byte i = 0; i < collaboratorCount; i++)
 							{
-								keyLength = reader.ReadUInt16();
-								var collaboratorModulus = reader.ReadBytes(keyLength);
+								KeyPair collaboratorPublicKey = reader.ReadPublicKey();
 								collaboratorPacketCounts[i] = reader.ReadUInt16();
-								if (i != ownCollaborator && IsClient)
-									collaborators.Add(new Collaborator(i, collaboratorModulus, CryptoConstants.DEFAULT_PUBLIC_KEY));
-								else
-									collaborators.Add(new Collaborator(i, collaboratorModulus, CryptoConstants.DEFAULT_PUBLIC_KEY, ownCollaboratorPrivateKey));
+								if (i == ownCollaboratorId && IsClient)
+								{
+									ownCollaborator = new Collaborator(i, ownCollaboratorPrivateKey);
+									collaborators.Add(ownCollaborator);
+								} else
+									collaborators.Add(new Collaborator(i, collaboratorPublicKey));
 							}
 						}
 					}

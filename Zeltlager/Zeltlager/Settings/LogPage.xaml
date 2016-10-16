@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
-			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 x:Class="Zeltlager.LogPage"
 			 Title="Log" Style="{StaticResource BaseStyle}">
 	<ContentPage.Content>
@@ -13,19 +13,19 @@
 						 Spacing="15">
 				<StackLayout Orientation="Vertical" Spacing="15">
 					<Label Text="Info"/>
-					<Switch IsToggled="{Binding info}" Toggled="updateUI"/>
+					<Switch IsToggled="{Binding Info}" Toggled="UpdateUI"/>
 				</StackLayout>
 				<StackLayout Orientation="Vertical" Spacing="15">
 					<Label Text="Warning"/>
-					<Switch IsToggled="{Binding warning}" Toggled="updateUI"/>
+					<Switch IsToggled="{Binding Warning}" Toggled="UpdateUI"/>
 				</StackLayout>
 				<StackLayout Orientation="Vertical" Spacing="15">
 					<Label Text="Error"/>
-					<Switch IsToggled="{Binding error}" Toggled="updateUI"/>
+					<Switch IsToggled="{Binding Error}" Toggled="UpdateUI"/>
 				</StackLayout>
 				<StackLayout Orientation="Vertical" Spacing="15">
 					<Label Text="Exception"/>
-					<Switch IsToggled="{Binding exception}" Toggled="updateUI"/>
+					<Switch IsToggled="{Binding Exception}" Toggled="UpdateUI"/>
 				</StackLayout>
 			</StackLayout>
 			<ScrollView>

@@ -1,13 +1,12 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Zeltlager.UAM;
 using System.Threading.Tasks;
-using Zeltlager.DataPackets;
 
 namespace Zeltlager
 {
 	using Client;
+	using DataPackets;
+	using UAM;
 
 	[Editable("Zelt")]
 	public class Tent : IEditable<Tent>, ISearchable
@@ -21,7 +20,7 @@ namespace Zeltlager
 		public string Name { get; set; }
 
 		[Editable("Zeltbereuer")]
-		List<Member> supervisors = new List<Member>();
+		List<Member> supervisors;
 
 		[Editable("Mädchenzelt")]
 		public bool Girls { get; set; }
@@ -30,11 +29,19 @@ namespace Zeltlager
 
 		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
 
-		public Tent() {}
+		public Tent()
+		{
+			Id = new TentId();
+			Number = 0;
+			Name = "";
+			Girls = false;
+			supervisors = new List<Member>();
+		}
 
-		public Tent(TentId id, byte Number, string name, bool girls, List<Member> supervisors)
+		public Tent(TentId id, byte number, string name, bool girls, List<Member> supervisors)
 		{
 			Id = id;
+			Number = number;
 			Name = name;
 			Girls = girls;
 			this.supervisors = supervisors;
@@ -63,7 +70,7 @@ namespace Zeltlager
 
 		public Tent CloneDeep()
 		{
-			return new Tent(Id, Number, Name, Girls, new List<Member>(supervisors));
+			return new Tent(Id.CloneShallow(), Number, Name, Girls, new List<Member>(supervisors));
 		}
 
 		public string SearchableText
@@ -74,7 +81,7 @@ namespace Zeltlager
 		public string SearchableDetail
 		{
 			get { return ""; }
-		}	
+		}
 
 		#endregion
 	}

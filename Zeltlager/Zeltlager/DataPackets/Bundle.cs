@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.IO.Compression;
 
 namespace Zeltlager.DataPackets
 {
@@ -13,7 +12,8 @@ namespace Zeltlager.DataPackets
         public Bundle(DataPacket[] packets)
 		{
 			MemoryStream mem = new MemoryStream();
-			using (BinaryWriter output = new BinaryWriter(mem))
+			// Compress the data using gzip
+			using (BinaryWriter output = new BinaryWriter(new GZipStream(mem, CompressionLevel.Optimal)))
 			{
 				output.Write((ushort)packets.Length);
 				foreach (var packet in packets)
@@ -26,14 +26,13 @@ namespace Zeltlager.DataPackets
 					output.Write(data);
 				}
 			}
-			// TODO Compress the data
 			Data = mem.ToArray();
 		}
 
 		public DataPacket[] GetPackets()
 		{
 			MemoryStream mem = new MemoryStream(Data);
-			using (BinaryReader input = new BinaryReader(mem))
+			using (BinaryReader input = new BinaryReader(new GZipStream(mem, CompressionMode.Decompress)))
 			{
 				ushort count = input.ReadUInt16();
 				DataPacket[] packets = new DataPacket[count];

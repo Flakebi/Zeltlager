@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Zeltlager.Calendar
@@ -15,7 +15,7 @@ namespace Zeltlager.Calendar
 			this.lager = lager;
 			Days = new List<Day>();
 
-			//for testing
+			//TODO For testing
 			InitCalendar(new DateTime(2016, 8, 2), new DateTime(2016, 8, 12));
 		}
 
@@ -34,7 +34,7 @@ namespace Zeltlager.Calendar
 				startDate = startDate.AddDays(1);
 			}
 
-			//add standard events
+			// Add standard events
 			foreach (Day day in Days)
 			{
 				day.Events.Add(new CalendarEvent(GetSpecificTime(day.Date, 8, 1), "Frühstück", ""));
@@ -48,9 +48,9 @@ namespace Zeltlager.Calendar
 			return new DateTime(day.Year, day.Month, day.Day, newHour, newMin, 0);
 		}
 
-		public void InsertNewCalendarEvent(CalendarEvent calendarEvent) 
+		public void InsertNewCalendarEvent(CalendarEvent calendarEvent)
 		{
-			//find correct day
+			// Find correct day
 			Day d = FindCorrectDay(calendarEvent);
 			d.Events.Add(calendarEvent);
 			d.Events.Sort();
@@ -61,7 +61,8 @@ namespace Zeltlager.Calendar
 			FindCorrectDay(caldendarEvent).Events.Remove(caldendarEvent);
 		}
 
-		Day FindCorrectDay(CalendarEvent ce){
+		Day FindCorrectDay(CalendarEvent ce)
+		{
 			return lager.Calendar.Days.Find(x => x.Date.Date == ce.Date.Date);
 		}
 	}

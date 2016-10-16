@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,8 +37,8 @@ namespace Zeltlager
 		/// <summary>
 		/// The version of the data packet protocol.
 		/// </summary>
-		protected const byte VERSION = 0;   // TODO does this really need to be public?
-		protected const string GENERAL_SETTINGS_FILE = "lager.conf";	// TODO does this really need to be public?
+		protected const byte VERSION = 0;
+		protected const string GENERAL_SETTINGS_FILE = "lager.conf";
 
 		static LagerBase()
 		{

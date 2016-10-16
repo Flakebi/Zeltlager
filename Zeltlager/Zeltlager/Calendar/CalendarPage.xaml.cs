@@ -1,11 +1,11 @@
-﻿using System;
-using Zeltlager.UAM;
+using System;
 
 using Xamarin.Forms;
 
 namespace Zeltlager.Calendar
 {
 	using Client;
+	using UAM;
 
 	public partial class CalendarPage : CarouselPage
 	{
@@ -18,9 +18,8 @@ namespace Zeltlager.Calendar
 				DayPage dp = new DayPage(day);
 				Children.Add(dp);
 			}
-			foreach (ContentPage cp in Children) {
+			foreach (ContentPage cp in Children)
 				((DayPage)cp).removeNavButtons();
-			}
 			Title = "Kalender";
 		}
 

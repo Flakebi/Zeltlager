@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 
 namespace Zeltlager
 {
@@ -30,7 +31,11 @@ namespace Zeltlager
 		{
 			List<T> sorted = collection.OrderBy(x => x).ToList();
 			for (int i = 0; i < sorted.Count(); i++)
-				collection.Move(collection.IndexOf(sorted[i]), i);
+			{
+				int newIndex = collection.IndexOf(sorted[i]);
+				if (newIndex != i)
+					collection.Move(newIndex, i);
+			}
 		}
 
 		public static void ToBytes(this ushort value, byte[] array, int offset)
@@ -134,5 +139,13 @@ namespace Zeltlager
 		}
 
 		public static long ToLong(this byte[] value, int offset) => (long)value.ToULong(offset);
+
+		public static string ToHexString(this byte[] bytes)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (var b in bytes)
+				sb.Append(b.ToString("X2"));
+			return sb.ToString();
+		}
 	}
 }

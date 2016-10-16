@@ -53,9 +53,9 @@ namespace Zeltlager.Server
 			Console.WriteLine("Result: " + Encoding.UTF8.GetString(decrypted));
 
 			// Signature
-			var keyPair = await crypto.CreateAsymmetricKeys();
-			var signature = await crypto.Sign(keyPair.Modulus, keyPair.PrivateKey, data);
-			var verification = await crypto.Verify(keyPair.Modulus, keyPair.PublicKey, signature, data);
+			var keyPair = await crypto.CreateAsymmetricKey();
+			var signature = await crypto.Sign(keyPair, data);
+			var verification = await crypto.Verify(keyPair, signature, data);
 			Console.WriteLine("Verification: " + verification);
 
 			LagerBase.IoProvider = new RootedIoProvider(new ServerIoProvider(), Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Lager"));

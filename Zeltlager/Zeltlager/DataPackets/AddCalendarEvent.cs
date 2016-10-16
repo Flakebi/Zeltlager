@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
 using Zeltlager.Calendar;

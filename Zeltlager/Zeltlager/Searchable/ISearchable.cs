@@ -1,4 +1,3 @@
-﻿using System;
 namespace Zeltlager
 {
 	public interface ISearchable

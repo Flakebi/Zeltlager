@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Calendar
 {
@@ -16,36 +14,38 @@ namespace Zeltlager.Calendar
 			{
 				if (value != events)
 				{
-					events = value; OnPropertyChanged("Events");
+					events = value;
+					OnPropertyChanged(nameof(Events));
 				}
 			}
 		}
+
 		private DateTime date;
 		public DateTime Date
 		{
-			get
-			{ return date; }
+			get { return date; }
 			set
 			{
 				date = value;
-				OnPropertyChanged("Date");
+				OnPropertyChanged(nameof(Date));
 			}
 		}
 
-
 		public Day(DateTime date)
 		{
-			this.Date = date;
-			this.Events = new ObservableCollection<CalendarEvent>();
+			Date = date;
+			Events = new ObservableCollection<CalendarEvent>();
 		}
 
 		#region INotifyPropertyChanged implementation
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public void OnPropertyChanged([CallerMemberName]string propertyName = null)
+		public void OnPropertyChanged(string propertyName)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
+
 		#endregion
 	}
 }
