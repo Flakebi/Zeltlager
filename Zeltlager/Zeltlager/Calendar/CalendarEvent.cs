@@ -105,7 +105,7 @@ namespace Zeltlager.Calendar
 			await LagerClient.CurrentLager.AddPacket(new AddCalendarEvent(this));
 		}
 
-		public CalendarEvent CloneDeep()
+		public CalendarEvent Clone()
 		{
 			return new CalendarEvent(date, title, detail);
 		}

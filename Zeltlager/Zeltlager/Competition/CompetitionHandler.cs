@@ -1,5 +1,4 @@
-﻿using System;
-namespace Zeltlager.Competition
+﻿namespace Zeltlager.Competition
 {
 	using System.Collections.Generic;
 	using Client;

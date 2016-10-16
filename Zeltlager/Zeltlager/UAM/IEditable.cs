@@ -19,6 +19,6 @@ namespace Zeltlager.UAM
 		/// (so it can be deleted while saving the new one).
 		/// </summary>
 		/// <returns>A copy of this object.</returns>
-		T CloneDeep();
+		T Clone();
 	}
 }

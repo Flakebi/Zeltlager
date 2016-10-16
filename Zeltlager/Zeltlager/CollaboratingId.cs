@@ -79,7 +79,7 @@ namespace Zeltlager
 			output.Write(id);
 		}
 
-		public MemberId CloneShallow()
+		public MemberId Clone()
 		{
 			return new MemberId(collaborator, id);
 		}

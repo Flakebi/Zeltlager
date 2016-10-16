@@ -32,7 +32,7 @@ namespace Zeltlager.UAM
 			oldObj = obj;
 
 			// Save old object so we can delete it when save is clicked
-			Obj = oldObj.CloneDeep();
+			Obj = oldObj.Clone();
 
 			// Set the binding context so the binding of variables work
 			BindingContext = Obj;
@@ -115,7 +115,7 @@ namespace Zeltlager.UAM
 					//sw.IsToggled = (bool) type.GetRuntimeProperty(pi.Name).GetValue(Obj);
 					sw.SetBinding(Switch.IsToggledProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = sw;
-				} else if (vartype == typeof(List<object>))
+				} else if (vartype == typeof(List<>))
 				{
 					// use list edit
 					// TODO: Write List edit

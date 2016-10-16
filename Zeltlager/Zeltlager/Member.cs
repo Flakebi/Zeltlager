@@ -53,9 +53,9 @@ namespace Zeltlager
 			await LagerClient.CurrentLager.AddPacket(new AddMember(this));
 		}
 
-		public Member CloneDeep()
+		public Member Clone()
 		{
-			return new Member(Id.CloneShallow(), Name, Tent, Supervisor);
+			return new Member(Id.Clone(), Name, Tent, Supervisor);
 		}
 
 		public string SearchableText

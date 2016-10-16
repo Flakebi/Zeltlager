@@ -68,7 +68,7 @@ namespace Zeltlager
 			await LagerClient.CurrentLager.AddPacket(new AddTent(this));
 		}
 
-		public Tent CloneDeep()
+		public Tent Clone()
 		{
 			return new Tent(Id.CloneShallow(), Number, Name, Girls, new List<Member>(supervisors));
 		}

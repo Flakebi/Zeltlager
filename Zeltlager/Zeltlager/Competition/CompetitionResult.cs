@@ -2,18 +2,15 @@
 using Zeltlager.UAM;
 namespace Zeltlager.Competition
 {
-	/// <summary>
-	/// saves the result of a participant for a certain competition
-	/// </summary>
 	public class CompetitionResult
 	{
-		Participant participant;
-		int result;
+		int points;
+		int place;
 
-		public CompetitionResult(Participant par, int res)
+		public CompetitionResult(int points, int place)
 		{
-			participant = par;
-			result = res;
+			this.points = points;
+			this.place = place;
 		}
 	}
 }
