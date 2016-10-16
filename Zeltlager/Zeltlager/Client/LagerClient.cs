@@ -41,7 +41,7 @@ namespace Zeltlager.Client
 		/// <summary>
 		/// The collaborator that we are.
 		/// </summary>
-		byte ownCollaborator;
+		Collaborator ownCollaborator;
 		/// <summary>
 		/// The number of packets from our own contributor that were already
 		/// sent to the server. This is also the id of the next packet, that
@@ -131,17 +131,16 @@ namespace Zeltlager.Client
 		/// </summary>
 		public async Task AddPacket(DataPacket packet)
 		{
-			var collaborator = collaborators[ownCollaborator];
-			collaborator.AddPacket(packet);
+			ownCollaborator.AddPacket(packet);
 			// First, write the packet to disk (it will be serialised in that process)
 			var rootedIo = new RootedIoProvider(IoProvider, Id.ToString());
-			await collaborator.SavePacket(rootedIo, symmetricKey, (ushort)(collaborator.Packets.Count - 1));
+			await ownCollaborator.SavePacket(rootedIo, symmetricKey, (ushort)(ownCollaborator.Packets.Count - 1));
 
 			// Save the updated packet count
 			await SaveGeneralSettings();
 
 			// Then deserialise it to apply it
-			packet.Deserialise(this, collaborator);
+			packet.Deserialise(this, ownCollaborator);
 		}
 
 		/// <summary>
@@ -163,7 +162,7 @@ namespace Zeltlager.Client
 			var key = await CryptoProvider.CreateAsymmetricKey();
 			Collaborator c = new Collaborator(0, key);
 			collaborators.Add(c);
-			ownCollaborator = 0;
+			ownCollaborator = c;
 			statusUpdate(InitStatus.Ready);
 		}
 
@@ -206,9 +205,9 @@ namespace Zeltlager.Client
 					if (IsClient)
 					{
 						writer.Write(synchronized);
-						writer.Write(ownCollaborator);
+						writer.Write(ownCollaborator.Id);
 						writer.Write(sentPackets);
-						writer.WritePrivateKey(collaborators[ownCollaborator].Key);
+						writer.WritePrivateKey(ownCollaborator.Key);
 					}
 					writer.WritePrivateKey(asymmetricKey);
 					// Write collaborators
@@ -253,10 +252,11 @@ namespace Zeltlager.Client
 						using (BinaryReader reader = new BinaryReader(mem))
 						{
 							KeyPair ownCollaboratorPrivateKey = new KeyPair(null, null, null);
+							byte ownCollaboratorId = 0;
 							if (IsClient)
 							{
 								synchronized = reader.ReadBoolean();
-								ownCollaborator = reader.ReadByte();
+								ownCollaboratorId = reader.ReadByte();
 								sentPackets = reader.ReadUInt16();
 								ownCollaboratorPrivateKey = reader.ReadPrivateKey();
 							}
@@ -271,9 +271,11 @@ namespace Zeltlager.Client
 							{
 								KeyPair collaboratorPublicKey = reader.ReadPublicKey();
 								collaboratorPacketCounts[i] = reader.ReadUInt16();
-								if (i == ownCollaborator && IsClient)
-									collaborators.Add(new Collaborator(i, ownCollaboratorPrivateKey));
-								else
+								if (i == ownCollaboratorId && IsClient)
+								{
+									ownCollaborator = new Collaborator(i, ownCollaboratorPrivateKey);
+									collaborators.Add(ownCollaborator);
+								} else
 									collaborators.Add(new Collaborator(i, collaboratorPublicKey));
 							}
 						}

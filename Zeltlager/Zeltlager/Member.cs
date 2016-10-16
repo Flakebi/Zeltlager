@@ -1,11 +1,11 @@
 using System;
-using Zeltlager.UAM;
-using Zeltlager.DataPackets;
+using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-	using System.Threading.Tasks;
 	using Client;
+	using DataPackets;
+	using UAM;
 
 	[Editable("Teilnehmer")]
 	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
@@ -44,15 +44,13 @@ namespace Zeltlager
 		public async Task OnSaveEditing(Member oldObject)
 		{
 			if (oldObject != null)
-			{
 				await LagerClient.CurrentLager.AddPacket(new DeleteMember(oldObject));
-			}
 			await LagerClient.CurrentLager.AddPacket(new AddMember(this));
 		}
 
 		public Member CloneDeep()
 		{
-			return new Member(Id, Name, Tent, Supervisor);
+			return new Member(Id.CloneShallow(), Name, Tent, Supervisor);
 		}
 
 		public string SearchableText

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using Zeltlager.UAM;
 using System.Threading.Tasks;
-using Zeltlager.DataPackets;
 
 namespace Zeltlager
 {
 	using Client;
+	using DataPackets;
+	using UAM;
 
 	[Editable("Zelt")]
 	public class Tent : IEditable<Tent>, ISearchable
@@ -63,7 +63,7 @@ namespace Zeltlager
 
 		public Tent CloneDeep()
 		{
-			return new Tent(Id, Number, Name, Girls, new List<Member>(supervisors));
+			return new Tent(Id.CloneShallow(), Number, Name, Girls, new List<Member>(supervisors));
 		}
 
 		public string SearchableText

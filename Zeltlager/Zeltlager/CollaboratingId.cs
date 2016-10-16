@@ -62,6 +62,11 @@ namespace Zeltlager
 		{
 			output.Write(id);
 		}
+
+		public TentId CloneShallow()
+		{
+			return new TentId(collaborator, id);
+		}
 	}
 
 	public class MemberId : CollaboratingId<ushort>
@@ -72,6 +77,11 @@ namespace Zeltlager
 		public override void WriteId(BinaryWriter output)
 		{
 			output.Write(id);
+		}
+
+		public MemberId CloneShallow()
+		{
+			return new MemberId(collaborator, id);
 		}
 	}
 

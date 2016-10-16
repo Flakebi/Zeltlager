@@ -6,6 +6,7 @@ using Xamarin.Forms;
 namespace Zeltlager.General
 {
 	using Client;
+	using DataPackets;
 	using UAM;
 
 	public partial class MembersPage : ContentPage
@@ -26,17 +27,14 @@ namespace Zeltlager.General
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(new Member(), true)));
 		}
 
-		void OnContextActionEdit(object sender)
+		void OnContextActionEdit(Member member)
 		{
-			//TODO
-			//Tent t = (Tent)((MenuItem)sender).CommandParameter;
-			//Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(t, false)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(member, false)), true);
 		}
 
-		async void OnContextActionDelete(object sender)
+		async void OnContextActionDelete(Member member)
 		{
-			//TODO
-			//await LagerClient.CurrentLager.AddPacket(new DeleteTent((Tent)((MenuItem)sender).CommandParameter));
+			await LagerClient.CurrentLager.AddPacket(new DeleteMember(member));
 		}
 	}
 }

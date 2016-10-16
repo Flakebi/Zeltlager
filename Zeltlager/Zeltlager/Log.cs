@@ -73,6 +73,7 @@ namespace Zeltlager
 					}
 				}
 			}
+			await Info("Log", "Loaded the log");
 		}
 
 		public Task Info(string section, string message) => AddMessage(new Message(LogType.Info, section, message));
@@ -106,7 +107,10 @@ namespace Zeltlager
 				writer.WriteLine(message);
 		}
 
-		// prints the whole log
+		/// <summary>
+		/// Format the whole log into one string.
+		/// </summary>
+		/// <returns>A string containing the log.</returns>
 		public string Print()
 		{
 			StringBuilder sb = new StringBuilder();
@@ -115,7 +119,14 @@ namespace Zeltlager
 			return sb.ToString();
 		}
 
-		// prints just the message types specified
+		/// <summary>
+		/// Format selected messages of the log into a string.
+		/// </summary>
+		/// <param name="printInfo">True, if info messages should appear in the returned message.</param>
+		/// <param name="printWarning">True, if warnings should appear in the returned message.</param>
+		/// <param name="printError">True, if errors should appear in the returned message.</param>
+		/// <param name="printException">True, if exceptions should appear in the returned message.</param>
+		/// <returns></returns>
 		public string Print(bool printInfo, bool printWarning, bool printError, bool printException)
 		{
 			StringBuilder sb = new StringBuilder();
