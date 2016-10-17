@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-		Title="Zelte"
-		Style="{StaticResource BaseStyle}"
-		x:Class="Zeltlager.General.TentsPage">
-	<ContentPage.ToolbarItems>
-		<ToolbarItem x:Name="AddButton" Name="Hinzufügen" Clicked="OnAddButtonClicked">
-		</ToolbarItem>
-	</ContentPage.ToolbarItems>
-	<ContentPage.Content>
-	</ContentPage.Content>
+		         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Zeltlager;assembly=Zeltlager"
+		         Title="Zelte"
+		         Style="{StaticResource BaseStyle}"
+		         x:Class="Zeltlager.General.TentsPage">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem x:Name="AddButton" Name="{x:Static local:Icons.ADD}" Clicked="OnAddButtonClicked">
+    </ToolbarItem>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Content>
+  </ContentPage.Content>
 </ContentPage>

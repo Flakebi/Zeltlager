@@ -21,16 +21,8 @@ namespace Zeltlager
 		/// All tent ids should be unique (per collaborator) so the next free
 		/// member id for this collaborator is saved here.
 		/// </summary>
-		//TODO Remove them
 		public ushort NextMemberId { get; set; }
 		public byte NextTentId { get; set; }
-
-		/// <summary>
-		/// All ids should be unique (per collaborator) so the next free
-		/// id for every id type for this collaborator is saved here.
-		/// The type is the type of the id, e.g. MemberId for members.
-		/// </summary>
-		public Dictionary<Type, object> NextIds;
 
 		/// <summary>
 		/// Initialises a new collaborator.
@@ -196,5 +188,7 @@ namespace Zeltlager
 			}
 			return success;
 		}
+
+        //TODO Implement ISerialisable (Write/ReadId)
 	}
 }

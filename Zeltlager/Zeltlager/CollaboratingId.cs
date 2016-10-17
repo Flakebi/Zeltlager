@@ -5,11 +5,14 @@ using System.Linq;
 namespace Zeltlager
 {
 	using Client;
+    using Serialisation;
 
 	public abstract class CollaboratingId<T> : IEquatable<CollaboratingId<T>> where T : IEquatable<T>
-	{
-		public Collaborator collaborator;
-		public T id;
+    {
+        [Serialisation(Type = SerialisationType.Id)]
+        public Collaborator collaborator;
+        [Serialisation]
+        public T id;
 
 		protected CollaboratingId() { }
 		protected CollaboratingId(Collaborator collaborator, T id)
