@@ -61,12 +61,12 @@ namespace Zeltlager.Competition
 
 		void OnAddStationClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Station>(new Station("", competition), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Station>(new Station("", competition), true, lager)), true);
 		}
 
 		void OnAddParticipantClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(new Participant("", competition), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(new Participant("", competition), true, lager)), true);
 		}
 
 		#region Searchable implementaition
@@ -74,7 +74,7 @@ namespace Zeltlager.Competition
 
 
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Station>(station, false, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Station>(station, false, lager)), true);
 		}
 
 		void OnDeleteStation(Station station)
@@ -84,7 +84,7 @@ namespace Zeltlager.Competition
 
 		void OnEditParticipant(Participant participant)
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(participant, false, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(participant, false, lager)), true);
 		}
 
 		void OnDeleteParticipant(Participant participant)

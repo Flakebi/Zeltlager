@@ -19,7 +19,7 @@ namespace Zeltlager.Competition
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new UniversalAddModifyPage<Competition>(new Competition(lager, ""), true, lager),true);
+			Navigation.PushModalAsync(new UniversalAddModifyPage<Competition>(new Competition(lager, ""), true, lager),true);
 		}
 
 		void OnEdit(object sender)
