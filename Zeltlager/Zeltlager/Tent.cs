@@ -6,24 +6,30 @@ namespace Zeltlager
 {
 	using Client;
 	using DataPackets;
+    using Serialisation;
 	using UAM;
 
 	[Editable("Zelt")]
 	public class Tent : IEditable<Tent>, ISearchable
-	{
-		public TentId Id { get; set; }
+    {
+        [Serialisation(Type = SerialisationType.Id)]
+        public TentId Id { get; set; }
 
 		[Editable("Zeltnummer")]
-		public byte Number { get; set; }
+        [Serialisation]
+        public byte Number { get; set; }
 
 		[Editable("Zeltname")]
-		public string Name { get; set; }
+        [Serialisation]
+        public string Name { get; set; }
 
 		[Editable("Zeltbereuer")]
-		List<Member> supervisors;
+        [Serialisation]
+        List<Member> supervisors;
 
 		[Editable("Mädchenzelt")]
-		public bool Girls { get; set; }
+        [Serialisation]
+        public bool Girls { get; set; }
 
 		public IReadOnlyList<Member> Supervisors { get { return supervisors; } }
 

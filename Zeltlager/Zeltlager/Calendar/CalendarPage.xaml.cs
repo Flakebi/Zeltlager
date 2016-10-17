@@ -20,7 +20,6 @@ namespace Zeltlager.Calendar
 			}
 			foreach (ContentPage cp in Children)
 				((DayPage)cp).removeNavButtons();
-			Title = "Kalender";
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)

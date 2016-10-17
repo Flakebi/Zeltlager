@@ -5,23 +5,28 @@ namespace Zeltlager
 {
 	using Client;
 	using DataPackets;
+    using Serialisation;
 	using UAM;
 
 	[Editable("Teilnehmer")]
 	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
-	{
-		public MemberId Id { get; set; }
+    {
+        [Serialisation(Type = SerialisationType.Id)]
+        public MemberId Id { get; set; }
 
 		[Editable("Name")]
+        [Serialisation]
 		public string Name { get; set; }
 		/// <summary>
 		/// The tent in which this member lives, this attribute can not be null.
 		/// </summary>
 		[Editable("Zelt")]
-		public Tent Tent { get; set; }
+        [Serialisation(Type = SerialisationType.Reference)]
+        public Tent Tent { get; set; }
 
 		[Editable("Betreuer")]
-		public bool Supervisor { get; set; }
+        [Serialisation]
+        public bool Supervisor { get; set; }
 
 		public string Display { get { return Name + (Supervisor ? " \ud83d\ude0e" : ""); } }
 
@@ -39,6 +44,16 @@ namespace Zeltlager
 			Tent = tent;
 			Supervisor = supervisor;
 		}
+
+        // Constructors for deserialisation
+        protected Member(SerialisationContext context, string name, Tent tent, bool supervisor)
+        {
+            // Use the next free member id and inrcease the id afterwards.
+            Id = new MemberId(context.Collaborator, context.Collaborator.NextMemberId++);
+            Name = name;
+            Tent = tent;
+            Supervisor = supervisor;
+        }
 
 		public override string ToString() => Display;
 

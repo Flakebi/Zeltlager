@@ -288,17 +288,22 @@ namespace Zeltlager.Serialisation
                         arguments[i] = context;
                     else
                     {
-                        if (!parameters.Select(p => p.ParameterType).Contains(parameter.ParameterType)
+                        if (!parameters.Skip(i + 1).Select(p => p.ParameterType).Contains(parameter.ParameterType)
                             && remainingAttributes.Count(a => a.Type == parameter.ParameterType) == 1)
+                        {
                             // Check if the type of this parameter is unambiguous
-                            arguments[i] = remainingAttributes.Find(a => a.Type == parameter.ParameterType).Value;
-                        else
+                            int index = remainingAttributes.FindIndex(a => a.Type == parameter.ParameterType);
+                            arguments[i] = remainingAttributes[index].Value;
+                            remainingAttributes.RemoveAt(index);
+                            continue;
+                        } else
                         {
                             // Take the attribute with the same name if it exists
-                            var attribute = remainingAttributes.FirstOrDefault(a => a.Name.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase));
-                            if (attribute != null)
+                            int index = remainingAttributes.FindIndex(a => a.Name.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase));
+                            if (index != -1)
                             {
-                                arguments[i] = attribute.Value;
+                                arguments[i] = remainingAttributes[index].Value;
+                                remainingAttributes.RemoveAt(index);
                                 continue;
                             }
                         }
