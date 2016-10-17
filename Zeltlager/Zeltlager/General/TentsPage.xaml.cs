@@ -12,28 +12,31 @@ namespace Zeltlager.General
 
 	public partial class TentsPage : ContentPage
 	{
-		public TentsPage()
+		LagerClient lager;
+
+		public TentsPage(LagerClient lager)
 		{
 			InitializeComponent();
-			Content = new SearchableListView<Tent>(LagerClient.CurrentLager.Tents, OnContextActionEdit, OnContextActionDelete);
+			this.lager = lager;
+			Content = new SearchableListView<Tent>(lager.Tents, OnContextActionEdit, OnContextActionDelete);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			var tentNumber = (byte)0;
-			if (LagerClient.CurrentLager.Tents.Any())
-				tentNumber = (byte)(LagerClient.CurrentLager.Tents.Max(t => t.Number) + 1);
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(new TentId(), tentNumber, "", true, new List<Member>()), true)));
+			if (lager.Tents.Any())
+				tentNumber = (byte)(lager.Tents.Max(t => t.Number) + 1);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(new TentId(), tentNumber, "", true, new List<Member>()), true, lager)), true);
 		}
 
 		void OnContextActionEdit(Tent tent)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(tent, false)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(tent, false, lager)), true);
 		}
 
 		async void OnContextActionDelete(Tent tent)
 		{
-			await LagerClient.CurrentLager.AddPacket(new DeleteTent(tent));
+			await lager.AddPacket(new DeleteTent(tent));
 		}
 	}
 }

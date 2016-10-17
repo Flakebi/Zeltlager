@@ -9,13 +9,16 @@ namespace Zeltlager.Calendar
 
 	public partial class CalendarPage : CarouselPage
 	{
-		public CalendarPage()
+		LagerClient lager;
+
+		public CalendarPage(LagerClient lager)
 		{
+			this.lager = lager;
 			InitializeComponent();
-			var days = LagerClient.CurrentLager.Calendar.Days;
+			var days = lager.Calendar.Days;
 			foreach (Day day in days)
 			{
-				DayPage dp = new DayPage(day);
+				DayPage dp = new DayPage(day, lager);
 				Children.Add(dp);
 			}
 			foreach (ContentPage cp in Children)
@@ -26,7 +29,7 @@ namespace Zeltlager.Calendar
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			//Navigation.PushModalAsync(new NavigationPage(new CalendarEventEditPage(new CalendarEvent(((DayPage)CurrentPage).Day.Date, ""))));
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(new CalendarEvent(((DayPage)CurrentPage).Day.Date, "", ""), true)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(new CalendarEvent(((DayPage)CurrentPage).Day.Date, "", ""), true, lager)), true);
 		}
 	}
 }

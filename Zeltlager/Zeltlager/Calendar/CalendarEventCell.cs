@@ -9,6 +9,7 @@ namespace Zeltlager.Calendar
 
 	public class CalendarEventCell : ViewCell
 	{
+		LagerClient lager;
 		Label time = new Label()
 		{
 			VerticalTextAlignment = TextAlignment.Center,
@@ -27,8 +28,11 @@ namespace Zeltlager.Calendar
 			TextColor = (Color)Application.Current.Resources["textColorSecondary"]
 		};
 
-		public CalendarEventCell()
+		public CalendarEventCell() : this(null) {}
+
+		public CalendarEventCell(LagerClient lager)
 		{
+			this.lager = lager;
 			StackLayout horizontalLayout = new StackLayout();
 
 			horizontalLayout.Padding = new Thickness(10, 0);
@@ -63,12 +67,12 @@ namespace Zeltlager.Calendar
 		{
 			CalendarEvent ce = (CalendarEvent)((MenuItem)sender).CommandParameter;
 			//Call edit screen for item
-			((View)Parent).Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(ce, false)), true);
+			((View)Parent).Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(ce, false, lager)), true);
 		}
 
 		async void OnDelete(object sender, EventArgs e)
 		{
-			await LagerClient.CurrentLager.AddPacket(new DeleteCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter));
+			await lager.AddPacket(new DeleteCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter));
 		}
 	}
 }

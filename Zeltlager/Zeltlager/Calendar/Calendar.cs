@@ -7,12 +7,10 @@ namespace Zeltlager.Calendar
 
 	public class Calendar : ILagerPart
 	{
-		LagerClient lager;
 		public List<Day> Days { get; }
 
-		public Calendar(LagerClient lager)
+		public Calendar()
 		{
-			this.lager = lager;
 			Days = new List<Day>();
 
 			//TODO For testing
@@ -63,7 +61,7 @@ namespace Zeltlager.Calendar
 
 		Day FindCorrectDay(CalendarEvent ce)
 		{
-			return lager.Calendar.Days.Find(x => x.Date.Date == ce.Date.Date);
+			return Days.Find(x => x.Date.Date == ce.Date.Date);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Zeltlager.Client;
 using Zeltlager.UAM;
 
 namespace Zeltlager.Competition
@@ -15,24 +16,24 @@ namespace Zeltlager.Competition
 
 		[Editable("Name")]
 		string name;
-
-		Dictionary<Participant, CompetitionResult> results;
+		Member supervisor;
+		Ranking ranking;
 
 		public Station(string name, Competition competition)
 		{
 			this.name = name;
 			this.competition = competition;
-			results = new Dictionary<Participant, CompetitionResult>();
+			ranking =  new Ranking();
 		}
 
-		Station(string name, Competition competition, Dictionary<Participant, CompetitionResult> results) : this(name, competition)
+		Station(string name, Competition competition, Ranking ranking) : this(name, competition)
 		{
-			this.results = results;
+			this.ranking = ranking;
 		}
 
-		public void AddResult(Participant participant, int points, int? place)
+		public void AddResult(Participant participant, int? points = null, int? place = null)
 		{
-			results[participant] = new CompetitionResult(points, place);
+			
 		}
 
 		#region Interface implementation
@@ -41,7 +42,7 @@ namespace Zeltlager.Competition
 
 		public string SearchableDetail { get { return ""; } }
 
-		public Task OnSaveEditing(Station oldObject)
+		public Task OnSaveEditing(Station oldObject, LagerClient lager)
 		{
 			// TODO: Packets
 			return null;
@@ -49,7 +50,7 @@ namespace Zeltlager.Competition
 
 		public Station Clone()
 		{
-			return new Station(name, competition, results);
+			return new Station(name, competition, ranking);
 		}
 
 

@@ -6,36 +6,40 @@ using Xamarin.Forms;
 
 namespace Zeltlager.General
 {
+	using System.Collections.Generic;
 	using Client;
 	using DataPackets;
 	using UAM;
 
 	public partial class MembersPage : ContentPage
 	{
-		public MembersPage()
+		LagerClient lager;
+
+		public MembersPage(LagerClient lager)
 		{
 			InitializeComponent();
-			Content = new SearchableListView<Member>(LagerClient.CurrentLager.Members, OnContextActionEdit, OnContextActionDelete);
+			this.lager = lager;
+			Content = new SearchableListView<Member>(lager.Members, OnContextActionEdit, OnContextActionDelete);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			if (!LagerClient.CurrentLager.Tents.Any())
+			if (!lager.Tents.Any())
 			{
 				DisplayAlert("Keine Zelte vorhanden", "Bitte füge ein Zelt hinzu. Jeder Teilnehmer muss ein Zelt haben.", "Ok");
 				return;
 			}
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(new Member(), true)));
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(new Member(), true, lager)));
 		}
 
 		void OnContextActionEdit(Member member)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(member, false)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(member, false, lager)), true);
 		}
 
 		async void OnContextActionDelete(Member member)
 		{
-			await LagerClient.CurrentLager.AddPacket(new DeleteMember(member));
+			await lager.AddPacket(new DeleteMember(member));
 		}
 	}
 }

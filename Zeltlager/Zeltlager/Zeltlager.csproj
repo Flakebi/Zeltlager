@@ -134,6 +134,7 @@
     <Compile Include="Competition\CompetitionPages\StationPage.xaml.cs">
       <DependentUpon>StationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Competition\Ranking.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

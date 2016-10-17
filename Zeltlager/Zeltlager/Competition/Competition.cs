@@ -13,8 +13,11 @@ namespace Zeltlager.Competition
 
 		[Editable("Name")]
 		public string Name;
+
 		public List<Participant> Participants;
 		public List<Station> Stations;
+		public Ranking Ranking;
+
 
 		public Competition(LagerClient lager, string name)
 		{
@@ -22,24 +25,19 @@ namespace Zeltlager.Competition
 			this.Name = name;
 		}
 
-		public void AddStation(Station station) { Stations.Add(station); }
+		public void AddStation(Station station) => Stations.Add(station);
 
-		public void RemoveStation(Station station) { Stations.Remove(station); }
+		public void RemoveStation(Station station) => Stations.Remove(station);
 
-		public void AddParticipant(Participant participant) { Participants.Add(participant); }
+		public void AddParticipant(Participant participant) => Participants.Add(participant);
 
-		public void RemoveParticipant(Participant participant) { Participants.Remove(participant); }
+		public void RemoveParticipant(Participant participant) => Participants.Remove(participant);
 
 		#region Interface implementation
 
-		public Task OnSaveEditing(Competition oldObject)
+		public Task OnSaveEditing(Competition oldObject, LagerClient lager)
 		{
 			// TODO: durch packets ersetzen
-			if (oldObject != null)
-			{
-				LagerClient.CurrentLager.CompetitionHandler.RemoveCompetition(oldObject);
-			}
-			LagerClient.CurrentLager.CompetitionHandler.AddCompetition(this);
 			return null;
 		}
 

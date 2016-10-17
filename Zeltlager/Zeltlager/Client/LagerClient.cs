@@ -20,8 +20,6 @@ namespace Zeltlager.Client
 
 		public static GlobalSettings ClientGlobalSettings { get; set; }
 
-		public static LagerClient CurrentLager { get; set; }
-
 		public string Name { get; set; }
 		public IReadOnlyList<Member> Members { get { return members; } }
 		public IReadOnlyList<Tent> Tents { get { return tents; } }
@@ -67,7 +65,7 @@ namespace Zeltlager.Client
 
 			CompetitionHandler = new Competition.CompetitionHandler(this);
 			Erwischt = new Erwischt.Erwischt(this);
-			Calendar = new Calendar.Calendar(this);
+			Calendar = new Calendar.Calendar();
 		}
 
 		ILagerPart[] GetParts()
@@ -317,6 +315,21 @@ namespace Zeltlager.Client
 		{
 			if (!tents.Remove(tent))
 				throw new InvalidOperationException("A tent with this id wasn't found for deletion.");
+		}
+
+		public Tent GetTentFromDisplay(string display)
+		{
+			Tent t = null;
+			// find correct tent from display string
+			foreach (Tent tent in Tents)
+			{
+				if (tent.Display == display)
+				{
+					t = tent;
+					break;
+				}
+			}
+			return t;
 		}
 	}
 }

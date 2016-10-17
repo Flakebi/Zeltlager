@@ -12,13 +12,15 @@ namespace Zeltlager.UAM
 	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
 	{
 		public T Obj { get; }
-		private T oldObj;
-		private bool isAddPage;
+		T oldObj;
+		readonly bool isAddPage;
+		LagerClient lager;
 
 		static readonly Type[] numtypes = { typeof(byte), typeof(ushort), typeof(int) };
 
-		public UniversalAddModifyPage(T obj, bool isAddPage)
+		public UniversalAddModifyPage(T obj, bool isAddPage, LagerClient lager)
 		{
+			this.lager = lager;
 			// Set title of page
 			this.isAddPage = isAddPage;
 			Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name +
@@ -88,22 +90,13 @@ namespace Zeltlager.UAM
 				{
 					// use picker filled with all tents
 					Picker picker = new Picker();
-					foreach (Tent tent in LagerClient.CurrentLager.Tents)
+					foreach (Tent tent in lager.Tents)
 					{
 						picker.Items.Add(tent.ToString());
 					}
 					picker.SelectedIndexChanged += (sender, args) =>
 					{
-						Tent t = null;
-						// find correct tent from display string
-						foreach (Tent tent in LagerClient.CurrentLager.Tents)
-						{
-							if (tent.Display == picker.Items[picker.SelectedIndex])
-							{
-								t = tent;
-								break;
-							}
-						}
+						Tent t = lager.GetTentFromDisplay(picker.Items[picker.SelectedIndex]);
 						type.GetRuntimeProperty(pi.Name).SetValue(Obj, t);
 					};
 					picker.SelectedIndex = 0;
@@ -130,8 +123,8 @@ namespace Zeltlager.UAM
 			}
 
 			Content = grid;
-			ToolbarItems.Add(new ToolbarItem("Abbrechen", null, OnCancelClicked, ToolbarItemOrder.Primary, 0));
-			ToolbarItems.Add(new ToolbarItem("Speichern", null, OnSaveClicked, ToolbarItemOrder.Primary, 1));
+			ToolbarItems.Add(new ToolbarItem(Icons.CANCEL, null, OnCancelClicked, ToolbarItemOrder.Primary, 0));
+			ToolbarItems.Add(new ToolbarItem(Icons.SAVE, null, OnSaveClicked, ToolbarItemOrder.Primary, 1));
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			// make page not start directly at the top
 			Padding = new Thickness(8, 15, 8, 0);
@@ -146,7 +139,7 @@ namespace Zeltlager.UAM
 		{
 			if (isAddPage)
 				oldObj = default(T);
-			await Obj.OnSaveEditing(oldObj);
+			await Obj.OnSaveEditing(oldObj, lager);
 			await Navigation.PopModalAsync(true);
 		}
 	}

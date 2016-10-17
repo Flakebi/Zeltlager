@@ -54,6 +54,7 @@ namespace Zeltlager
 			}
 
 			bool loadedLager = false;
+			LagerClient lager = null;
 			if (LagerClient.ClientGlobalSettings.Lagers.Count > 0)
 			{
 				// Load lager
@@ -62,8 +63,8 @@ namespace Zeltlager
 					loadingScreen.Status = "Lager laden";
 					byte lagerId = LagerClient.ClientGlobalSettings.LastLager;
 					var lagerData = LagerClient.ClientGlobalSettings.Lagers[lagerId];
-					LagerClient.CurrentLager = new LagerClient(lagerId, lagerData.Item1, lagerData.Item2);
-					if (!await LagerClient.CurrentLager.Load())
+					lager = new LagerClient(lagerId, lagerData.Item1, lagerData.Item2);
+					if (!await lager.Load())
 						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden des Lagers sind Fehler aufgetreten", "Ok");
 					loadedLager = true;
 				} catch (Exception e)
@@ -75,7 +76,7 @@ namespace Zeltlager
 			}
 			if (loadedLager)
 				// Go to the main page
-				MainPage = new NavigationPage(new MainPage());
+				MainPage = new NavigationPage(new MainPage(lager));
 			else
 			{
 				// Create lager
@@ -101,10 +102,10 @@ namespace Zeltlager
 			MainPage = new NavigationPage(loadingScreen);
 			try
 			{
-				LagerClient.CurrentLager = new LagerClient((byte)LagerClient.ClientGlobalSettings.Lagers.Count, name, password);
-				await LagerClient.CurrentLager.Init(DisplayStatus);
+				LagerClient lager = new LagerClient((byte)LagerClient.ClientGlobalSettings.Lagers.Count, name, password);
+				await lager.Init(DisplayStatus);
 				loadingScreen.Status = "Lager speichern";
-				await LagerClient.CurrentLager.Save();
+				await lager.Save();
 
 				// Add lager to settings
 				loadingScreen.Status = "Einstellungen speichern";
@@ -113,7 +114,7 @@ namespace Zeltlager
 				await LagerClient.ClientGlobalSettings.Save();
 
 				// Go to the main page
-				MainPage = new NavigationPage(new MainPage());
+				MainPage = new NavigationPage(new MainPage(lager));
 			} catch (Exception e)
 			{
 				// Log the exception

@@ -59,13 +59,17 @@ namespace Zeltlager
 
 		public bool RemoveSupervisor(Member supervisor) => supervisors.Remove(supervisor);
 
+		// TODO: get members
+
+
+
 		#region Interface implementations
 
-		public async Task OnSaveEditing(Tent oldObject)
+		public async Task OnSaveEditing(Tent oldObject, LagerClient lager)
 		{
 			if (oldObject != null)
-				await LagerClient.CurrentLager.AddPacket(new DeleteTent(oldObject));
-			await LagerClient.CurrentLager.AddPacket(new AddTent(this));
+				await lager.AddPacket(new DeleteTent(oldObject));
+			await lager.AddPacket(new AddTent(this));
 		}
 
 		public Tent Clone()

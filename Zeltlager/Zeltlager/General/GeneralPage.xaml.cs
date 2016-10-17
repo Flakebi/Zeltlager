@@ -1,24 +1,27 @@
 using System;
 
 using Xamarin.Forms;
+using Zeltlager.Client;
 
 namespace Zeltlager.General
 {
 	public partial class GeneralPage : ContentPage
 	{
-		public GeneralPage()
+		LagerClient lager;
+		public GeneralPage(LagerClient lager)
 		{
 			InitializeComponent();
+			this.lager = lager;
 		}
 
 		void OnMemberClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new MembersPage());
+			Navigation.PushAsync(new MembersPage(lager));
 		}
 
 		void OnTentClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new TentsPage());
+			Navigation.PushAsync(new TentsPage(lager));
 		}
 	}
 }

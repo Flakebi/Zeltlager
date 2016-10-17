@@ -6,6 +6,12 @@ namespace Zeltlager.Calendar
 {
 	public class Day : INotifyPropertyChanged
 	{
+		public Tent Dishwashers 
+		{
+			get;
+			set; 
+		}
+
 		private ObservableCollection<CalendarEvent> events;
 		public ObservableCollection<CalendarEvent> Events
 		{

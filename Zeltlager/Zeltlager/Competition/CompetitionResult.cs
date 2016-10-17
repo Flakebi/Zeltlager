@@ -4,10 +4,10 @@ namespace Zeltlager.Competition
 {
 	public class CompetitionResult
 	{
-		int points;
+		int? points;
 		int? place;
 
-		public CompetitionResult(int points, int? place)
+		public CompetitionResult(int? points = null, int? place = null)
 		{
 			this.points = points;
 			this.place = place;

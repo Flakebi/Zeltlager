@@ -12,6 +12,8 @@ namespace Zeltlager
 		public const string DELETE = "\ud83d\uddd1";
 		public const string SETTINGS = "⚙";
 		public const string ADD = "＋";
+		public const string SAVE = "\ud83d\udcbe";
+		public const string CANCEL = "❌";
 
 		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
 		{

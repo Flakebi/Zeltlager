@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Zeltlager.Client;
 
 namespace Zeltlager.UAM
 {
@@ -12,7 +13,7 @@ namespace Zeltlager.UAM
 		/// The old object that was edited.
 		/// null if this object is newly created and not edited.
 		/// </param>
-		Task OnSaveEditing(T oldObject);
+		Task OnSaveEditing(T oldObject, LagerClient lager);
 
 		/// <summary>
 		/// Deep cloning method used to save object status before editing

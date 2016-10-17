@@ -70,6 +70,8 @@
 				<Setter Property="BarBackgroundColor" Value="{DynamicResource backgroundColor}" />
 				<Setter Property="Tint" Value="{DynamicResource separatorColor}" />
 			</Style>
+			<Style TargetType="Picker" BasedOn="{StaticResource BaseStyle}">
+			</Style>
 		</ResourceDictionary>
 
 	</Application.Resources>

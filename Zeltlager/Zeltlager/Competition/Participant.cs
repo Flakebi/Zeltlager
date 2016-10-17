@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Zeltlager.Client;
 using Zeltlager.UAM;
 namespace Zeltlager.Competition
 {
@@ -26,7 +27,7 @@ namespace Zeltlager.Competition
 
 		public string SearchableDetail { get { return ""; } }
 
-		public Task OnSaveEditing(Participant oldObject)
+		public Task OnSaveEditing(Participant oldObject, LagerClient lager)
 		{
 			// TODO: Packets
 			return null;

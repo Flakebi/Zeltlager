@@ -1,17 +1,20 @@
 ﻿using System;
 using Xamarin.Forms;
 using Zeltlager.UAM;
+using Zeltlager.Client;
 
 namespace Zeltlager.Competition
 {
 	public partial class CompetitionPage : ContentPage
 	{
 		Competition competition;
+		LagerClient lager;
 
-		public CompetitionPage(Competition competition)
+		public CompetitionPage(Competition competition, LagerClient lager)
 		{
 			InitializeComponent();
 			this.competition = competition;
+			this.lager = lager;
 
 			StackLayout vsl = new StackLayout
 			{
@@ -58,12 +61,12 @@ namespace Zeltlager.Competition
 
 		void OnAddStationClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Station>(new Station("", competition), true)), true);
+			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Station>(new Station("", competition), true, lager)), true);
 		}
 
 		void OnAddParticipantClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(new Participant("", competition), true)), true);
+			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(new Participant("", competition), true, lager)), true);
 		}
 
 		#region Searchable implementaition
@@ -71,7 +74,7 @@ namespace Zeltlager.Competition
 
 
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Station>(station, false)), true);
+			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Station>(station, false, lager)), true);
 		}
 
 		void OnDeleteStation(Station station)
@@ -81,7 +84,7 @@ namespace Zeltlager.Competition
 
 		void OnEditParticipant(Participant participant)
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(participant, false)), true);
+			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(participant, false, lager)), true);
 		}
 
 		void OnDeleteParticipant(Participant participant)

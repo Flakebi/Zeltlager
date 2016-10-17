@@ -46,11 +46,11 @@ namespace Zeltlager
 
 		#region Interface implementation
 
-		public async Task OnSaveEditing(Member oldObject)
+		public async Task OnSaveEditing(Member oldObject, LagerClient lager)
 		{
 			if (oldObject != null)
-				await LagerClient.CurrentLager.AddPacket(new DeleteMember(oldObject));
-			await LagerClient.CurrentLager.AddPacket(new AddMember(this));
+				await lager.AddPacket(new DeleteMember(oldObject));
+			await lager.AddPacket(new AddMember(this));
 		}
 
 		public Member Clone()

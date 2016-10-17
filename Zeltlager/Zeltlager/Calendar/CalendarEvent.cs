@@ -11,6 +11,8 @@ namespace Zeltlager.Calendar
 	[Editable("Termin")]
 	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>, IEquatable<CalendarEvent>
 	{
+		LagerClient lager;
+
 		/// <summary>
 		/// The date of this event.
 		/// </summary>
@@ -94,15 +96,15 @@ namespace Zeltlager.Calendar
 			return Date.CompareTo(other.Date);
 		}
 
-		public async Task OnSaveEditing(CalendarEvent oldObj)
+		public async Task OnSaveEditing(CalendarEvent oldObj, LagerClient lager)
 		{
 			if (oldObj != null)
 			{
 				// Delete Item
-				await LagerClient.CurrentLager.AddPacket(new DeleteCalendarEvent(oldObj));
+				await lager.AddPacket(new DeleteCalendarEvent(oldObj));
 			}
 			// Insert Calendar Event into correct day
-			await LagerClient.CurrentLager.AddPacket(new AddCalendarEvent(this));
+			await lager.AddPacket(new AddCalendarEvent(this));
 		}
 
 		public CalendarEvent Clone()

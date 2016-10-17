@@ -9,25 +9,27 @@ namespace Zeltlager.Competition
 {
 	public partial class CompetitionHandlerPage : ContentPage
 	{
-		public CompetitionHandlerPage()
+		LagerClient lager;
+		public CompetitionHandlerPage(LagerClient lager)
 		{
 			InitializeComponent();
-			Content = new SearchableListView<Competition>(LagerClient.CurrentLager.CompetitionHandler.Competitions, OnEdit, OnDelete);
+			this.lager = lager;
+			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEdit, OnDelete);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new NavigationPage(new UniversalAddModifyPage<Competition>(new Competition(LagerClient.CurrentLager, ""), true)),true);
+			Navigation.PushAsync(new UniversalAddModifyPage<Competition>(new Competition(lager, ""), true, lager),true);
 		}
 
 		void OnEdit(object sender)
 		{
-			
+			// TODO edit competitons
 		}
 
 		void OnDelete(object sender)
 		{
-			
+			// TODO delete competetions, packets
 		}
 	}
 }
