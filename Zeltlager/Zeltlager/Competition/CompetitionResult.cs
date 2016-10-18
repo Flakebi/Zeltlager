@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Zeltlager.UAM;
 namespace Zeltlager.Competition
 {

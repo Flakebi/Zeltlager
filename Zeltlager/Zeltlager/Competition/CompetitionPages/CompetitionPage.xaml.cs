@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Xamarin.Forms;
 using Zeltlager.UAM;
 using Zeltlager.Client;
