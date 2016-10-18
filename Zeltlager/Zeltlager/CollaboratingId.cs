@@ -5,14 +5,14 @@ using System.Linq;
 namespace Zeltlager
 {
 	using Client;
-    using Serialisation;
+	using Serialisation;
 
 	public abstract class CollaboratingId<T> : IEquatable<CollaboratingId<T>> where T : IEquatable<T>
-    {
-        [Serialisation(Type = SerialisationType.Id)]
-        public Collaborator collaborator;
-        [Serialisation]
-        public T id;
+	{
+		[Serialisation(Type = SerialisationType.Reference)]
+		public Collaborator collaborator;
+		[Serialisation]
+		public T id;
 
 		protected CollaboratingId() { }
 		protected CollaboratingId(Collaborator collaborator, T id)
@@ -25,7 +25,7 @@ namespace Zeltlager
 		{
 			if (other == null)
 				return false;
-			return collaborator.Id == other.collaborator.Id && id.Equals(other.id);
+			return collaborator == other.collaborator && id.Equals(other.id);
 		}
 
 		public override bool Equals(object obj)
@@ -38,7 +38,7 @@ namespace Zeltlager
 
 		public override int GetHashCode()
 		{
-			return id.GetHashCode() ^ collaborator.Id.GetHashCode();
+			return id.GetHashCode() ^ collaborator.Key.PublicKey.GetHashCode();
 		}
 
 		public abstract void WriteId(BinaryWriter output);

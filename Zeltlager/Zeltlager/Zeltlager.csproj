@@ -81,7 +81,7 @@
     <Compile Include="RootedIoProvider.cs" />
     <Compile Include="Serialisation\ISerialisable.cs" />
     <Compile Include="Serialisation\SerialisationAttribute.cs" />
-    <Compile Include="Serialisation\SerialisationContext.cs" />
+    <Compile Include="Serialisation\LagerSerialisationContext.cs" />
     <Compile Include="Serialisation\Serialiser.cs" />
     <Compile Include="Tent.cs" />
     <Compile Include="Client\LagerClient.cs" />

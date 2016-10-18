@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using Serialisation;
+
 	/// <summary>
 	/// Constants used for the cryptographic functions.
 	/// All LENGTH values are an amount of bytes,
@@ -26,6 +28,7 @@ namespace Zeltlager
 
 	public struct KeyPair
 	{
+		[Serialisation]
 		public byte[] Modulus;
 		public byte[] PublicKey;
 		public byte[] PrivateKey;

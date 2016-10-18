@@ -6,34 +6,40 @@ namespace Zeltlager
 {
 	using Client;
 	using DataPackets;
-    using Serialisation;
+	using Serialisation;
 	using UAM;
 
 	[Editable("Zelt")]
 	public class Tent : IEditable<Tent>, ISearchable
-    {
-        [Serialisation(Type = SerialisationType.Id)]
-        public TentId Id { get; set; }
+	{
+		[Serialisation(Type = SerialisationType.Id)]
+		public TentId Id { get; set; }
 
 		[Editable("Zeltnummer")]
-        [Serialisation]
-        public byte Number { get; set; }
+		[Serialisation]
+		public byte Number { get; set; }
 
 		[Editable("Zeltname")]
-        [Serialisation]
-        public string Name { get; set; }
+		[Serialisation]
+		public string Name { get; set; }
 
 		[Editable("Zeltbereuer")]
-        [Serialisation]
-        List<Member> supervisors;
+		[Serialisation(Type = SerialisationType.Reference)]
+		List<Member> supervisors;
 
 		[Editable("Mädchenzelt")]
-        [Serialisation]
-        public bool Girls { get; set; }
+		[Serialisation]
+		public bool Girls { get; set; }
 
 		public IReadOnlyList<Member> Supervisors { get { return supervisors; } }
 
 		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
+
+		// For deserialisation
+		protected static Tent GetFromId(LagerSerialisationContext context, TentId id)
+		{
+			return ((LagerClientSerialisationContext)context).LagerClient.Tents.First(t => t.Id == id);
+		}
 
 		public Tent()
 		{

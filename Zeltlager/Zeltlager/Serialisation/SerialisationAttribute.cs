@@ -19,40 +19,37 @@ namespace Zeltlager.Serialisation
 		/// This field is an id and should be saved if
 		/// other objects want to save references to this
 		/// object.
-		/// As ids should be unique, the next free id is
-		/// stored for each collaborator in NextIds.
+		/// If an object has fields that are marked as id,
+		/// if must have the following static method for deserialisation:
+		/// GetFromId(...)
+		/// GetFromId must take all fields that are marked as id as
+		/// parameters. It can also take a serialisation context.
 		/// </summary>
 		Id,
 	}
 
 	/// <summary>
 	/// This attribute marks fields and properties for serialisation.
-	/// An object that should be deserialised must have a constructor
-	/// that takes all fields as arguments that are marked for serialisation,
-	/// except the ids which have to be initialised by the constructor.
-	/// For that purpose you can take a SerialisationContext that contains
-	/// a lager and the collaborator that created the currenty deserialised
-	/// packet.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
 	public class SerialisationAttribute : Attribute
 	{
-        /// <summary>
-        /// The type of this attribute: How it should be serialised.
-        /// Default value: Full
-        /// </summary>
+		/// <summary>
+		/// The type of this attribute: How it should be serialised.
+		/// Default value: Full
+		/// </summary>
 		public SerialisationType Type { get; set; }
 
-        /// <summary>
-        /// If this attribute is optional.
-        /// Default value: False
-        /// </summary>
-        public bool Optional { get; set; }
+		/// <summary>
+		/// If this attribute is optional.
+		/// Default value: False
+		/// </summary>
+		public bool Optional { get; set; }
 
 		public SerialisationAttribute()
 		{
 			Type = SerialisationType.Full;
-            Optional = false;
+			Optional = false;
 		}
 	}
 }

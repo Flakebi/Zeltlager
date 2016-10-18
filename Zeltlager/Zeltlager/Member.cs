@@ -1,34 +1,41 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Zeltlager
 {
 	using Client;
 	using DataPackets;
-    using Serialisation;
+	using Serialisation;
 	using UAM;
 
 	[Editable("Teilnehmer")]
 	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
-    {
-        [Serialisation(Type = SerialisationType.Id)]
-        public MemberId Id { get; set; }
+	{
+		[Serialisation(Type = SerialisationType.Id)]
+		public MemberId Id { get; set; }
 
 		[Editable("Name")]
-        [Serialisation]
+		[Serialisation]
 		public string Name { get; set; }
 		/// <summary>
 		/// The tent in which this member lives, this attribute can not be null.
 		/// </summary>
 		[Editable("Zelt")]
-        [Serialisation(Type = SerialisationType.Reference)]
-        public Tent Tent { get; set; }
+		[Serialisation(Type = SerialisationType.Reference)]
+		public Tent Tent { get; set; }
 
 		[Editable("Betreuer")]
-        [Serialisation]
-        public bool Supervisor { get; set; }
+		[Serialisation]
+		public bool Supervisor { get; set; }
 
 		public string Display { get { return Name + (Supervisor ? " \ud83d\ude0e" : ""); } }
+
+		// For deserialisation
+		protected static Member GetFromId(LagerSerialisationContext context, MemberId id)
+		{
+			return ((LagerClientSerialisationContext)context).LagerClient.Members.First(m => m.Id == id);
+		}
 
 		public Member()
 		{
@@ -45,15 +52,15 @@ namespace Zeltlager
 			Supervisor = supervisor;
 		}
 
-        // Constructors for deserialisation
-        protected Member(SerialisationContext context, string name, Tent tent, bool supervisor)
-        {
-            // Use the next free member id and inrcease the id afterwards.
-            Id = new MemberId(context.Collaborator, context.Collaborator.NextMemberId++);
-            Name = name;
-            Tent = tent;
-            Supervisor = supervisor;
-        }
+		// Constructors for deserialisation
+		protected Member(LagerSerialisationContext context, string name, Tent tent, bool supervisor)
+		{
+			// Use the next free member id and inrcease the id afterwards.
+			Id = new MemberId(context.Collaborator, context.Collaborator.NextMemberId++);
+			Name = name;
+			Tent = tent;
+			Supervisor = supervisor;
+		}
 
 		public override string ToString() => Display;
 

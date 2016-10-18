@@ -4,17 +4,22 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Zeltlager.DataPackets;
-
 namespace Zeltlager
 {
-	public class Collaborator
+	using DataPackets;
+	using Serialisation;
+
+	public class Collaborator : ISerialisable<LagerSerialisationContext>
 	{
 		List<DataPacket> packets = new List<DataPacket>();
 
 		public KeyPair Key { get; private set; }
 
 		public byte Id { get; private set; }
+		/// <summary>
+		/// The list of collaborators (indexed by the id) as of this collaborators view point.
+		/// </summary>
+		public List<Collaborator> Collaborators { get; private set; }
 		public IReadOnlyList<DataPacket> Packets { get { return packets; } }
 
 		/// <summary>
@@ -34,6 +39,8 @@ namespace Zeltlager
 		/// </param>
 		public Collaborator(byte id, KeyPair key)
 		{
+			Collaborators = new List<Collaborator>();
+			Collaborators.Add(this);
 			Id = id;
 			Key = key;
 
@@ -189,6 +196,32 @@ namespace Zeltlager
 			return success;
 		}
 
-        //TODO Implement ISerialisable (Write/ReadId)
+		//TODO Implement ISerialisable (Write/ReadId)
+
+		// Serialisation
+		public void Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		{
+			serialiser.Write(output, context, Key);
+			//TODO Write signatures
+		}
+
+		public void WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		{
+			// Get our collaborator id as seen from the collaborator that writes our id
+			serialiser.Write(output, context,
+				(byte)context.Collaborator.Collaborators.IndexOf(this));
+		}
+
+		public void Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		{
+			serialiser.Read(input, context, Key);
+			//TODO Read signatures
+		}
+
+		public static Collaborator ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		{
+			byte id = serialiser.Read<byte>(input, context, 0);
+			return context.Collaborator.Collaborators[id];
+		}
 	}
 }

@@ -5,13 +5,13 @@ namespace Zeltlager.Serialisation
 	/// <summary>
 	/// An interface that enables you to override automatically generated
 	/// serialisation and deserialisation methods.
-	/// You must also provide the following static methods:
-	/// Read(BinaryReader input, SerialisationContext context)
-	/// ReadFromId(BinaryReader input, SerialisationContext context)
+	/// You must also provide the following static method:
+	/// ReadFromId(BinaryReader input, Serialiser<C> serialiser, C context)
 	/// </summary>
-	public interface ISerialisable
+	public interface ISerialisable<C>
 	{
-		void Write(BinaryWriter output, SerialisationContext context);
-		void WriteId(BinaryWriter output, SerialisationContext context);
+		void Write(BinaryWriter output, Serialiser<C> serialiser, C context);
+		void WriteId(BinaryWriter output, Serialiser<C> serialiser, C context);
+		void Read(BinaryReader input, Serialiser<C> serialiser, C context);
 	}
 }

@@ -3,14 +3,23 @@ using System.Collections.Generic;
 
 namespace Zeltlager
 {
+	using Serialisation;
+
 	public class LagerBase
 	{
+		/// <summary>
+		/// The version of the data packet protocol.
+		/// </summary>
+		protected const byte VERSION = 0;
+		protected const string GENERAL_SETTINGS_FILE = "lager.conf";
+
 		public static bool IsClient { get; set; }
 		public static IIoProvider IoProvider { get; set; }
 		public static ICryptoProvider CryptoProvider { get; set; }
 		public static Log Log { get; set; }
 
 		public byte Id { get; set; }
+		public Serialiser<LagerSerialisationContext> serialiser = new Serialiser<LagerSerialisationContext>();
 		public IReadOnlyList<Collaborator> Collaborators { get { return collaborators; } }
 
 		protected List<Collaborator> collaborators = new List<Collaborator>();
@@ -34,12 +43,6 @@ namespace Zeltlager
 		/// The asymmetric keys of this lager, the private key is null for the server.
 		/// </summary>
 		protected KeyPair asymmetricKey;
-
-		/// <summary>
-		/// The version of the data packet protocol.
-		/// </summary>
-		protected const byte VERSION = 0;
-		protected const string GENERAL_SETTINGS_FILE = "lager.conf";
 
 		static LagerBase()
 		{
