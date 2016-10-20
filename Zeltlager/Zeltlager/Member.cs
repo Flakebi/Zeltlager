@@ -52,14 +52,19 @@ namespace Zeltlager
 			Supervisor = supervisor;
 		}
 
-		// Constructors for deserialisation
-		protected Member(LagerSerialisationContext context, string name, Tent tent, bool supervisor)
+		// Constructors for adding a member when deserialising
+		protected Member(LagerClientSerialisationContext context)
 		{
 			// Use the next free member id and inrcease the id afterwards.
 			Id = new MemberId(context.Collaborator, context.Collaborator.NextMemberId++);
-			Name = name;
-			Tent = tent;
-			Supervisor = supervisor;
+		}
+
+		// Add the member to a lager after deserialising it
+		protected void Add(LagerClientSerialisationContext context)
+		{
+			// Reset the collaborator in the id to prevent spoofinr
+			Id.collaborator = context.Collaborator;
+			context.LagerClient.AddMember(this);
 		}
 
 		public override string ToString() => Display;
