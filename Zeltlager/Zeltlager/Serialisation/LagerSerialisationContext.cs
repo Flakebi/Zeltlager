@@ -1,10 +1,12 @@
 namespace Zeltlager.Serialisation
 {
 	using Client;
+    using DataPackets;
 
 	public class LagerSerialisationContext
 	{
 		public LagerBase Lager { get; private set; }
+        public PacketId PacketId { get; set; }
 		public Collaborator Collaborator { get; private set; }
 
 		public LagerSerialisationContext(LagerBase lager, Collaborator collaborator)

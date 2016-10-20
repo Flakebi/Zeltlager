@@ -17,7 +17,7 @@ namespace Zeltlager.DataPackets
 	public abstract class DataPacket
 	{
 		static readonly Type[] packetTypes = {
-			typeof(Bundle),
+            typeof(AddPacket),
 			typeof(AddMember),
 			typeof(DeleteMember),
 			typeof(AddTent),
@@ -124,7 +124,6 @@ namespace Zeltlager.DataPackets
 		/// The packet has to deserialise itself from Data.
 		/// </summary>
 		/// <param name="lager">The lager to which this packet should be applied.</param>
-		/// <param name="packetType">The type id of the packet inside of this packet type.</param>
-		public abstract void Deserialise(LagerClientSerialisationContext context, byte packetType);
+		public abstract void Deserialise(LagerClientSerialisationContext context);
 	}
 }

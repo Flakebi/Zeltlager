@@ -98,6 +98,13 @@ namespace Zeltlager.Serialisation
 			return type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
 		}
 
+        bool writeIds;
+
+        public Serialiser(bool writeIds = false)
+        {
+            this.writeIds = writeIds;
+        }
+
 		/// <summary>
 		/// Write the given object to the output stream.
 		/// </summary>

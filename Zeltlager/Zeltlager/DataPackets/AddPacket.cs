@@ -57,7 +57,7 @@ namespace Zeltlager.DataPackets
 			Data = mem.ToArray();
 		}
 
-		public override void Deserialise(LagerClientSerialisationContext context, byte packetType)
+		public override void Deserialise(LagerClientSerialisationContext context)
 		{
 			var type = types[Id];
 			MemoryStream mem = new MemoryStream();
