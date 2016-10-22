@@ -11,7 +11,7 @@ namespace Zeltlager
 
 	public class Collaborator : ISerialisable<LagerSerialisationContext>
 	{
-		List<DataPacket> packets = new List<DataPacket>();
+		List<DataPacketBundle> bundles = new List<DataPacketBundle>();
 
 		public KeyPair Key { get; private set; }
 
@@ -19,15 +19,8 @@ namespace Zeltlager
 		/// <summary>
 		/// The list of collaborators (indexed by the id) as of this collaborators view point.
 		/// </summary>
-		public List<Collaborator> Collaborators { get; private set; }
-		public IReadOnlyList<DataPacket> Packets { get { return packets; } }
-
-		/// <summary>
-		/// All tent ids should be unique (per collaborator) so the next free
-		/// member id for this collaborator is saved here.
-		/// </summary>
-		public ushort NextMemberId { get; set; }
-		public byte NextTentId { get; set; }
+		public Dictionary<Collaborator, PacketId> Collaborators { get; private set; }
+		public IReadOnlyList<DataPacketBundle> Bundles { get { return bundles; } }
 
 		/// <summary>
 		/// Initialises a new collaborator.
@@ -39,16 +32,13 @@ namespace Zeltlager
 		/// </param>
 		public Collaborator(byte id, KeyPair key)
 		{
-			Collaborators = new List<Collaborator>();
-			Collaborators.Add(this);
+			Collaborators = new Dictionary<Collaborator, PacketId>();
+			Collaborators[this] = new PacketId(this); //TODO Is that all?
 			Id = id;
 			Key = key;
-
-			NextMemberId = 0;
-			NextTentId = 0;
 		}
 
-		public void AddPacket(DataPacket packet) => packets.Add(packet);
+		public void AddBundle(DataPacketBundle bundle) => bundles.Add(bundle);
 
 		public async Task SaveAll(IIoProvider io, byte[] symmetricKey)
 		{
@@ -56,147 +46,11 @@ namespace Zeltlager
 			if (!await io.ExistsFolder(id))
 				await io.CreateFolder(id);
 
-			for (ushort i = 0; i < packets.Count; i++)
-				await SavePacket(io, symmetricKey, i);
+			for (ushort i = 0; i < bundles.Count; i++)
+				;
+			//TODO
+			//await SavePacket(io, symmetricKey, i);
 		}
-
-		/// <summary>
-		/// Save the packet with the given id and encrypt it using the supplied symmetric key.
-		/// </summary>
-		/// <param name="io"></param>
-		/// <param name="symmetricKey">The key to encrypt the packet.</param>
-		/// <param name="i">The packet id.</param>
-		/// <returns></returns>
-		public async Task SavePacket(IIoProvider io, byte[] symmetricKey, ushort i)
-		{
-			var packet = packets[i];
-
-			byte[] data;
-			// Get packet data
-			MemoryStream mem = new MemoryStream();
-			using (BinaryWriter writer = new BinaryWriter(mem))
-				packet.WritePacket(writer);
-
-			data = mem.ToArray();
-
-			if (packet.Iv == null)
-				// Generate iv
-				packet.Iv = await LagerBase.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
-
-			// Write id, iv and encrypted data
-			mem = new MemoryStream();
-			using (BinaryWriter writer = new BinaryWriter(mem))
-			{
-				// Write the packet id
-				writer.Write(i.ToBytes());
-				// Write iv
-				writer.Write(packet.Iv);
-				// Write encrypted packet data
-				writer.Write(await LagerBase.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
-			}
-			data = mem.ToArray();
-
-			if (packet.Signature == null)
-			{
-				if (packet is InvalidDataPacket)
-				{
-					// Just write the packet data
-					using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
-						packet.WritePacket(output);
-					return;
-				} else if (Key.PrivateKey != null)
-					// Generate signature
-					packet.Signature = await LagerBase.CryptoProvider.Sign(Key, data);
-				else
-					throw new InvalidOperationException("Found unsigned packet without private key.");
-			}
-			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
-			{
-				// Write signature
-				output.Write(packet.Signature);
-				// Write id, iv and encrypted data
-				output.Write(data);
-			}
-		}
-
-		/// <summary>
-		/// Loads all packages of this collaborator.
-		/// </summary>
-		/// <param name="io">The io provider.</param>
-		/// <param name="symmetricKey">The symmetric key for the decryption of the pakcets.</param>
-		/// <param name="lager">The lager where this collaborator belongs to.</param>
-		/// <param name="version">The version of the saved packets.</param>
-		/// <param name="packetCount">The amount of packets that this contributor has.</param>
-		/// <returns>True if everything was loaded successfully, false otherwise.</returns>
-		public async Task<bool> Load(IIoProvider io, byte[] symmetricKey, LagerBase lager, byte version, ushort packetCount)
-		{
-			bool success = true;
-			string id = Id.ToString();
-			for (ushort i = 0; i < packetCount; i++)
-			{
-				byte[] signature;
-				byte[] allData;
-				try
-				{
-					using (BinaryReader input = new BinaryReader(await io.ReadFile(Path.Combine(id, i.ToString()))))
-					{
-						// Read signature
-						signature = input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH);
-						var length = (int)(input.BaseStream.Length - input.BaseStream.Position);
-						allData = input.ReadBytes(length);
-					}
-
-					// Verify signature
-					if (!await LagerBase.CryptoProvider.Verify(Key, signature, allData))
-						// The packet has an invalid signature
-						throw new Exception("The packet has an invalid signature.");
-
-					ushort packetId = allData.ToUShort(0);
-					// Check if the packet has the right id
-					if (packetId != i)
-						throw new Exception("The packet has an invalid id.");
-
-					byte[] iv = new byte[CryptoConstants.IV_LENGTH];
-					Array.Copy(allData, 2, iv, 0, iv.Length);
-					byte[] data = new byte[allData.Length - iv.Length - 2];
-					Array.Copy(allData, 2 + iv.Length, data, 0, data.Length);
-
-					data = await LagerBase.CryptoProvider.DecryptSymetric(symmetricKey, iv, data);
-
-					DataPacket packet = DataPacket.ReadPacket(data.ToArray());
-					packet.Iv = iv;
-					packet.Signature = signature;
-					packets.Add(packet);
-
-					// Check if we only parsed an invalid packet
-					if (packet is InvalidDataPacket)
-						success = false;
-				} catch (Exception e)
-				{
-					success = false;
-					// Log the exception
-					await LagerBase.Log.Exception("Collaborator", e);
-					lager.MissingPackets.Add(new Tuple<byte, ushort>(Id, i));
-					// Try to open the file
-					try
-					{
-						using (BinaryReader input = new BinaryReader(await io.ReadFile(Path.Combine(id, i.ToString()))))
-						{
-							// Read all data
-							allData = input.ReadBytes((int)input.BaseStream.Length);
-							packets.Add(new InvalidDataPacket(allData));
-						}
-					} catch (Exception)
-					{
-						// Insert an empty invalid packet
-						packets.Add(new InvalidDataPacket(new byte[0]));
-					}
-				}
-			}
-			return success;
-		}
-
-		//TODO Implement ISerialisable (Write/ReadId)
 
 		// Serialisation
 		public void Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
@@ -208,8 +62,7 @@ namespace Zeltlager
 		public void WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			// Get our collaborator id as seen from the collaborator that writes our id
-			serialiser.Write(output, context,
-				(byte)context.Collaborator.Collaborators.IndexOf(this));
+			serialiser.Write(output, context, context.PacketId.Creator.Collaborators[this].PacketIndex.Value);
 		}
 
 		public void Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)

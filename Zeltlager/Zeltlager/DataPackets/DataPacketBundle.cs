@@ -19,7 +19,8 @@ namespace Zeltlager.DataPackets
 		public const byte MAX_PACKETS = 255;
 
 		public uint Id { get; set; }
-		public List<DataPacket> Packets { get; private set; }
+		List<DataPacket> packets;
+		public IReadOnlyList<DataPacket> Packets { get { return packets; } }
 		/// <summary>
 		/// The full encrypted data of the bundle.
 		/// </summary>
@@ -29,7 +30,12 @@ namespace Zeltlager.DataPackets
 
 		public DataPacketBundle(DataPacket[] packets)
 		{
-			Packets = new List<DataPacket>(packets);
+			this.packets = new List<DataPacket>(packets);
+		}
+
+		public DataPacketBundle(byte[] data)
+		{
+			this.data = data;
 		}
 
 		/// <summary>
@@ -42,8 +48,8 @@ namespace Zeltlager.DataPackets
 			// Compress the data using gzip
 			using (BinaryWriter output = new BinaryWriter(new GZipStream(mem, CompressionLevel.Optimal)))
 			{
-				output.Write((byte)Packets.Count);
-				foreach (var packet in Packets)
+				output.Write((byte)packets.Count);
+				foreach (var packet in packets)
 				{
 					MemoryStream tmp = new MemoryStream();
 					using (BinaryWriter tmpOut = new BinaryWriter(tmp))
@@ -66,12 +72,12 @@ namespace Zeltlager.DataPackets
 			using (BinaryReader input = new BinaryReader(new GZipStream(mem, CompressionMode.Decompress)))
 			{
 				byte count = input.ReadByte();
-				Packets = new List<DataPacket>(count);
+				packets = new List<DataPacket>(count);
 				for (ushort i = 0; i < count; i++)
 				{
 					int length = input.ReadInt32();
 					byte[] bs = input.ReadBytes(length);
-					Packets.Add(DataPacket.ReadPacket(bs));
+					packets.Add(DataPacket.ReadPacket(bs));
 				}
 			}
 		}
@@ -100,7 +106,7 @@ namespace Zeltlager.DataPackets
 			byte[] encryptedData = mem.ToArray();
 
 			// Generate signature
-			byte[] signature = await LagerBase.CryptoProvider.Sign(context.Collaborator.Key, encryptedData);
+			byte[] signature = await LagerBase.CryptoProvider.Sign(context.PacketId.Creator.Key, encryptedData);
 
 			// Write all data
 			mem = new MemoryStream();
@@ -110,6 +116,13 @@ namespace Zeltlager.DataPackets
 				output.Write(encryptedData);
 			}
 			data = mem.ToArray();
+		}
+
+		public async Task Write(LagerClientSerialisationContext context, BinaryWriter output)
+		{
+			if (data == null)
+				await Serialise(context);
+			output.Write(data);
 		}
 
 		/// <summary>
@@ -127,7 +140,7 @@ namespace Zeltlager.DataPackets
 			Array.Copy(data, signature.Length, encryptedData, 0, encryptedData.Length);
 
 			// Verify signature
-			if (!await LagerBase.CryptoProvider.Verify(context.Collaborator.Key, signature, encryptedData))
+			if (!await LagerBase.CryptoProvider.Verify(context.PacketId.Creator.Key, signature, encryptedData))
 				throw new Exception("The bundle has an invalid signature.");
 
 			MemoryStream mem = new MemoryStream(encryptedData);
@@ -151,15 +164,29 @@ namespace Zeltlager.DataPackets
 			Unpack(unencryptedData);
 		}
 
-		/*TODO Remove?
-		public void Deserialise(LagerClientSerialisationContext context)
+		public async Task<Tuple<PacketId, DataPacket>[]> GetPackets(LagerClientSerialisationContext context)
 		{
-			context.PacketId = context.PacketId.Clone(this);
-			for (int i = 0; i < Packets.Count; i++)
+			if (packets == null)
+				await Deserialise(context);
+
+			Tuple<PacketId, DataPacket>[] result = new Tuple<PacketId, DataPacket>[packets.Count];
+			PacketId id = context.PacketId.Clone(this);
+			for (int i = 0; i < packets.Count; i++)
 			{
-				context.PacketId = context.PacketId.Clone((byte)i);
-				Packets[i].Deserialise(context);
+				id = id.Clone((byte)i);
+				result[i] = new Tuple<PacketId, DataPacket>(id, packets[i]);
 			}
-		}*/
+			return result;
+		}
+
+		public void AddPacket(DataPacket packet)
+		{
+			data = null;
+			if (packets == null)
+				packets = new List<DataPackets.DataPacket>();
+			if (packets.Count == MAX_PACKETS)
+				throw new InvalidOperationException("The bundle can't contain more packets");
+			packets.Add(packet);
+		}
 	}
 }

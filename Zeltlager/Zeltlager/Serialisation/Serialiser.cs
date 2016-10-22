@@ -98,12 +98,12 @@ namespace Zeltlager.Serialisation
 			return type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
 		}
 
-        bool writeIds;
+		bool writeIds;
 
-        public Serialiser(bool writeIds = false)
-        {
-            this.writeIds = writeIds;
-        }
+		public Serialiser(bool writeIds = false)
+		{
+			this.writeIds = writeIds;
+		}
 
 		/// <summary>
 		/// Write the given object to the output stream.
@@ -126,6 +126,20 @@ namespace Zeltlager.Serialisation
 				// Search for the matching method
 				typeof(BinaryWriter).GetRuntimeMethod(nameof(Write), new Type[] { typeof(T) })
 					.Invoke(output, new object[] { obj });
+			} else if (PRIMITIVES.ContainsKey(Nullable.GetUnderlyingType(type)))
+			{
+				// Save if the object is null
+				if (obj == null)
+					output.Write(false);
+				else
+				{
+					output.Write(true);
+					// Write the object
+					// Get the generic method
+					var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(nameof(Write));
+					method = method.MakeGenericMethod(Nullable.GetUnderlyingType(type));
+					method.Invoke(this, new object[] { output, context, obj });
+				}
 			} else if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
 			{
 				// Check for lists and arrays
@@ -247,6 +261,19 @@ namespace Zeltlager.Serialisation
 				// Search for the matching method
 				obj = (T)typeof(BinaryReader).GetRuntimeMethod(nameof(Read) + PRIMITIVES[type], new Type[0])
 					.Invoke(input, new object[0]);
+			} else if (PRIMITIVES.ContainsKey(Nullable.GetUnderlyingType(type)))
+			{
+				// Read if the object is null
+				if (!input.ReadBoolean())
+					obj = (T)GetDefault(type);
+				else
+				{
+					// Read the object
+					// Get the generic method
+					var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(nameof(Read));
+					method = method.MakeGenericMethod(Nullable.GetUnderlyingType(type));
+					obj = (T)method.Invoke(this, new object[] { input, context, obj });
+				}
 			} else if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
 			{
 				// Check for lists and arrays
@@ -394,7 +421,10 @@ namespace Zeltlager.Serialisation
 			if (attribute.Attribute.Optional)
 			{
 				if (!input.ReadBoolean())
+				{
+					attribute.Value = GetDefault(attribute.Type);
 					return;
+				}
 			}
 			// Check if we should read a reference
 			string methodName = attribute.Attribute.Type == SerialisationType.Reference ? nameof(ReadFromId) : nameof(Read);
