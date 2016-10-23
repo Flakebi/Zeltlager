@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Serialisation
 {
@@ -112,19 +113,23 @@ namespace Zeltlager.Serialisation
 		/// <param name="output">The output stream for the serialisation.</param>
 		/// <param name="context">The context for user defined serialisations.</param>
 		/// <param name="obj">The object that should be written into output.</param>
-		public void Write<T>(BinaryWriter output, C context, T obj)
+		public Task Write<T>(BinaryWriter output, C context, T obj)
 		{
-			var type = typeof(T);
+			return Write(output, context, obj, typeof(T));
+		}
+
+		async Task Write(BinaryWriter output, C context, object obj, Type type)
+		{
 			TypeInfo typeInfo = type.GetTypeInfo();
 			// Check if the object implements ISerialisable
 			ISerialisable<C> serialisable = obj as ISerialisable<C>;
 			if (serialisable != null)
-				serialisable.Write(output, this, context);
+				await serialisable.Write(output, this, context);
 			else if (PRIMITIVES.ContainsKey(type))
 			{
 				// Check for primitives
 				// Search for the matching method
-				typeof(BinaryWriter).GetRuntimeMethod(nameof(Write), new Type[] { typeof(T) })
+				typeof(BinaryWriter).GetRuntimeMethod(nameof(Write), new Type[] { type })
 					.Invoke(output, new object[] { obj });
 			} else if (PRIMITIVES.ContainsKey(Nullable.GetUnderlyingType(type)))
 			{
@@ -134,11 +139,9 @@ namespace Zeltlager.Serialisation
 				else
 				{
 					output.Write(true);
+					Type nullableType = Nullable.GetUnderlyingType(type);
 					// Write the object
-					// Get the generic method
-					var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(nameof(Write));
-					method = method.MakeGenericMethod(Nullable.GetUnderlyingType(type));
-					method.Invoke(this, new object[] { output, context, obj });
+					await Write(output, context, Convert.ChangeType(obj, nullableType), nullableType);
 				}
 			} else if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
 			{
@@ -154,18 +157,15 @@ namespace Zeltlager.Serialisation
 				else
 					elementType = typeof(object);
 
-				// Get the generic method
-				var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(nameof(Write));
-				method = method.MakeGenericMethod(elementType);
 				// Serialise all elements
 				foreach (var o in list)
-					method.Invoke(this, new object[] { output, context, o });
+					await Write(output, context, o, elementType);
 			} else
 			{
 				// Collect attributes in an array
 				var attributes = GetFieldData(type, obj).ToArray();
 				foreach (var attribute in attributes)
-					WriteField(output, context, attribute);
+					await WriteField(output, context, attribute);
 			}
 		}
 
@@ -176,20 +176,25 @@ namespace Zeltlager.Serialisation
 		/// <param name="output">The output stream for the serialisation.</param>
 		/// <param name="context">The context for user defined serialisations.</param>
 		/// <param name="obj">The object of which the id should be written into output.</param>
-		public void WriteId<T>(BinaryWriter output, C context, T obj)
+		public Task WriteId<T>(BinaryWriter output, C context, T obj)
+		{
+			return WriteId(output, context, obj, typeof(T));
+		}
+
+		public async Task WriteId(BinaryWriter output, C context, object obj, Type type)
 		{
 			// Check if the object implements ISerialisable
 			ISerialisable<C> serialisable = obj as ISerialisable<C>;
 			if (serialisable != null)
-				serialisable.WriteId(output, this, context);
+				await serialisable.WriteId(output, this, context);
 			else
 			{
 				// Find the id of the type
-				var attributes = GetFieldData(typeof(T), obj).Where(a => a.Attribute.Type == SerialisationType.Id).ToArray();
+				var attributes = GetFieldData(type, obj).Where(a => a.Attribute.Type == SerialisationType.Id).ToArray();
 				if (attributes.Length == 0)
 				{
 					// Check if it's a list of ids
-					TypeInfo typeInfo = typeof(T).GetTypeInfo();
+					TypeInfo typeInfo = type.GetTypeInfo();
 					if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
 					{
 						// Check for lists and arrays
@@ -204,22 +209,19 @@ namespace Zeltlager.Serialisation
 						else
 							elementType = typeof(object);
 
-						// Get the generic method
-						var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(nameof(WriteId));
-						method = method.MakeGenericMethod(elementType);
 						// Serialise all elements
 						foreach (var o in list)
-							method.Invoke(this, new object[] { output, context, o });
+							await WriteId(output, context, o, elementType);
 					}
 				} else
 				{
 					foreach (var attribute in attributes)
-						WriteField(output, context, attribute);
+						await WriteField(output, context, attribute);
 				}
 			}
 		}
 
-		void WriteField(BinaryWriter output, C context, FieldData attribute)
+		async Task WriteField(BinaryWriter output, C context, FieldData attribute)
 		{
 			// Check if the attribute is optional
 			if (attribute.Attribute.Optional)
@@ -232,11 +234,10 @@ namespace Zeltlager.Serialisation
 					output.Write(true);
 			}
 			// Check if we should only save a reference
-			string methodName = attribute.Attribute.Type == SerialisationType.Reference ? nameof(WriteId) : nameof(Write);
-			// Use the previously taken type as the generic parameter for the method call
-			var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(methodName);
-			method = method.MakeGenericMethod(attribute.Type);
-			method.Invoke(this, new object[] { output, context, attribute.Value });
+			if (attribute.Attribute.Type == SerialisationType.Reference)
+				await WriteId(output, context, attribute.Value, attribute.Type);
+			else
+				await Write(output, context, attribute.Value, attribute.Type);
 		}
 
 		/// <summary>
@@ -247,32 +248,34 @@ namespace Zeltlager.Serialisation
 		/// <param name="context">The context for user defined serialisations.</param>
 		/// <param name="obj">The object that should be filled with the read data.</param>
 		/// <returns>The read object.</returns>
-		public T Read<T>(BinaryReader input, C context, T obj)
+		public async Task<T> Read<T>(BinaryReader input, C context, T obj)
 		{
-			var type = typeof(T);
+			return (T)await Read(input, context, obj, typeof(T));
+		}
+
+		async Task<object> Read(BinaryReader input, C context, object obj, Type type)
+		{
 			TypeInfo typeInfo = type.GetTypeInfo();
 			// Check if the object implements ISerialisable
 			ISerialisable<C> serialisable = obj as ISerialisable<C>;
 			if (serialisable != null)
-				serialisable.Read(input, this, context);
+				await serialisable.Read(input, this, context);
 			else if (PRIMITIVES.ContainsKey(type))
 			{
 				// Check for primitives
 				// Search for the matching method
-				obj = (T)typeof(BinaryReader).GetRuntimeMethod(nameof(Read) + PRIMITIVES[type], new Type[0])
+				obj = typeof(BinaryReader).GetRuntimeMethod(nameof(Read) + PRIMITIVES[type], new Type[0])
 					.Invoke(input, new object[0]);
 			} else if (PRIMITIVES.ContainsKey(Nullable.GetUnderlyingType(type)))
 			{
 				// Read if the object is null
 				if (!input.ReadBoolean())
-					obj = (T)GetDefault(type);
+					obj = GetDefault(type);
 				else
 				{
+					Type nullableType = Nullable.GetUnderlyingType(type);
 					// Read the object
-					// Get the generic method
-					var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(nameof(Read));
-					method = method.MakeGenericMethod(Nullable.GetUnderlyingType(type));
-					obj = (T)method.Invoke(this, new object[] { input, context, obj });
+					obj = await Read(input, context, Convert.ChangeType(obj, nullableType), nullableType);
 				}
 			} else if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
 			{
@@ -289,9 +292,9 @@ namespace Zeltlager.Serialisation
 							(arguments.Length == 1 && arguments[0].ParameterType == typeof(int));
 					}).OrderBy(c => 1 - c.GetParameters().Length).First();
 					if (constructor.GetParameters().Length == 1)
-						obj = (T)constructor.Invoke(new object[] { count });
+						obj = constructor.Invoke(new object[] { count });
 					else
-						obj = (T)constructor.Invoke(new object[0]);
+						obj = constructor.Invoke(new object[0]);
 				}
 				IList list = (IList)obj;
 
@@ -304,16 +307,20 @@ namespace Zeltlager.Serialisation
 				else
 					elementType = typeof(object);
 
-				// Get the generic method
-				var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(nameof(Read));
-				method = method.MakeGenericMethod(elementType);
 				// Read list elements
 				for (int i = 0; i < count; i++)
 				{
+					object element = null;
 					if (list.Count > i)
-						list[i] = method.Invoke(this, new object[] { input, context, list[i] });
+						element = list[i];
+
+					// Read the list element
+					element = await Read(input, context, element, elementType);
+
+					if (list.Count > i)
+						list[i] = element;
 					else
-						list.Add(method.Invoke(this, new object[] { input, context, null }));
+						list.Add(element);
 				}
 			} else
 			{
@@ -322,7 +329,7 @@ namespace Zeltlager.Serialisation
 				// Read all attributes and set the fields of the object
 				foreach (var attribute in attributes)
 				{
-					ReadField(input, context, attribute);
+					await ReadField(input, context, attribute);
 					if (attribute.Field != null)
 						attribute.Field.SetValue(obj, attribute.Value);
 					else
@@ -339,18 +346,33 @@ namespace Zeltlager.Serialisation
 		/// <param name="input">The input stream for the serialisation.</param>
 		/// <param name="context">The context for user defined serialisations.</param>
 		/// <returns>The object of the read id.</returns>
-		public T ReadFromId<T>(BinaryReader input, C context)
+		public async Task<T> ReadFromId<T>(BinaryReader input, C context)
 		{
-			// Check if the object implements ISerialisable
-			Type type = typeof(T);
+			return (T)await ReadFromId(input, context, typeof(T));
+		}
+
+		static async Task<object> GetObjectTask<T>(Task<T> task)
+		{
+			return await task;
+		}
+
+		async Task<object> ReadFromId(BinaryReader input, C context, Type type)
+		{
 			TypeInfo typeInfo = type.GetTypeInfo();
+			// To convert a task
+			var converter = typeof(Serialiser<C>).GetTypeInfo()
+				.GetDeclaredMethod(nameof(GetObjectTask))
+				.MakeGenericMethod(type);
 			if (typeInfo.ImplementedInterfaces.Contains(typeof(ISerialisable<C>)))
 			{
 				// Find a matching method
 				var method = typeInfo.GetDeclaredMethods(nameof(ReadFromId))
 					.First(m => m.IsStatic && m.GetParameters().Select(
-						p => p.ParameterType).SequenceEqual(new Type[] { typeof(BinaryReader), typeof(Serialiser<C>), typeof(C) }));
-				return (T)method.Invoke(null, new object[] { input, this, context });
+						p => p.ParameterType)
+						.SequenceEqual(new Type[] { typeof(BinaryReader), typeof(Serialiser<C>), typeof(C) }));
+				object task = method.Invoke(null, new object[] { input, this, context });
+				// Convert the task
+				return await (Task<object>)converter.Invoke(null, new object[] { task });
 			} else
 			{
 				// Find the id of the type
@@ -360,7 +382,7 @@ namespace Zeltlager.Serialisation
 					// Check if it's a list of ids
 					if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
 					{
-						T obj;
+						object obj;
 						// Check for lists and arrays
 						int count = input.ReadInt32();
 						// Create the object
@@ -372,9 +394,9 @@ namespace Zeltlager.Serialisation
 								(arguments.Length == 1 && arguments[0].ParameterType == typeof(int));
 						}).OrderBy(c => 1 - c.GetParameters().Length).First();
 						if (constructor.GetParameters().Length == 1)
-							obj = (T)constructor.Invoke(new object[] { count });
+							obj = constructor.Invoke(new object[] { count });
 						else
-							obj = (T)constructor.Invoke(new object[0]);
+							obj = constructor.Invoke(new object[0]);
 
 						IList list = (IList)obj;
 						// Get the type parameter if it is a generic list or the element
@@ -386,23 +408,34 @@ namespace Zeltlager.Serialisation
 						else
 							elementType = typeof(object);
 
-						// Get the generic method
-						var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(nameof(ReadFromId));
-						method = method.MakeGenericMethod(elementType);
-						// Serialise all elements
-						foreach (var o in list)
-							method.Invoke(this, new object[] { input, context, o });
+						// Read list elements
+						for (int i = 0; i < count; i++)
+						{
+							object element = null;
+							if (list.Count > i)
+								element = list[i];
+
+							// Read the list element
+							element = await ReadFromId(input, context, elementType);
+
+							if (list.Count > i)
+								list[i] = element;
+							else
+								list.Add(element);
+						}
 
 						return obj;
 					}
 				} else
 				{
-					// Read the id
+					// Read the argumenst to get the id
 					foreach (var attribute in attributes)
-						ReadField(input, context, attribute);
+						await ReadField(input, context, attribute);
 				}
 
-				return (T)CallGetFromIdMethod(typeInfo, attributes, context);
+				object task = CallGetFromIdMethod(typeInfo, attributes, context);
+				// Convert the task
+				return await (Task<object>)converter.Invoke(null, new object[] { task });
 			}
 		}
 
@@ -415,7 +448,7 @@ namespace Zeltlager.Serialisation
 		/// The attribute that contains information about the value that
 		/// should be read and that will contain the read value.
 		/// </param>
-		void ReadField(BinaryReader input, C context, FieldData attribute)
+		async Task ReadField(BinaryReader input, C context, FieldData attribute)
 		{
 			// Check if the attribute is optional
 			if (attribute.Attribute.Optional)
@@ -427,23 +460,31 @@ namespace Zeltlager.Serialisation
 				}
 			}
 			// Check if we should read a reference
-			string methodName = attribute.Attribute.Type == SerialisationType.Reference ? nameof(ReadFromId) : nameof(Read);
-			// Use the previously taken type as the generic parameter for the method call
-			var method = typeof(Serialiser<C>).GetTypeInfo().GetDeclaredMethod(methodName);
-			method = method.MakeGenericMethod(attribute.Type);
 			if (attribute.Attribute.Type == SerialisationType.Reference)
-				attribute.Value = method.Invoke(this, new object[] { input, context });
+				attribute.Value = await ReadFromId(input, context, attribute.Type);
 			else
-				attribute.Value = method.Invoke(this, new object[] { input, context, attribute.Value });
+				attribute.Value = await Read(input, context, attribute.Value, attribute.Type);
 		}
 
+		/// <summary>
+		/// Returns a Task<T>.
+		/// </summary>
+		/// <param name="typeInfo"></param>
+		/// <param name="attributes"></param>
+		/// <param name="context"></param>
+		/// <returns></returns>
 		object CallGetFromIdMethod(TypeInfo typeInfo, FieldData[] attributes, C context)
 		{
 			// Search for a fitting constructor
 			foreach (var method in typeInfo.GetDeclaredMethods("GetFromId"))
 			{
-				if (!method.IsStatic)
+				var returnType = method.ReturnType.GetTypeInfo();
+				// Check the return type and if the method is static
+				if (!method.IsStatic ||
+					!returnType.IsGenericType ||
+					returnType.GetGenericTypeDefinition() != typeof(Task<>))
 					continue;
+
 				List<FieldData> remainingAttributes = new List<FieldData>(attributes);
 				var parameters = method.GetParameters();
 				object[] arguments = new object[parameters.Length];

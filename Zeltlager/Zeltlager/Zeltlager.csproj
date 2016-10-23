@@ -41,7 +41,6 @@
     <Compile Include="BCCryptoProvider.cs" />
     <Compile Include="Client\GlobalSettings.cs" />
     <Compile Include="Client\IoProvider.cs" />
-    <Compile Include="CollaboratingId.cs" />
     <Compile Include="Collaborator.cs" />
     <Compile Include="CommunicationPackets\CommunicationPacket.cs" />
     <Compile Include="CommunicationPackets\Requests\CommunicationRequest.cs" />

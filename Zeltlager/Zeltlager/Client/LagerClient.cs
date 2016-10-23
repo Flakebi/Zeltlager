@@ -191,7 +191,7 @@ namespace Zeltlager.Client
 			{
 				byte[] iv = await CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 				output.Write(VERSION);
-				output.WritePublicKey(asymmetricKey);
+				output.WritePublicKey(AsymmetricKey);
 				output.Write(salt);
 				output.Write(iv);
 
@@ -204,7 +204,7 @@ namespace Zeltlager.Client
 						writer.Write(ownCollaborator.Id);
 						writer.WritePrivateKey(ownCollaborator.Key);
 					}
-					writer.WritePrivateKey(asymmetricKey);
+					writer.WritePrivateKey(AsymmetricKey);
 					//TODO Write status
 
 					// Write collaborator keys

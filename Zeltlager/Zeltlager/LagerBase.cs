@@ -49,7 +49,7 @@ namespace Zeltlager
 		/// <summary>
 		/// The asymmetric keys of this lager, the private key is null for the server.
 		/// </summary>
-		protected KeyPair asymmetricKey;
+		public KeyPair AsymmetricKey { get; private set; }
 
 		static LagerBase()
 		{

@@ -1,10 +1,22 @@
 using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
 	using Serialisation;
 
-	public class PacketId : IEquatable<PacketId>
+	/// <summary>
+	/// A PacketId idenfifies a packet written by a collaborator and
+	/// stored in a packet bundle.
+	/// 
+	/// Serialising a PacketId with a LagerClientSerialisationContext
+	/// will write the collaborator id of the creator of the packet
+	/// and the bundle and packet id.
+	/// Serialising a reference to this PacketId will write only the
+	/// bundle and packet id.
+	/// </summary>
+	public class PacketId : IEquatable<PacketId>, ISerialisable<LagerClientSerialisationContext>
 	{
 		[Serialisation(Type = SerialisationType.Reference)]
 		public readonly Collaborator Creator;
@@ -68,6 +80,32 @@ namespace Zeltlager.DataPackets
 		public static bool operator !=(PacketId p1, PacketId p2)
 		{
 			return !(p1 == p2);
+		}
+
+		// Serialisation
+		public Task Write(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
+		{
+			//TODO
+			return new Task(() => { });
+		}
+
+		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
+		{
+			// Get our collaborator id as seen from the collaborator that writes our id
+			//TODO
+			return new Task(() => { });
+		}
+
+		public Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
+		{
+			//TODO
+			return new Task(() => { });
+		}
+
+		public static PacketId ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
+		{
+			//TODO
+			return null;
 		}
 	}
 }

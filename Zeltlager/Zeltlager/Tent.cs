@@ -13,7 +13,7 @@ namespace Zeltlager
 	public class Tent : IEditable<Tent>, ISearchable
 	{
 		[Serialisation(Type = SerialisationType.Id)]
-		public TentId Id { get; set; }
+		public PacketId Id { get; set; }
 
 		[Editable("Zeltnummer")]
 		[Serialisation]
@@ -36,21 +36,21 @@ namespace Zeltlager
 		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
 
 		// For deserialisation
-		protected static Tent GetFromId(LagerSerialisationContext context, TentId id)
+		protected static Task<Tent> GetFromId(LagerSerialisationContext context, PacketId id)
 		{
 			return ((LagerClientSerialisationContext)context).LagerClient.Tents.First(t => t.Id == id);
 		}
 
 		public Tent()
 		{
-			Id = new TentId();
+			Id = new PacketId();
 			Number = 0;
 			Name = "";
 			Girls = false;
 			supervisors = new List<Member>();
 		}
 
-		public Tent(TentId id, byte number, string name, bool girls, List<Member> supervisors)
+		public Tent(PacketId id, byte number, string name, bool girls, List<Member> supervisors)
 		{
 			Id = id;
 			Number = number;

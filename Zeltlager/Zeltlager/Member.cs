@@ -13,7 +13,7 @@ namespace Zeltlager
 	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
 	{
 		[Serialisation(Type = SerialisationType.Id)]
-		public MemberId Id { get; set; }
+		public PacketId Id { get; set; }
 
 		[Editable("Name")]
 		[Serialisation]
@@ -32,19 +32,19 @@ namespace Zeltlager
 		public string Display { get { return Name + (Supervisor ? " \ud83d\ude0e" : ""); } }
 
 		// For deserialisation
-		protected static Member GetFromId(LagerSerialisationContext context, MemberId id)
+		protected static Task<Member> GetFromId(LagerSerialisationContext context, PacketId id)
 		{
 			return ((LagerClientSerialisationContext)context).LagerClient.Members.First(m => m.Id == id);
 		}
 
 		public Member()
 		{
-			Id = new MemberId();
+			Id = new PacketId();
 			Name = "";
 			Supervisor = false;
 		}
 
-		public Member(MemberId id, string name, Tent tent, bool supervisor)
+		public Member(PacketId id, string name, Tent tent, bool supervisor)
 		{
 			Id = id;
 			Name = name;

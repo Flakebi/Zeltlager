@@ -21,7 +21,7 @@ namespace Zeltlager.Serialisation
 		/// object.
 		/// If an object has fields that are marked as id,
 		/// if must have the following static method for deserialisation:
-		/// GetFromId(...)
+		/// Task<T> GetFromId(...)
 		/// GetFromId must take all fields that are marked as id as
 		/// parameters. It can also take a serialisation context.
 		/// </summary>
