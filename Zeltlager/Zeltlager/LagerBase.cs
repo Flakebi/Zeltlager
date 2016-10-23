@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Zeltlager
 {
@@ -14,11 +16,11 @@ namespace Zeltlager
 		protected const string GENERAL_SETTINGS_FILE = "lager.conf";
 
 		public static bool IsClient { get; set; }
-		public static IIoProvider IoProvider { get; set; }
 		public static ICryptoProvider CryptoProvider { get; set; }
 		public static Log Log { get; set; }
 
-		public byte Id { get; set; }
+		protected IIoProvider ioProvider;
+
 		public Serialiser<LagerSerialisationContext> serialiser = new Serialiser<LagerSerialisationContext>();
 		public IReadOnlyList<Collaborator> Collaborators { get { return collaborators; } }
 
@@ -55,9 +57,35 @@ namespace Zeltlager
 			Log = new Log();
 		}
 
-		public LagerBase()
+		public LagerBase(IIoProvider io)
 		{
-			Status = new LagerStatus();
+			ioProvider = io;
+		}
+
+		/// <summary>
+		/// Find out which bundles are currently saved on the disk.
+		/// </summary>
+		/// <returns>The list of operators and bundles currently saved.</returns>
+		protected async Task<LagerStatus> ReadLagerStatus()
+		{
+			LagerStatus status = new LagerStatus();
+			// Check for collaborator folders
+			var folders = await ioProvider.ListContents("");
+			try
+			{
+				for (int collaboratorId = 0;
+					folders.Contains(new Tuple<string, FileType>(collaboratorId.ToString(), FileType.Folder));
+					collaboratorId++)
+				{
+					// Read the collaborator if possible
+
+				}
+			} catch (Exception e)
+			{
+				await Log.Exception("LagerStatus", e);
+			}
+			//TODO
+			return status;
 		}
 	}
 }

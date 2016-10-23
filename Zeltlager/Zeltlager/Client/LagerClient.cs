@@ -126,7 +126,7 @@ namespace Zeltlager.Client
 			bundle.AddPacket(packet);
 
 			// First, write the packet to disk
-			var rootedIo = new RootedIoProvider(IoProvider, Id.ToString());
+			var rootedIo = new RootedIoProvider(ioProvider, Id.ToString());
 			//TODO Save newPackets
 			//await ownCollaborator.SavePacket(rootedIo, SymmetricKey, (ushort)(ownCollaborator.Bundles.Count - 1));
 
@@ -160,7 +160,7 @@ namespace Zeltlager.Client
 			statusUpdate(InitStatus.Ready);
 		}
 
-		public Task Save() => Save(IoProvider);
+		public Task Save() => Save(ioProvider);
 
 		/// <summary>
 		/// Stores this instance on the filesystem.
@@ -183,7 +183,7 @@ namespace Zeltlager.Client
 			//TODO Save newPackets
 		}
 
-		Task SaveGeneralSettings() => SaveGeneralSettings(new RootedIoProvider(IoProvider, Id.ToString()));
+		Task SaveGeneralSettings() => SaveGeneralSettings(new RootedIoProvider(ioProvider, Id.ToString()));
 
 		async Task SaveGeneralSettings(IIoProvider io)
 		{
@@ -219,7 +219,7 @@ namespace Zeltlager.Client
 			}
 		}
 
-		public Task<bool> Load() => Load(IoProvider);
+		public Task<bool> Load() => Load(ioProvider);
 
 		/// <summary>
 		/// Load the collaborators and packets of this lager.

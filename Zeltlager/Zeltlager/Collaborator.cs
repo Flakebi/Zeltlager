@@ -15,11 +15,10 @@ namespace Zeltlager
 
 		public KeyPair Key { get; private set; }
 
-		public byte Id { get; private set; }
 		/// <summary>
 		/// The list of collaborators (indexed by the id) as of this collaborators view point.
 		/// </summary>
-		public Dictionary<Collaborator, PacketId> Collaborators { get; private set; }
+		public Dictionary<PacketId, Collaborator> Collaborators { get; private set; }
 		public IReadOnlyList<DataPacketBundle> Bundles { get { return bundles; } }
 
 		/// <summary>
@@ -30,11 +29,9 @@ namespace Zeltlager
 		/// The public key of the collaborator and also the
 		/// private key if our own contributor is initialised.
 		/// </param>
-		public Collaborator(byte id, KeyPair key)
+		public Collaborator(KeyPair key)
 		{
-			Collaborators = new Dictionary<Collaborator, PacketId>();
-			Collaborators[this] = new PacketId(this); //TODO Is that all?
-			Id = id;
+			Collaborators = new Dictionary<PacketId, Collaborator>();
 			Key = key;
 		}
 

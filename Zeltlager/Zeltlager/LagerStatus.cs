@@ -12,20 +12,20 @@ namespace Zeltlager
 	public class LagerStatus : ISerialisable<LagerSerialisationContext>
 	{
 		/// <summary>
-		/// The collaborator list saves the packet count for each collaborator.
+		/// The collaborator list saves the bundle count for each collaborator.
 		/// The index in this list is the collaborator id as seen from the owner of this object.
 		/// </summary>
-		public List<Tuple<Collaborator, ushort>> PacketCount { get; private set; }
+		public List<Tuple<Collaborator, ushort>> BundleCount { get; private set; }
 
 		public LagerStatus()
 		{
-			PacketCount = new List<Tuple<Collaborator, ushort>>();
+			BundleCount = new List<Tuple<Collaborator, ushort>>();
 		}
 
 		public void Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			output.Write((byte)PacketCount.Count);
-			foreach (var c in PacketCount)
+			output.Write((byte)BundleCount.Count);
+			foreach (var c in BundleCount)
 			{
 				// Write the collaborator id from our point of view
 				serialiser.WriteId(output, context, c.Item1);
@@ -41,12 +41,12 @@ namespace Zeltlager
 		public void Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			byte count = input.ReadByte();
-			PacketCount.Capacity = count;
+			BundleCount.Capacity = count;
 			for (int i = 0; i < count; i++)
 			{
 				Collaborator collaborator = serialiser.ReadFromId<Collaborator>(input, context);
 				ushort packets = serialiser.Read(input, context, (ushort)0);
-				PacketCount.Add(new Tuple<Collaborator, ushort>(collaborator, packets));
+				BundleCount.Add(new Tuple<Collaborator, ushort>(collaborator, packets));
 			}
 		}
 	}
