@@ -17,13 +17,7 @@ namespace Zeltlager.DataPackets
 	public abstract class DataPacket
 	{
 		static readonly Type[] packetTypes = {
-            typeof(AddPacket),
-			typeof(AddMember),
-			typeof(DeleteMember),
-			typeof(AddTent),
-			typeof(DeleteTent),
-			typeof(AddSupervisorToTent),
-			typeof(DeleteSupervisorFromTent),
+			typeof(AddPacket),
 			typeof(AddCalendarEvent),
 			typeof(DeleteCalendarEvent),
 		};

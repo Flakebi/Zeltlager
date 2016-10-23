@@ -181,7 +181,7 @@ namespace Zeltlager.Serialisation
 			return WriteId(output, context, obj, typeof(T));
 		}
 
-		public async Task WriteId(BinaryWriter output, C context, object obj, Type type)
+		async Task WriteId(BinaryWriter output, C context, object obj, Type type)
 		{
 			// Check if the object implements ISerialisable
 			ISerialisable<C> serialisable = obj as ISerialisable<C>;

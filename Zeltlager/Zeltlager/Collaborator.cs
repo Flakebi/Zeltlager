@@ -103,7 +103,7 @@ namespace Zeltlager
 
 				data = mem.ToArray();
 			}
-			serialiser.Write(output, context, data);
+			await serialiser.Write(output, context, data);
 		}
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
@@ -130,10 +130,10 @@ namespace Zeltlager
 			return new Task(() => { });
 		}
 
-		public static Collaborator ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public static Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			byte id = input.ReadByte();
-			return context.Lager.Status.BundleCount[id].Item1;
+			return Task.FromResult(context.Lager.Status.BundleCount[id].Item1);
 		}
 
 		// Serialisation with a LagerClientSerialisationContext
@@ -146,22 +146,19 @@ namespace Zeltlager
 		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
 			// Get our collaborator id as seen from the collaborator that writes our id
-			serialiser.WriteId(output, context, context.PacketId.Creator.Collaborators
+			return serialiser.WriteId(output, context, context.PacketId.Creator.Collaborators
 				.First(c => c.Value == this).Key);
-			return new Task(() => { });
 		}
 
 		public Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			serialiser.Read(input, context, Key);
-			//TODO Read signatures
-			return new Task(() => { });
+			return serialiser.Read(input, context, Key);
 		}
 
-		public static Collaborator ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
+		public static async Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			byte id = serialiser.Read<byte>(input, context, 0);
-			return context.Collaborator.Collaborators[id];
+			PacketId id = await serialiser.Read(input, context, new PacketId(context.PacketId.Creator));
+			return context.PacketId.Creator.Collaborators[id];
 		}
 	}
 }

@@ -36,14 +36,14 @@ namespace Zeltlager
 		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
 
 		// For deserialisation
-		protected static Task<Tent> GetFromId(LagerSerialisationContext context, PacketId id)
+		protected static Task<Tent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
-			return ((LagerClientSerialisationContext)context).LagerClient.Tents.First(t => t.Id == id);
+			return Task.FromResult(context.LagerClient.Tents.First(t => t.Id == id));
 		}
 
 		public Tent()
 		{
-			Id = new PacketId();
+			Id = new PacketId(null);
 			Number = 0;
 			Name = "";
 			Girls = false;
@@ -86,7 +86,7 @@ namespace Zeltlager
 
 		public Tent Clone()
 		{
-			return new Tent(Id.CloneShallow(), Number, Name, Girls, new List<Member>(supervisors));
+			return new Tent(Id.Clone(), Number, Name, Girls, new List<Member>(supervisors));
 		}
 
 		public string SearchableText

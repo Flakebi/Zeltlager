@@ -1,8 +1,6 @@
-using System.IO;
-
 namespace Zeltlager.DataPackets
 {
-	using Client;
+	using Serialisation;
 
 	/// <summary>
 	/// Represents an invalid packet. It contains only the raw data.
@@ -14,7 +12,7 @@ namespace Zeltlager.DataPackets
 			Data = data;
 		}
 
-		public override void Deserialise(LagerClient lager, Collaborator collaborator)
+		public override void Deserialise(LagerClientSerialisationContext context)
 		{
 			// Just do nothing here
 		}

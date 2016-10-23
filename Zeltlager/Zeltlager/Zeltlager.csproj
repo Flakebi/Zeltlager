@@ -50,14 +50,12 @@
     <Compile Include="Competition\Competition.cs" />
     <Compile Include="DataPackets\AddMember.cs" />
     <Compile Include="DataPackets\AddPacket.cs" />
-    <Compile Include="DataPackets\AddSupervisorToTent.cs" />
     <Compile Include="DataPackets\AddTent.cs" />
     <Compile Include="DataPackets\DataPacketBundle.cs" />
     <Compile Include="DataPackets\DataPacket.cs" />
     <Compile Include="DataPackets\DeleteMember.cs" />
     <Compile Include="DataPackets\DeleteTent.cs" />
     <Compile Include="DataPackets\InvalidDataPacket.cs" />
-    <Compile Include="DataPackets\DeleteSupervisorFromTent.cs" />
     <Compile Include="DataPackets\PacketId.cs" />
     <Compile Include="Erwischt\Erwischt.cs" />
     <Compile Include="ICryptoProvider.cs" />

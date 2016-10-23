@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Zeltlager
 {
@@ -22,30 +23,30 @@ namespace Zeltlager
 			BundleCount = new List<Tuple<Collaborator, ushort>>();
 		}
 
-		public void Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			output.Write((byte)BundleCount.Count);
 			foreach (var c in BundleCount)
 			{
 				// Write the collaborator id from our point of view
-				serialiser.WriteId(output, context, c.Item1);
-				serialiser.Write(output, context, c.Item2);
+				await serialiser.WriteId(output, context, c.Item1);
+				await serialiser.Write(output, context, c.Item2);
 			}
 		}
 
-		public void WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			throw new InvalidOperationException("You can't write the id of a lager status");
 		}
 
-		public void Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			byte count = input.ReadByte();
 			BundleCount.Capacity = count;
 			for (int i = 0; i < count; i++)
 			{
-				Collaborator collaborator = serialiser.ReadFromId<Collaborator>(input, context);
-				ushort packets = serialiser.Read(input, context, (ushort)0);
+				Collaborator collaborator = await serialiser.ReadFromId<Collaborator>(input, context);
+				ushort packets = await serialiser.Read(input, context, (ushort)0);
 				BundleCount.Add(new Tuple<Collaborator, ushort>(collaborator, packets));
 			}
 		}

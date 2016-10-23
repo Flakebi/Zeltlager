@@ -1,12 +1,13 @@
+using System.Collections.Generic;
+
 namespace Zeltlager.Competition
 {
-	using System.Collections.Generic;
 	using Client;
 
 	/// <summary>
 	/// collects all the competitions of one lager
 	/// </summary>
-	public class CompetitionHandler : ILagerPart
+	public class CompetitionHandler
 	{
 		LagerClient lager;
 		public List<Competition> Competitions;

@@ -32,14 +32,14 @@ namespace Zeltlager
 		public string Display { get { return Name + (Supervisor ? " \ud83d\ude0e" : ""); } }
 
 		// For deserialisation
-		protected static Task<Member> GetFromId(LagerSerialisationContext context, PacketId id)
+		protected static Task<Member> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
-			return ((LagerClientSerialisationContext)context).LagerClient.Members.First(m => m.Id == id);
+			return Task.FromResult(context.LagerClient.Members.First(m => m.Id == id));
 		}
 
 		public Member()
 		{
-			Id = new PacketId();
+			Id = new PacketId(null);
 			Name = "";
 			Supervisor = false;
 		}
@@ -52,18 +52,11 @@ namespace Zeltlager
 			Supervisor = supervisor;
 		}
 
-		// Constructors for adding a member when deserialising
-		protected Member(LagerClientSerialisationContext context)
-		{
-			// Use the next free member id and inrcease the id afterwards.
-			Id = new MemberId(context.Collaborator, context.Collaborator.NextMemberId++);
-		}
-
 		// Add the member to a lager after deserialising it
 		protected void Add(LagerClientSerialisationContext context)
 		{
-			// Reset the collaborator in the id to prevent spoofinr
-			Id.collaborator = context.Collaborator;
+			// Reset the collaborator in the id to prevent spoofing
+			Id = Id.Clone(context.PacketId.Creator);
 			context.LagerClient.AddMember(this);
 		}
 
