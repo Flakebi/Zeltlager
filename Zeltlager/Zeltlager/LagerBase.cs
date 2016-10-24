@@ -43,13 +43,10 @@ namespace Zeltlager
 		/// and should be fetched from the server.
 		/// Each tuple contains the collaborator and the packet id.
 		/// </summary>
-		public List<Tuple<byte, ushort>> MissingPackets { get; set; }
+		//TODO Do we need this?
+		public List<PacketId> MissingPackets { get; set; }
 
 		// Crypto
-		/// <summary>
-		/// The salt used for the key derivation functions.
-		/// </summary>
-		protected byte[] salt;
 		/// <summary>
 		/// The asymmetric keys of this lager, the private key is null for the server.
 		/// </summary>
@@ -82,21 +79,25 @@ namespace Zeltlager
 					collaboratorId++)
 				{
 					// Read the collaborator if possible
-					using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(
-						Path.Combine(collaboratorId.ToString(), COLLABORATOR_FILE))))
+					IIoProvider rootedIo = new RootedIoProvider(ioProvider, collaboratorId.ToString());
+					using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(COLLABORATOR_FILE)))
 					{
 						Collaborator collaborator = new Collaborator();
 						LagerSerialisationContext context = new LagerSerialisationContext(this);
 						context.PacketId = new PacketId(collaborator);
-						await serialiser.Read(input, context, collaborators);
-						collaborators.Add(collaborator);
+						await serialiser.Read(input, context, collaborator);
+						// Find out how many bundles this collaborator has
+						var files = await rootedIo.ListContents("");
+						uint bundleCount = 0;
+						while (files.Contains(new Tuple<string, FileType>(bundleCount.ToString(), FileType.File)))
+							bundleCount++;
+						status.BundleCount.Add(new Tuple<Collaborator, uint>(collaborator, bundleCount));
 					}
 				}
 			} catch (Exception e)
 			{
 				await Log.Exception("LagerStatus", e);
 			}
-			//TODO
 			return status;
 		}
 	}

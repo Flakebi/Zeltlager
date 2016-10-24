@@ -43,6 +43,10 @@ namespace Zeltlager.Client
 		List<DataPacketBundle> newBundles = new List<DataPacketBundle>();
 
 		// Crypto
+		/// <summary>
+		/// The salt used for the key derivation functions.
+		/// </summary>
+		byte[] salt;
 		public byte[] SymmetricKey { get; private set; }
 
 		/// <summary>
@@ -50,13 +54,13 @@ namespace Zeltlager.Client
 		/// </summary>
 		string password;
 
-		public LagerClient(byte id, string name, string password)
+		public LagerClient(IIoProvider ioProvider, string name, string password) :
+			base(ioProvider)
 		{
-			Id = id;
 			Name = name;
 			this.password = password;
 
-			MissingPackets = new List<Tuple<byte, ushort>>();
+			MissingPackets = new List<PacketId>();
 
 			CompetitionHandler = new Competition.CompetitionHandler(this);
 			Erwischt = new Erwischt.Erwischt(this);
