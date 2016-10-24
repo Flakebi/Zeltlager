@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using DataPackets;
 	using Serialisation;
 
 	public class LagerBase
@@ -14,6 +16,8 @@ namespace Zeltlager
 		/// </summary>
 		protected const byte VERSION = 0;
 		protected const string GENERAL_SETTINGS_FILE = "lager.conf";
+		const string LAGER_FILE = "lager.data";
+		const string COLLABORATOR_FILE = "collaborator.data";
 
 		public static bool IsClient { get; set; }
 		public static ICryptoProvider CryptoProvider { get; set; }
@@ -78,7 +82,15 @@ namespace Zeltlager
 					collaboratorId++)
 				{
 					// Read the collaborator if possible
-
+					using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(
+						Path.Combine(collaboratorId.ToString(), COLLABORATOR_FILE))))
+					{
+						Collaborator collaborator = new Collaborator();
+						LagerSerialisationContext context = new LagerSerialisationContext(this);
+						context.PacketId = new PacketId(collaborator);
+						await serialiser.Read(input, context, collaborators);
+						collaborators.Add(collaborator);
+					}
 				}
 			} catch (Exception e)
 			{
