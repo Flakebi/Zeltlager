@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
@@ -17,7 +18,9 @@ namespace Zeltlager.DataPackets
 	public abstract class DataPacket
 	{
 		static readonly Type[] packetTypes = {
+			typeof(AddCollaborator),
 			typeof(AddPacket),
+			//TODO Convert calendar events
 			typeof(AddCalendarEvent),
 			typeof(DeleteCalendarEvent),
 		};
@@ -118,6 +121,6 @@ namespace Zeltlager.DataPackets
 		/// The packet has to deserialise itself from Data.
 		/// </summary>
 		/// <param name="lager">The lager to which this packet should be applied.</param>
-		public abstract void Deserialise(LagerClientSerialisationContext context);
+		public abstract Task Deserialise(LagerClientSerialisationContext context);
 	}
 }

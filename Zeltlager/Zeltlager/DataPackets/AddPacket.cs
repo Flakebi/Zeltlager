@@ -1,10 +1,11 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	using System.IO;
 	using Serialisation;
 
 	public class AddPacket : DataPacket
@@ -28,7 +29,7 @@ namespace Zeltlager.DataPackets
 
 		public AddPacket() { }
 
-		public AddPacket(LagerClientSerialisationContext context, object obj)
+		public async Task Init(LagerClientSerialisationContext context, object obj)
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
@@ -46,7 +47,7 @@ namespace Zeltlager.DataPackets
 						Id = (byte)i;
 
 						method = method.MakeGenericMethod(types[i].Item1);
-						method.Invoke(context.Lager.serialiser, new object[] { output, context, obj });
+						await (Task)method.Invoke(context.Lager.Serialiser, new object[] { output, context, obj });
 						success = true;
 						break;
 					}
@@ -57,7 +58,7 @@ namespace Zeltlager.DataPackets
 			Data = mem.ToArray();
 		}
 
-		public override void Deserialise(LagerClientSerialisationContext context)
+		public override async Task Deserialise(LagerClientSerialisationContext context)
 		{
 			var type = types[Id];
 			MemoryStream mem = new MemoryStream();
@@ -72,7 +73,13 @@ namespace Zeltlager.DataPackets
 				// Get the generic method
 				var method = typeof(Serialiser<LagerClientSerialisationContext>).GetTypeInfo().GetDeclaredMethod(nameof(Serialiser<LagerClientSerialisationContext>.Read));
 				method = method.MakeGenericMethod(type.Item1);
-				method.Invoke(context.Lager.serialiser, new object[] { output, context, obj });
+				object task = method.Invoke(context.Lager.Serialiser, new object[] { output, context, obj });
+				// To convert a task
+				var converter = typeof(Serialiser<LagerClientSerialisationContext>).GetTypeInfo()
+					.GetDeclaredMethod(nameof(Serialiser<LagerClientSerialisationContext>.GetObjectTask))
+					.MakeGenericMethod(type.Item1);
+				// Wait for the task
+				await (Task<object>)converter.Invoke(null, new object[] { task });
 
 				// Call the add method
 				if (type.Item2 != null)
@@ -82,7 +89,10 @@ namespace Zeltlager.DataPackets
 						parameters = new object[] { context };
 					else
 						parameters = new object[0];
-					type.Item2.Invoke(obj, parameters);
+					object result = type.Item2.Invoke(obj, parameters);
+					// Wait if its a task
+					if (type.Item2.ReturnType == typeof(Task))
+						await (Task)result;
 				}
 			}
 		}

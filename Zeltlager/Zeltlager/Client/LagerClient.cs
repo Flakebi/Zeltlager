@@ -19,7 +19,17 @@ namespace Zeltlager.Client
 			Ready
 		}
 
+		/// <summary>
+		/// The path of the client configuration file.
+		/// It contains the id of the last opened lager
+		/// and for each lager the password and the private
+		/// key of our collaborator.
+		/// </summary>
+		const string GENERAL_SETTINGS_FILE = "client.conf";
+
 		public static GlobalSettings ClientGlobalSettings { get; set; }
+
+		public Serialiser<LagerClientSerialisationContext> ClientSerialiser { get; private set; }
 
 		public string Name { get; set; }
 		public IReadOnlyList<Member> Members { get { return members; } }
@@ -57,6 +67,7 @@ namespace Zeltlager.Client
 		public LagerClient(IIoProvider ioProvider, string name, string password) :
 			base(ioProvider)
 		{
+			ClientSerialiser = new Serialiser<LagerClientSerialisationContext>();
 			Name = name;
 			this.password = password;
 
@@ -103,7 +114,7 @@ namespace Zeltlager.Client
 				try
 				{
 					context.PacketId = packet.Item1;
-					packet.Item2.Deserialise(context);
+					await packet.Item2.Deserialise(context);
 				} catch (Exception e)
 				{
 					// Log the exception
@@ -140,7 +151,7 @@ namespace Zeltlager.Client
 			// Then deserialise it to apply it
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
 			context.PacketId = new PacketId(ownCollaborator, bundle, (byte)(bundle.Packets.Count - 1));
-			packet.Deserialise(context);
+			await packet.Deserialise(context);
 		}
 
 		/// <summary>
@@ -153,45 +164,28 @@ namespace Zeltlager.Client
 			salt = await CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
 			SymmetricKey = await CryptoProvider.DeriveSymmetricKey(password, salt);
 			statusUpdate(InitStatus.CreateGameAsymmetricKey);
-			asymmetricKey = await CryptoProvider.CreateAsymmetricKey();
+			AsymmetricKey = await CryptoProvider.CreateAsymmetricKey();
 
 			// Create the keys for our own collaborator
 			statusUpdate(InitStatus.CreateCollaboratorAsymmetricKey);
 			var key = await CryptoProvider.CreateAsymmetricKey();
-			Collaborator c = new Collaborator(0, key);
+			Collaborator c = new Collaborator(key);
 			collaborators.Add(c);
 			ownCollaborator = c;
+
+			// Add the collaborator to his own list
+			var packet = new AddCollaborator();
+			var context = new LagerClientSerialisationContext(this);
+			context.PacketId = new PacketId(ownCollaborator);
+			await packet.Init(context, ownCollaborator);
+			await AddPacket(packet);
+
 			statusUpdate(InitStatus.Ready);
 		}
-
-		public Task Save() => Save(ioProvider);
-
-		/// <summary>
-		/// Stores this instance on the filesystem.
-		/// </summary>
-		/// <param name="io">The used io system.</param>
-		/// <returns>If the save was successful.</returns>
-		public async Task Save(IIoProvider io)
+		
+		async Task SaveGeneralSettings()
 		{
-			//TODO Is this method needed?
-			string id = Id.ToString();
-			if (!await io.ExistsFolder(id))
-				await io.CreateFolder(id);
-			var rootedIo = new RootedIoProvider(io, id);
-
-			await SaveGeneralSettings(rootedIo);
-
-			// Save packets from collaborators
-			await Task.WhenAll(collaborators.Select(async c => await c.SaveAll(rootedIo, SymmetricKey)));
-
-			//TODO Save newPackets
-		}
-
-		Task SaveGeneralSettings() => SaveGeneralSettings(new RootedIoProvider(ioProvider, Id.ToString()));
-
-		async Task SaveGeneralSettings(IIoProvider io)
-		{
-			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(GENERAL_SETTINGS_FILE)))
+			using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(GENERAL_SETTINGS_FILE)))
 			{
 				byte[] iv = await CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
 				output.Write(VERSION);
@@ -241,7 +235,7 @@ namespace Zeltlager.Client
 			{
 				if (input.ReadByte() == VERSION)
 				{
-					asymmetricKey = input.ReadPublicKey();
+					AsymmetricKey = input.ReadPublicKey();
 					salt = input.ReadBytes(CryptoConstants.SALT_LENGTH);
 					var iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
 
@@ -260,7 +254,7 @@ namespace Zeltlager.Client
 								ownCollaboratorPrivateKey = reader.ReadPrivateKey();
 							}
 
-							asymmetricKey = reader.ReadPrivateKey();
+							AsymmetricKey = reader.ReadPrivateKey();
 
 							// Read collaborators
 							byte collaboratorCount = reader.ReadByte();
@@ -272,10 +266,10 @@ namespace Zeltlager.Client
 								collaboratorPacketCounts[i] = reader.ReadUInt16();
 								if (i == ownCollaboratorId && IsClient)
 								{
-									ownCollaborator = new Collaborator(i, ownCollaboratorPrivateKey);
+									ownCollaborator = new Collaborator(ownCollaboratorPrivateKey);
 									collaborators.Add(ownCollaborator);
 								} else
-									collaborators.Add(new Collaborator(i, collaboratorPublicKey));
+									collaborators.Add(new Collaborator(collaboratorPublicKey));
 							}
 						}
 					}

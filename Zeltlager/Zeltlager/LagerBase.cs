@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Zeltlager
@@ -15,7 +15,6 @@ namespace Zeltlager
 		/// The version of the data packet protocol.
 		/// </summary>
 		protected const byte VERSION = 0;
-		protected const string GENERAL_SETTINGS_FILE = "lager.conf";
 		const string LAGER_FILE = "lager.data";
 		const string COLLABORATOR_FILE = "collaborator.data";
 
@@ -25,7 +24,14 @@ namespace Zeltlager
 
 		protected IIoProvider ioProvider;
 
-		public Serialiser<LagerSerialisationContext> serialiser = new Serialiser<LagerSerialisationContext>();
+		/// <summary>
+		/// The data of this lager.
+		/// This contains the version, the public key, salt, iv and (encrypted) the name and private key.
+		/// All this data is signed with the lager private key.
+		/// </summary>
+		byte[] data;
+
+		public Serialiser<LagerSerialisationContext> Serialiser { get; private set; }
 		public IReadOnlyList<Collaborator> Collaborators { get { return collaborators; } }
 
 		protected List<Collaborator> collaborators = new List<Collaborator>();
@@ -50,7 +56,7 @@ namespace Zeltlager
 		/// <summary>
 		/// The asymmetric keys of this lager, the private key is null for the server.
 		/// </summary>
-		public KeyPair AsymmetricKey { get; private set; }
+		public KeyPair AsymmetricKey { get; protected set; }
 
 		static LagerBase()
 		{
@@ -60,11 +66,13 @@ namespace Zeltlager
 
 		public LagerBase(IIoProvider io)
 		{
+			Serialiser = new Serialiser<LagerSerialisationContext>();
 			ioProvider = io;
 		}
 
 		/// <summary>
-		/// Find out which bundles are currently saved on the disk.
+		/// Find out which bundles are currently saved on the disk and read a
+		/// list of collaborators.
 		/// </summary>
 		/// <returns>The list of operators and bundles currently saved.</returns>
 		protected async Task<LagerStatus> ReadLagerStatus()
@@ -85,7 +93,7 @@ namespace Zeltlager
 						Collaborator collaborator = new Collaborator();
 						LagerSerialisationContext context = new LagerSerialisationContext(this);
 						context.PacketId = new PacketId(collaborator);
-						await serialiser.Read(input, context, collaborator);
+						await Serialiser.Read(input, context, collaborator);
 						// Find out how many bundles this collaborator has
 						var files = await rootedIo.ListContents("");
 						uint bundleCount = 0;
