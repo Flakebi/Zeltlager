@@ -19,7 +19,7 @@ namespace Zeltlager.Client
 			Ready
 		}
 
-		public static GlobalSettings ClientGlobalSettings { get; set; }
+		public static ClientSettings Settings { get; private set; }
 
 		public string Name { get; set; }
 		public IReadOnlyList<Member> Members { get { return members; } }
@@ -54,8 +54,8 @@ namespace Zeltlager.Client
 		/// </summary>
 		string password;
 
-		public LagerClient(IIoProvider ioProvider, string name, string password) :
-			base(ioProvider)
+		public LagerClient(LagerManager manager, IIoProvider ioProvider, string name, string password) :
+			base(manager, ioProvider)
 		{
 			Name = name;
 			this.password = password;

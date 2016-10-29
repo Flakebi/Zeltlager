@@ -9,7 +9,7 @@ namespace Zeltlager
 	using DataPackets;
 	using Serialisation;
 
-	public class LagerBase
+	public class LagerBase : ISerialisable<LagerSerialisationContext>
 	{
 		/// <summary>
 		/// The version of the data packet protocol.
@@ -25,8 +25,17 @@ namespace Zeltlager
 
 		protected IIoProvider ioProvider;
 
+		/// <summary>
+		/// Contains the version, the public lager key, the password salt,
+		/// the iv, (the length of the encrypted data),  the encrypted
+		/// private key and encrypted name.
+		/// All these data are signed with the private lager key.
+		/// </summary>
+		protected byte[] data;
+
+		protected LagerManager manager;
 		public Serialiser<LagerSerialisationContext> serialiser = new Serialiser<LagerSerialisationContext>();
-		public IReadOnlyList<Collaborator> Collaborators { get { return collaborators; } }
+		public IReadOnlyList<Collaborator> Collaborators => collaborators;
 
 		protected List<Collaborator> collaborators = new List<Collaborator>();
 
@@ -58,8 +67,9 @@ namespace Zeltlager
 			Log = new Log();
 		}
 
-		public LagerBase(IIoProvider io)
+		public LagerBase(LagerManager manager, IIoProvider io)
 		{
+			this.manager = manager;
 			ioProvider = io;
 		}
 
@@ -83,7 +93,7 @@ namespace Zeltlager
 					using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(COLLABORATOR_FILE)))
 					{
 						Collaborator collaborator = new Collaborator();
-						LagerSerialisationContext context = new LagerSerialisationContext(this);
+						LagerSerialisationContext context = new LagerSerialisationContext(manager, this);
 						context.PacketId = new PacketId(collaborator);
 						await serialiser.Read(input, context, collaborator);
 						// Find out how many bundles this collaborator has
@@ -99,6 +109,36 @@ namespace Zeltlager
 				await Log.Exception("LagerStatus", e);
 			}
 			return status;
+		}
+
+		async Task Deserialise()
+		{
+			LagerSerialisationContext context = new LagerSerialisationContext(manager, this);
+			//TODO Verify and save public key
+		}
+
+		// Serialisation with a LagerSerialisationContext
+		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		{
+			await serialiser.Write(output, context, data);
+		}
+
+		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		{
+			// Get our lager id from the manager
+			output.Write((byte)context.Manager.Lagers.IndexOf(this));
+			return new Task(() => { });
+		}
+
+		public async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		{
+			data = await serialiser.Read<byte[]>(input, context, null);
+		}
+
+		public static Task<LagerBase> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		{
+			byte id = input.ReadByte();
+			return Task.FromResult(context.Manager.Lagers[id]);
 		}
 	}
 }

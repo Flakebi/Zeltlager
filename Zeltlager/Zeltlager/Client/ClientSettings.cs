@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Client
 {
-	public class GlobalSettings
+	public class ClientSettings
 	{
 		const string SETTINGS_FILE = "settings.conf";
 		const byte VERSION = 0;
@@ -17,7 +17,7 @@ namespace Zeltlager.Client
 		/// </summary>
 		public List<Tuple<string, string>> Lagers { get; set; }
 
-		public GlobalSettings()
+		public ClientSettings()
 		{
 			Lagers = new List<Tuple<string, string>>();
 		}

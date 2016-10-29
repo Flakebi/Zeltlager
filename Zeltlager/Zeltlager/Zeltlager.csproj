@@ -39,7 +39,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BCCryptoProvider.cs" />
-    <Compile Include="Client\GlobalSettings.cs" />
+    <Compile Include="Client\ClientSettings.cs" />
     <Compile Include="Client\IoProvider.cs" />
     <Compile Include="Collaborator.cs" />
     <Compile Include="CommunicationPackets\CommunicationPacket.cs" />
@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="ILagerServer.cs" />
     <Compile Include="LagerBase.cs" />
+    <Compile Include="LagerManager.cs" />
     <Compile Include="LagerStatus.cs" />
     <Compile Include="LoadingScreen.xaml.cs">
       <DependentUpon>LoadingScreen.xaml</DependentUpon>
