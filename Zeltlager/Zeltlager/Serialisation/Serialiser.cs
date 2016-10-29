@@ -94,9 +94,14 @@ namespace Zeltlager.Serialisation
 			return fields.Concat(properties).OrderBy(t => t.Name);
 		}
 
-		static object GetDefault(Type type)
+		public static object GetDefault(Type type)
 		{
 			return type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
+		}
+
+		public static async Task<object> GetObjectTask<T>(Task<T> task)
+		{
+			return await task;
 		}
 
 		bool writeIds;
@@ -349,11 +354,6 @@ namespace Zeltlager.Serialisation
 		public async Task<T> ReadFromId<T>(BinaryReader input, C context)
 		{
 			return (T)await ReadFromId(input, context, typeof(T));
-		}
-
-		static async Task<object> GetObjectTask<T>(Task<T> task)
-		{
-			return await task;
 		}
 
 		async Task<object> ReadFromId(BinaryReader input, C context, Type type)
