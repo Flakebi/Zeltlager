@@ -120,6 +120,7 @@ namespace Zeltlager.Calendar
 		#endregion
 	}
 
+	//TODO Replace by serialising
 	public static class CalendarEventHelper
 	{
 		public static void Write(this BinaryWriter output, CalendarEvent calendarEvent)

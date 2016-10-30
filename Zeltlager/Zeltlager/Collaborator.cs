@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using Cryptography;
 	using DataPackets;
 	using Serialisation;
 
@@ -38,49 +39,57 @@ namespace Zeltlager
 		/// <summary>
 		/// The list of collaborators (indexed by the id) as of this collaborators view point.
 		/// </summary>
-		public Dictionary<PacketId, Collaborator> Collaborators { get; private set; }
-		List<DataPacketBundle> bundles = new List<DataPacketBundle>();
-		public IReadOnlyList<DataPacketBundle> Bundles { get { return bundles; } }
+		Dictionary<PacketId, Collaborator> collaborators = new Dictionary<PacketId, Collaborator>();
+		public Dictionary<PacketId, Collaborator> Collaborators => collaborators;
+		Dictionary<int, DataPacketBundle> bundles = new Dictionary<int, DataPacketBundle>();
+		public IReadOnlyDictionary<int, DataPacketBundle> Bundles => bundles;
+
+		public Collaborator() { }
 
 		/// <summary>
 		/// Initialises a new collaborator.
 		/// </summary>
-		/// <param name="id">The id of the collaborator.</param>
-		/// <param name="publicKey">
+		/// <param name="key">
 		/// The public key of the collaborator and also the
 		/// private key if our own contributor is initialised.
 		/// </param>
 		public Collaborator(KeyPair key)
 		{
-			Collaborators = new Dictionary<PacketId, Collaborator>();
 			Key = key;
 		}
 
-		public Collaborator() : this(new KeyPair())
-		{ }
-
-		public void AddBundle(DataPacketBundle bundle) => bundles.Add(bundle);
-
-		public async Task SaveAll(IIoProvider io, byte[] symmetricKey)
+		public void AddBundle(int id, DataPacketBundle bundle)
 		{
-			string id = Id.ToString();
-			if (!await io.ExistsFolder(id))
-				await io.CreateFolder(id);
-
-			for (ushort i = 0; i < bundles.Count; i++)
-				;
-			//TODO
-			//await SavePacket(io, symmetricKey, i);
+			if (bundles.ContainsKey(id))
+				throw new InvalidOperationException("Can't add a packet bundle with an id that is already taken");
+			bundles[id] = bundle;
 		}
 
 		/// <summary>
 		/// Verify the key signatures that are stored in the collaborator data.
+		/// Throws an exception if the verification failed.
 		/// </summary>
-		/// <returns>true, if this collaborator was verified successfully.</returns>
-		public Task<bool> Verify(LagerSerialisationContext context)
+		async Task Verify(LagerSerialisationContext context)
 		{
-			//TODO
-			return Task.FromResult(true);
+			// Read the signatures
+			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
+			{
+				input.ReadPublicKey();
+				byte[] keyData = new byte[input.BaseStream.Position];
+				Array.Copy(data, keyData, keyData.Length);
+				byte[] lagerSignature = input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH);
+				byte[] signedData = new byte[input.BaseStream.Position];
+				Array.Copy(data, signedData, signedData.Length);
+				byte[] collaboratorSignature = input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH);
+
+				// Check the signatures
+				// Verify the lager signature
+				if (!await LagerManager.CryptoProvider.Verify(context.Lager.AsymmetricKey, lagerSignature, keyData))
+					throw new InvalidDataException("The lager signature of the collaborator is wrong");
+				// Verify the collaborator signature
+				if (!await LagerManager.CryptoProvider.Verify(Key, collaboratorSignature, signedData))
+					throw new InvalidDataException("The collaborator signature of the collaborator is wrong");
+			}
 		}
 
 		// Serialisation with a LagerSerialisationContext
@@ -95,10 +104,10 @@ namespace Zeltlager
 					writer.WritePublicKey(Key);
 					byte[] keyData = mem.ToArray();
 					// Sign the key with the lager private key
-					writer.Write(await LagerBase.CryptoProvider.Sign(context.Lager.AsymmetricKey, keyData));
+					writer.Write(await LagerManager.CryptoProvider.Sign(context.Lager.AsymmetricKey, keyData));
 					keyData = mem.ToArray();
 					// Sign the data with our own private key
-					writer.Write(await LagerBase.CryptoProvider.Sign(Key, keyData));
+					writer.Write(await LagerManager.CryptoProvider.Sign(Key, keyData));
 				}
 
 				data = mem.ToArray();
@@ -109,12 +118,13 @@ namespace Zeltlager
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			// Get our collaborator id from the LagerStatus
-			output.Write((byte)context.Lager.Status.BundleCount.FindIndex(c => c.Item1 == this));
+			output.Write(context.Lager.Status.BundleCount.FindIndex(c => c.Item1 == this));
 			return new Task(() => { });
 		}
 
 		public Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
+			// Copy the key into the data array
 			Key = input.ReadPublicKey();
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter writer = new BinaryWriter(mem))
@@ -122,17 +132,16 @@ namespace Zeltlager
 			byte[] keyData = mem.ToArray();
 			data = new byte[keyData.Length + 2 * CryptoConstants.SIGNATURE_LENGTH];
 			Array.Copy(keyData, data, keyData.Length);
-			// Read the signatures
-			Array.Copy(input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH), 0,
-				data, keyData.Length, CryptoConstants.SIGNATURE_LENGTH);
-			Array.Copy(input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH), 0,
-				data, keyData.Length + CryptoConstants.SIGNATURE_LENGTH, CryptoConstants.SIGNATURE_LENGTH);
-			return new Task(() => { });
+
+			// Copy the signatures
+			Array.Copy(input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH * 2), 0,
+				data, keyData.Length, CryptoConstants.SIGNATURE_LENGTH * 2);
+			return Verify(context);
 		}
 
 		public static Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			byte id = input.ReadByte();
+			int id = input.ReadInt32();
 			return Task.FromResult(context.Lager.Status.BundleCount[id].Item1);
 		}
 
@@ -152,7 +161,8 @@ namespace Zeltlager
 
 		public Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			return serialiser.Read(input, context, Key);
+			Key = input.ReadPublicKey();
+			return Task.Run(() => { });
 		}
 
 		public static async Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)

@@ -38,7 +38,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BCCryptoProvider.cs" />
     <Compile Include="Client\ClientSettings.cs" />
     <Compile Include="Client\IoProvider.cs" />
     <Compile Include="Collaborator.cs" />
@@ -49,22 +48,16 @@
     <Compile Include="CommunicationPackets\Responses\ListGames.cs" />
     <Compile Include="Competition\Competition.cs" />
     <Compile Include="DataPackets\AddCollaborator.cs" />
-    <Compile Include="DataPackets\AddMember.cs" />
     <Compile Include="DataPackets\AddPacket.cs" />
-    <Compile Include="DataPackets\AddTent.cs" />
     <Compile Include="DataPackets\DataPacketBundle.cs" />
     <Compile Include="DataPackets\DataPacket.cs" />
-    <Compile Include="DataPackets\DeleteMember.cs" />
-    <Compile Include="DataPackets\DeleteTent.cs" />
     <Compile Include="DataPackets\InvalidDataPacket.cs" />
     <Compile Include="DataPackets\PacketId.cs" />
     <Compile Include="Erwischt\Erwischt.cs" />
-    <Compile Include="ICryptoProvider.cs" />
     <Compile Include="IIoProvider.cs" />
     <Compile Include="CreateLager.xaml.cs">
       <DependentUpon>CreateLager.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ILagerServer.cs" />
     <Compile Include="LagerBase.cs" />
     <Compile Include="LagerManager.cs" />
     <Compile Include="LagerStatus.cs" />
@@ -135,6 +128,10 @@
       <DependentUpon>StationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Competition\Ranking.cs" />
+    <Compile Include="DataPackets\EditPacket.cs" />
+    <Compile Include="DataPackets\RevertPacket.cs" />
+    <Compile Include="Cryptography\BCCryptoProvider.cs" />
+    <Compile Include="Cryptography\ICryptoProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -228,6 +225,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Cryptography\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.2.127\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.2.127\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
 </Project>

@@ -16,16 +16,16 @@ namespace Zeltlager
 		/// The collaborator list saves the bundle count for each collaborator.
 		/// The index in this list is the collaborator id as seen from the owner of this object.
 		/// </summary>
-		public List<Tuple<Collaborator, uint>> BundleCount { get; private set; }
+		public List<Tuple<Collaborator, int>> BundleCount { get; private set; }
 
 		public LagerStatus()
 		{
-			BundleCount = new List<Tuple<Collaborator, uint>>();
+			BundleCount = new List<Tuple<Collaborator, int>>();
 		}
 
 		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			output.Write((byte)BundleCount.Count);
+			output.Write(BundleCount.Count);
 			foreach (var c in BundleCount)
 			{
 				// Write the collaborator id from our point of view
@@ -41,14 +41,15 @@ namespace Zeltlager
 
 		public async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			byte count = input.ReadByte();
-			BundleCount.Capacity = count;
+			int count = input.ReadByte();
+			List<Tuple<Collaborator, int>> newBundleCount = new List<Tuple<Collaborator, int>>(count);
 			for (int i = 0; i < count; i++)
 			{
 				Collaborator collaborator = await serialiser.ReadFromId<Collaborator>(input, context);
-				uint packets = await serialiser.Read(input, context, (uint)0);
-				BundleCount.Add(new Tuple<Collaborator, uint>(collaborator, packets));
+				int packets = await serialiser.Read(input, context, 0);
+				newBundleCount.Add(new Tuple<Collaborator, int>(collaborator, packets));
 			}
+			BundleCount = newBundleCount;
 		}
 	}
 }

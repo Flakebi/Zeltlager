@@ -12,7 +12,7 @@ namespace Zeltlager.DataPackets
 	/// A subclass of this type must have a default constructor and
 	/// can optionally have the static method IdCount which says how many
 	/// ids should be reserved for the type:
-	/// public static byte GetIdCount()
+	/// public static int GetIdCount()
 	/// All possible packet types have to be added to the packetTypes array.
 	/// </summary>
 	public abstract class DataPacket
@@ -30,39 +30,39 @@ namespace Zeltlager.DataPackets
 		/// </summary>
 		/// <param name="input">The input reader</param>
 		/// <returns>The read packet.</returns>
-		public static DataPacket ReadPacket(byte[] input)
+		public static DataPacket ReadPacket(PacketId id, byte[] data)
 		{
-			byte packetType = input[0];
-			byte idCount = 0;
-			for (int i = 0; i < packetTypes.Length; i++)
+			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
 			{
-				idCount = 1;
-				// Check if the packet type specifies an id count
-				var func = packetTypes[i].GetTypeInfo().GetDeclaredMethod("GetIdCount");
-				if (func != null && func.IsStatic && func.GetParameters().Length == 0 && func.ReturnType == typeof(byte))
-					idCount = (byte)func.Invoke(null, new object[0]);
-				if (packetType < idCount)
-					break;
-				else
+				int packetType = input.ReadInt32();
+				int idCount = 0;
+				for (int i = 0; i < packetTypes.Length; i++)
+				{
+					idCount = 1;
+					// Check if the packet type specifies an id count
+					var func = packetTypes[i].GetTypeInfo().GetDeclaredMethod("GetIdCount");
+					if (func != null && func.IsStatic && func.GetParameters().Length == 0 && func.ReturnType == typeof(int))
+						idCount = (int)func.Invoke(null, new object[0]);
+					if (packetType < idCount)
+						break;
 					packetType -= idCount;
-			}
-			// Invalid id
-			if (packetType >= idCount)
-			{
-				// Create a new InvalidDataPacket
-				return new InvalidDataPacket(input);
-			}
+				}
+				// Invalid id
+				if (packetType >= idCount)
+					// Create a new InvalidDataPacket
+					return new InvalidDataPacket(data);
 
-			// Create a new packet of the specified type using the default constructor
-			DataPacket packet = (DataPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors
-				.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[0]);
+				// Create a new packet of the specified type using the default constructor
+				DataPacket packet = (DataPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors
+					.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[0]);
 
-			// Fill the packet data
-			packet.Timestamp = DateTime.FromBinary(input.ToLong(1));
-			packet.Id = idCount;
-			packet.Data = new byte[input.Length - 9];
-			Array.Copy(input, 9, packet.Data, 0, packet.Data.Length);
-			return packet;
+				// Fill the packet data
+				packet.Timestamp = DateTime.FromBinary(input.ReadInt64());
+				packet.subId = idCount;
+				packet.Data = input.ReadBytes((int)(input.BaseStream.Length - input.BaseStream.Position));
+				packet.Id = id;
+				return packet;
+			}
 		}
 
 		/// <summary>
@@ -71,6 +71,7 @@ namespace Zeltlager.DataPackets
 		public byte[] Signature { get; set; }
 		public byte[] Iv { get; set; }
 
+		public PacketId Id { get; private set; }
 		/// <summary>
 		/// The timestamp in UTC.
 		/// </summary>
@@ -79,12 +80,12 @@ namespace Zeltlager.DataPackets
 		/// <summary>
 		/// The sub-id of this packet.
 		/// </summary>
-		protected byte Id { get; set; }
+		protected int subId { get; set; }
 
-		public DataPacket()
+		protected DataPacket()
 		{
 			Timestamp = DateTime.UtcNow;
-			Id = 0;
+			subId = 0;
 		}
 
 		public void WritePacket(BinaryWriter output)
@@ -93,8 +94,8 @@ namespace Zeltlager.DataPackets
 			if (!(this is InvalidDataPacket))
 			{
 				// Write the type of this packet
-				byte packetType = 0;
-				byte idCount = 0;
+				int packetType = 0;
+				int idCount = 0;
 				Type ownType = GetType();
 				for (int i = 0; i < packetTypes.Length; i++)
 				{
@@ -103,15 +104,15 @@ namespace Zeltlager.DataPackets
 					idCount = 1;
 					// Check if the packet type specifies an id count
 					var func = packetTypes[i].GetTypeInfo().GetDeclaredMethod("GetIdCount");
-					if (func != null && func.IsStatic && func.GetParameters().Length == 0 && func.ReturnType == typeof(byte))
-						idCount = (byte)func.Invoke(null, new object[0]);
+					if (func != null && func.IsStatic && func.GetParameters().Length == 0 && func.ReturnType == typeof(int))
+						idCount = (int)func.Invoke(null, new object[0]);
 
 					packetType += idCount;
 				}
-				idCount += Id;
+				idCount += subId;
 
 				output.Write(idCount);
-				output.Write(Timestamp.ToBinary().ToBytes());
+				output.Write(Timestamp.ToBinary());
 			}
 			output.Write(Data);
 		}
@@ -121,6 +122,7 @@ namespace Zeltlager.DataPackets
 		/// The packet has to deserialise itself from Data.
 		/// </summary>
 		/// <param name="lager">The lager to which this packet should be applied.</param>
-		public abstract Task Deserialise(LagerClientSerialisationContext context);
+		public abstract Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context);
 	}
 }

@@ -79,7 +79,7 @@ namespace Zeltlager.Serialisation
 			{ typeof(ulong), "UInt64" },
 			{ typeof(long), "Int64" },
 			{ typeof(float), "Single" },
-			{ typeof(double), "Double" },
+			{ typeof(double), "Double" }
 		};
 
 		static IEnumerable<FieldData> GetFieldData(Type type, object obj)
@@ -123,7 +123,7 @@ namespace Zeltlager.Serialisation
 			return Write(output, context, obj, typeof(T));
 		}
 
-		async Task Write(BinaryWriter output, C context, object obj, Type type)
+		public async Task Write(BinaryWriter output, C context, object obj, Type type)
 		{
 			TypeInfo typeInfo = type.GetTypeInfo();
 			// Check if the object implements ISerialisable
@@ -148,7 +148,12 @@ namespace Zeltlager.Serialisation
 					// Write the object
 					await Write(output, context, Convert.ChangeType(obj, nullableType), nullableType);
 				}
-			} else if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
+			} else if (type == typeof(DateTime))
+			{
+				// Check for dates
+				DateTime dateTime = (DateTime)obj;
+				await Write(output, context, dateTime.ToBinary());
+			} else if (typeof(IList).GetTypeInfo().IsAssignableFrom(typeInfo))
 			{
 				// Check for lists and arrays
 				var list = (IList)obj;
@@ -186,7 +191,7 @@ namespace Zeltlager.Serialisation
 			return WriteId(output, context, obj, typeof(T));
 		}
 
-		async Task WriteId(BinaryWriter output, C context, object obj, Type type)
+		public async Task WriteId(BinaryWriter output, C context, object obj, Type type)
 		{
 			// Check if the object implements ISerialisable
 			ISerialisable<C> serialisable = obj as ISerialisable<C>;
@@ -200,7 +205,7 @@ namespace Zeltlager.Serialisation
 				{
 					// Check if it's a list of ids
 					TypeInfo typeInfo = type.GetTypeInfo();
-					if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
+					if (typeof(IList).GetTypeInfo().IsAssignableFrom(typeInfo))
 					{
 						// Check for lists and arrays
 						var list = (IList)obj;
@@ -235,8 +240,8 @@ namespace Zeltlager.Serialisation
 				{
 					output.Write(false);
 					return;
-				} else
-					output.Write(true);
+				}
+				output.Write(true);
 			}
 			// Check if we should only save a reference
 			if (attribute.Attribute.Type == SerialisationType.Reference)
@@ -258,7 +263,7 @@ namespace Zeltlager.Serialisation
 			return (T)await Read(input, context, obj, typeof(T));
 		}
 
-		async Task<object> Read(BinaryReader input, C context, object obj, Type type)
+		public async Task<object> Read(BinaryReader input, C context, object obj, Type type)
 		{
 			TypeInfo typeInfo = type.GetTypeInfo();
 			// Check if the object implements ISerialisable
@@ -282,7 +287,11 @@ namespace Zeltlager.Serialisation
 					// Read the object
 					obj = await Read(input, context, Convert.ChangeType(obj, nullableType), nullableType);
 				}
-			} else if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
+			} else if (type == typeof(DateTime))
+			{
+				// Check for dates
+				obj = DateTime.FromBinary(await Read(input, context, (long)0));
+			} else if (typeof(IList).GetTypeInfo().IsAssignableFrom(typeInfo))
 			{
 				// Check for lists and arrays
 				int count = input.ReadInt32();
@@ -356,7 +365,7 @@ namespace Zeltlager.Serialisation
 			return (T)await ReadFromId(input, context, typeof(T));
 		}
 
-		async Task<object> ReadFromId(BinaryReader input, C context, Type type)
+		public async Task<object> ReadFromId(BinaryReader input, C context, Type type)
 		{
 			TypeInfo typeInfo = type.GetTypeInfo();
 			// To convert a task
@@ -380,7 +389,7 @@ namespace Zeltlager.Serialisation
 				if (attributes.Length == 0)
 				{
 					// Check if it's a list of ids
-					if (typeInfo.ImplementedInterfaces.Contains(typeof(IList)))
+					if (typeof(IList).GetTypeInfo().IsAssignableFrom(typeInfo))
 					{
 						object obj;
 						// Check for lists and arrays
@@ -523,7 +532,7 @@ namespace Zeltlager.Serialisation
 				if (success && remainingAttributes.Count == 0)
 					return method.Invoke(null, arguments);
 			}
-			throw new NotImplementedException(typeInfo.Name + " does not specify a static method called 'GetFromId' suitable for deserialisation");
+			throw new InvalidOperationException(typeInfo.Name + " does not specify a static method called 'GetFromId' suitable for deserialisation");
 		}
 	}
 }

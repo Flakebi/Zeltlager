@@ -6,21 +6,25 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using Cryptography;
 	using DataPackets;
 	using Serialisation;
 
+	/// <summary>
+	/// Serialising a LagerBase with a LagerSerialisationContext will write
+	/// the data of a lager.
+	/// </summary>
 	public class LagerBase : ISerialisable<LagerSerialisationContext>
 	{
 		/// <summary>
 		/// The version of the data packet protocol.
 		/// </summary>
-		protected const byte VERSION = 0;
+		protected const int VERSION = 0;
 		const string LAGER_FILE = "lager.data";
 		const string COLLABORATOR_FILE = "collaborator.data";
 
-		public static bool IsClient { get; set; }
-		public static ICryptoProvider CryptoProvider { get; set; }
-		public static Log Log { get; set; }
+		public LagerManager Manager { get; private set; }
+		public readonly int Id;
 
 		protected IIoProvider ioProvider;
 
@@ -29,15 +33,13 @@ namespace Zeltlager
 		/// This contains the version, the public key, salt, iv and (encrypted) the name and private key.
 		/// All this data is signed with the lager private key.
 		/// </summary>
-		byte[] data;
+		protected byte[] data;
 
-		public Serialiser<LagerSerialisationContext> Serialiser { get; private set; }
-		protected LagerManager manager;
-		public IReadOnlyList<Collaborator> Collaborators => collaborators;
+		protected Serialiser<LagerSerialisationContext> serialiser;
 
-		protected List<Collaborator> collaborators = new List<Collaborator>();
+		protected Dictionary<KeyPair, Collaborator> collaborators = new Dictionary<KeyPair, Collaborator>();
+		public IReadOnlyDictionary<KeyPair, Collaborator> Collaborators => collaborators;
 
-		//TODO Use the lager status
 		/// <summary>
 		/// The number of packets that were generated so far by each client.
 		/// For clients, the collaborator order and packet count is the one
@@ -45,31 +47,33 @@ namespace Zeltlager
 		/// </summary>
 		public LagerStatus Status { get; set; }
 
-		/// <summary>
-		/// Packets that could not be loaded or are not yet available
-		/// and should be fetched from the server.
-		/// Each tuple contains the collaborator and the packet id.
-		/// </summary>
-		//TODO Do we need this?
-		public List<PacketId> MissingPackets { get; set; }
-
 		// Crypto
 		/// <summary>
 		/// The asymmetric keys of this lager, the private key is null for the server.
 		/// </summary>
 		public KeyPair AsymmetricKey { get; protected set; }
 
-		static LagerBase()
+		public LagerBase(LagerManager manager, IIoProvider io, int id)
 		{
-			CryptoProvider = new BCCryptoProvider();
-			Log = new Log();
+			Manager = manager;
+			serialiser = new Serialiser<LagerSerialisationContext>();
+			ioProvider = io;
+			Id = id;
 		}
 
-		public LagerBase(LagerManager manager, IIoProvider io)
+		/// <summary>
+		/// Load the data, the lager status and the collaborators of a lager.
+		/// </summary>
+		public virtual async Task Load()
 		{
-			this.manager = manager;
-			Serialiser = new Serialiser<LagerSerialisationContext>();
-			ioProvider = io;
+			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+			// Load the lager data
+			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(LAGER_FILE)))
+				await serialiser.Read(input, context, this);
+
+			Status = await ReadLagerStatus();
+
+			//TODO
 		}
 
 		/// <summary>
@@ -93,51 +97,61 @@ namespace Zeltlager
 					using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(COLLABORATOR_FILE)))
 					{
 						Collaborator collaborator = new Collaborator();
-						LagerSerialisationContext context = new LagerSerialisationContext(manager, this);
+						LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
 						context.PacketId = new PacketId(collaborator);
-						await Serialiser.Read(input, context, collaborator);
+						await serialiser.Read(input, context, collaborator);
 						// Find out how many bundles this collaborator has
 						var files = await rootedIo.ListContents("");
-						uint bundleCount = 0;
+						int bundleCount = 0;
 						while (files.Contains(new Tuple<string, FileType>(bundleCount.ToString(), FileType.File)))
 							bundleCount++;
-						status.BundleCount.Add(new Tuple<Collaborator, uint>(collaborator, bundleCount));
+						status.BundleCount.Add(new Tuple<Collaborator, int>(collaborator, bundleCount));
 					}
 				}
 			} catch (Exception e)
 			{
-				await Log.Exception("LagerStatus", e);
+				await LagerManager.Log.Exception("LagerStatus", e);
 			}
 			return status;
 		}
 
-		async Task Deserialise()
+		async Task Verify()
 		{
-			LagerSerialisationContext context = new LagerSerialisationContext(manager, this);
-			//TODO Verify and save public key
+			// Check if the data signature is valid
+			byte[] signature = new byte[CryptoConstants.SIGNATURE_LENGTH];
+			Array.Copy(data, data.Length - signature.Length, signature, 0, signature.Length);
+			if (!await LagerManager.CryptoProvider.Verify(AsymmetricKey, signature, data))
+				throw new InvalidDataException("The signature of the lager is wrong");
 		}
 
 		// Serialisation with a LagerSerialisationContext
-		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public virtual async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			await serialiser.Write(output, context, data);
 		}
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			// Get our lager id from the manager
-			output.Write((byte)context.Manager.Lagers.IndexOf(this));
+			output.Write(Id);
 			return new Task(() => { });
 		}
 
-		public async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public virtual async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			data = await serialiser.Read<byte[]>(input, context, null);
+			using (BinaryReader reader = new BinaryReader(new MemoryStream(data)))
+			{
+				int version = reader.ReadInt32();
+				if (version != VERSION)
+					throw new InvalidDataException("The lager has an unknown version");
+				AsymmetricKey = reader.ReadPublicKey();
+			}
+			await Verify();
 		}
 
 		public static Task<LagerBase> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			byte id = input.ReadByte();
+			int id = input.ReadInt32();
 			return Task.FromResult(context.Manager.Lagers[id]);
 		}
 	}

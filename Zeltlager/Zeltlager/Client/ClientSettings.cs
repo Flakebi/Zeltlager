@@ -8,20 +8,11 @@ namespace Zeltlager.Client
 	public class ClientSettings
 	{
 		const string SETTINGS_FILE = "settings.conf";
-		const byte VERSION = 0;
+		const int VERSION = 0;
 
-		public byte LastLager { get; set; }
-		/// <summary>
-		/// Contains all lagers.
-		/// For each lager the name and the password.
-		/// </summary>
-		public List<Tuple<string, string>> Lagers { get; set; }
+		public int LastLager { get; set; }
 
-		public ClientSettings()
-		{
-			Lagers = new List<Tuple<string, string>>();
-		}
-
+		//TODO Replace by serialising
 		public async Task Load()
 		{
 			// Set default values
@@ -33,10 +24,11 @@ namespace Zeltlager.Client
 			{
 				using (BinaryReader input = new BinaryReader(await io.ReadFile(SETTINGS_FILE)))
 				{
-					if (input.ReadByte() == VERSION)
+					if (input.ReadInt32() == VERSION)
 					{
-						byte lagerCount = input.ReadByte();
-						byte lastLager = input.ReadByte();
+						//TODO Don't read lager count
+						int lagerCount = input.ReadInt32();
+						int lastLager = input.ReadInt32();
 						if (lastLager < lagerCount)
 						{
 							LastLager = lastLager;
@@ -60,7 +52,7 @@ namespace Zeltlager.Client
 			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(SETTINGS_FILE)))
 			{
 				output.Write(VERSION);
-				output.Write((byte)Lagers.Count);
+				output.Write(Lagers.Count);
 				output.Write(LastLager);
 
 				// Write list

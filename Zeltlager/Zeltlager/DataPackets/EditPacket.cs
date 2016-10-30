@@ -8,33 +8,28 @@ namespace Zeltlager.DataPackets
 {
 	using Serialisation;
 
-	public class AddPacket : DataPacket
+	public class EditPacket : DataPacket
 	{
 		/// <summary>
 		/// The list of types that can be serialised.
-		/// Every type must have a constructor that takes
-		/// a LagerClientSerialisationContext.
 		/// 
 		/// The method is an optional member method that will
-		/// be called on the newly created object after it was read
-		/// and when it should be added to the lager. This method
-		/// can also take a LagerClientSerialisationContext.
+		/// be called on the edited object after it was read.
+		/// This method can also take a LagerClientSerialisationContext.
 		/// </summary>
 		static readonly Tuple<Type, MethodInfo>[] types = {
-			new Tuple<Type, MethodInfo>(typeof(Member),
-				typeof(Member).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
-			new Tuple<Type, MethodInfo>(typeof(Tent),
-				typeof(Tent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) }))
+			new Tuple<Type, MethodInfo>(typeof(Member), null),
+			new Tuple<Type, MethodInfo>(typeof(Tent), null)
 		};
 
 		public static int GetIdCount() { return types.Length; }
 
-		protected AddPacket() { }
+		protected EditPacket() { }
 
-		public async Task<AddPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
+		public async Task<EditPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, object obj)
 		{
-			var packet = new AddPacket();
+			var packet = new EditPacket();
 			await Init(serialiser, context, obj);
 			return packet;
 		}
@@ -55,13 +50,14 @@ namespace Zeltlager.DataPackets
 						// Set id and write object
 						subId = i;
 
+						await serialiser.WriteId(output, context, obj, types[i].Item1);
 						await serialiser.Write(output, context, obj, types[i].Item1);
 						success = true;
 						break;
 					}
 				}
 				if (!success)
-					throw new ArgumentException("The object is not supported for adding, add it to the types array in AddPacket");
+					throw new ArgumentException("The object is not supported for editing, add it to the types array in EditPacket");
 			}
 			Data = mem.ToArray();
 		}
@@ -72,15 +68,12 @@ namespace Zeltlager.DataPackets
 			var type = types[subId];
 			using (BinaryReader input = new BinaryReader(new MemoryStream(Data)))
 			{
-				// Create an object
-				object obj = type.Item1.GetTypeInfo().DeclaredConstructors
-					.First(c => c.GetParameters().Select(p => p.ParameterType)
-						.SequenceEqual(new Type[] { typeof(LagerClientSerialisationContext) }))
-					.Invoke(new object[] { context });
+				// Get the object by id
+				object obj = await serialiser.ReadFromId(input, context, type.Item1);
 
 				obj = await serialiser.Read(input, context, obj, type.Item1);
 
-				// Call the add method
+				// Call the edit method
 				if (type.Item2 != null)
 				{
 					object[] parameters;

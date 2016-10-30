@@ -23,9 +23,9 @@ namespace Zeltlager.DataPackets
 		[Serialisation(Type = SerialisationType.Reference)]
 		public DataPacketBundle Bundle { get; private set; }
 		[Serialisation]
-		public byte? PacketIndex { get; private set; }
+		public int? PacketIndex { get; private set; }
 
-		public PacketId(Collaborator creator, DataPacketBundle bundle = null, byte? packetIndex = null)
+		public PacketId(Collaborator creator, DataPacketBundle bundle = null, int? packetIndex = null)
 		{
 			Creator = creator;
 			Bundle = bundle;
@@ -47,7 +47,7 @@ namespace Zeltlager.DataPackets
 			return new PacketId(Creator, bundle, null);
 		}
 
-		public PacketId Clone(byte packetIndex)
+		public PacketId Clone(int packetIndex)
 		{
 			return new PacketId(Creator, Bundle, packetIndex);
 		}
@@ -69,7 +69,7 @@ namespace Zeltlager.DataPackets
 
 		public override int GetHashCode()
 		{
-			return PacketIndex.GetHashCode() ^ Creator.Key.PublicKey.GetHashCode() ^ Bundle.Id.GetHashCode();
+			return PacketIndex.GetHashCode() ^ Creator.Key.Modulus.GetHashCode() ^ Bundle.Id.GetHashCode();
 		}
 
 		public static bool operator ==(PacketId p1, PacketId p2)
@@ -111,10 +111,10 @@ namespace Zeltlager.DataPackets
 
 		public static Task<PacketId> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			byte packetIndex = input.ReadByte();
-			uint bundleId = input.ReadUInt32();
+			int packetIndex = input.ReadInt32();
+			int bundleId = input.ReadInt32();
 			var collaborator = context.PacketId.Creator;
-			PacketId id = new PacketId(collaborator, collaborator.Bundles[(int)bundleId], packetIndex);
+			PacketId id = new PacketId(collaborator, collaborator.Bundles[bundleId], packetIndex);
 			return Task.FromResult(id);
 		}
 	}

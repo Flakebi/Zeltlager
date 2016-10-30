@@ -8,26 +8,35 @@ namespace Zeltlager.DataPackets
 
 	public class AddCollaborator : DataPacket
 	{
-		public AddCollaborator() { }
+		protected AddCollaborator() { }
 
-		public async Task Init(LagerClientSerialisationContext context, Collaborator collaborator)
+		public static async Task<AddCollaborator> Create(Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context, Collaborator collaborator)
+		{
+			var packet = new AddCollaborator();
+			await packet.Init(serialiser, context, collaborator);
+			return packet;
+		}
+
+		async Task Init(Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context, Collaborator collaborator)
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 			{
-				await context.LagerClient.ClientSerialiser.Write(output, context, collaborator);
+				await serialiser.Write(output, context, collaborator);
 			}
 			Data = mem.ToArray();
 		}
 
-		public override async Task Deserialise(LagerClientSerialisationContext context)
+		public override async Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context)
 		{
 			Collaborator collaborator = new Collaborator();
-			MemoryStream mem = new MemoryStream(Data);
-			using (BinaryReader input = new BinaryReader(mem))
-				await context.LagerClient.ClientSerialiser.Read(input, context, collaborator);
+			using (BinaryReader input = new BinaryReader(new MemoryStream(Data)))
+				await serialiser.Read(input, context, collaborator);
 			// Search the right collaborator
-			collaborator = context.Lager.Collaborators.First(c => c.Key.PublicKey.SequenceEqual(collaborator.Key.PublicKey));
+			collaborator = context.Lager.Collaborators[collaborator.Key];
 			// Add the read collaborator to the list
 			context.PacketId.Creator.Collaborators[context.PacketId] = collaborator;
 		}

@@ -14,48 +14,45 @@ namespace Zeltlager.CommunicationPackets
 		/// <summary>
 		/// The version of the data packet protocol.
 		/// </summary>
-		static uint VERSION = 0;
+		const int VERSION = 0;
 
-		static Type[] packetTypes = {
+		static readonly Type[] packetTypes = {
 			typeof(Requests.ListGames),
-			typeof(Responses.ListGames),
+			typeof(Responses.ListGames)
 		};
 
 		/// <summary>
 		/// Read a packet. This function can throw an IOException, e.g. if the packet type is invalid.
 		/// </summary>
-		/// <param name="packetTypes">A list of possible packet types</param>
-		/// <param name="input">The input reader</param>
+		/// <param name="data">The input data.</param>
 		/// <returns>The read packet.</returns>
-		protected static CommunicationPacket ReadPacket(byte[] input)
+		protected static CommunicationPacket ReadPacket(byte[] data)
 		{
-			byte packetType = input[0];
+			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
+			{
+				int packetType = input.ReadInt32();
 
-			if (packetType >= packetTypes.Length)
-				throw new IOException("Invalid communication packet type");
+				if (packetType >= packetTypes.Length)
+					throw new IOException("Invalid communication packet type");
 
-			// Create a new packet of the specified type using the default constructor
-			CommunicationPacket packet = (CommunicationPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors
-				.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[0]);
+				// Create a new packet of the specified type using the default constructor
+				CommunicationPacket packet = (CommunicationPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors
+					.First(ctor => ctor.GetParameters().Length == 0).Invoke(new object[0]);
 
-			// Fill the packet data
-			packet.Data = new byte[input.Length - 1];
-			Array.Copy(input, 1, packet.Data, 0, packet.Data.Length);
-			return packet;
+				// Fill the packet data
+				packet.Data = input.ReadBytes((int)(input.BaseStream.Length - input.BaseStream.Position));
+				return packet;
+			}
 		}
 
 		protected byte[] Data { get; set; }
-
-		public CommunicationPacket()
-		{
-		}
 
 		protected void WritePacket(BinaryWriter output)
 		{
 			var index = Array.IndexOf(packetTypes, GetType());
 			if (index == -1)
 				throw new InvalidOperationException("Trying to write an unknown packet type, you should add this packet to the CommunicationPacket.packetTypes array.");
-			output.Write((byte)index);
+			output.Write(index);
 			output.Write(Data);
 		}
 	}

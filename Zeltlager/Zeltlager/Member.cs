@@ -29,7 +29,7 @@ namespace Zeltlager
 		[Serialisation]
 		public bool Supervisor { get; set; }
 
-		public string Display { get { return Name + (Supervisor ? " \ud83d\ude0e" : ""); } }
+		public string Display => Name + (Supervisor ? " \ud83d\ude0e" : "");
 
 		// For deserialisation
 		protected static Task<Member> GetFromId(LagerClientSerialisationContext context, PacketId id)
@@ -43,6 +43,10 @@ namespace Zeltlager
 			Name = "";
 			Supervisor = false;
 		}
+
+		// For deserialisetion
+		public Member(LagerClientSerialisationContext context) : this()
+		{ }
 
 		public Member(PacketId id, string name, Tent tent, bool supervisor)
 		{

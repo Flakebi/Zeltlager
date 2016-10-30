@@ -17,7 +17,7 @@ namespace Zeltlager
 
 		[Editable("Zeltnummer")]
 		[Serialisation]
-		public byte Number { get; set; }
+		public int Number { get; set; }
 
 		[Editable("Zeltname")]
 		[Serialisation]
@@ -31,9 +31,9 @@ namespace Zeltlager
 		[Serialisation]
 		public bool Girls { get; set; }
 
-		public IReadOnlyList<Member> Supervisors { get { return supervisors; } }
+		public IReadOnlyList<Member> Supervisors => supervisors;
 
-		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
+		public string Display => Number + " " + Name + " " + (Girls ? "♀" : "♂");
 
 		// For deserialisation
 		protected static Task<Tent> GetFromId(LagerClientSerialisationContext context, PacketId id)
@@ -50,7 +50,11 @@ namespace Zeltlager
 			supervisors = new List<Member>();
 		}
 
-		public Tent(PacketId id, byte number, string name, bool girls, List<Member> supervisors)
+		// For deserialisetion
+		public Tent(LagerClientSerialisationContext context) : this()
+		{ }
+
+		public Tent(PacketId id, int number, string name, bool girls, List<Member> supervisors)
 		{
 			Id = id;
 			Number = number;
@@ -70,6 +74,14 @@ namespace Zeltlager
 		}
 
 		public bool RemoveSupervisor(Member supervisor) => supervisors.Remove(supervisor);
+
+		// Add the member to a lager after deserialising it
+		protected void Add(LagerClientSerialisationContext context)
+		{
+			// Reset the collaborator in the id to prevent spoofing
+			Id = Id.Clone(context.PacketId.Creator);
+			context.LagerClient.AddTent(this);
+		}
 
 		// TODO: get members
 

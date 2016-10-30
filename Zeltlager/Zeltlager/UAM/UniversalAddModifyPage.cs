@@ -16,7 +16,16 @@ namespace Zeltlager.UAM
 		readonly bool isAddPage;
 		LagerClient lager;
 
-		static readonly Type[] numtypes = { typeof(byte), typeof(ushort), typeof(int) };
+		static readonly Type[] NUM_TYPES = {
+			typeof(byte),
+			typeof(sbyte),
+			typeof(ushort),
+			typeof(short),
+			typeof(uint),
+			typeof(int),
+			typeof(ulong),
+			typeof(long)
+		};
 
 		public UniversalAddModifyPage(T obj, bool isAddPage, LagerClient lager)
 		{
@@ -78,7 +87,7 @@ namespace Zeltlager.UAM
 					var tp = new TimePicker();
 					tp.SetBinding(TimePicker.TimeProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = tp;
-				} else if (numtypes.Contains(vartype))
+				} else if (NUM_TYPES.Contains(vartype))
 				{
 					// use entry with num Keyboard
 					manip = new Entry

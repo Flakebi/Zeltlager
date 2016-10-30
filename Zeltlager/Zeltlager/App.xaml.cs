@@ -26,14 +26,6 @@ namespace Zeltlager
 			LagerBase.IoProvider = new Client.IoProvider();
 			LagerClient.ClientGlobalSettings = new Client.GlobalSettings();
 
-			/*lager.Init();
-			Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());
-			DataPacket packet = new AddTentPacket(tent);
-			lager.Collaborators.First().AddPacket(packet);
-			var member = new Member(0, "Caro", tent, true);
-			packet = new AddMemberPacket(member);
-			lager.Collaborators.First().AddPacket(packet);*/
-
 			loadingScreen = new LoadingScreen();
 			MainPage = new NavigationPage(loadingScreen);
 		}
@@ -61,7 +53,7 @@ namespace Zeltlager
 				try
 				{
 					loadingScreen.Status = "Lager laden";
-					byte lagerId = LagerClient.ClientGlobalSettings.LastLager;
+					int lagerId = LagerClient.ClientGlobalSettings.LastLager;
 					var lagerData = LagerClient.ClientGlobalSettings.Lagers[lagerId];
 					lager = new LagerClient(lagerId, lagerData.Item1, lagerData.Item2);
 					if (!await lager.Load())
@@ -102,14 +94,14 @@ namespace Zeltlager
 			MainPage = new NavigationPage(loadingScreen);
 			try
 			{
-				LagerClient lager = new LagerClient((byte)LagerClient.ClientGlobalSettings.Lagers.Count, name, password);
+				LagerClient lager = new LagerClient(LagerClient.ClientGlobalSettings.Lagers.Count, name, password);
 				await lager.Init(DisplayStatus);
 				loadingScreen.Status = "Lager speichern";
 				await lager.Save();
 
 				// Add lager to settings
 				loadingScreen.Status = "Einstellungen speichern";
-				LagerClient.ClientGlobalSettings.LastLager = (byte)LagerClient.ClientGlobalSettings.Lagers.Count;
+				LagerClient.ClientGlobalSettings.LastLager = LagerClient.ClientGlobalSettings.Lagers.Count;
 				LagerClient.ClientGlobalSettings.Lagers.Add(new Tuple<string, string>(name, password));
 				await LagerClient.ClientGlobalSettings.Save();
 

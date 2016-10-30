@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
@@ -12,11 +13,10 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 
-using static Zeltlager.CryptoConstants;
-using System.Threading.Tasks;
-
-namespace Zeltlager
+namespace Zeltlager.Cryptography
 {
+	using static CryptoConstants;
+	
 	/// <summary>
 	/// A crypto provider using BouncyCastle.
 	/// </summary>
@@ -24,7 +24,7 @@ namespace Zeltlager
 	{
 		SecureRandom random = new SecureRandom();
 		PaddedBufferedBlockCipher symmetricCipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesFastEngine()), new Pkcs7Padding());
-		RsaEngine asymmetricCipher = new RsaEngine();
+		readonly RsaEngine asymmetricCipher = new RsaEngine();
 
 		public Task<byte[]> GetRandom(int length)
 		{
