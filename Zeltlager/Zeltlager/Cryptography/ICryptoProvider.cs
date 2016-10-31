@@ -53,7 +53,7 @@ namespace Zeltlager.Cryptography
 
 		public override int GetHashCode()
 		{
-			return Modulus.GetHashCode();
+			return Modulus[0].GetHashCode();
 		}
 
 		public static bool operator ==(KeyPair p1, KeyPair p2)

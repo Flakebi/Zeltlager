@@ -62,14 +62,14 @@ namespace Zeltlager.DataPackets
 		public override bool Equals(object obj)
 		{
 			PacketId other = obj as PacketId;
-			if (other == null)
+			if (((object)other) == null)
 				return false;
 			return Equals(other);
 		}
 
 		public override int GetHashCode()
 		{
-			return PacketIndex.GetHashCode() ^ Creator.Key.Modulus.GetHashCode() ^ Bundle.Id.GetHashCode();
+			return PacketIndex.GetHashCode() ^ Creator.Key.Modulus[0].GetHashCode() ^ Bundle.Id.GetHashCode();
 		}
 
 		public static bool operator ==(PacketId p1, PacketId p2)

@@ -155,7 +155,7 @@ namespace Zeltlager
 		public Task Write(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
 			output.WritePublicKey(Key);
-			return new Task(() => { });
+			return Task.WhenAll();
 		}
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
@@ -168,7 +168,7 @@ namespace Zeltlager
 		public Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
 			Key = input.ReadPublicKey();
-			return Task.Run(() => { });
+			return Task.WhenAll();
 		}
 
 		public static async Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)

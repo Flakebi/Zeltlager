@@ -91,5 +91,13 @@ namespace Zeltlager
 		public string SearchableDetail => Tent.Display;
 
 		#endregion
+
+		public override bool Equals(object obj)
+		{
+			Member other = obj as Member;
+			if (other == null)
+				return false;
+			return Name == other.Name && Supervisor == other.Supervisor && Tent.Equals(other.Tent);
+		}
 	}
 }

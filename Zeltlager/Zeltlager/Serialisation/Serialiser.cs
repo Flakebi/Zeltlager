@@ -128,6 +128,7 @@ namespace Zeltlager.Serialisation
 			TypeInfo typeInfo = type.GetTypeInfo();
 			// Check if the object implements ISerialisable
 			ISerialisable<C> serialisable = obj as ISerialisable<C>;
+			Type nullableType = Nullable.GetUnderlyingType(type);
 			if (serialisable != null)
 				await serialisable.Write(output, this, context);
 			else if (PRIMITIVES.ContainsKey(type))
@@ -136,7 +137,7 @@ namespace Zeltlager.Serialisation
 				// Search for the matching method
 				typeof(BinaryWriter).GetRuntimeMethod(nameof(Write), new Type[] { type })
 					.Invoke(output, new object[] { obj });
-			} else if (PRIMITIVES.ContainsKey(Nullable.GetUnderlyingType(type)))
+			} else if (nullableType != null && PRIMITIVES.ContainsKey(nullableType))
 			{
 				// Save if the object is null
 				if (obj == null)
@@ -144,7 +145,6 @@ namespace Zeltlager.Serialisation
 				else
 				{
 					output.Write(true);
-					Type nullableType = Nullable.GetUnderlyingType(type);
 					// Write the object
 					await Write(output, context, Convert.ChangeType(obj, nullableType), nullableType);
 				}
@@ -271,6 +271,7 @@ namespace Zeltlager.Serialisation
 			TypeInfo typeInfo = type.GetTypeInfo();
 			// Check if the object implements ISerialisable
 			ISerialisable<C> serialisable = obj as ISerialisable<C>;
+			Type nullableType = Nullable.GetUnderlyingType(type);
 			if (serialisable != null)
 				await serialisable.Read(input, this, context);
 			else if (PRIMITIVES.ContainsKey(type))
@@ -279,14 +280,13 @@ namespace Zeltlager.Serialisation
 				// Search for the matching method
 				obj = typeof(BinaryReader).GetRuntimeMethod(nameof(Read) + PRIMITIVES[type], new Type[0])
 					.Invoke(input, new object[0]);
-			} else if (PRIMITIVES.ContainsKey(Nullable.GetUnderlyingType(type)))
+			} else if (nullableType != null && PRIMITIVES.ContainsKey(nullableType))
 			{
 				// Read if the object is null
 				if (!input.ReadBoolean())
 					obj = GetDefault(type);
 				else
 				{
-					Type nullableType = Nullable.GetUnderlyingType(type);
 					// Read the object
 					obj = await Read(input, context, Convert.ChangeType(obj, nullableType), nullableType);
 				}

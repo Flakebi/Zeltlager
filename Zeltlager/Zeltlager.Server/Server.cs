@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Sockets.Plugin;
 
 using Zeltlager.DataPackets;
+using Zeltlager.Cryptography;
 
 namespace Zeltlager.Server
 {
@@ -23,7 +24,6 @@ namespace Zeltlager.Server
 
 		static void Main(string[] args)
 		{
-			//Task.Run(async () => await AsyncMain(args)).GetAwaiter().GetResult();
 			Task.WaitAll(AsyncMain(args));
 		}
 

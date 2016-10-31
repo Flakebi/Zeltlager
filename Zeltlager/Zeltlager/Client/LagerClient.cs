@@ -113,6 +113,10 @@ namespace Zeltlager.Client
 			OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);
 			collaborators.Add(ownCollaboratorPrivateKey, OwnCollaborator);
 
+			// Set the lager status
+			Status = new LagerStatus();
+			Status.BundleCount.Add(new Tuple<Collaborator, int>(OwnCollaborator, 0));
+
             // Save the lager
             await Save();
 
@@ -256,6 +260,7 @@ namespace Zeltlager.Client
 			bundle.AddPacket(packet);
 
 			// First, write the packet to disk
+			//TODO Write the bundle to the new packets folder
 			PacketId id = new PacketId(OwnCollaborator, bundle, bundle.Packets.Count - 1);
 			await SaveBundle(id);
 

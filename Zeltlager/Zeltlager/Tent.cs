@@ -110,5 +110,14 @@ namespace Zeltlager
 		public string SearchableDetail => "";
 
 		#endregion
+
+		public override bool Equals(object obj)
+		{
+			Tent other = obj as Tent;
+			if (other == null)
+				return false;
+			return Number == other.Number && Name == other.Name && Girls == other.Girls &&
+				Supervisors.SequenceEqual(other.Supervisors);
+		}
 	}
 }

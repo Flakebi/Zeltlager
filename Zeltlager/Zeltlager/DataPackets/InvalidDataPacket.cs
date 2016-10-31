@@ -19,7 +19,7 @@ namespace Zeltlager.DataPackets
             LagerClientSerialisationContext context)
 		{
             // Just do nothing here
-            return Task.Run(() => { });
+            return Task.WhenAll();
 		}
 	}
 }
