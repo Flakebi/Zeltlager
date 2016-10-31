@@ -21,14 +21,19 @@ namespace Zeltlager
 
 		protected IIoProvider ioProvider;
 
-		Dictionary<int, LagerBase> lagers = new Dictionary<int, LagerBase>();
+        protected Dictionary<int, LagerBase> lagers = new Dictionary<int, LagerBase>();
 		public IReadOnlyDictionary<int, LagerBase> Lagers => lagers;
+
+        public LagerManager(IIoProvider io)
+        {
+            ioProvider = io;
+        }
 
 		/// <summary>
 		/// Load all lagers.
 		/// </summary>
 		/// <returns></returns>
-		public async Task Load()
+        public virtual async Task Load()
 		{
 			//TODO
 			// Search folders for lagers
@@ -50,14 +55,10 @@ namespace Zeltlager
 			}
 		}
 
-		protected async Task<LagerBase> LoadLager(int id)
+        protected virtual async Task<LagerBase> LoadLager(int id)
 		{
 			IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
-			LagerBase lager;
-			if (IsClient)
-				lager = new Client.LagerClient(this, io, id);
-			else
-				lager = new LagerBase(this, io, id);
+			LagerBase lager = new LagerBase(this, io, id);
 			await lager.Load();
 			return lager;
 		}

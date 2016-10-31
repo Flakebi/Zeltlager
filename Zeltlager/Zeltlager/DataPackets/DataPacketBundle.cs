@@ -79,7 +79,7 @@ namespace Zeltlager.DataPackets
 		/// Unpacks and decompresses packets from an unencrypted byte array.
 		/// </summary>
 		/// <param name="unencryptedData">The byte array that contains the packets.</param>
-		void Unpack(byte[] unencryptedData)
+		void Unpack(LagerClientSerialisationContext context, byte[] unencryptedData)
 		{
 			MemoryStream mem = new MemoryStream(unencryptedData);
 			using (BinaryReader input = new BinaryReader(new GZipStream(mem, CompressionMode.Decompress)))
@@ -90,7 +90,8 @@ namespace Zeltlager.DataPackets
 				{
 					int length = input.ReadInt32();
 					byte[] bs = input.ReadBytes(length);
-					packets.Add(DataPacket.ReadPacket(bs));
+                    PacketId id = context.PacketId.Clone(i);
+                    packets.Add(DataPacket.ReadPacket(id, bs));
 				}
 			}
 		}
@@ -167,7 +168,7 @@ namespace Zeltlager.DataPackets
 			var verificationResult = await VerifyAndGetEncryptedData(context);
 			byte[] unencryptedData = await LagerManager.CryptoProvider.DecryptSymetric(
 				context.LagerClient.SymmetricKey, verificationResult.Item1, verificationResult.Item2);
-			Unpack(unencryptedData);
+            Unpack(context, unencryptedData);
 		}
 
 		public async Task<Tuple<PacketId, DataPacket>[]> GetPackets(LagerClientSerialisationContext context)

@@ -76,6 +76,22 @@ namespace Zeltlager
 			//TODO
 		}
 
+        public virtual async Task<DataPacketBundle> LoadBundle(PacketId id)
+        {
+            //TODO
+            return null;
+        }
+
+        public virtual async Task Save()
+        {
+            LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+            // Load the lager data
+            using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(LAGER_FILE)))
+                await serialiser.Write(output, context, this);
+
+            //TODO
+        }
+
 		/// <summary>
 		/// Find out which bundles are currently saved on the disk and read a
 		/// list of collaborators.
@@ -119,24 +135,29 @@ namespace Zeltlager
 		{
 			// Check if the data signature is valid
 			byte[] signature = new byte[CryptoConstants.SIGNATURE_LENGTH];
+            byte[] signedData = new byte[data.Length - signature.Length];
 			Array.Copy(data, data.Length - signature.Length, signature, 0, signature.Length);
-			if (!await LagerManager.CryptoProvider.Verify(AsymmetricKey, signature, data))
+            Array.Copy(data, signedData, signedData.Length);
+            if (!await LagerManager.CryptoProvider.Verify(AsymmetricKey, signature, signedData))
 				throw new InvalidDataException("The signature of the lager is wrong");
 		}
 
 		// Serialisation with a LagerSerialisationContext
-		public virtual async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public virtual async Task Write(BinaryWriter output,
+			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			await serialiser.Write(output, context, data);
 		}
 
-		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser,
+			LagerSerialisationContext context)
 		{
 			output.Write(Id);
 			return new Task(() => { });
 		}
 
-		public virtual async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public virtual async Task Read(BinaryReader input,
+			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			data = await serialiser.Read<byte[]>(input, context, null);
 			using (BinaryReader reader = new BinaryReader(new MemoryStream(data)))
@@ -149,7 +170,8 @@ namespace Zeltlager
 			await Verify();
 		}
 
-		public static Task<LagerBase> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public static Task<LagerBase> ReadFromId(BinaryReader input,
+			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			int id = input.ReadInt32();
 			return Task.FromResult(context.Manager.Lagers[id]);

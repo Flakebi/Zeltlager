@@ -29,13 +29,6 @@ namespace Zeltlager.Client
 			Ready
 		}
 
-		/// <summary>
-		/// The path of the client configuration file.
-		/// It contains the id of the last opened lager
-		/// and for each lager the password and the private
-		/// key of our collaborator.
-		/// </summary>
-		const string GENERAL_SETTINGS_FILE = "client.conf";
 		const string CLIENT_LAGER_FILE = "client.data";
 
 		public static ClientSettings Settings { get; private set; }
@@ -115,8 +108,8 @@ namespace Zeltlager.Client
 			ownCollaborator = new Collaborator(ownCollaboratorPrivateKey);
 			collaborators[ownCollaboratorPrivateKey] = ownCollaborator;
 
-			// Save the lager
-			//TODO
+            // Save the lager
+            await Save();
 
 			// Add the collaborator to his own list
 			var context = new LagerClientSerialisationContext(Manager, this);
@@ -129,14 +122,36 @@ namespace Zeltlager.Client
 
 		public override async Task Load()
 		{
-			await base.Load();
-			LagerStatus status = Status;
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
 			// Load the lager client data
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(CLIENT_LAGER_FILE)))
 				await clientSerialiser.Read(input, context, this);
+
+            // Save the status
+            LagerStatus status = Status;
+            await base.Load();
+            Status = status;
+
 			//TODO Anything more?
 		}
+
+        /// <summary>
+        /// Load all bundles of this lager.
+        /// </summary>
+        /// <returns>
+        /// The status of the lager loading.
+        /// true if the lager was loaded successfully, false otherwise.
+        /// </returns>
+        public async Task<bool> LoadBundles()
+        {
+            //TODO Read all packets
+            return false;
+        }
+
+        public override async Task Save()
+        {
+            
+        }
 
 		/// <summary>
 		/// Assemble the packet history from all collaborators.
@@ -273,8 +288,13 @@ namespace Zeltlager.Client
 					writer.Write(salt);
 					writer.Write(iv);
 					writer.Write(encryptedData);
+                    writer.Flush();
+
+                    // Sign the data
+                    byte[] signature = await LagerManager.CryptoProvider.Sign(AsymmetricKey, mem.ToArray());
+                    writer.Write(signature);
 				}
-				data = mem.ToArray();
+                data = mem.ToArray();
 			}
 		}
 
@@ -304,6 +324,7 @@ namespace Zeltlager.Client
 			}
 		}
 
+        // Serialisation with a LagerSerialisationContext
 		public override async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			await Serialise();

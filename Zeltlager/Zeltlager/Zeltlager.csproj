@@ -105,8 +105,6 @@
     <Compile Include="UAM\IEditable.cs" />
     <Compile Include="Searchable\ISearchable.cs" />
     <Compile Include="Searchable\SearchableListView.cs" />
-    <Compile Include="DataPackets\AddCalendarEvent.cs" />
-    <Compile Include="DataPackets\DeleteCalendarEvent.cs" />
     <Compile Include="Searchable\SearchableCell.cs" />
     <Compile Include="Settings\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -132,6 +130,7 @@
     <Compile Include="DataPackets\RevertPacket.cs" />
     <Compile Include="Cryptography\BCCryptoProvider.cs" />
     <Compile Include="Cryptography\ICryptoProvider.cs" />
+    <Compile Include="Client\ClientLagerManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
