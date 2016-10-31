@@ -32,17 +32,11 @@ namespace Zeltlager
 		/// <summary>
 		/// Load all lagers.
 		/// </summary>
-		/// <returns></returns>
         public virtual async Task Load()
 		{
-			//TODO
 			// Search folders for lagers
 			var folders = await ioProvider.ListContents("");
-			int lagerCount = 0;
-			while (folders.Contains(new Tuple<string, FileType>(lagerCount.ToString(), FileType.Folder)))
-				lagerCount++;
-
-			for (int i = 0; i < lagerCount; i++)
+			for (int i = 0; folders.Contains(new Tuple<string, FileType>(i.ToString(), FileType.Folder)); i++)
 			{
 				try
 				{

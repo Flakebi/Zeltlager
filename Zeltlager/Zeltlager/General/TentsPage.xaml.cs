@@ -26,7 +26,8 @@ namespace Zeltlager.General
 			int tentNumber = 0;
 			if (lager.Tents.Any())
 				tentNumber = lager.Tents.Max(t => t.Number) + 1;
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(new PacketId(), tentNumber, "", true, new List<Member>()), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(
+				new Tent(null, tentNumber, "", true, new List<Member>()), true, lager)), true);
 		}
 
 		void OnContextActionEdit(Tent tent)

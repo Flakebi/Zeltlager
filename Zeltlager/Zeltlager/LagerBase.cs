@@ -71,15 +71,7 @@ namespace Zeltlager
 				await serialiser.Read(input, context, this);
 
 			Status = await ReadLagerStatus();
-
-			//TODO
 		}
-
-        public virtual async Task<DataPacketBundle> LoadBundle(PacketId id)
-        {
-            //TODO
-            return null;
-        }
 
         public virtual async Task Save()
         {
@@ -87,8 +79,6 @@ namespace Zeltlager
             // Load the lager data
             using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(LAGER_FILE)))
                 await serialiser.Write(output, context, this);
-
-            //TODO
         }
 
 		/// <summary>
@@ -109,19 +99,20 @@ namespace Zeltlager
 				{
 					// Read the collaborator if possible
 					IIoProvider rootedIo = new RootedIoProvider(ioProvider, collaboratorId.ToString());
+					Collaborator collaborator = new Collaborator();
+					collaborator.Id = collaboratorId;
+					LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+					context.PacketId = new PacketId(collaborator);
+
 					using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(COLLABORATOR_FILE)))
-					{
-						Collaborator collaborator = new Collaborator();
-						LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
-						context.PacketId = new PacketId(collaborator);
 						await serialiser.Read(input, context, collaborator);
-						// Find out how many bundles this collaborator has
-						var files = await rootedIo.ListContents("");
-						int bundleCount = 0;
-						while (files.Contains(new Tuple<string, FileType>(bundleCount.ToString(), FileType.File)))
-							bundleCount++;
-						status.BundleCount.Add(new Tuple<Collaborator, int>(collaborator, bundleCount));
-					}
+
+					// Find out how many bundles this collaborator has
+					var files = await rootedIo.ListContents("");
+					int bundleCount = 0;
+					while (files.Contains(new Tuple<string, FileType>(bundleCount.ToString(), FileType.File)))
+						bundleCount++;
+					status.BundleCount.Add(new Tuple<Collaborator, int>(collaborator, bundleCount));
 				}
 			} catch (Exception e)
 			{
@@ -139,6 +130,38 @@ namespace Zeltlager
             Array.Copy(data, signedData, signedData.Length);
             if (!await LagerManager.CryptoProvider.Verify(AsymmetricKey, signature, signedData))
 				throw new InvalidDataException("The signature of the lager is wrong");
+		}
+
+		string GetBundlePath(PacketId id)
+		{
+			// Get the local collaborator id
+			int collaboratorId = Status.BundleCount.FindIndex(c => c.Item1 == id.Creator);
+			return Path.Combine(collaboratorId.ToString(), id.Bundle.Id.ToString());
+		}
+
+		public async Task<DataPacketBundle> LoadBundle(Collaborator creator, int bundleId)
+		{
+			DataPacketBundle bundle = new DataPacketBundle();
+			bundle.Id = bundleId;
+			PacketId id = new PacketId(creator);
+			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+			context.PacketId = id;
+
+			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(GetBundlePath(id))))
+				return await serialiser.Read(input, context, bundle);
+		}
+
+		public async Task SaveBundle(PacketId id)
+		{
+			using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(GetBundlePath(id))))
+				await SerialiseBundle(output, id);
+		}
+
+		protected virtual async Task SerialiseBundle(BinaryWriter output, PacketId id)
+		{
+			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+			context.PacketId = id;
+			await serialiser.Write(output, context, id.Bundle);
 		}
 
 		// Serialisation with a LagerSerialisationContext

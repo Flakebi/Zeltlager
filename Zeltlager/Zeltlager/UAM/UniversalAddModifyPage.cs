@@ -8,13 +8,15 @@ using Xamarin.Forms;
 namespace Zeltlager.UAM
 {
 	using Client;
+	using DataPackets;
+	using Serialisation;
 
 	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
 	{
 		public T Obj { get; }
 		T oldObj;
 		readonly bool isAddPage;
-		LagerClient lager;
+		readonly LagerClient lager;
 
 		static readonly Type[] NUM_TYPES = {
 			typeof(byte),
@@ -148,7 +150,9 @@ namespace Zeltlager.UAM
 		{
 			if (isAddPage)
 				oldObj = default(T);
-			await Obj.OnSaveEditing(oldObj);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);
+			context.PacketId = new PacketId(lager.OwnCollaborator);
+			await Obj.OnSaveEditing(lager.ClientSerialiser, context, oldObj);
 			await Navigation.PopModalAsync(true);
 		}
 	}

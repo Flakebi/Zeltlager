@@ -173,7 +173,10 @@ namespace Zeltlager.Serialisation
 			} else
 			{
 				// Collect attributes in an array
-				var attributes = GetFieldData(type, obj).ToArray();
+				var attributesEnumerable = GetFieldData(type, obj);
+				if (!writeIds)
+					attributesEnumerable = attributesEnumerable.Where(a => a.Attribute.Type != SerialisationType.Id);
+				var attributes = attributesEnumerable.ToArray();
 				foreach (var attribute in attributes)
 					await WriteField(output, context, attribute);
 			}
@@ -339,7 +342,10 @@ namespace Zeltlager.Serialisation
 			} else
 			{
 				// Collect attributes in an array
-				var attributes = GetFieldData(type, obj).ToArray();
+				var attributesEnumerable = GetFieldData(type, obj);
+				if (!writeIds)
+					attributesEnumerable = attributesEnumerable.Where(a => a.Attribute.Type != SerialisationType.Id);
+				var attributes = attributesEnumerable.ToArray();
 				// Read all attributes and set the fields of the object
 				foreach (var attribute in attributes)
 				{

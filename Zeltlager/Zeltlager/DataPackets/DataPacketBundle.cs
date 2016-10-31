@@ -115,7 +115,7 @@ namespace Zeltlager.DataPackets
 				// Write iv
 				output.Write(iv);
 				// Write encrypted packet data
-				output.Write(await LagerManager.CryptoProvider.EncryptSymetric(context.LagerClient.SymmetricKey, iv, data));
+				output.Write(await LagerManager.CryptoProvider.EncryptSymetric(context.LagerClient.SymmetricKey, iv, packed));
 			}
 			byte[] encryptedData = mem.ToArray();
 
@@ -164,7 +164,6 @@ namespace Zeltlager.DataPackets
 
 		async Task Deserialise(LagerClientSerialisationContext context)
 		{
-			byte[] signature = new byte[CryptoConstants.SIGNATURE_LENGTH];
 			var verificationResult = await VerifyAndGetEncryptedData(context);
 			byte[] unencryptedData = await LagerManager.CryptoProvider.DecryptSymetric(
 				context.LagerClient.SymmetricKey, verificationResult.Item1, verificationResult.Item2);

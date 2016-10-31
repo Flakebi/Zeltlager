@@ -27,6 +27,11 @@ namespace Zeltlager
 	public class Collaborator : ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>
 	{
 		/// <summary>
+		/// The id that this collaborator has on the server.
+		/// </summary>
+		public int Id { get; set; }
+		
+		/// <summary>
 		/// The data of this collaborator.
 		/// This contains the public key of this collaborator, signed with
 		/// the private lager key. This data is signed with the private
@@ -62,7 +67,7 @@ namespace Zeltlager
 		{
 			if (bundles.ContainsKey(id))
 				throw new InvalidOperationException("Can't add a packet bundle with an id that is already taken");
-			bundles[id] = bundle;
+			bundles.Add(id, bundle);
 		}
 
 		/// <summary>
@@ -118,7 +123,7 @@ namespace Zeltlager
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			// Get our collaborator id from the LagerStatus
-			output.Write(context.Lager.Status.BundleCount.FindIndex(c => c.Item1 == this));
+			output.Write(Id);
 			return new Task(() => { });
 		}
 
@@ -142,7 +147,8 @@ namespace Zeltlager
 		public static Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			int id = input.ReadInt32();
-			return Task.FromResult(context.Lager.Status.BundleCount[id].Item1);
+			Collaborator collaborator = context.Lager.Collaborators.Values.First(c => c.Id == id);
+			return Task.FromResult(collaborator);
 		}
 
 		// Serialisation with a LagerClientSerialisationContext

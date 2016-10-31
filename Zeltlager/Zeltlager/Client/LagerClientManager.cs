@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Client
 {
-    public class ClientLagerManager : LagerManager
+    public class LagerClientManager : LagerManager
     {
         public ClientSettings Settings { get; private set; }
         
-        public ClientLagerManager(IIoProvider io) : base(io)
+        public LagerClientManager(IIoProvider io) : base(io)
         {
             Settings = new ClientSettings();
         }
@@ -33,11 +33,11 @@ namespace Zeltlager.Client
             IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
             LagerClient lager = new LagerClient(this, io, id);
             await lager.Init(name, password, statusUpdate);
-            // Save tha lager
+            // Save the lager
             await lager.Save();
 
-            // Store lager as last used lager
-            lagers[id] = lager;
+			// Store lager as last used lager
+			lagers.Add(id, lager);
             Settings.LastLager = id;
             await Settings.Save(ioProvider);
             return lager;

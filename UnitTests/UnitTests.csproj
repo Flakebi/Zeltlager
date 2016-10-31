@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="SerialisationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DiscardIoProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zeltlager\Zeltlager\Zeltlager.csproj">

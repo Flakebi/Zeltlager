@@ -14,11 +14,11 @@ namespace Zeltlager
 			"Lagerschlüssel erstellen",
 			"Lagerzertifikat erstellen",
 			"Persönliches Zertifikat erstellen",
-			"Fertig"
+			"Lager speichern"
 		};
 
 		LoadingScreen loadingScreen;
-        ClientLagerManager manager;
+        LagerClientManager manager;
 
 		public App()
 		{
@@ -26,7 +26,7 @@ namespace Zeltlager
 
             LagerManager.IsClient = true;
 
-            manager = new ClientLagerManager(new IoProvider());
+            manager = new LagerClientManager(new IoProvider());
 
 			loadingScreen = new LoadingScreen();
 			MainPage = new NavigationPage(loadingScreen);
@@ -58,6 +58,8 @@ namespace Zeltlager
                     int lagerId = manager.Settings.LastLager;
                     lager = (LagerClient)manager.Lagers[lagerId];
 					if (!await lager.LoadBundles())
+						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden der Lagerdateien sind Fehler aufgetreten", "Ok");
+					if (!await lager.ApplyHistory())
 						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden des Lagers sind Fehler aufgetreten", "Ok");
 					loadedLager = true;
 				} catch (Exception e)
