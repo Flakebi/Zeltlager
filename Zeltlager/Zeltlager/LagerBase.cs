@@ -42,10 +42,9 @@ namespace Zeltlager
 
 		/// <summary>
 		/// The number of packets that were generated so far by each client.
-		/// For clients, the collaborator order and packet count is the one
-		/// of the server.
+		/// This is the state of the local data.
 		/// </summary>
-		public LagerStatus Status { get; set; }
+		protected LagerStatus Status;
 
 		// Crypto
 		/// <summary>

@@ -1,14 +1,11 @@
 using System;
 using System.Linq;
-using Zeltlager.DataPackets;
 
 using Xamarin.Forms;
 
 namespace Zeltlager.General
 {
-	using System.Collections.Generic;
 	using Client;
-	using DataPackets;
 	using UAM;
 
 	public partial class MembersPage : ContentPage
@@ -39,7 +36,8 @@ namespace Zeltlager.General
 
 		async void OnContextActionDelete(Member member)
 		{
-			await lager.AddPacket(new DeleteMember(member));
+			//TODO Revert packets
+			//await lager.AddPacket(new DeleteMember(member));
 		}
 	}
 }

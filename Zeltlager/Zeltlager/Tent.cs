@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-	using Client;
 	using DataPackets;
 	using Serialisation;
 	using UAM;
@@ -89,11 +88,16 @@ namespace Zeltlager
 
 		#region Interface implementations
 
-		public async Task OnSaveEditing(Tent oldObject, LagerClient lager)
+		public async Task OnSaveEditing(
+			Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context, Tent oldObject)
 		{
+            DataPacket packet;
 			if (oldObject != null)
-				await lager.AddPacket(new DeleteTent(oldObject));
-			await lager.AddPacket(new AddTent(this));
+				packet = await EditPacket.Create(serialiser, context, this);
+            else
+				packet = await AddPacket.Create(serialiser, context, this);
+			await context.LagerClient.AddPacket(packet);
 		}
 
 		public Tent Clone()
@@ -101,15 +105,9 @@ namespace Zeltlager
 			return new Tent(Id.Clone(), Number, Name, Girls, new List<Member>(supervisors));
 		}
 
-		public string SearchableText
-		{
-			get { return Display; }
-		}
+		public string SearchableText => Display;
 
-		public string SearchableDetail
-		{
-			get { return ""; }
-		}
+		public string SearchableDetail => "";
 
 		#endregion
 	}

@@ -1,9 +1,10 @@
-using System;
 using System.Threading.Tasks;
-using Zeltlager.Client;
-using Zeltlager.UAM;
+
 namespace Zeltlager.Competition
 {
+	using Serialisation;
+	using UAM;
+	
 	/// <summary>
 	/// represents a participant in a comptetion, could be a tent, a mixed group or a single person
 	/// </summary>
@@ -23,14 +24,15 @@ namespace Zeltlager.Competition
 
 		#region Interface implementation
 
-		public string SearchableText { get { return name; } }
+		public string SearchableText => name;
 
-		public string SearchableDetail { get { return ""; } }
+		public string SearchableDetail => "";
 
-		public Task OnSaveEditing(Participant oldObject, LagerClient lager)
+		public async Task OnSaveEditing(
+			Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context, Participant oldObject)
 		{
 			// TODO: Packets
-			return null;
 		}
 
 		public Participant Clone()

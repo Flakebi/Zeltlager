@@ -26,7 +26,7 @@ namespace Zeltlager.Client
             return lager;
         }
 
-        public async Task CreateLager(string name, string password,
+        public async Task<LagerClient> CreateLager(string name, string password,
             Action<LagerClient.InitStatus> statusUpdate)
         {
             int id = Lagers.Count;
@@ -40,6 +40,7 @@ namespace Zeltlager.Client
             lagers[id] = lager;
             Settings.LastLager = id;
             await Settings.Save(ioProvider);
+            return lager;
         }
     }
 }

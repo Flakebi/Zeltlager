@@ -26,11 +26,11 @@ namespace Zeltlager.DataPackets
 
 		protected EditPacket() { }
 
-		public async Task<EditPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
+        public static async Task<EditPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, object obj)
 		{
 			var packet = new EditPacket();
-			await Init(serialiser, context, obj);
+			await packet.Init(serialiser, context, obj);
 			return packet;
 		}
 

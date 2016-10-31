@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
-	using System.Threading.Tasks;
 	using Client;
 	using UAM;
+    using Serialisation;
 
 	[Editable("Wettkampf")]
 	public class Competition : IEditable<Competition>, ISearchable
@@ -21,8 +22,8 @@ namespace Zeltlager.Competition
 
 		public Competition(LagerClient lager, string name)
 		{
-			this.Lager = lager;
-			this.Name = name;
+			Lager = lager;
+			Name = name;
 		}
 
 		public void AddStation(Station station) => Stations.Add(station);
@@ -35,7 +36,9 @@ namespace Zeltlager.Competition
 
 		#region Interface implementation
 
-		public Task OnSaveEditing(Competition oldObject, LagerClient lager)
+		public Task OnSaveEditing(
+            Serialiser<LagerClientSerialisationContext> serialiser,
+            LagerClientSerialisationContext context, Competition oldObject)
 		{
 			// TODO: durch packets ersetzen
 			return null;

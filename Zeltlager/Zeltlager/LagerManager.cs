@@ -16,7 +16,6 @@ namespace Zeltlager
 		static LagerManager()
 		{
 			CryptoProvider = new BCCryptoProvider();
-			Log = new Log();
 		}
 
 		protected IIoProvider ioProvider;
@@ -26,6 +25,7 @@ namespace Zeltlager
 
         public LagerManager(IIoProvider io)
         {
+            Log = new Log(io);
             ioProvider = io;
         }
 

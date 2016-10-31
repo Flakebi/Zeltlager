@@ -20,9 +20,6 @@ namespace Zeltlager.DataPackets
 		static readonly Type[] packetTypes = {
 			typeof(AddCollaborator),
 			typeof(AddPacket),
-			//TODO Convert calendar events
-			typeof(AddCalendarEvent),
-			typeof(DeleteCalendarEvent),
 		};
 
 		/// <summary>

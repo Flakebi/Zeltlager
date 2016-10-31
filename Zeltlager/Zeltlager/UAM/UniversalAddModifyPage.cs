@@ -139,7 +139,7 @@ namespace Zeltlager.UAM
 			Padding = new Thickness(8, 15, 8, 0);
 		}
 
-		private void OnCancelClicked()
+		void OnCancelClicked()
 		{
 			Navigation.PopModalAsync(true);
 		}
@@ -148,7 +148,7 @@ namespace Zeltlager.UAM
 		{
 			if (isAddPage)
 				oldObj = default(T);
-			await Obj.OnSaveEditing(oldObj, lager);
+			await Obj.OnSaveEditing(oldObj);
 			await Navigation.PopModalAsync(true);
 		}
 	}

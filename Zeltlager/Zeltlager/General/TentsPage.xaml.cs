@@ -26,7 +26,7 @@ namespace Zeltlager.General
 			int tentNumber = 0;
 			if (lager.Tents.Any())
 				tentNumber = lager.Tents.Max(t => t.Number) + 1;
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(new TentId(), tentNumber, "", true, new List<Member>()), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent>(new Tent(new PacketId(), tentNumber, "", true, new List<Member>()), true, lager)), true);
 		}
 
 		void OnContextActionEdit(Tent tent)
@@ -36,7 +36,8 @@ namespace Zeltlager.General
 
 		async void OnContextActionDelete(Tent tent)
 		{
-			await lager.AddPacket(new DeleteTent(tent));
+			//TODO Revert packets
+			//await lager.AddPacket(new DeleteTent(tent));
 		}
 	}
 }

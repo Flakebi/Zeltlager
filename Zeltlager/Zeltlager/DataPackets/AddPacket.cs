@@ -31,11 +31,11 @@ namespace Zeltlager.DataPackets
 
 		protected AddPacket() { }
 
-		public async Task<AddPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
+        public static async Task<AddPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, object obj)
 		{
 			var packet = new AddPacket();
-			await Init(serialiser, context, obj);
+			await packet.Init(serialiser, context, obj);
 			return packet;
 		}
 

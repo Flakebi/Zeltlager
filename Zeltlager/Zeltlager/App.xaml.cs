@@ -95,23 +95,14 @@ namespace Zeltlager
 			MainPage = new NavigationPage(loadingScreen);
 			try
 			{
-                LagerClient lager = new LagerClient(manager, io, manager.Lagers.Count);
-                await lager.Init(name, password, DisplayStatus);
-				loadingScreen.Status = "Lager speichern";
-				await lager.Save();
-
-				// Add lager to settings
-				loadingScreen.Status = "Einstellungen speichern";
-                manager.Settings.LastLager = manager.Lagers.Count;
-                manager.Lagers[manager.Lagers.Count] = lager;
-				await LagerClient.ClientGlobalSettings.Save();
+                var lager = await manager.CreateLager(name, password, DisplayStatus);
 
 				// Go to the main page
 				MainPage = new NavigationPage(new MainPage(lager));
 			} catch (Exception e)
 			{
 				// Log the exception
-				await LagerBase.Log.Exception("App", e);
+                await LagerManager.Log.Exception("Creating lager", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 		}

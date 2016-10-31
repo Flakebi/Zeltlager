@@ -1,27 +1,27 @@
 using System;
-using Zeltlager.UAM;
 
 using Xamarin.Forms;
 
 namespace Zeltlager.Calendar
 {
 	using Client;
+	using UAM;
 
 	public class CalendarEventCell : ViewCell
 	{
 		LagerClient lager;
-		Label time = new Label()
+		Label time = new Label
 		{
 			VerticalTextAlignment = TextAlignment.Center,
 			HorizontalTextAlignment = TextAlignment.End,
 			TextColor = (Color)Application.Current.Resources["whiteColor"]
 		};
-		Label title = new Label()
+		Label title = new Label
 		{
 			VerticalTextAlignment = TextAlignment.Center,
 			HorizontalTextAlignment = TextAlignment.End
 		};
-		Label detail = new Label()
+		Label detail = new Label
 		{
 			VerticalTextAlignment = TextAlignment.Center,
 			HorizontalTextAlignment = TextAlignment.End,
@@ -72,7 +72,8 @@ namespace Zeltlager.Calendar
 
 		async void OnDelete(object sender, EventArgs e)
 		{
-			await lager.AddPacket(new DeleteCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter));
+			//TODO Revert packets
+			//await lager.AddPacket(new DeleteCalendarEvent((CalendarEvent)((MenuItem)sender).CommandParameter));
 		}
 	}
 }

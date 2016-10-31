@@ -65,6 +65,13 @@ namespace Zeltlager.Client
 		/// </summary>
 		int? serverId;
 
+		/// <summary>
+		/// The number of packets that were generated so far by each client.
+		/// The collaborator order and packet count is the one
+		/// of the server.
+		/// </summary>
+		LagerStatus ServerStatus;
+
 		// Crypto
 		/// <summary>
 		/// The salt used for the key derivation functions.
@@ -126,11 +133,8 @@ namespace Zeltlager.Client
 			// Load the lager client data
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(CLIENT_LAGER_FILE)))
 				await clientSerialiser.Read(input, context, this);
-
-            // Save the status
-            LagerStatus status = Status;
+			
             await base.Load();
-            Status = status;
 
 			//TODO Anything more?
 		}
@@ -144,13 +148,23 @@ namespace Zeltlager.Client
         /// </returns>
         public async Task<bool> LoadBundles()
         {
-            //TODO Read all packets
-            return false;
+			//TODO Read all packets
+			bool success = false;
+			foreach (var collaborator in )
+			{
+				
+			}
+			return success;
         }
 
         public override async Task Save()
         {
-            
+			await base.Save();
+
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			// Load the lager client data
+			using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(CLIENT_LAGER_FILE)))
+				await clientSerialiser.Write(output, context, this);
         }
 
 		/// <summary>
@@ -317,7 +331,7 @@ namespace Zeltlager.Client
 			// Decrypt the data
 			SymmetricKey = await LagerManager.CryptoProvider.DeriveSymmetricKey(password, salt);
 			byte[] unencryptedData = await LagerManager.CryptoProvider.DecryptSymetric(SymmetricKey, iv, encryptedData);
-			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
+			using (BinaryReader input = new BinaryReader(new MemoryStream(unencryptedData)))
 			{
 				Name = input.ReadString();
 				AsymmetricKey = input.ReadPrivateKey();
@@ -340,6 +354,7 @@ namespace Zeltlager.Client
 		// Serialisation with a LagerClientSerialisationContext
 		public async Task Write(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
+			//TODO Read and write the server status here
 			output.Write(password);
 			output.WritePrivateKey(ownCollaboratorPrivateKey);
 			// Write server related data only if this lager is connected to a server
