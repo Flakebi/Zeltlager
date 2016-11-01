@@ -33,32 +33,36 @@ namespace UnitTests
 				return;
 
 			// Lock
-			Monitor.Enter(monitor);
-			if (inited)
-				return;
-			inited = true;
+			try
+			{
+				Monitor.Enter(monitor);
+				if (inited)
+					return;
 
-			LagerManager.IsClient = true;
+				LagerManager.IsClient = true;
 
-			manager = new LagerClientManager(new DiscardIoProvider());
-			await manager.CreateLager("Testlager", "secure passwörd", null);
-			lager = (LagerClient)manager.Lagers[0];
-			ownCollaborator = lager.OwnCollaborator;
-			serialiser = new Serialiser<LagerClientSerialisationContext>();
-			context = new LagerClientSerialisationContext(manager, lager);
-			context.PacketId = new PacketId(ownCollaborator);
+				manager = new LagerClientManager(new DiscardIoProvider());
+				await manager.CreateLager("Testlager", "secure passwörd", null);
+				lager = (LagerClient)manager.Lagers[0];
+				ownCollaborator = lager.OwnCollaborator;
+				serialiser = new Serialiser<LagerClientSerialisationContext>();
+				context = new LagerClientSerialisationContext(manager, lager);
+				context.PacketId = new PacketId(ownCollaborator);
 
-			tent = new Tent(null, 0, "Tent", false, new List<Member>());
-			member = new Member(null, "Member", tent, true);
+				tent = new Tent(null, 0, "Tent", false, new List<Member>());
+				await lager.AddPacket(await AddPacket.Create(serialiser, context, tent));
+				// Get the newly created objects
+				tent = lager.Tents.First();
 
-			await lager.AddPacket(await AddPacket.Create(serialiser, context, tent));
-			await lager.AddPacket(await AddPacket.Create(serialiser, context, member));
+				member = new Member(null, "Member", tent, true);
+				await lager.AddPacket(await AddPacket.Create(serialiser, context, member));
+				member = lager.Members.First();
 
-			// Get the newly created objects
-			tent = lager.Tents.First();
-			member = lager.Members.First();
-
-			Monitor.Exit(monitor);
+				inited = true;
+			} finally
+			{
+				Monitor.Exit(monitor);
+			}
 		}
 
 		[Test]

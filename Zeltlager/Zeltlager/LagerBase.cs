@@ -175,7 +175,7 @@ namespace Zeltlager
 			LagerSerialisationContext context)
 		{
 			output.Write(Id);
-			return new Task(() => { });
+			return Task.WhenAll();
 		}
 
 		public virtual async Task Read(BinaryReader input,

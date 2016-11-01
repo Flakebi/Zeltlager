@@ -14,6 +14,7 @@ namespace Zeltlager
 	{
 		/// <summary>
 		/// The collaborator list saves the bundle count for each collaborator.
+		/// This is the next bundle id that can be uploaded to the server.
 		/// The index in this list is the collaborator id as seen from the owner of this object.
 		/// </summary>
 		public List<Tuple<Collaborator, int>> BundleCount { get; private set; }

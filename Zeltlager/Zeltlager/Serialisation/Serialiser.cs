@@ -350,6 +350,13 @@ namespace Zeltlager.Serialisation
 				foreach (var attribute in attributes)
 				{
 					await ReadField(input, context, attribute);
+					if (obj == null)
+					{
+						// Check for a default constructor to create the object
+						var constructor = typeInfo.DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
+						if (constructor != null)
+							obj = constructor.Invoke(new object[0]);
+					}
 					if (attribute.Field != null)
 						attribute.Field.SetValue(obj, attribute.Value);
 					else

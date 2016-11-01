@@ -75,10 +75,9 @@ namespace Zeltlager
 		public bool RemoveSupervisor(Member supervisor) => supervisors.Remove(supervisor);
 
 		// Add the member to a lager after deserialising it
-		protected void Add(LagerClientSerialisationContext context)
+		public void Add(LagerClientSerialisationContext context)
 		{
-			// Reset the collaborator in the id to prevent spoofing
-			Id = Id.Clone(context.PacketId.Creator);
+			Id = context.PacketId;
 			context.LagerClient.AddTent(this);
 		}
 

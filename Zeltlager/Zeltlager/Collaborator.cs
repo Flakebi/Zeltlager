@@ -41,12 +41,15 @@ namespace Zeltlager
 
 		public KeyPair Key { get; private set; }
 
+		Dictionary<PacketId, Collaborator> collaborators = new Dictionary<PacketId, Collaborator>();
 		/// <summary>
 		/// The list of collaborators (indexed by the id) as of this collaborators view point.
 		/// </summary>
-		Dictionary<PacketId, Collaborator> collaborators = new Dictionary<PacketId, Collaborator>();
 		public Dictionary<PacketId, Collaborator> Collaborators => collaborators;
 		Dictionary<int, DataPacketBundle> bundles = new Dictionary<int, DataPacketBundle>();
+		/// <summary>
+		/// The list of bundles of a collaborator indexed by their id.
+		/// </summary>
 		public IReadOnlyDictionary<int, DataPacketBundle> Bundles => bundles;
 
 		public Collaborator() { }
@@ -124,7 +127,7 @@ namespace Zeltlager
 		{
 			// Get our collaborator id from the LagerStatus
 			output.Write(Id);
-			return new Task(() => { });
+			return Task.WhenAll();
 		}
 
 		public Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)

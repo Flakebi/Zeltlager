@@ -13,16 +13,15 @@ namespace Zeltlager.DataPackets
 	/// Represents a bundle of encrypted packets.
 	///
 	/// Serialising a DataPacketBundle will write its data.
-	/// If it is serialised with a LagerClientSerialisationContext,
-	/// the data will be automatically created from the Packets list.
+	/// Only serialise a DataPacketBundle with a LagerSerialisationContext.
 	/// </summary>
-	public class DataPacketBundle : ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>
+	public class DataPacketBundle : ISerialisable<LagerSerialisationContext>
 	{
-		//TODO Change this into a maximum size (except if it's only one packet)
 		/// <summary>
-		/// The maximum number of packets in one bundle.
+		/// The maximum number of bytes in one bundle
+		/// (except if it contains only one packet).
 		/// </summary>
-		public const byte MAX_PACKETS = 255;
+		public const int MAX_PACKET_SIZE = 1024;
 
 		public int Id { get; set; }
 
@@ -39,11 +38,11 @@ namespace Zeltlager.DataPackets
 		/// </summary>
 		byte[] data;
 
-		public DataPacketBundle() { }
+		public int Size => data.Length;
 
-		public DataPacketBundle(DataPacket[] packets)
+		public DataPacketBundle()
 		{
-			this.packets = new List<DataPacket>(packets);
+			data = new byte[0];
 		}
 
 		public DataPacketBundle(byte[] data)
@@ -90,8 +89,8 @@ namespace Zeltlager.DataPackets
 				{
 					int length = input.ReadInt32();
 					byte[] bs = input.ReadBytes(length);
-                    PacketId id = context.PacketId.Clone(i);
-                    packets.Add(DataPacket.ReadPacket(id, bs));
+					PacketId id = context.PacketId.Clone(i);
+					packets.Add(DataPacket.ReadPacket(id, bs));
 				}
 			}
 		}
@@ -167,7 +166,7 @@ namespace Zeltlager.DataPackets
 			var verificationResult = await VerifyAndGetEncryptedData(context);
 			byte[] unencryptedData = await LagerManager.CryptoProvider.DecryptSymetric(
 				context.LagerClient.SymmetricKey, verificationResult.Item1, verificationResult.Item2);
-            Unpack(context, unencryptedData);
+			Unpack(context, unencryptedData);
 		}
 
 		public async Task<Tuple<PacketId, DataPacket>[]> GetPackets(LagerClientSerialisationContext context)
@@ -185,14 +184,14 @@ namespace Zeltlager.DataPackets
 			return result;
 		}
 
-		public void AddPacket(DataPacket packet)
+		public async Task AddPacket(LagerClientSerialisationContext context, DataPacket packet)
 		{
-			data = null;
 			if (packets == null)
 				packets = new List<DataPacket>();
-			if (packets.Count == MAX_PACKETS)
+			if (packets.Count != 0 && Size >= MAX_PACKET_SIZE)
 				throw new InvalidOperationException("The bundle can't contain more packets");
 			packets.Add(packet);
+			await Serialise(context);
 		}
 
 		// Serialisation with a LagerSerialisationContext
@@ -220,31 +219,6 @@ namespace Zeltlager.DataPackets
 			// Update the context
 			context.PacketId = context.PacketId.Clone(bundle);
 			return Task.FromResult(bundle);
-		}
-
-		// Serialisation with a LagerClientSerialisationContext
-		public async Task Write(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			if (data == null)
-				await Serialise(context);
-			await serialiser.Write(output, context, data);
-		}
-
-		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			// Bundle ids should be serialised with a LagerSerialisationContext only
-			throw new InvalidOperationException("Can't serialise the id of a packet bundle");
-		}
-
-		public async Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			data = await serialiser.Read<byte[]>(input, context, null);
-			packets = null;
-		}
-
-		public static Task<DataPacketBundle> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			throw new InvalidOperationException("Can't deserialise the id of a packet bundle");
 		}
 	}
 }

@@ -53,10 +53,6 @@ namespace Zeltlager.Client
 		/// The private key of our own collaborator.
 		/// </summary>
 		KeyPair ownCollaboratorPrivateKey;
-		/// <summary>
-		/// Bundles that were created but not yet sent to the server.
-		/// </summary>
-		List<DataPacketBundle> newBundles = new List<DataPacketBundle>();
 
 		/// <summary>
 		/// The id of this lager on the server.
@@ -250,23 +246,29 @@ namespace Zeltlager.Client
 		{
 			DataPacketBundle bundle;
 			// Check if a usable bundle exists
-			if (!newBundles.Any() || newBundles.Last().Packets.Count == DataPacketBundle.MAX_PACKETS)
+			// A bundle is usable if it was not already synchronised with the server
+			// and if it contains free space.
+			int maxBundleId = OwnCollaborator.Bundles.Any() ? OwnCollaborator.Bundles.Keys.Max() : -1;
+			if (OwnCollaborator.Bundles.Any() &&
+				(serverStatus == null || serverStatus.BundleCount.First(c => c.Item1 == OwnCollaborator).Item2 < maxBundleId) &&
+				OwnCollaborator.Bundles[maxBundleId].Size < DataPacketBundle.MAX_PACKET_SIZE)
+				bundle = OwnCollaborator.Bundles[maxBundleId];
+			else
 			{
 				bundle = new DataPacketBundle();
-				bundle.Id = newBundles.Count;
-				newBundles.Add(bundle);
-			} else
-				bundle = newBundles.Last();
-			bundle.AddPacket(packet);
+				bundle.Id = maxBundleId + 1;
+				OwnCollaborator.AddBundle(bundle.Id, bundle);
+
+			}
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			PacketId id = new PacketId(OwnCollaborator, bundle, bundle.Packets?.Count);
+			context.PacketId = id;
+			await bundle.AddPacket(context, packet);
 
 			// First, write the packet to disk
-			//TODO Write the bundle to the new packets folder
-			PacketId id = new PacketId(OwnCollaborator, bundle, bundle.Packets.Count - 1);
 			await SaveBundle(id);
 
 			// Then deserialise it to apply it
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
-			context.PacketId = id;
 			await packet.Deserialise(ClientSerialiser, context);
 		}
 

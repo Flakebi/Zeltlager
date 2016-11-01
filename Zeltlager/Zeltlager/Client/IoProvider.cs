@@ -14,9 +14,12 @@ namespace Zeltlager.Client
 		{
 			List<string> parts = new List<string>();
 			string s = path;
-			parts.Add(Path.GetFileName(s));
-			while (!string.IsNullOrEmpty(s = Path.GetDirectoryName(s)))
+			if (!string.IsNullOrEmpty(s))
+			{
 				parts.Add(Path.GetFileName(s));
+				while (!string.IsNullOrEmpty(s = Path.GetDirectoryName(s)))
+					parts.Add(Path.GetFileName(s));
+			}
 			return parts.Where(p => !string.IsNullOrEmpty(p)).Reverse().ToArray();
 		}
 
