@@ -148,6 +148,8 @@ namespace Zeltlager
 		{
 			int id = input.ReadInt32();
 			Collaborator collaborator = context.Lager.Collaborators.Values.First(c => c.Id == id);
+			// Update the context
+			context.PacketId = context.PacketId.Clone(collaborator);
 			return Task.FromResult(collaborator);
 		}
 

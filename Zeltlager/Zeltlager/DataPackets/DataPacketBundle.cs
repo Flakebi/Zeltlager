@@ -203,7 +203,8 @@ namespace Zeltlager.DataPackets
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			throw new InvalidOperationException("Can't serialise the id of a packet bundle");
+			output.Write(Id);
+			return Task.WhenAll();
 		}
 
 		public async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
@@ -214,7 +215,11 @@ namespace Zeltlager.DataPackets
 
 		public static Task<DataPacketBundle> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			throw new InvalidOperationException("Can't serialise the id of a packet bundle");
+			int id = input.ReadInt32();
+			DataPacketBundle bundle = context.PacketId.Creator.Bundles[id];
+			// Update the context
+			context.PacketId = context.PacketId.Clone(bundle);
+			return Task.FromResult(bundle);
 		}
 
 		// Serialisation with a LagerClientSerialisationContext
@@ -227,6 +232,7 @@ namespace Zeltlager.DataPackets
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
+			// Bundle ids should be serialised with a LagerSerialisationContext only
 			throw new InvalidOperationException("Can't serialise the id of a packet bundle");
 		}
 
@@ -238,7 +244,7 @@ namespace Zeltlager.DataPackets
 
 		public static Task<DataPacketBundle> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			throw new InvalidOperationException("Can't serialise the id of a packet bundle");
+			throw new InvalidOperationException("Can't deserialise the id of a packet bundle");
 		}
 	}
 }
