@@ -328,10 +328,14 @@ namespace Zeltlager.Client
 			return t;
 		}
 
-		//create some test data if a new lager is created
+		/// <summary>
+		/// Create some test data if a new lager is created
+		/// </summary>
 		public async Task CreateTestData()
 		{
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			context.PacketId = new PacketId(OwnCollaborator);
+
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
 				new Tent(null, 0, "Tiger", false, new List<Member>())));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
