@@ -329,19 +329,30 @@ namespace Zeltlager.Client
 		}
 
 		//create some test data if a new lager is created
-		public async Task createTestData()
+		public async Task CreateTestData()
 		{
-			await AddPacket(new AddTent(new Tent(new TentId(ownCollaborator, 0), 0, "Tiger", false, new List<Member>())));
-			await AddPacket(new AddTent(new Tent(new TentId(ownCollaborator, 1), 1, "Giraffen", false, new List<Member>())));
-			await AddPacket(new AddTent(new Tent(new TentId(ownCollaborator, 2), 2, "Seepferdchen", false, new List<Member>())));
-			await AddPacket(new AddTent(new Tent(new TentId(ownCollaborator, 3), 3, "Pinguine", false, new List<Member>())));
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Tent(null, 0, "Tiger", false, new List<Member>())));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Tent(null, 1, "Giraffen", false, new List<Member>())));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Tent(null, 2, "Seepferdchen", false, new List<Member>())));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Tent(null, 3, "Pinguine", false, new List<Member>())));
 
-			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 0), "Anna", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));
-			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 1), "Bernd", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));
-			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 2), "Claudius", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
-			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 3), "Don", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
-			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 4), "Emily", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
-			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 5), "Franz", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Member(null, "Anna", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Member(null, "Bernd", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Member(null, "Claudius", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Member(null, "Don", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Member(null, "Emily", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Member(null, "Franz", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
 		}
 	
 		/// <summary>

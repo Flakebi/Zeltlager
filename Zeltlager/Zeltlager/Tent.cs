@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using Client;
 	using DataPackets;
 	using Serialisation;
 	using UAM;
@@ -31,7 +32,6 @@ namespace Zeltlager
 
 		[Editable("Zeltbetreuer")]	
 		public IReadOnlyList<Member> Supervisors => supervisors;
-		public List<Member> Supervisors { get { return supervisors; } }
 
 		public string Display => Number + " " + Name + " " + (Girls ? "♀" : "♂");
 

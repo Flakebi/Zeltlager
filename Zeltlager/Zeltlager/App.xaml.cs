@@ -99,7 +99,7 @@ namespace Zeltlager
 			{
                 var lager = await manager.CreateLager(name, password, DisplayStatus);
 				// fill with some test data
-				await lager.createTestData();
+				await lager.CreateTestData();
 
 
 
