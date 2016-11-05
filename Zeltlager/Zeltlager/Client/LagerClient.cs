@@ -383,20 +383,26 @@ namespace Zeltlager.Client
 		}
 
         // Serialisation with a LagerSerialisationContext
-		public override async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public override async Task Write(BinaryWriter output,
+			Serialiser<LagerSerialisationContext> serialiser,
+			LagerSerialisationContext context)
 		{
 			await Serialise();
 			await base.Write(output, serialiser, context);
 		}
 
-		public override async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public override async Task Read(BinaryReader input,
+			Serialiser<LagerSerialisationContext> serialiser,
+			LagerSerialisationContext context)
 		{
 			await base.Read(input, serialiser, context);
 			await Deserialise();
 		}
 
 		// Serialisation with a LagerClientSerialisationContext
-		public async Task Write(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
+		public async Task Write(BinaryWriter output,
+			Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context)
 		{
 			output.Write(password);
 			output.WritePrivateKey(ownCollaboratorPrivateKey);

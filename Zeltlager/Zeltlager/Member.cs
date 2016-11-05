@@ -44,8 +44,7 @@ namespace Zeltlager
 		}
 
 		// For deserialisetion
-		public Member(LagerClientSerialisationContext context) : this()
-		{ }
+		public Member(LagerClientSerialisationContext context) : this() { }
 
 		public Member(PacketId id, string name, Tent tent, bool supervisor)
 		{
@@ -97,6 +96,11 @@ namespace Zeltlager
 			if (other == null)
 				return false;
 			return Name == other.Name && Supervisor == other.Supervisor && Tent.Equals(other.Tent);
+		}
+
+		public override int GetHashCode()
+		{
+			return Name.GetHashCode() ^ Supervisor.GetHashCode() ^ Tent.GetHashCode();
 		}
 	}
 }
