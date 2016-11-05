@@ -21,7 +21,7 @@ namespace Zeltlager
 		/// </summary>
 		protected const int VERSION = 0;
 		const string LAGER_FILE = "lager.data";
-		const string COLLABORATOR_FILE = "collaborator.data";
+		protected const string COLLABORATOR_FILE = "collaborator.data";
 
 		public LagerManager Manager { get; private set; }
 		public readonly int Id;
@@ -71,6 +71,7 @@ namespace Zeltlager
 				await serialiser.Read(input, context, this);
 
 			Status = await ReadLagerStatus();
+			collaborators = Status.BundleCount.Select(c => c.Item1).ToDictionary(c => c.Key);
 		}
 
         public virtual async Task Save()
@@ -143,7 +144,7 @@ namespace Zeltlager
 		{
 			DataPacketBundle bundle = new DataPacketBundle();
 			bundle.Id = bundleId;
-			PacketId id = new PacketId(creator);
+			PacketId id = new PacketId(creator, bundle);
 			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
 			context.PacketId = id;
 

@@ -39,7 +39,7 @@ namespace Zeltlager
 		/// </summary>
 		byte[] data;
 
-		public KeyPair Key { get; private set; }
+		public KeyPair Key { get; set; }
 
 		Dictionary<PacketId, Collaborator> collaborators = new Dictionary<PacketId, Collaborator>();
 		/// <summary>
@@ -130,24 +130,21 @@ namespace Zeltlager
 			return Task.WhenAll();
 		}
 
-		public Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public async Task Read(BinaryReader input,
+			Serialiser<LagerSerialisationContext> serialiser,
+			LagerSerialisationContext context)
 		{
-			// Copy the key into the data array
-			Key = input.ReadPublicKey();
-			MemoryStream mem = new MemoryStream();
-			using (BinaryWriter writer = new BinaryWriter(mem))
-				writer.WritePublicKey(Key);
-			byte[] keyData = mem.ToArray();
-			data = new byte[keyData.Length + 2 * CryptoConstants.SIGNATURE_LENGTH];
-			Array.Copy(keyData, data, keyData.Length);
-
-			// Copy the signatures
-			Array.Copy(input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH * 2), 0,
-				data, keyData.Length, CryptoConstants.SIGNATURE_LENGTH * 2);
-			return Verify(context);
+			data = await serialiser.Read<byte[]>(input, context, null);
+			// Read the key
+			MemoryStream mem = new MemoryStream(data);
+			using (BinaryReader reader = new BinaryReader(mem))
+				Key = reader.ReadPublicKey();
+			await Verify(context);
 		}
 
-		public static Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public static Task<Collaborator> ReadFromId(BinaryReader input,
+			Serialiser<LagerSerialisationContext> serialiser,
+			LagerSerialisationContext context)
 		{
 			int id = input.ReadInt32();
 			Collaborator collaborator = context.Lager.Collaborators.Values.First(c => c.Id == id);
@@ -157,7 +154,9 @@ namespace Zeltlager
 		}
 
 		// Serialisation with a LagerClientSerialisationContext
-		public Task Write(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
+		public Task Write(BinaryWriter output,
+			Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context)
 		{
 			output.WritePublicKey(Key);
 			return Task.WhenAll();

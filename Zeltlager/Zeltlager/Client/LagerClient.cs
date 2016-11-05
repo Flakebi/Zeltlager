@@ -108,13 +108,17 @@ namespace Zeltlager.Client
 			ownCollaboratorPrivateKey = await LagerManager.CryptoProvider.CreateAsymmetricKey();
 			OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);
 			collaborators.Add(ownCollaboratorPrivateKey, OwnCollaborator);
+			// Save the new collaborator
+			IIoProvider io = new RootedIoProvider(ioProvider, OwnCollaborator.Id.ToString());
+			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(COLLABORATOR_FILE)))
+				await serialiser.Write(output, new LagerSerialisationContext(Manager, this), OwnCollaborator);
 
 			// Set the lager status
 			Status = new LagerStatus();
 			Status.BundleCount.Add(new Tuple<Collaborator, int>(OwnCollaborator, 0));
 
-            // Save the lager
-            await Save();
+			// Save the lager
+			await Save();
 
 			// Add the collaborator to his own list
 			var context = new LagerClientSerialisationContext(Manager, this);
@@ -131,41 +135,39 @@ namespace Zeltlager.Client
 			// Load the lager client data
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(CLIENT_LAGER_FILE)))
 				await ClientSerialiser.Read(input, context, this);
-			
-            await base.Load();
+
+			await base.Load();
+			var oldCollaborators = collaborators;
 
 			// Unite the read collaborators of the lager status and the server lager status
 			// Only key and id are available in the collaborators in the server status and collaborator
-			// list so take the id and write it into the collaborators of the lager status.
-			var newBundleCount = serverStatus.BundleCount
-				.Select(c =>
-				{
-					var collaborator = collaborators[c.Item1.Key];
-					collaborator.Id = c.Item1.Id;
-					return new Tuple<Collaborator, int>(collaborator, c.Item2);
-				}).ToList();
-			serverStatus.BundleCount.Clear();
-			serverStatus.BundleCount.AddRange(newBundleCount);
-
-			// Take the collaborators of the lager status
-			collaborators.Clear();
-			// Add collaborators to collaborator list
-			foreach (var c in Status.BundleCount)
+			// list so take the them and write it into the collaborators of the lager status.
+			collaborators = oldCollaborators.Select(c =>
 			{
-				var collaborator = c.Item1;
-				collaborators.Add(collaborator.Key, collaborator);
+				var cNew = collaborators[c.Key];
+				c.Value.Id = cNew.Id;
+				c.Value.Key = cNew.Key;
+				return c.Value;
+			}).ToDictionary(c => c.Key);
+
+			if (serverId.HasValue)
+			{
+				var newBundleCount = serverStatus.BundleCount
+					.Select(c => new Tuple<Collaborator, int>(collaborators[c.Item1.Key], c.Item2));
+				serverStatus.BundleCount.Clear();
+				serverStatus.BundleCount.AddRange(newBundleCount);
 			}
 		}
 
-        /// <summary>
-        /// Load all bundles of this lager.
-        /// </summary>
-        /// <returns>
-        /// The status of the lager loading.
-        /// true if the lager was loaded successfully, false otherwise.
-        /// </returns>
-        public async Task<bool> LoadBundles()
-        {
+		/// <summary>
+		/// Load all bundles of this lager.
+		/// </summary>
+		/// <returns>
+		/// The status of the lager loading.
+		/// true if the lager was loaded successfully, false otherwise.
+		/// </returns>
+		public async Task<bool> LoadBundles()
+		{
 			// Read all packets
 			bool success = true;
 			foreach (var collaborator in Status.BundleCount)
@@ -177,35 +179,43 @@ namespace Zeltlager.Client
 						var bundle = await LoadBundle(collaborator.Item1, i);
 						collaborator.Item1.AddBundle(i, bundle);
 					}
-				} catch(Exception e)
+				}
+				catch (Exception e)
 				{
 					await LagerManager.Log.Exception("Bundle loading", e);
 					success = false;
 				}
 			}
 			return success;
-        }
+		}
 
-        public override async Task Save()
-        {
+		public override async Task Save()
+		{
 			await base.Save();
 
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
 			// Load the lager client data
 			using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(CLIENT_LAGER_FILE)))
 				await ClientSerialiser.Write(output, context, this);
-        }
+		}
 
 		/// <summary>
 		/// Assemble the packet history from all collaborators.
 		/// This orders the packets in chronological order and removes packet bundles.
 		/// </summary>
 		/// <returns>The flat history of packets.</returns>
-		List<DataPacket> GetHistory()
+		async Task<List<DataPacket>> GetHistory()
 		{
-			return collaborators.Values.Select(col =>
-					col.Bundles.Values.Select(b => b.Packets).SelectMany(p => p)
-				)
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			return (await Task.WhenAll(collaborators.Values.Select(async col =>
+			{
+				context.PacketId = new PacketId(col);
+				return (await Task.WhenAll(col.Bundles.Values.Select(b =>
+				{
+					context.PacketId = context.PacketId.Clone(b);
+					return b.GetPackets(context);
+				}))).SelectMany(p => p).Select(p => p.Item2);
+			})))
 				// Use OrderBy which is a stable sorting algorithm
 				.SelectMany(p => p)
 				.OrderBy(packet => packet.Timestamp).ToList();
@@ -220,7 +230,7 @@ namespace Zeltlager.Client
 		/// </returns>
 		public async Task<bool> ApplyHistory()
 		{
-			List<DataPacket> history = GetHistory();
+			List<DataPacket> history = await GetHistory();
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
 			bool success = true;
 			foreach (var packet in history)
@@ -229,7 +239,8 @@ namespace Zeltlager.Client
 				{
 					context.PacketId = packet.Id;
 					await packet.Deserialise(ClientSerialiser, context);
-				} catch (Exception e)
+				}
+				catch (Exception e)
 				{
 					// Log the exception
 					await LagerManager.Log.Exception("Lager", e);
@@ -339,17 +350,19 @@ namespace Zeltlager.Client
 					writer.Write(salt);
 					writer.Write(iv);
 					writer.Write(encryptedData);
-                    writer.Flush();
+					writer.Flush();
 
-                    // Sign the data
-                    byte[] signature = await LagerManager.CryptoProvider.Sign(AsymmetricKey, mem.ToArray());
-                    writer.Write(signature);
+					// Sign the data
+					byte[] signature = await LagerManager.CryptoProvider.Sign(AsymmetricKey, mem.ToArray());
+					writer.Write(signature);
 				}
-                data = mem.ToArray();
+				data = mem.ToArray();
 			}
 		}
 
-		// Decrypt the data array.
+		/// <summary>
+		/// Decrypt the data array.
+		/// </summary>
 		async Task Deserialise()
 		{
 			// Read the encrypted data
@@ -362,7 +375,8 @@ namespace Zeltlager.Client
 				input.ReadPublicKey();
 				salt = input.ReadBytes(CryptoConstants.SALT_LENGTH);
 				iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
-				encryptedData = input.ReadBytes((int)(input.BaseStream.Length - input.BaseStream.Position));
+				encryptedData = input.ReadBytes((int)(input.BaseStream.Length
+					- input.BaseStream.Position - CryptoConstants.SIGNATURE_LENGTH));
 			}
 
 			// Decrypt the data
@@ -375,7 +389,7 @@ namespace Zeltlager.Client
 			}
 		}
 
-        // Serialisation with a LagerSerialisationContext
+		// Serialisation with a LagerSerialisationContext
 		public override async Task Write(BinaryWriter output,
 			Serialiser<LagerSerialisationContext> serialiser,
 			LagerSerialisationContext context)
@@ -420,7 +434,7 @@ namespace Zeltlager.Client
 
 		public async Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			collaborators.Clear();
+			collaborators = new Dictionary<KeyPair, Collaborator>();
 
 			password = input.ReadString();
 			ownCollaboratorPrivateKey = input.ReadPrivateKey();
@@ -450,7 +464,8 @@ namespace Zeltlager.Client
 				// Deserialise the server status with a normal serialisetion context.
 				LagerSerialisationContext lagerContext = new LagerSerialisationContext(Manager, this);
 				await this.serialiser.Read(input, lagerContext, serverStatus);
-			} else
+			}
+			else
 			{
 				OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);
 				collaborators.Add(ownCollaboratorPrivateKey, OwnCollaborator);
