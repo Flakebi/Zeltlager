@@ -20,6 +20,7 @@ namespace Zeltlager.DataPackets
 		static readonly Type[] packetTypes = {
 			typeof(AddCollaborator),
 			typeof(AddPacket),
+			typeof(EditPacket),
 		};
 
 		/// <summary>
@@ -31,21 +32,22 @@ namespace Zeltlager.DataPackets
 		{
 			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
 			{
-				int packetType = input.ReadInt32();
+				int subId = input.ReadInt32();
 				int idCount = 0;
-				for (int i = 0; i < packetTypes.Length; i++)
+				int packetType;
+				for (packetType = 0; packetType < packetTypes.Length; packetType++)
 				{
 					idCount = 1;
 					// Check if the packet type specifies an id count
-					var func = packetTypes[i].GetTypeInfo().GetDeclaredMethod("GetIdCount");
+					var func = packetTypes[packetType].GetTypeInfo().GetDeclaredMethod("GetIdCount");
 					if (func != null && func.IsStatic && func.GetParameters().Length == 0 && func.ReturnType == typeof(int))
 						idCount = (int)func.Invoke(null, new object[0]);
-					if (packetType < idCount)
+					if (subId < idCount)
 						break;
-					packetType -= idCount;
+					subId -= idCount;
 				}
 				// Invalid id
-				if (packetType >= idCount)
+				if (subId >= idCount || subId < 0)
 					// Create a new InvalidDataPacket
 					return new InvalidDataPacket(data);
 
@@ -55,7 +57,7 @@ namespace Zeltlager.DataPackets
 
 				// Fill the packet data
 				packet.Timestamp = DateTime.FromBinary(input.ReadInt64());
-				packet.subId = idCount;
+				packet.subId = subId;
 				packet.Data = input.ReadBytes((int)(input.BaseStream.Length - input.BaseStream.Position));
 				packet.Id = id;
 				return packet;
@@ -106,9 +108,9 @@ namespace Zeltlager.DataPackets
 
 					packetType += idCount;
 				}
-				idCount += subId;
+				packetType += subId;
 
-				output.Write(idCount);
+				output.Write(packetType);
 				output.Write(Timestamp.ToBinary());
 			}
 			output.Write(Data);

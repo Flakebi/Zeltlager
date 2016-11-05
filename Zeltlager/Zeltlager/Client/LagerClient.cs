@@ -108,10 +108,6 @@ namespace Zeltlager.Client
 			ownCollaboratorPrivateKey = await LagerManager.CryptoProvider.CreateAsymmetricKey();
 			OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);
 			collaborators.Add(ownCollaboratorPrivateKey, OwnCollaborator);
-			// Save the new collaborator
-			IIoProvider io = new RootedIoProvider(ioProvider, OwnCollaborator.Id.ToString());
-			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(COLLABORATOR_FILE)))
-				await serialiser.Write(output, new LagerSerialisationContext(Manager, this), OwnCollaborator);
 
 			// Set the lager status
 			Status = new LagerStatus();
@@ -119,6 +115,12 @@ namespace Zeltlager.Client
 
 			// Save the lager
 			await Save();
+
+			// Save the new collaborator
+			IIoProvider io = new RootedIoProvider(ioProvider, OwnCollaborator.Id.ToString());
+			await io.CreateFolder("");
+			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(COLLABORATOR_FILE)))
+				await serialiser.Write(output, new LagerSerialisationContext(Manager, this), OwnCollaborator);
 
 			// Add the collaborator to his own list
 			var context = new LagerClientSerialisationContext(Manager, this);
@@ -136,19 +138,20 @@ namespace Zeltlager.Client
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(CLIENT_LAGER_FILE)))
 				await ClientSerialiser.Read(input, context, this);
 
-			await base.Load();
 			var oldCollaborators = collaborators;
+			await base.Load();
 
 			// Unite the read collaborators of the lager status and the server lager status
 			// Only key and id are available in the collaborators in the server status and collaborator
 			// list so take the them and write it into the collaborators of the lager status.
-			collaborators = oldCollaborators.Select(c =>
+			collaborators = collaborators.Select(c =>
 			{
-				var cNew = collaborators[c.Key];
-				c.Value.Id = cNew.Id;
-				c.Value.Key = cNew.Key;
+				var cOld = oldCollaborators[c.Key];
+				c.Value.Id = cOld.Id;
+				c.Value.Key = cOld.Key;
 				return c.Value;
 			}).ToDictionary(c => c.Key);
+			OwnCollaborator = collaborators[ownCollaboratorPrivateKey];
 
 			if (serverId.HasValue)
 			{

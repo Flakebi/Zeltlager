@@ -22,9 +22,7 @@ namespace Zeltlager.DataPackets
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
-			{
 				await serialiser.Write(output, context, collaborator);
-			}
 			Data = mem.ToArray();
 		}
 

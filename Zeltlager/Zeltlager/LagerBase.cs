@@ -77,7 +77,9 @@ namespace Zeltlager
         public virtual async Task Save()
         {
             LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
-            // Load the lager data
+			// Create the folder if it doesn't exist
+			await ioProvider.CreateFolder("");
+            // Write the lager data
             using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(LAGER_FILE)))
                 await serialiser.Write(output, context, this);
         }
@@ -137,6 +139,8 @@ namespace Zeltlager
 		{
 			// Get the local collaborator id
 			int collaboratorId = Status.BundleCount.FindIndex(c => c.Item1 == id.Creator);
+			if (collaboratorId == -1)
+				throw new InvalidOperationException("Can't get the bundle path for an unknown collaborator");
 			return Path.Combine(collaboratorId.ToString(), id.Bundle.Id.ToString());
 		}
 

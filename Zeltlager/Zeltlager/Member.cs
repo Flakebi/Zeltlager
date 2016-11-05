@@ -81,7 +81,7 @@ namespace Zeltlager
 
 		public Member Clone()
 		{
-			return new Member(null, Name, Tent, Supervisor);
+			return new Member(Id?.Clone(), Name, Tent, Supervisor);
 		}
 
 		public string SearchableText => Display;

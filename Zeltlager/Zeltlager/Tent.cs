@@ -100,7 +100,7 @@ namespace Zeltlager
 
 		public Tent Clone()
 		{
-			return new Tent(null, Number, Name, Girls, new List<Member>(supervisors));
+			return new Tent(Id?.Clone(), Number, Name, Girls, new List<Member>(supervisors));
 		}
 
 		public string SearchableText => Display;
