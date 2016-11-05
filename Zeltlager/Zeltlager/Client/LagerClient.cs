@@ -19,7 +19,7 @@ namespace Zeltlager.Client
 	/// the lager status of the server.
 	/// Reading with a LagerClientSerialisationContext will also create the collaborator list.
 	/// </summary>
-	public class LagerClient : LagerBase, ISerialisable<LagerSerialisationContext>
+	public class LagerClient : LagerBase, ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>
 	{
 		public enum InitStatus
 		{
@@ -261,7 +261,7 @@ namespace Zeltlager.Client
 
 			}
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
-			PacketId id = new PacketId(OwnCollaborator, bundle, bundle.Packets?.Count);
+			PacketId id = new PacketId(OwnCollaborator, bundle, bundle.Packets == null ? 0 : bundle.Packets.Count);
 			context.PacketId = id;
 			await bundle.AddPacket(context, packet);
 
@@ -270,13 +270,6 @@ namespace Zeltlager.Client
 
 			// Then deserialise it to apply it
 			await packet.Deserialise(ClientSerialiser, context);
-		}
-
-		protected override async Task SerialiseBundle(BinaryWriter output, PacketId id)
-		{
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
-			context.PacketId = id;
-			await ClientSerialiser.Write(output, context, id.Bundle);
 		}
 
 		public void AddMember(Member member)
@@ -414,7 +407,9 @@ namespace Zeltlager.Client
 				foreach (var c in serverStatus.BundleCount)
 					output.WritePublicKey(c.Item1.Key);
 
-				await serialiser.Write(output, context, serverStatus);
+				// Serialise the server status with a normal serialisetion context.
+				LagerSerialisationContext lagerContext = new LagerSerialisationContext(Manager, this);
+				await this.serialiser.Write(output, lagerContext, serverStatus);
 			}
 		}
 
@@ -452,7 +447,9 @@ namespace Zeltlager.Client
 				foreach (var c in serverStatus.BundleCount)
 					collaborators.Add(c.Item1.Key, c.Item1);
 
-				await serialiser.Read(input, context, serverStatus);
+				// Deserialise the server status with a normal serialisetion context.
+				LagerSerialisationContext lagerContext = new LagerSerialisationContext(Manager, this);
+				await this.serialiser.Read(input, lagerContext, serverStatus);
 			} else
 			{
 				OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);

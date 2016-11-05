@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace UnitTests
 	public class SerialisationTests
 	{
 		bool inited;
-		object monitor = new object();
+		Semaphore semaphore = new Semaphore(1, 1);
 
 		LagerClientManager manager;
 		LagerClient lager;
@@ -35,7 +36,7 @@ namespace UnitTests
 			// Lock
 			try
 			{
-				Monitor.Enter(monitor);
+				semaphore.WaitOne();
 				if (inited)
 					return;
 
@@ -61,7 +62,7 @@ namespace UnitTests
 				inited = true;
 			} finally
 			{
-				Monitor.Exit(monitor);
+				semaphore.Release();
 			}
 		}
 

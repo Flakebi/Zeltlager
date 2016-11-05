@@ -22,7 +22,6 @@ namespace Zeltlager.DataPackets
 		public Collaborator Creator { get; private set; }
 		[Serialisation(Type = SerialisationType.Reference)]
 		public DataPacketBundle Bundle { get; private set; }
-		[Serialisation]
 		public int? PacketIndex { get; private set; }
 
 		protected PacketId() { }
@@ -71,7 +70,9 @@ namespace Zeltlager.DataPackets
 
 		public override int GetHashCode()
 		{
-			return PacketIndex.GetHashCode() ^ Creator.Key.Modulus[0].GetHashCode() ^ Bundle.Id.GetHashCode();
+			return PacketIndex.GetHashCode() ^
+				(Creator == null ? 0 : Creator.Key.Modulus[0].GetHashCode()) ^
+				(Bundle == null ? 0 : Bundle.Id.GetHashCode());
 		}
 
 		public static bool operator ==(PacketId p1, PacketId p2)
@@ -98,22 +99,30 @@ namespace Zeltlager.DataPackets
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			// Bundle ids should be serialised with a LagerSerialisationContext only
-			throw new InvalidOperationException("Can't serialise the id of a packet bundle");
+			output.Write(Bundle.Id);
+			output.Write(PacketIndex.Value);
+			return Task.WhenAll();
 		}
 
 		public async Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
 			Creator = await serialiser.ReadFromId<Collaborator>(input, context);
+			// Update the context temporary with the collaborator
+			PacketId old = context.PacketId;
+			context.PacketId = old.Clone(Creator);
 			var id = await serialiser.ReadFromId<PacketId>(input, context);
+			context.PacketId = old;
 			Bundle = id.Bundle;
 			PacketIndex = id.PacketIndex;
 		}
 
 		public static Task<PacketId> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			// Bundle ids should be serialised with a LagerSerialisationContext only
-			throw new InvalidOperationException("Can't deserialise the id of a packet bundle");
+			PacketId id = new PacketId(context.PacketId.Creator);
+			int bundleId = input.ReadInt32();
+			id.Bundle = context.PacketId.Creator.Bundles[bundleId];
+			id.PacketIndex = input.ReadInt32();
+			return Task.FromResult(id);
 		}
 	}
 }

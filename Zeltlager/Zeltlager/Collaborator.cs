@@ -178,7 +178,7 @@ namespace Zeltlager
 
 		public static async Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			PacketId id = await serialiser.Read(input, context, new PacketId(context.PacketId.Creator));
+			PacketId id = await serialiser.ReadFromId<PacketId>(input, context);
 			return context.PacketId.Creator.Collaborators[id];
 		}
 	}

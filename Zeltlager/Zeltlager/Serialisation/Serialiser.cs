@@ -177,6 +177,8 @@ namespace Zeltlager.Serialisation
 				if (!writeIds)
 					attributesEnumerable = attributesEnumerable.Where(a => a.Attribute.Type != SerialisationType.Id);
 				var attributes = attributesEnumerable.ToArray();
+				if (attributes.Length == 0)
+					throw new InvalidOperationException("You are trying to serialise an object without data");
 				foreach (var attribute in attributes)
 					await WriteField(output, context, attribute);
 			}
@@ -225,7 +227,8 @@ namespace Zeltlager.Serialisation
 						// Serialise all elements
 						foreach (var o in list)
 							await WriteId(output, context, o, elementType);
-					}
+					} else
+						throw new InvalidOperationException("You are trying to serialise an object without data");
 				} else
 				{
 					foreach (var attribute in attributes)
@@ -269,12 +272,20 @@ namespace Zeltlager.Serialisation
 		public async Task<object> Read(BinaryReader input, C context, object obj, Type type)
 		{
 			TypeInfo typeInfo = type.GetTypeInfo();
-			// Check if the object implements ISerialisable
-			ISerialisable<C> serialisable = obj as ISerialisable<C>;
 			Type nullableType = Nullable.GetUnderlyingType(type);
-			if (serialisable != null)
-				await serialisable.Read(input, this, context);
-			else if (PRIMITIVES.ContainsKey(type))
+			// Check if the object implements ISerialisable
+			if (typeof(ISerialisable<C>).GetTypeInfo().IsAssignableFrom(typeInfo))
+			{
+				if (obj == null)
+				{
+					// Check for a default constructor to create the object
+					var constructor = typeInfo.DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
+					if (constructor != null)
+						obj = constructor.Invoke(new object[0]);
+				}
+				await ((ISerialisable<C>)obj).Read(input, this, context);
+				
+			} else if (PRIMITIVES.ContainsKey(type))
 			{
 				// Check for primitives
 				// Search for the matching method
@@ -346,6 +357,8 @@ namespace Zeltlager.Serialisation
 				if (!writeIds)
 					attributesEnumerable = attributesEnumerable.Where(a => a.Attribute.Type != SerialisationType.Id);
 				var attributes = attributesEnumerable.ToArray();
+				if (attributes.Length == 0)
+					throw new InvalidOperationException("You are trying to serialise an object without data");
 				// Read all attributes and set the fields of the object
 				foreach (var attribute in attributes)
 				{
@@ -447,7 +460,8 @@ namespace Zeltlager.Serialisation
 						}
 
 						return obj;
-					}
+					} else
+						throw new InvalidOperationException("You are trying to serialise an object without data");
 				} else
 				{
 					// Read the argumenst to get the id
