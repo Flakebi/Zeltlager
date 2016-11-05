@@ -21,7 +21,7 @@ namespace Zeltlager.Calendar
 
 			Day = day;
 
-			Padding = new Thickness(0, 20, 15, 0);
+			Padding = new Thickness(10);
 
 			var dayNameLabel = new Label
 			{
@@ -32,7 +32,6 @@ namespace Zeltlager.Calendar
 
 			leftArrow = new Button
 			{
-				Margin = new Thickness(15, 0, 0, 0),
 				Text = "←",
 				FontAttributes = FontAttributes.Bold,
 				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
@@ -69,13 +68,16 @@ namespace Zeltlager.Calendar
 			if (Day.Dishwashers == null)
 			{
 				label.Text = "kein Spüldienst";
+				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 			}
 			else
 			{
-				label.Text = Day.Dishwashers.ToString();
+				label.Text = "Spüldienst: " + Day.Dishwashers.ToString();
+				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 			}
 			Label dishwasherLabel = label;
-			dishwasherLabel.HorizontalOptions = LayoutOptions.StartAndExpand;
+			dishwasherLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
+			dishwasherLabel.VerticalOptions = LayoutOptions.CenterAndExpand;
 
 			dishwashers = new StackLayout
 			{
@@ -120,6 +122,7 @@ namespace Zeltlager.Calendar
 				{
 					picker.Items.Add(tent.ToString());
 				}
+				// damit man auch wieder in den Startzustand ohne Spüldienst kommt
 				picker.Items.Add("kein Spüldienst");
 				picker.SelectedIndexChanged += (sendern, args) =>
 				{
@@ -129,6 +132,7 @@ namespace Zeltlager.Calendar
 					}
 					Day.Dishwashers = lager.GetTentFromDisplay(picker.Items[picker.SelectedIndex]);
 				};
+
 				if (Day.Dishwashers == null)
 				{
 					picker.SelectedIndex = picker.Items.IndexOf("kein Spüldienst");
@@ -137,8 +141,10 @@ namespace Zeltlager.Calendar
 				{
 					picker.SelectedIndex = picker.Items.IndexOf(Day.Dishwashers.ToString());
 				}
-				picker.HorizontalOptions = LayoutOptions.StartAndExpand;
-				picker.Style = (Style)Application.Current.Resources["BaseStyle"];
+
+				picker.HorizontalOptions = LayoutOptions.CenterAndExpand;
+				picker.VerticalOptions = LayoutOptions.CenterAndExpand;
+				//picker.Style = (Style)Application.Current.Resources["BaseStyle"];
 				dishwashers.Children.RemoveAt(0);
 				dishwashers.Children.Insert(0, picker);
 			}
@@ -148,14 +154,17 @@ namespace Zeltlager.Calendar
 				if (Day.Dishwashers == null)
 				{
 					label.Text = "kein Spüldienst";
+					label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 				}
 				else
 				{
-					label.Text = Day.Dishwashers.ToString();
+					label.Text = "Spüldienst: " + Day.Dishwashers.ToString();
+					label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 				}
 				editDishwasherButton.Text = Icons.EDIT;
 				dishwashers.Children.RemoveAt(0);
-				label.HorizontalOptions = LayoutOptions.StartAndExpand;
+				label.HorizontalOptions = LayoutOptions.CenterAndExpand;
+				label.VerticalOptions = LayoutOptions.CenterAndExpand;
 				dishwashers.Children.Insert(0, label);
 			}
 		}

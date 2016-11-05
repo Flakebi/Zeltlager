@@ -25,30 +25,50 @@ namespace Zeltlager.General
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
 			grid.RowDefinitions.Add(rd);
-			grid.Children.Add(new Label { Text = "Zeltname: "}, 0, 0);
+			grid.Children.Add(new Label
+			{
+				Text = "Zeltname: ",
+				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+			}, 0, 0);
 			grid.Children.Add(new Label { Text = tent.Name }, 1, 0);
 
 			grid.RowDefinitions.Add(rd);
-			grid.Children.Add(new Label { Text = "Zeltnummer: " }, 0, 1);
+			grid.Children.Add(new Label
+			{
+				Text = "Zeltnummer: ",
+				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+			}, 0, 1);
 			grid.Children.Add(new Label { Text = tent.Number.ToString() }, 1, 1);
 
 			grid.RowDefinitions.Add(rd);
-			grid.Children.Add(new Label { Text = "Geschlecht: " }, 0, 2);
-			grid.Children.Add(new Label { Text = tent.Girls? "♀" : "♂" }, 1, 2);
+			grid.Children.Add(new Label
+			{
+				Text = "Geschlecht: ",
+				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+			}, 0, 2);
+			grid.Children.Add(new Label { Text = tent.Girls ? "♀" : "♂" }, 1, 2);
 
 
 			grid.RowDefinitions.Add(rd);
-			grid.Children.Add(new Label { Text = "Zeltbetreuer: " }, 0, 2, 3, 4);
+			grid.Children.Add(new Label
+			{
+				Text = "Zeltbetreuer: ",
+				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+			}, 0, 2, 3, 4);
 
 			grid.RowDefinitions.Add(rdlist);
 			grid.Children.Add(new SearchableListView<Member>(tent.Supervisors, null, null, null), 0, 2, 4, 5);
 
 
 			grid.RowDefinitions.Add(rd);
-			grid.Children.Add(new Label { Text = "Zeltbewohner: " }, 0, 2, 5, 6);
+			grid.Children.Add(new Label
+			{
+				Text = "Zeltbewohner: ",
+				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+			}, 0, 2, 5, 6);
 
 			grid.RowDefinitions.Add(rdfill);
-			grid.Children.Add(new SearchableListView<Member>(lager.Members, null, null, null), 0, 2, 6, 7);
+			grid.Children.Add(new SearchableListView<Member>(tent.GetMembers(lager), null, null, null), 0, 2, 6, 7);
 
 			var scrollView = new ScrollView();
 			scrollView.Content = grid;

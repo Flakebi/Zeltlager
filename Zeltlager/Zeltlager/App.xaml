@@ -34,11 +34,11 @@
 			<Color x:Key="backgroundColor">#303030</Color>
 			<Color x:Key="textColor">White</Color>
 			<Color x:Key="buttonColor">#181832</Color>
-			<Color x:Key="textColorStandard">#73bac7</Color>
+			<Color x:Key="textColorStandard">#07BADE</Color>
 			<Color x:Key="textColorButton">#1165e3</Color>
-			<Color x:Key="separatorColor">#a500ba</Color>
+			<Color x:Key="separatorColor">#0E5EB3</Color>
 			<Color x:Key="whiteColor">#dddddd</Color>
-			<Color x:Key="textColorSecondary">#5850d4</Color>
+			<Color x:Key="textColorSecondary">#1880EF</Color>
 
 			<Style x:Key="BaseStyle" TargetType="VisualElement">
 				<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}"/>
@@ -71,8 +71,9 @@
 				<Setter Property="Tint" Value="{DynamicResource separatorColor}" />
 			</Style>
 			<Style TargetType="Picker" BasedOn="{StaticResource BaseStyle}">
+				<Setter Property="TextColor" Value="{DynamicResource textColorStandard}" />  
 			</Style>
-		</ResourceDictionary>
+			</ResourceDictionary>
 
 	</Application.Resources>
 </Application>

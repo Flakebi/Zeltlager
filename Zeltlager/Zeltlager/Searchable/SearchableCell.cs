@@ -67,20 +67,26 @@ namespace Zeltlager
 			}
 		}
 
+		MenuItem editAction, deleteAction;
+
 		public SearchableCell()
 		{
-			var editAction = new MenuItem { Text = Icons.EDIT };
+			editAction = new MenuItem { Text = Icons.EDIT };
 			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnEditCommandParameter)));
 			editAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnEditCommand)));
 			editAction.BindingContext = this;
 
-			var deleteAction = new MenuItem { Text = Icons.DELETE, IsDestructive = true };
+			deleteAction = new MenuItem { Text = Icons.DELETE, IsDestructive = true };
 			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnDeleteCommandParameter)));
 			deleteAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnDeleteCommand)));
 			deleteAction.BindingContext = this;
 
-			ContextActions.Add(editAction);
-			ContextActions.Add(deleteAction);
+			if (OnEditCommand != null)
+				ContextActions.Add(editAction);
+			if (OnDeleteCommand != null)
+				ContextActions.Add(deleteAction);
+
+			TextColor = (Color)Application.Current.Resources["textColorStandard"];
 		}
 	}
 }

@@ -18,6 +18,7 @@ namespace Zeltlager.General
 		public MembersPage(LagerClient lager)
 		{
 			InitializeComponent();
+			Padding = new Thickness(10);
 			this.lager = lager;
 			// TODO: think about what should happen if member is clicked
 			Content = new SearchableListView<Member>(lager.Members, OnContextActionEdit, OnContextActionDelete, null);

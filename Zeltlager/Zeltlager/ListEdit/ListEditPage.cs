@@ -77,7 +77,7 @@ namespace Zeltlager
 			ToolbarItems.Add(new ToolbarItem(Icons.SAVE, null, OnSaveClicked, ToolbarItemOrder.Primary, 1));
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			// make page not start directly at the top
-			Padding = new Thickness(8, 15, 8, 0);
+			Padding = new Thickness(10);
 		}
 
 		void OnUnselectedItemClicked(object sender, SelectedItemChangedEventArgs e)

@@ -25,13 +25,14 @@ namespace Zeltlager
 			// build Layout
 			StackLayout stackLayout = new StackLayout
 			{
-				VerticalOptions = LayoutOptions.FillAndExpand,
+				//VerticalOptions = LayoutOptions.FillAndExpand,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 				Orientation = StackOrientation.Vertical,
 				Spacing = 15
 			};
 			SearchBar searchBar = new SearchBar();
 			searchBar.TextChanged += OnSearch;
+			searchBar.Style = (Style)Application.Current.Resources["BaseStyle"];
 			stackLayout.Children.Add(searchBar);
 
 			listView = new ListView();
@@ -39,10 +40,13 @@ namespace Zeltlager
 			dataTemplate.SetBinding(TextCell.TextProperty, new Binding("SearchableText"));
 			dataTemplate.SetBinding(TextCell.DetailProperty, new Binding("SearchableDetail"));
 
+
 			// Bind commands for context actions
-			// TODO: if parameters are null, disable Context Actions
-			OnEdit = new Command(sender => onEdit((T)sender));
-			OnDelete = new Command(sender => onDelete((T)sender));
+			if (OnEdit != null)
+				OnEdit = new Command(sender => onEdit((T)sender));
+
+			if (OnDelete != null)
+				OnDelete = new Command(sender => onDelete((T)sender));
 			dataTemplate.SetBinding(SearchableCell.OnEditCommandParameterProperty, new Binding("."));
 			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
 			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandParameterProperty, new Binding("."));
@@ -51,23 +55,17 @@ namespace Zeltlager
 			// define what happens, if cell is selected
 			listView.ItemSelected += (sender, e) =>
 			{
-				onClick((T)listView.SelectedItem);
-				LagerBase.Log.Info("searchable list", "clicked on: " + ((T)listView.SelectedItem).SearchableText);
+				T item = (T)listView.SelectedItem;
+				if (onClick != null && item != null)
+					onClick(item);
+				listView.SelectedItem = null;
 			};
 
 			listView.ItemTemplate = dataTemplate;
 			listView.BindingContext = items;
 			listView.ItemsSource = currentItems;
 
-			var listGrid = new StackLayout
-			{
-				Spacing = 0,
-				VerticalOptions = LayoutOptions.Fill,
-				HorizontalOptions = LayoutOptions.FillAndExpand
-			};
-			listGrid.Children.Add(listView);
-
-			stackLayout.Children.Add(listGrid);
+			stackLayout.Children.Add(listView);
 
 			Content = stackLayout;
 			Style = (Style)Application.Current.Resources["BaseStyle"];

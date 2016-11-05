@@ -19,6 +19,7 @@ namespace Zeltlager
 		public LoadingScreen()
 		{
 			InitializeComponent();
+			Padding = new Thickness(10);
 			BindingContext = this;
 		}
 	}

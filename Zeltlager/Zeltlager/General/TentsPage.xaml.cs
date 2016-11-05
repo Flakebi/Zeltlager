@@ -17,6 +17,7 @@ namespace Zeltlager.General
 		public TentsPage(LagerClient lager)
 		{
 			InitializeComponent();
+			Padding = new Thickness(10);
 			this.lager = lager;
 			Content = new SearchableListView<Tent>(lager.Tents, OnContextActionEdit, OnContextActionDelete, OnTentClick);
 		}
@@ -39,7 +40,7 @@ namespace Zeltlager.General
 			await lager.AddPacket(new DeleteTent(tent));
 		}
 
-		void OnTentClick(Tent tent)
+		public void OnTentClick(Tent tent)
 		{
 			Navigation.PushAsync(new TentDetailPage(tent, lager));
 		}

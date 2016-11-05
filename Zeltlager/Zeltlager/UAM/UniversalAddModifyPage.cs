@@ -52,7 +52,8 @@ namespace Zeltlager.UAM
 
 				Label label = new Label
 				{
-					Text = pi.GetCustomAttribute<EditableAttribute>().Name + " :"
+					Text = pi.GetCustomAttribute<EditableAttribute>().Name + ": ",
+					TextColor = (Color) Application.Current.Resources["textColorSecondary"]
 				};
 				grid.Children.Add(label, 0, attributeNumber);
 
@@ -157,7 +158,7 @@ namespace Zeltlager.UAM
 			ToolbarItems.Add(new ToolbarItem(Icons.SAVE, null, OnSaveClicked, ToolbarItemOrder.Primary, 1));
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			// make page not start directly at the top
-			Padding = new Thickness(8, 15, 8, 0);
+			Padding = new Thickness(10);
 		}
 
 		private void OnCancelClicked()
