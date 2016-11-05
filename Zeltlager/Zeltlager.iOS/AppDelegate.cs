@@ -23,6 +23,7 @@ namespace Zeltlager.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+			UITableView.Appearance.SeparatorInset = UIEdgeInsets.Zero;
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 

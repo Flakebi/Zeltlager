@@ -107,11 +107,16 @@ namespace Zeltlager
 				loadingScreen.Status = "Lager speichern";
 				await lager.Save();
 
+				// fill with some test data
+				await lager.createTestData();
+
 				// Add lager to settings
 				loadingScreen.Status = "Einstellungen speichern";
 				LagerClient.ClientGlobalSettings.LastLager = (byte)LagerClient.ClientGlobalSettings.Lagers.Count;
 				LagerClient.ClientGlobalSettings.Lagers.Add(new Tuple<string, string>(name, password));
 				await LagerClient.ClientGlobalSettings.Save();
+
+
 
 				// Go to the main page
 				MainPage = new NavigationPage(new MainPage(lager));

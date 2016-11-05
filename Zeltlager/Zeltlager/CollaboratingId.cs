@@ -109,8 +109,8 @@ namespace Zeltlager
 		{
 			byte collaboratorId = input.ReadByte();
 			var collaborator = lager.Collaborators.First(c => c.Id == collaboratorId);
-			byte tentId = input.ReadByte();
-			return new MemberId(collaborator, tentId);
+			ushort memberId = input.ReadUInt16();
+			return new MemberId(collaborator, memberId);
 		}
 	}
 }

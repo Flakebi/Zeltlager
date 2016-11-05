@@ -23,7 +23,6 @@ namespace Zeltlager
 		[Serialisation]
 		public string Name { get; set; }
 
-		[Editable("Zeltbereuer")]
 		[Serialisation(Type = SerialisationType.Reference)]
 		List<Member> supervisors;
 
@@ -31,7 +30,8 @@ namespace Zeltlager
 		[Serialisation]
 		public bool Girls { get; set; }
 
-		public IReadOnlyList<Member> Supervisors { get { return supervisors; } }
+		[Editable("Zeltbetreuer")]	
+		public List<Member> Supervisors { get { return supervisors; } }
 
 		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
 

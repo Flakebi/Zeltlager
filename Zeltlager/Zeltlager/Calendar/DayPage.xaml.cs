@@ -104,13 +104,6 @@ namespace Zeltlager.Calendar
 
 			header.HorizontalOptions = LayoutOptions.FillAndExpand;
 			Content = calendarList;
-
-			//Content = new StackLayout
-			//{
-			//	VerticalOptions = LayoutOptions.FillAndExpand,
-			//	Children = { header, calendarList }
-			//};
-			//removeNavButtons();
 		}
 
 		public void OnEditDishwasherClicked(object sender, EventArgs e)
@@ -160,9 +153,9 @@ namespace Zeltlager.Calendar
 				{
 					label.Text = Day.Dishwashers.ToString();
 				}
-				label.HorizontalOptions = LayoutOptions.StartAndExpand;
 				editDishwasherButton.Text = Icons.EDIT;
 				dishwashers.Children.RemoveAt(0);
+				label.HorizontalOptions = LayoutOptions.StartAndExpand;
 				dishwashers.Children.Insert(0, label);
 			}
 		}

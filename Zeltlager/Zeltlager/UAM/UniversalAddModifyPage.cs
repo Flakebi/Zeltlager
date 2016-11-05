@@ -7,6 +7,7 @@ using Xamarin.Forms;
 
 namespace Zeltlager.UAM
 {
+	using System.Collections;
 	using Client;
 
 	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
@@ -67,18 +68,21 @@ namespace Zeltlager.UAM
 						Keyboard = Keyboard.Text
 					};
 					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
-				} else if (vartype == typeof(DateTime))
+				}
+				else if (vartype == typeof(DateTime))
 				{
 					// use date picker
 					manip = new DatePicker();
 					manip.SetBinding(DatePicker.DateProperty, new Binding(pi.Name, BindingMode.TwoWay));
-				} else if (vartype == typeof(TimeSpan))
+				}
+				else if (vartype == typeof(TimeSpan))
 				{
 					// use time picker
 					var tp = new TimePicker();
 					tp.SetBinding(TimePicker.TimeProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = tp;
-				} else if (numtypes.Contains(vartype))
+				}
+				else if (numtypes.Contains(vartype))
 				{
 					// use entry with num Keyboard
 					manip = new Entry
@@ -86,7 +90,8 @@ namespace Zeltlager.UAM
 						Keyboard = Keyboard.Numeric
 					};
 					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
-				} else if (vartype == typeof(Tent))
+				}
+				else if (vartype == typeof(Tent))
 				{
 					// use picker filled with all tents
 					Picker picker = new Picker();
@@ -101,17 +106,42 @@ namespace Zeltlager.UAM
 					};
 					picker.SelectedIndex = 0;
 					manip = picker;
-				} else if (vartype == typeof(bool))
+				}
+				else if (vartype == typeof(bool))
 				{
 					// use switch
 					var sw = new Switch();
 					//sw.IsToggled = (bool) type.GetRuntimeProperty(pi.Name).GetValue(Obj);
 					sw.SetBinding(Switch.IsToggledProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = sw;
-				} else if (vartype == typeof(List<>))
+				}
+				else if (vartype.GetTypeInfo().IsGenericType && vartype.GetGenericTypeDefinition() == typeof(List<>))
 				{
 					// use list edit
-					// TODO: Write List edit
+					// var type = typeof(AnimalContext<>).MakeGenericType(a.GetType());
+					var genericListType = vartype.GenericTypeArguments[0];
+					var typeForListEdit = typeof(ListEditPage<>).MakeGenericType(genericListType);
+					var list = type.GetRuntimeProperty(pi.Name).GetValue(Obj);
+					object listEditPage = null;
+					//var ilist = (IList)list;
+					//ilist.Add(new Member{ Tent = new Tent(), Id = new MemberId(new Co)});
+					if (genericListType == typeof(Member))
+					{
+						listEditPage = typeForListEdit.GetTypeInfo().DeclaredConstructors.First().Invoke(new object[] { lager.Members.ToList(), list, Title });
+					}
+					//Page lep = (Page)listEditPage;
+					//lep.SetBinding((BindableProperty)typeForListEdit.GetTypeInfo()
+					//               .GetDeclaredField("SelectedItemsProperty").GetValue(null),
+					//               new Binding(pi.Name, BindingMode.TwoWay));
+					Button b = new Button
+					{
+						Text = "Zeltbetreuer bearbeiten"
+					};
+					b.Clicked += (sender, e) =>
+					{
+						Navigation.PushModalAsync(new NavigationPage((Page)listEditPage));
+					};
+					manip = b;
 				} else
 				{
 					throw new Exception("Type " + vartype + " not supported by UniversalAddModifyPage");

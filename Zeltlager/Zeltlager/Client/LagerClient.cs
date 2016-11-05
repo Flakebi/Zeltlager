@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Client
 {
@@ -330,6 +331,22 @@ namespace Zeltlager.Client
 				}
 			}
 			return t;
+		}
+
+		//create some test data if a new lager is created
+		public async Task createTestData()
+		{
+			await AddPacket(new AddTent(new Tent(new TentId(ownCollaborator, 0), 0, "Tiger", false, new List<Member>())));
+			await AddPacket(new AddTent(new Tent(new TentId(ownCollaborator, 1), 1, "Giraffen", false, new List<Member>())));
+			await AddPacket(new AddTent(new Tent(new TentId(ownCollaborator, 2), 2, "Seepferdchen", false, new List<Member>())));
+			await AddPacket(new AddTent(new Tent(new TentId(ownCollaborator, 3), 3, "Pinguine", false, new List<Member>())));
+
+			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 0), "Anna", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));
+			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 1), "Bernd", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));
+			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 2), "Claudius", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 3), "Don", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 4), "Emily", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+			await AddPacket(new AddMember(new Member(new MemberId(ownCollaborator, 5), "Franz", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
 		}
 	}
 }
