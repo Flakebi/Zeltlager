@@ -1,10 +1,10 @@
+using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Zeltlager
+namespace Zeltlager.Cryptography
 {
-	using Serialisation;
-
 	/// <summary>
 	/// Constants used for the cryptographic functions.
 	/// All LENGTH values are an amount of bytes,
@@ -23,14 +23,13 @@ namespace Zeltlager
 		public const int ASYMMETRIC_KEY_SIZE = 1024;
 		public const int KEY_DERIVATION_ITERATIONS = 5000;
 
-		public static readonly byte[] DEFAULT_PUBLIC_KEY = new byte[] { 1, 0, 1 };
+		public static readonly byte[] DEFAULT_PUBLIC_KEY = { 1, 0, 1 };
 	}
 
-	public struct KeyPair
+	public struct KeyPair : IEquatable<KeyPair>
 	{
-		[Serialisation]
-		public byte[] Modulus;
-		public byte[] PublicKey;
+		public readonly byte[] Modulus;
+		public readonly byte[] PublicKey;
 		public byte[] PrivateKey;
 
 		public KeyPair(byte[] modulus, byte[] publicKey, byte[] privateKey)
@@ -38,6 +37,33 @@ namespace Zeltlager
 			Modulus = modulus;
 			PublicKey = publicKey;
 			PrivateKey = privateKey;
+		}
+
+		public bool Equals(KeyPair other)
+		{
+			return Modulus.SequenceEqual(other.Modulus);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (!(obj is KeyPair))
+				return false;
+			return Equals((KeyPair)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return Modulus[0].GetHashCode();
+		}
+
+		public static bool operator ==(KeyPair p1, KeyPair p2)
+		{
+			return p1.Equals(p2);
+		}
+
+		public static bool operator !=(KeyPair p1, KeyPair p2)
+		{
+			return !(p1 == p2);
 		}
 	}
 

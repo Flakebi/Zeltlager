@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace Zeltlager.Calendar
 {
-	using Client;
-
-	public class Calendar : ILagerPart
+	public class Calendar
 	{
 		public List<Day> Days { get; }
 

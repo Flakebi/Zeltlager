@@ -8,19 +8,12 @@ using System.Threading.Tasks;
 using Sockets.Plugin;
 
 using Zeltlager.DataPackets;
+using Zeltlager.Cryptography;
 
 namespace Zeltlager.Server
 {
 	class Server
 	{
-		public static string ByteArrayToString(byte[] ba)
-		{
-			StringBuilder hex = new StringBuilder(ba.Length * 2);
-			foreach (byte b in ba)
-				hex.AppendFormat("{0:x2}", b);
-			return hex.ToString();
-		}
-
 		public static byte[] StringToByteArray(string hex)
 		{
 			byte[] bytes = new byte[hex.Length / 2];
@@ -31,7 +24,6 @@ namespace Zeltlager.Server
 
 		static void Main(string[] args)
 		{
-			//Task.Run(async () => await AsyncMain(args)).GetAwaiter().GetResult();
 			Task.WaitAll(AsyncMain(args));
 		}
 
@@ -44,7 +36,7 @@ namespace Zeltlager.Server
 			byte[] key = await crypto.GetRandom(CryptoConstants.SYMMETRIC_KEY_LENGTH);
 			byte[] data = Encoding.UTF8.GetBytes("This is a test :)");
 			byte[] mac = await crypto.ComputeMac(key, data);
-			Console.WriteLine("Mac: " + ByteArrayToString(mac));
+			Console.WriteLine("Mac: " + mac.ToHexString());
 
 			// Symmetric encryption
 			byte[] iv = await crypto.GetRandom(CryptoConstants.SYMMETRIC_BLOCK_LENGTH);

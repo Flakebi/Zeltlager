@@ -19,7 +19,7 @@ namespace Zeltlager.Erwischt
 		public Member Target;
 	}
 
-	public class Erwischt : ILagerPart
+	public class Erwischt
 	{
 		LagerClient lager;
 		Dictionary<Member, MemberData> memberData;

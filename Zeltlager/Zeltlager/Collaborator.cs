@@ -6,222 +6,179 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using Cryptography;
 	using DataPackets;
 	using Serialisation;
 
-	public class Collaborator : ISerialisable<LagerSerialisationContext>
+	/// <summary>
+	/// A collaborator of a lager that can add bundles and has an own key.
+	/// 
+	/// Serialising a collaborator with a LagerSerialisationContext
+	/// will write the collaborator data (the signed public key).
+	/// Serialising a reference to this collaborator will write the
+	/// index of this collaborator in the LagerStatus of the lager.
+	/// 
+	/// Serialising a collaborator with a LagerClientSerialisationContext
+	/// will write the public key of this collaborator (unsigned).
+	/// Serialising a reference to this collaborator will write the
+	/// PacketId of this collaborator in the collaborator list of the
+	/// currently serialising collaborator.
+	/// </summary>
+	public class Collaborator : ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>
 	{
-		List<DataPacket> packets = new List<DataPacket>();
+		/// <summary>
+		/// The id that this collaborator has on the server.
+		/// </summary>
+		public int Id { get; set; }
+		
+		/// <summary>
+		/// The data of this collaborator.
+		/// This contains the public key of this collaborator, signed with
+		/// the private lager key. This data is signed with the private
+		/// key of this collaborator.
+		/// </summary>
+		byte[] data;
 
-		public KeyPair Key { get; private set; }
+		public KeyPair Key { get; set; }
 
-		public byte Id { get; private set; }
+		Dictionary<PacketId, Collaborator> collaborators = new Dictionary<PacketId, Collaborator>();
 		/// <summary>
 		/// The list of collaborators (indexed by the id) as of this collaborators view point.
 		/// </summary>
-		public List<Collaborator> Collaborators { get; private set; }
-		public IReadOnlyList<DataPacket> Packets { get { return packets; } }
-
+		public Dictionary<PacketId, Collaborator> Collaborators => collaborators;
+		Dictionary<int, DataPacketBundle> bundles = new Dictionary<int, DataPacketBundle>();
 		/// <summary>
-		/// All tent ids should be unique (per collaborator) so the next free
-		/// member id for this collaborator is saved here.
+		/// The list of bundles of a collaborator indexed by their id.
 		/// </summary>
-		public ushort NextMemberId { get; set; }
-		public byte NextTentId { get; set; }
+		public IReadOnlyDictionary<int, DataPacketBundle> Bundles => bundles;
+
+		public Collaborator() { }
 
 		/// <summary>
 		/// Initialises a new collaborator.
 		/// </summary>
-		/// <param name="id">The id of the collaborator.</param>
-		/// <param name="publicKey">
+		/// <param name="key">
 		/// The public key of the collaborator and also the
 		/// private key if our own contributor is initialised.
 		/// </param>
-		public Collaborator(byte id, KeyPair key)
+		public Collaborator(KeyPair key)
 		{
-			Collaborators = new List<Collaborator>();
-			Collaborators.Add(this);
-			Id = id;
 			Key = key;
-
-			NextMemberId = 0;
-			NextTentId = 0;
 		}
 
-		public void AddPacket(DataPacket packet) => packets.Add(packet);
-
-		public async Task SaveAll(IIoProvider io, byte[] symmetricKey)
+		public void AddBundle(int id, DataPacketBundle bundle)
 		{
-			string id = Id.ToString();
-			if (!await io.ExistsFolder(id))
-				await io.CreateFolder(id);
-
-			for (ushort i = 0; i < packets.Count; i++)
-				await SavePacket(io, symmetricKey, i);
+			if (bundles.ContainsKey(id))
+				throw new InvalidOperationException("Can't add a packet bundle with an id that is already taken");
+			bundles.Add(id, bundle);
 		}
 
 		/// <summary>
-		/// Save the packet with the given id and encrypt it using the supplied symmetric key.
+		/// Verify the key signatures that are stored in the collaborator data.
+		/// Throws an exception if the verification failed.
 		/// </summary>
-		/// <param name="io"></param>
-		/// <param name="symmetricKey">The key to encrypt the packet.</param>
-		/// <param name="i">The packet id.</param>
-		/// <returns></returns>
-		public async Task SavePacket(IIoProvider io, byte[] symmetricKey, ushort i)
+		async Task Verify(LagerSerialisationContext context)
 		{
-			var packet = packets[i];
-
-			byte[] data;
-			// Get packet data
-			MemoryStream mem = new MemoryStream();
-			using (BinaryWriter writer = new BinaryWriter(mem))
-				packet.WritePacket(writer);
-
-			data = mem.ToArray();
-
-			if (packet.Iv == null)
-				// Generate iv
-				packet.Iv = await LagerBase.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
-
-			// Write id, iv and encrypted data
-			mem = new MemoryStream();
-			using (BinaryWriter writer = new BinaryWriter(mem))
+			// Read the signatures
+			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
 			{
-				// Write the packet id
-				writer.Write(i.ToBytes());
-				// Write iv
-				writer.Write(packet.Iv);
-				// Write encrypted packet data
-				writer.Write(await LagerBase.CryptoProvider.EncryptSymetric(symmetricKey, packet.Iv, data));
-			}
-			data = mem.ToArray();
+				input.ReadPublicKey();
+				byte[] keyData = new byte[input.BaseStream.Position];
+				Array.Copy(data, keyData, keyData.Length);
+				byte[] lagerSignature = input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH);
+				byte[] signedData = new byte[input.BaseStream.Position];
+				Array.Copy(data, signedData, signedData.Length);
+				byte[] collaboratorSignature = input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH);
 
-			if (packet.Signature == null)
-			{
-				if (packet is InvalidDataPacket)
-				{
-					// Just write the packet data
-					using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
-						packet.WritePacket(output);
-					return;
-				} else if (Key.PrivateKey != null)
-					// Generate signature
-					packet.Signature = await LagerBase.CryptoProvider.Sign(Key, data);
-				else
-					throw new InvalidOperationException("Found unsigned packet without private key.");
-			}
-			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(Path.Combine(Id.ToString(), i.ToString()))))
-			{
-				// Write signature
-				output.Write(packet.Signature);
-				// Write id, iv and encrypted data
-				output.Write(data);
+				// Check the signatures
+				// Verify the lager signature
+				if (!await LagerManager.CryptoProvider.Verify(context.Lager.AsymmetricKey, lagerSignature, keyData))
+					throw new InvalidDataException("The lager signature of the collaborator is wrong");
+				// Verify the collaborator signature
+				if (!await LagerManager.CryptoProvider.Verify(Key, collaboratorSignature, signedData))
+					throw new InvalidDataException("The collaborator signature of the collaborator is wrong");
 			}
 		}
 
-		/// <summary>
-		/// Loads all packages of this collaborator.
-		/// </summary>
-		/// <param name="io">The io provider.</param>
-		/// <param name="symmetricKey">The symmetric key for the decryption of the pakcets.</param>
-		/// <param name="lager">The lager where this collaborator belongs to.</param>
-		/// <param name="version">The version of the saved packets.</param>
-		/// <param name="packetCount">The amount of packets that this contributor has.</param>
-		/// <returns>True if everything was loaded successfully, false otherwise.</returns>
-		public async Task<bool> Load(IIoProvider io, byte[] symmetricKey, LagerBase lager, byte version, ushort packetCount)
+		// Serialisation with a LagerSerialisationContext
+		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			bool success = true;
-			string id = Id.ToString();
-			for (ushort i = 0; i < packetCount; i++)
+			if (data == null)
 			{
-				byte[] signature;
-				byte[] allData;
-				try
+				// Create the data
+				MemoryStream mem = new MemoryStream();
+				using (BinaryWriter writer = new BinaryWriter(mem))
 				{
-					using (BinaryReader input = new BinaryReader(await io.ReadFile(Path.Combine(id, i.ToString()))))
-					{
-						// Read signature
-						signature = input.ReadBytes(CryptoConstants.SIGNATURE_LENGTH);
-						var length = (int)(input.BaseStream.Length - input.BaseStream.Position);
-						allData = input.ReadBytes(length);
-					}
-
-					// Verify signature
-					if (!await LagerBase.CryptoProvider.Verify(Key, signature, allData))
-						// The packet has an invalid signature
-						throw new Exception("The packet has an invalid signature.");
-
-					ushort packetId = allData.ToUShort(0);
-					// Check if the packet has the right id
-					if (packetId != i)
-						throw new Exception("The packet has an invalid id.");
-
-					byte[] iv = new byte[CryptoConstants.IV_LENGTH];
-					Array.Copy(allData, 2, iv, 0, iv.Length);
-					byte[] data = new byte[allData.Length - iv.Length - 2];
-					Array.Copy(allData, 2 + iv.Length, data, 0, data.Length);
-
-					data = await LagerBase.CryptoProvider.DecryptSymetric(symmetricKey, iv, data);
-
-					DataPacket packet = DataPacket.ReadPacket(data.ToArray());
-					packet.Iv = iv;
-					packet.Signature = signature;
-					packets.Add(packet);
-
-					// Check if we only parsed an invalid packet
-					if (packet is InvalidDataPacket)
-						success = false;
-				} catch (Exception e)
-				{
-					success = false;
-					// Log the exception
-					await LagerBase.Log.Exception("Collaborator", e);
-					lager.MissingPackets.Add(new Tuple<byte, ushort>(Id, i));
-					// Try to open the file
-					try
-					{
-						using (BinaryReader input = new BinaryReader(await io.ReadFile(Path.Combine(id, i.ToString()))))
-						{
-							// Read all data
-							allData = input.ReadBytes((int)input.BaseStream.Length);
-							packets.Add(new InvalidDataPacket(allData));
-						}
-					} catch (Exception)
-					{
-						// Insert an empty invalid packet
-						packets.Add(new InvalidDataPacket(new byte[0]));
-					}
+					writer.WritePublicKey(Key);
+					byte[] keyData = mem.ToArray();
+					// Sign the key with the lager private key
+					writer.Write(await LagerManager.CryptoProvider.Sign(context.Lager.AsymmetricKey, keyData));
+					keyData = mem.ToArray();
+					// Sign the data with our own private key
+					writer.Write(await LagerManager.CryptoProvider.Sign(Key, keyData));
 				}
+
+				data = mem.ToArray();
 			}
-			return success;
+			await serialiser.Write(output, context, data);
 		}
 
-		//TODO Implement ISerialisable (Write/ReadId)
-
-		// Serialisation
-		public void Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			serialiser.Write(output, context, Key);
-			//TODO Write signatures
+			// Get our collaborator id from the LagerStatus
+			output.Write(Id);
+			return Task.WhenAll();
 		}
 
-		public void WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public async Task Read(BinaryReader input,
+			Serialiser<LagerSerialisationContext> serialiser,
+			LagerSerialisationContext context)
+		{
+			data = await serialiser.Read<byte[]>(input, context, null);
+			// Read the key
+			MemoryStream mem = new MemoryStream(data);
+			using (BinaryReader reader = new BinaryReader(mem))
+				Key = reader.ReadPublicKey();
+			await Verify(context);
+		}
+
+		public static Task<Collaborator> ReadFromId(BinaryReader input,
+			Serialiser<LagerSerialisationContext> serialiser,
+			LagerSerialisationContext context)
+		{
+			int id = input.ReadInt32();
+			Collaborator collaborator = context.Lager.Collaborators.Values.First(c => c.Id == id);
+			// Update the context
+			context.PacketId = context.PacketId.Clone(collaborator);
+			return Task.FromResult(collaborator);
+		}
+
+		// Serialisation with a LagerClientSerialisationContext
+		public Task Write(BinaryWriter output,
+			Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context)
+		{
+			output.WritePublicKey(Key);
+			return Task.WhenAll();
+		}
+
+		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
 			// Get our collaborator id as seen from the collaborator that writes our id
-			serialiser.Write(output, context,
-				(byte)context.Collaborator.Collaborators.IndexOf(this));
+			return serialiser.WriteId(output, context, context.PacketId.Creator.Collaborators
+				.First(c => c.Value == this).Key);
 		}
 
-		public void Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			serialiser.Read(input, context, Key);
-			//TODO Read signatures
+			Key = input.ReadPublicKey();
+			return Task.WhenAll();
 		}
 
-		public static Collaborator ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public static async Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			byte id = serialiser.Read<byte>(input, context, 0);
-			return context.Collaborator.Collaborators[id];
+			PacketId id = await serialiser.ReadFromId<PacketId>(input, context);
+			return context.PacketId.Creator.Collaborators[id];
 		}
 	}
 }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-	using Client;
 	using DataPackets;
 	using Serialisation;
 	using UAM;
@@ -13,7 +12,7 @@ namespace Zeltlager
 	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
 	{
 		[Serialisation(Type = SerialisationType.Id)]
-		public MemberId Id { get; set; }
+		public PacketId Id { get; set; }
 
 		[Editable("Name")]
 		[Serialisation]
@@ -29,22 +28,25 @@ namespace Zeltlager
 		[Serialisation]
 		public bool Supervisor { get; set; }
 
-		public string Display { get { return Name + (Supervisor ? " \ud83d\ude0e" : ""); } }
+		public string Display => Name + (Supervisor ? " \ud83d\ude0e" : "");
 
 		// For deserialisation
-		protected static Member GetFromId(LagerSerialisationContext context, MemberId id)
+		protected static Task<Member> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
-			return ((LagerClientSerialisationContext)context).LagerClient.Members.First(m => m.Id == id);
+			return Task.FromResult(context.LagerClient.Members.First(m => m.Id == id));
 		}
 
 		public Member()
 		{
-			Id = new MemberId();
+			Id = new PacketId(null);
 			Name = "";
 			Supervisor = false;
 		}
 
-		public Member(MemberId id, string name, Tent tent, bool supervisor)
+		// For deserialisetion
+		public Member(LagerClientSerialisationContext context) : this() { }
+
+		public Member(PacketId id, string name, Tent tent, bool supervisor)
 		{
 			Id = id;
 			Name = name;
@@ -52,14 +54,11 @@ namespace Zeltlager
 			Supervisor = supervisor;
 		}
 
-		// Constructors for deserialisation
-		protected Member(LagerSerialisationContext context, string name, Tent tent, bool supervisor)
+		// Add the member to a lager after deserialising it
+		public void Add(LagerClientSerialisationContext context)
 		{
-			// Use the next free member id and inrcease the id afterwards.
-			Id = new MemberId(context.Collaborator, context.Collaborator.NextMemberId++);
-			Name = name;
-			Tent = tent;
-			Supervisor = supervisor;
+			Id = context.PacketId;
+			context.LagerClient.AddMember(this);
 		}
 
 		public override string ToString() => Display;
@@ -68,28 +67,40 @@ namespace Zeltlager
 
 		#region Interface implementation
 
-		public async Task OnSaveEditing(Member oldObject, LagerClient lager)
+		public async Task OnSaveEditing(
+            Serialiser<LagerClientSerialisationContext> serialiser,
+            LagerClientSerialisationContext context, Member oldObject)
 		{
+            DataPacket packet;
 			if (oldObject != null)
-				await lager.AddPacket(new DeleteMember(oldObject));
-			await lager.AddPacket(new AddMember(this));
+                packet = await EditPacket.Create(serialiser, context, this);
+            else
+                packet = await AddPacket.Create(serialiser, context, this);
+            await context.LagerClient.AddPacket(packet);
 		}
 
 		public Member Clone()
 		{
-			return new Member(Id.Clone(), Name, Tent, Supervisor);
+			return new Member(Id?.Clone(), Name, Tent, Supervisor);
 		}
 
-		public string SearchableText
-		{
-			get { return Display; }
-		}
+		public string SearchableText => Display;
 
-		public string SearchableDetail
-		{
-			get { return Tent.Display; }
-		}
+		public string SearchableDetail => Tent.Display;
 
 		#endregion
+
+		public override bool Equals(object obj)
+		{
+			Member other = obj as Member;
+			if (other == null)
+				return false;
+			return Name == other.Name && Supervisor == other.Supervisor && Tent.Equals(other.Tent);
+		}
+
+		public override int GetHashCode()
+		{
+			return Name.GetHashCode() ^ Supervisor.GetHashCode() ^ Tent.GetHashCode();
+		}
 	}
 }

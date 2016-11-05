@@ -9,15 +9,26 @@ namespace Zeltlager.UAM
 {
 	using System.Collections;
 	using Client;
+	using DataPackets;
+	using Serialisation;
 
 	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
 	{
 		public T Obj { get; }
 		T oldObj;
 		readonly bool isAddPage;
-		LagerClient lager;
+		readonly LagerClient lager;
 
-		static readonly Type[] numtypes = { typeof(byte), typeof(ushort), typeof(int) };
+		static readonly Type[] NUM_TYPES = {
+			typeof(byte),
+			typeof(sbyte),
+			typeof(ushort),
+			typeof(short),
+			typeof(uint),
+			typeof(int),
+			typeof(ulong),
+			typeof(long)
+		};
 
 		public UniversalAddModifyPage(T obj, bool isAddPage, LagerClient lager)
 		{
@@ -83,7 +94,7 @@ namespace Zeltlager.UAM
 					tp.SetBinding(TimePicker.TimeProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = tp;
 				}
-				else if (numtypes.Contains(vartype))
+				else if (NUM_TYPES.Contains(vartype))
 				{
 					// use entry with num Keyboard
 					manip = new Entry
@@ -161,7 +172,7 @@ namespace Zeltlager.UAM
 			Padding = new Thickness(10);
 		}
 
-		private void OnCancelClicked()
+		void OnCancelClicked()
 		{
 			Navigation.PopModalAsync(true);
 		}
@@ -170,7 +181,9 @@ namespace Zeltlager.UAM
 		{
 			if (isAddPage)
 				oldObj = default(T);
-			await Obj.OnSaveEditing(oldObj, lager);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);
+			context.PacketId = new PacketId(lager.OwnCollaborator);
+			await Obj.OnSaveEditing(lager.ClientSerialiser, context, oldObj);
 			await Navigation.PopModalAsync(true);
 		}
 	}

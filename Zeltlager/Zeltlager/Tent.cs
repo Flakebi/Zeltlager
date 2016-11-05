@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-	using Client;
 	using DataPackets;
 	using Serialisation;
 	using UAM;
@@ -13,11 +12,11 @@ namespace Zeltlager
 	public class Tent : IEditable<Tent>, ISearchable
 	{
 		[Serialisation(Type = SerialisationType.Id)]
-		public TentId Id { get; set; }
+		public PacketId Id { get; set; }
 
 		[Editable("Zeltnummer")]
 		[Serialisation]
-		public byte Number { get; set; }
+		public int Number { get; set; }
 
 		[Editable("Zeltname")]
 		[Serialisation]
@@ -31,26 +30,30 @@ namespace Zeltlager
 		public bool Girls { get; set; }
 
 		[Editable("Zeltbetreuer")]	
+		public IReadOnlyList<Member> Supervisors => supervisors;
 		public List<Member> Supervisors { get { return supervisors; } }
 
-		public string Display { get { return Number + " " + Name + " " + (Girls ? "♀" : "♂"); } }
+		public string Display => Number + " " + Name + " " + (Girls ? "♀" : "♂");
 
 		// For deserialisation
-		protected static Tent GetFromId(LagerSerialisationContext context, TentId id)
+		protected static Task<Tent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
-			return ((LagerClientSerialisationContext)context).LagerClient.Tents.First(t => t.Id == id);
+			return Task.FromResult(context.LagerClient.Tents.First(t => t.Id == id));
 		}
 
 		public Tent()
 		{
-			Id = new TentId();
+			Id = new PacketId(null);
 			Number = 0;
 			Name = "";
 			Girls = false;
 			supervisors = new List<Member>();
 		}
 
-		public Tent(TentId id, byte number, string name, bool girls, List<Member> supervisors)
+		// For deserialisetion
+		public Tent(LagerClientSerialisationContext context) : this() { }
+
+		public Tent(PacketId id, int number, string name, bool girls, List<Member> supervisors)
 		{
 			Id = id;
 			Number = number;
@@ -76,30 +79,51 @@ namespace Zeltlager
 			return new List<Member>(lager.Members.Where((arg) => arg.Tent.Equals(this)));
 		}
 
+		// Add the member to a lager after deserialising it
+		public void Add(LagerClientSerialisationContext context)
+		{
+			Id = context.PacketId;
+			context.LagerClient.AddTent(this);
+		}
+
+
 		#region Interface implementations
 
-		public async Task OnSaveEditing(Tent oldObject, LagerClient lager)
+		public async Task OnSaveEditing(
+			Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context, Tent oldObject)
 		{
+            DataPacket packet;
 			if (oldObject != null)
-				await lager.AddPacket(new DeleteTent(oldObject));
-			await lager.AddPacket(new AddTent(this));
+				packet = await EditPacket.Create(serialiser, context, this);
+            else
+				packet = await AddPacket.Create(serialiser, context, this);
+			await context.LagerClient.AddPacket(packet);
 		}
 
 		public Tent Clone()
 		{
-			return new Tent(Id.CloneShallow(), Number, Name, Girls, new List<Member>(supervisors));
+			return new Tent(Id?.Clone(), Number, Name, Girls, new List<Member>(supervisors));
 		}
 
-		public string SearchableText
-		{
-			get { return Display; }
-		}
+		public string SearchableText => Display;
 
-		public string SearchableDetail
-		{
-			get { return ""; }
-		}
+		public string SearchableDetail => "";
 
 		#endregion
+
+		public override bool Equals(object obj)
+		{
+			Tent other = obj as Tent;
+			if (other == null)
+				return false;
+			return Number == other.Number && Name == other.Name && Girls == other.Girls &&
+				Supervisors.SequenceEqual(other.Supervisors);
+		}
+
+		public override int GetHashCode()
+		{
+			return Number.GetHashCode() ^ Name.GetHashCode() ^ Girls.GetHashCode() ^ Supervisors.GetHashCode();
+		}
 	}
 }

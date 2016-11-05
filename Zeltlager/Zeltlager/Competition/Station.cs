@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Zeltlager.Client;
-using Zeltlager.UAM;
 
 namespace Zeltlager.Competition
 {
+	using Serialisation;
+	using UAM;
+	
 	/// <summary>
 	/// represents one station in the competition and the results achieved there
 	/// </summary>
@@ -38,22 +37,21 @@ namespace Zeltlager.Competition
 
 		#region Interface implementation
 
-		public string SearchableText { get { return name; } }
+		public string SearchableText => name;
 
-		public string SearchableDetail { get { return ""; } }
+		public string SearchableDetail => "";
 
-		public Task OnSaveEditing(Station oldObject, LagerClient lager)
+		public async Task OnSaveEditing(
+			Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context, Station oldObject)
 		{
 			// TODO: Packets
-			return null;
 		}
 
 		public Station Clone()
 		{
 			return new Station(name, competition, ranking);
 		}
-
-
 
 		#endregion
 	}

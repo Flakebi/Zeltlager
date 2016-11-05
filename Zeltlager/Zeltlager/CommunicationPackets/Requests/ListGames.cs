@@ -12,7 +12,7 @@ namespace Zeltlager.CommunicationPackets.Requests
     {
 		public ListGames() { }
 
-		public override void Apply(INetworkConnection connection, ILagerServer lagerServer)
+		public override void Apply(INetworkConnection connection, LagerManager manager)
 		{
 			// Create a response
 		}

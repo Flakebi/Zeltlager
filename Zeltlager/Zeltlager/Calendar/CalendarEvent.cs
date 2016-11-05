@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 namespace Zeltlager.Calendar
 {
 	using Client;
+	using DataPackets;
+	using Serialisation;
 	using UAM;
 
 	[Editable("Termin")]
@@ -16,7 +18,7 @@ namespace Zeltlager.Calendar
 		/// <summary>
 		/// The date of this event.
 		/// </summary>
-		private DateTime date;
+		DateTime date;
 		[Editable("Tag")]
 		public DateTime Date
 		{
@@ -35,7 +37,7 @@ namespace Zeltlager.Calendar
 		/// </summary>
 		/// A private attribute is needed, so binding Date to a DatePicker does not fuck up our time
 		/// (changes in the TimeOfDay in Date are not reflected in TimeSpan)
-		private TimeSpan timeSpan;
+		TimeSpan timeSpan;
 		[Editable("Uhrzeit")]
 		public TimeSpan TimeSpan
 		{
@@ -58,7 +60,7 @@ namespace Zeltlager.Calendar
 			get { return date.ToString("HH:mm"); }
 		}
 
-		private string title;
+		string title;
 		[Editable("Titel")]
 		public string Title
 		{
@@ -66,7 +68,7 @@ namespace Zeltlager.Calendar
 			set { title = value; OnPropertyChanged(nameof(Title)); }
 		}
 
-		private string detail;
+		string detail;
 		[Editable("Beschreibung")]
 		public string Detail
 		{
@@ -96,15 +98,16 @@ namespace Zeltlager.Calendar
 			return Date.CompareTo(other.Date);
 		}
 
-		public async Task OnSaveEditing(CalendarEvent oldObj, LagerClient lager)
+		public async Task OnSaveEditing(
+			Serialiser<LagerClientSerialisationContext> serialiser,
+			LagerClientSerialisationContext context, CalendarEvent oldObject)
 		{
-			if (oldObj != null)
-			{
-				// Delete Item
-				await lager.AddPacket(new DeleteCalendarEvent(oldObj));
-			}
-			// Insert Calendar Event into correct day
-			await lager.AddPacket(new AddCalendarEvent(this));
+			DataPacket packet;
+			if (oldObject != null)
+				packet = await EditPacket.Create(serialiser, context, this);
+			else
+				packet = await AddPacket.Create(serialiser, context, this);
+			await context.LagerClient.AddPacket(packet);
 		}
 
 		public CalendarEvent Clone()
@@ -118,23 +121,5 @@ namespace Zeltlager.Calendar
 		}
 
 		#endregion
-	}
-
-	public static class CalendarEventHelper
-	{
-		public static void Write(this BinaryWriter output, CalendarEvent calendarEvent)
-		{
-			output.Write(calendarEvent.Date.ToBinary());
-			output.Write(calendarEvent.Title);
-			output.Write(calendarEvent.Detail);
-		}
-
-		public static CalendarEvent ReadCalendarEvent(this BinaryReader input)
-		{
-			DateTime date = DateTime.FromBinary(input.ReadInt64());
-			string title = input.ReadString();
-			string detail = input.ReadString();
-			return new CalendarEvent(date, title, detail);
-		}
 	}
 }

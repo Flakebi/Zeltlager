@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
-using Zeltlager.Client;
 
 namespace Zeltlager.UAM
 {
+    using Serialisation;
+    
 	public interface IEditable<T>
 	{
 		/// <summary>
@@ -13,7 +14,9 @@ namespace Zeltlager.UAM
 		/// The old object that was edited.
 		/// null if this object is newly created and not edited.
 		/// </param>
-		Task OnSaveEditing(T oldObject, LagerClient lager);
+		Task OnSaveEditing(
+            Serialiser<LagerClientSerialisationContext> serialiser,
+            LagerClientSerialisationContext context, T oldObject);
 
 		/// <summary>
 		/// Deep cloning method used to save object status before editing

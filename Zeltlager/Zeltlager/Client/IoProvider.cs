@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,10 +14,24 @@ namespace Zeltlager.Client
 		{
 			List<string> parts = new List<string>();
 			string s = path;
-			parts.Add(Path.GetFileName(s));
-			while (!string.IsNullOrEmpty(s = Path.GetDirectoryName(s)))
+			if (!string.IsNullOrEmpty(s))
+			{
 				parts.Add(Path.GetFileName(s));
+				while (!string.IsNullOrEmpty(s = Path.GetDirectoryName(s)))
+					parts.Add(Path.GetFileName(s));
+			}
 			return parts.Where(p => !string.IsNullOrEmpty(p)).Reverse().ToArray();
+		}
+
+		public async Task<Tuple<string, FileType>[]> ListContents(string path)
+		{
+			IFolder folder = FileSystem.Current.LocalStorage;
+			foreach (var p in GetParts(path))
+				folder = await folder.GetFolderAsync(p);
+			var files = await folder.GetFilesAsync();
+			var folders = await folder.GetFoldersAsync();
+			return files.Select(f => new Tuple<string, FileType>(f.Name, FileType.File))
+				.Concat(folders.Select(f => new Tuple<string, FileType>(f.Name, FileType.Folder))).ToArray();
 		}
 
 		public async Task CreateFolder(string path)

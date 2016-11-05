@@ -1,16 +1,18 @@
 namespace Zeltlager.Serialisation
 {
 	using Client;
+	using DataPackets;
 
 	public class LagerSerialisationContext
 	{
+		public LagerManager Manager { get; private set; }
 		public LagerBase Lager { get; private set; }
-		public Collaborator Collaborator { get; private set; }
+		public PacketId PacketId { get; set; }
 
-		public LagerSerialisationContext(LagerBase lager, Collaborator collaborator)
+		public LagerSerialisationContext(LagerManager manager, LagerBase lager)
 		{
+			Manager = manager;
 			Lager = lager;
-			Collaborator = collaborator;
 		}
 	}
 
@@ -24,8 +26,7 @@ namespace Zeltlager.Serialisation
 			}
 		}
 
-		public LagerClientSerialisationContext(LagerClient lager, Collaborator collaborator) :
-			base(lager, collaborator)
+		public LagerClientSerialisationContext(LagerManager manager, LagerClient lager) : base(manager, lager)
 		{ }
 	}
 }

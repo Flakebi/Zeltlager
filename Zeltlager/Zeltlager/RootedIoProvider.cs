@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -16,6 +17,8 @@ namespace Zeltlager
 			this.ioProvider = ioProvider;
 			this.root = root;
 		}
+
+		public Task<Tuple<string, FileType>[]> ListContents(string path) => ioProvider.ListContents(Path.Combine(root, path));
 
 		public Task CreateFolder(string path) => ioProvider.CreateFolder(Path.Combine(root, path));
 

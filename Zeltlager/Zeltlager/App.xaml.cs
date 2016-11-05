@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace Zeltlager
 {
@@ -8,31 +9,24 @@ namespace Zeltlager
 
 	public partial class App : Application
 	{
-		static readonly string[] INIT_STATUS = new string[]
+		static readonly string[] INIT_STATUS =
 		{
 			"Lagerschlüssel erstellen",
 			"Lagerzertifikat erstellen",
 			"Persönliches Zertifikat erstellen",
-			"Fertig"
+			"Lager speichern"
 		};
 
 		LoadingScreen loadingScreen;
+        LagerClientManager manager;
 
 		public App()
 		{
 			InitializeComponent();
 
-			LagerBase.IsClient = true;
-			LagerBase.IoProvider = new Client.IoProvider();
-			LagerClient.ClientGlobalSettings = new Client.GlobalSettings();
+            LagerManager.IsClient = true;
 
-			/*lager.Init();
-			Tent tent = new Tent(0, "Regenbogenforellen", new List<Member>());
-			DataPacket packet = new AddTentPacket(tent);
-			lager.Collaborators.First().AddPacket(packet);
-			var member = new Member(0, "Caro", tent, true);
-			packet = new AddMemberPacket(member);
-			lager.Collaborators.First().AddPacket(packet);*/
+            manager = new LagerClientManager(new IoProvider());
 
 			loadingScreen = new LoadingScreen();
 			MainPage = new NavigationPage(loadingScreen);
@@ -44,33 +38,34 @@ namespace Zeltlager
 			try
 			{
 				loadingScreen.Status = "Einstellungen laden";
-				await LagerClient.ClientGlobalSettings.Load();
-				await LagerBase.Log.Load();
+                await manager.Load();
+				await LagerManager.Log.Load();
 			} catch (Exception e)
 			{
 				// Log the exception
-				await LagerBase.Log.Exception("App", e);
+				await LagerManager.Log.Exception("App", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 
 			bool loadedLager = false;
 			LagerClient lager = null;
-			if (LagerClient.ClientGlobalSettings.Lagers.Count > 0)
+            if (manager.Lagers.Any())
 			{
 				// Load lager
 				try
 				{
 					loadingScreen.Status = "Lager laden";
-					byte lagerId = LagerClient.ClientGlobalSettings.LastLager;
-					var lagerData = LagerClient.ClientGlobalSettings.Lagers[lagerId];
-					lager = new LagerClient(lagerId, lagerData.Item1, lagerData.Item2);
-					if (!await lager.Load())
+                    int lagerId = manager.Settings.LastLager;
+                    lager = (LagerClient)manager.Lagers[lagerId];
+					if (!await lager.LoadBundles())
+						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden der Lagerdateien sind Fehler aufgetreten", "Ok");
+					if (!await lager.ApplyHistory())
 						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden des Lagers sind Fehler aufgetreten", "Ok");
 					loadedLager = true;
 				} catch (Exception e)
 				{
 					// Log the exception
-					await LagerBase.Log.Exception("App", e);
+					await LagerManager.Log.Exception("App", e);
 					await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 				}
 			}
@@ -102,19 +97,10 @@ namespace Zeltlager
 			MainPage = new NavigationPage(loadingScreen);
 			try
 			{
-				LagerClient lager = new LagerClient((byte)LagerClient.ClientGlobalSettings.Lagers.Count, name, password);
-				await lager.Init(DisplayStatus);
-				loadingScreen.Status = "Lager speichern";
-				await lager.Save();
-
+                var lager = await manager.CreateLager(name, password, DisplayStatus);
 				// fill with some test data
 				await lager.createTestData();
 
-				// Add lager to settings
-				loadingScreen.Status = "Einstellungen speichern";
-				LagerClient.ClientGlobalSettings.LastLager = (byte)LagerClient.ClientGlobalSettings.Lagers.Count;
-				LagerClient.ClientGlobalSettings.Lagers.Add(new Tuple<string, string>(name, password));
-				await LagerClient.ClientGlobalSettings.Save();
 
 
 
@@ -123,7 +109,7 @@ namespace Zeltlager
 			} catch (Exception e)
 			{
 				// Log the exception
-				await LagerBase.Log.Exception("App", e);
+                await LagerManager.Log.Exception("Creating lager", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 		}

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 using Xamarin.Forms;
 
@@ -27,12 +26,12 @@ namespace Zeltlager
 
 		void UpdateUI(object sender, EventArgs e)
 		{
-			logLabel.Text = LagerBase.Log.Print(Info, Warning, Error, Exception);
+			logLabel.Text = LagerManager.Log.Print(Info, Warning, Error, Exception);
 		}
 
 		async void OnDeleteClicked(object sender, EventArgs e)
 		{
-			await LagerBase.Log.Clear();
+			await LagerManager.Log.Clear();
 			UpdateUI(null, null);
 		}
 	}

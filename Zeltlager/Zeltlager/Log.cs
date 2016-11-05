@@ -46,18 +46,22 @@ namespace Zeltlager
 
 		const string FILENAME = "log.txt";
 
-		List<Message> messages = new List<Message>();
+		readonly List<Message> messages = new List<Message>();
+        readonly IIoProvider ioProvider;
 
-		public IReadOnlyCollection<Message> Messages { get { return messages; } }
+		public IReadOnlyCollection<Message> Messages => messages;
 
-		public Log() { }
+        public Log(IIoProvider io)
+        {
+            ioProvider = io;
+        }
 
 		public async Task Load()
 		{
-			if (!await LagerBase.IoProvider.ExistsFile(FILENAME))
+            if (!await ioProvider.ExistsFile(FILENAME))
 				return;
 
-			using (var file = new StreamReader(await LagerBase.IoProvider.ReadFile(FILENAME)))
+			using (var file = new StreamReader(await ioProvider.ReadFile(FILENAME)))
 			{
 				string line;
 				while ((line = file.ReadLine()) != null)
@@ -89,10 +93,10 @@ namespace Zeltlager
 			messages.Clear();
 
 			// Clear the log file
-			if (!await LagerBase.IoProvider.ExistsFile(FILENAME))
+			if (!await ioProvider.ExistsFile(FILENAME))
 				return;
 
-			using (var file = await LagerBase.IoProvider.WriteFile(FILENAME))
+			using (var file = await ioProvider.WriteFile(FILENAME))
 			{ }
 		}
 
@@ -103,7 +107,7 @@ namespace Zeltlager
 		async Task AddMessage(Message message)
 		{
 			messages.Add(message);
-			using (StreamWriter writer = new StreamWriter(await LagerBase.IoProvider.AppendFile(FILENAME)))
+			using (StreamWriter writer = new StreamWriter(await ioProvider.AppendFile(FILENAME)))
 				writer.WriteLine(message);
 		}
 
