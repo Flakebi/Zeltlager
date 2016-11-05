@@ -18,7 +18,7 @@ namespace Zeltlager.General
 		{
 			InitializeComponent();
 			this.lager = lager;
-			Content = new SearchableListView<Tent>(lager.Tents, OnContextActionEdit, OnContextActionDelete);
+			Content = new SearchableListView<Tent>(lager.Tents, OnContextActionEdit, OnContextActionDelete, OnTentClick);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
@@ -37,6 +37,11 @@ namespace Zeltlager.General
 		async void OnContextActionDelete(Tent tent)
 		{
 			await lager.AddPacket(new DeleteTent(tent));
+		}
+
+		void OnTentClick(Tent tent)
+		{
+			Navigation.PushAsync(new TentDetailPage(tent, lager));
 		}
 	}
 }

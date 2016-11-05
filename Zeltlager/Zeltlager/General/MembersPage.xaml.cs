@@ -19,7 +19,8 @@ namespace Zeltlager.General
 		{
 			InitializeComponent();
 			this.lager = lager;
-			Content = new SearchableListView<Member>(lager.Members, OnContextActionEdit, OnContextActionDelete);
+			// TODO: think about what should happen if member is clicked
+			Content = new SearchableListView<Member>(lager.Members, OnContextActionEdit, OnContextActionDelete, null);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)

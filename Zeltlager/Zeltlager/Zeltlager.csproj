@@ -136,6 +136,9 @@
     </Compile>
     <Compile Include="Competition\Ranking.cs" />
     <Compile Include="ListEdit\ListEditPage.cs" />
+    <Compile Include="General\TentDetailPage.xaml.cs">
+      <DependentUpon>TentDetailPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -190,6 +193,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Competition\CompetitionPages\StationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\TentDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

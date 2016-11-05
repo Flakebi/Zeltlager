@@ -71,9 +71,10 @@ namespace Zeltlager
 
 		public bool RemoveSupervisor(Member supervisor) => supervisors.Remove(supervisor);
 
-		// TODO: get members
-
-
+		public List<Member> GetMembers(LagerClient lager)
+		{
+			return new List<Member>(lager.Members.Where((arg) => arg.Tent.Equals(this)));
+		}
 
 		#region Interface implementations
 

@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+
+using Xamarin.Forms;
+using Zeltlager.Client;
+namespace Zeltlager.General
+{
+	public partial class TentDetailPage : ContentPage
+	{
+		//Tent tent;
+
+		public TentDetailPage(Tent tent, LagerClient lager)
+		{
+			InitializeComponent();
+			Title = "Zeltdetails " + tent.Display;
+			Padding = new Thickness(10);
+
+			Grid grid = new Grid();
+			grid.RowSpacing = 0;
+			RowDefinition rd = new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) };
+			RowDefinition rdfill = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+			RowDefinition rdlist = new RowDefinition { Height = new GridLength(100, GridUnitType.Absolute) };
+
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+			grid.RowDefinitions.Add(rd);
+			grid.Children.Add(new Label { Text = "Zeltname: "}, 0, 0);
+			grid.Children.Add(new Label { Text = tent.Name }, 1, 0);
+
+			grid.RowDefinitions.Add(rd);
+			grid.Children.Add(new Label { Text = "Zeltnummer: " }, 0, 1);
+			grid.Children.Add(new Label { Text = tent.Number.ToString() }, 1, 1);
+
+			grid.RowDefinitions.Add(rd);
+			grid.Children.Add(new Label { Text = "Geschlecht: " }, 0, 2);
+			grid.Children.Add(new Label { Text = tent.Girls? "♀" : "♂" }, 1, 2);
+
+
+			grid.RowDefinitions.Add(rd);
+			grid.Children.Add(new Label { Text = "Zeltbetreuer: " }, 0, 2, 3, 4);
+
+			grid.RowDefinitions.Add(rdlist);
+			grid.Children.Add(new SearchableListView<Member>(tent.Supervisors, null, null, null), 0, 2, 4, 5);
+
+
+			grid.RowDefinitions.Add(rd);
+			grid.Children.Add(new Label { Text = "Zeltbewohner: " }, 0, 2, 5, 6);
+
+			grid.RowDefinitions.Add(rdfill);
+			grid.Children.Add(new SearchableListView<Member>(lager.Members, null, null, null), 0, 2, 6, 7);
+
+			var scrollView = new ScrollView();
+			scrollView.Content = grid;
+
+			Content = scrollView;
+		}
+	}
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Xamarin.Forms;
+using Zeltlager.Client;
 
 namespace Zeltlager
 {
@@ -15,7 +16,7 @@ namespace Zeltlager
 		public Command OnEdit { get; set; }
 		public Command OnDelete { get; set; }
 
-		public SearchableListView(IReadOnlyList<T> items, Action<T> onEdit, Action<T> onDelete)
+		public SearchableListView(IReadOnlyList<T> items, Action<T> onEdit, Action<T> onDelete, Action<T> onClick)
 		{
 			totalItems = items;
 			// Display everything at the beginning
@@ -39,6 +40,7 @@ namespace Zeltlager
 			dataTemplate.SetBinding(TextCell.DetailProperty, new Binding("SearchableDetail"));
 
 			// Bind commands for context actions
+			// TODO: if parameters are null, disable Context Actions
 			OnEdit = new Command(sender => onEdit((T)sender));
 			OnDelete = new Command(sender => onDelete((T)sender));
 			dataTemplate.SetBinding(SearchableCell.OnEditCommandParameterProperty, new Binding("."));
@@ -46,10 +48,26 @@ namespace Zeltlager
 			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandParameterProperty, new Binding("."));
 			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 
+			// define what happens, if cell is selected
+			listView.ItemSelected += (sender, e) =>
+			{
+				onClick((T)listView.SelectedItem);
+				LagerBase.Log.Info("searchable list", "clicked on: " + ((T)listView.SelectedItem).SearchableText);
+			};
+
 			listView.ItemTemplate = dataTemplate;
 			listView.BindingContext = items;
 			listView.ItemsSource = currentItems;
-			stackLayout.Children.Add(listView);
+
+			var listGrid = new StackLayout
+			{
+				Spacing = 0,
+				VerticalOptions = LayoutOptions.Fill,
+				HorizontalOptions = LayoutOptions.FillAndExpand
+			};
+			listGrid.Children.Add(listView);
+
+			stackLayout.Children.Add(listGrid);
 
 			Content = stackLayout;
 			Style = (Style)Application.Current.Resources["BaseStyle"];

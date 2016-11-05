@@ -32,7 +32,7 @@ namespace Zeltlager.Competition
 			addStation.Clicked += OnAddStationClicked;
 			stationHeader.Children.Add(addStation);
 
-			var stationList = new SearchableListView<Station>(competition.Stations, OnEditStation, OnDeleteStation);
+			var stationList = new SearchableListView<Station>(competition.Stations, OnEditStation, OnDeleteStation, null);
 
 			StackLayout participantHeader = new StackLayout
 			{
@@ -43,7 +43,7 @@ namespace Zeltlager.Competition
 			addParticipant.Clicked += OnAddParticipantClicked;
 			participantHeader.Children.Add(addParticipant);
 
-			var participantList = new SearchableListView<Participant>(competition.Participants, OnEditParticipant, OnDeleteParticipant);
+			var participantList = new SearchableListView<Participant>(competition.Participants, OnEditParticipant, OnDeleteParticipant, null);
 
 			vsl.Children.Add(stationHeader);
 			vsl.Children.Add(stationList);

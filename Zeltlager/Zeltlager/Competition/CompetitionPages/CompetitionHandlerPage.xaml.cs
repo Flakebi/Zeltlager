@@ -14,7 +14,7 @@ namespace Zeltlager.Competition
 		{
 			InitializeComponent();
 			this.lager = lager;
-			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEdit, OnDelete);
+			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEdit, OnDelete, OnClick);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
@@ -22,14 +22,19 @@ namespace Zeltlager.Competition
 			Navigation.PushModalAsync(new UniversalAddModifyPage<Competition>(new Competition(lager, ""), true, lager),true);
 		}
 
-		void OnEdit(object sender)
+		void OnEdit(Competition comp)
 		{
 			// TODO edit competitons
 		}
 
-		void OnDelete(object sender)
+		void OnDelete(Competition comp)
 		{
 			// TODO delete competetions, packets
+		}
+
+		void OnClick(Competition comp)
+		{
+			// TODO what should happen if competition is selected
 		}
 	}
 }
