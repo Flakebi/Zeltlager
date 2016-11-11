@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Zeltlager.DataPackets;
+using System.Linq;
 
 namespace Zeltlager.Calendar
 {
@@ -60,6 +62,11 @@ namespace Zeltlager.Calendar
 		Day FindCorrectDay(CalendarEvent ce)
 		{
 			return Days.Find(x => x.Date.Date == ce.Date.Date);
+		}
+
+		public CalendarEvent GetEventFromPacketId(PacketId id)
+		{
+			return Days.SelectMany(day => day.Events).First(x => x.Id == id);
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Zeltlager.Calendar;
 
 namespace Zeltlager.DataPackets
 {
@@ -19,7 +20,9 @@ namespace Zeltlager.DataPackets
 		/// </summary>
 		static readonly Tuple<Type, MethodInfo>[] types = {
 			new Tuple<Type, MethodInfo>(typeof(Member), null),
-			new Tuple<Type, MethodInfo>(typeof(Tent), null)
+			new Tuple<Type, MethodInfo>(typeof(Tent), null),
+			new Tuple<Type, MethodInfo>(typeof(CalendarEvent), 
+			   typeof(CalendarEvent).GetRuntimeMethod("Edit", new Type[] { typeof(LagerClientSerialisationContext) }))
 		};
 
 		public static int GetIdCount() { return types.Length; }

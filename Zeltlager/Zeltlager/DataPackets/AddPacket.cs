@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Zeltlager.Calendar;
 
 namespace Zeltlager.DataPackets
 {
@@ -24,7 +25,9 @@ namespace Zeltlager.DataPackets
 			new Tuple<Type, MethodInfo>(typeof(Member),
 				typeof(Member).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(Tent),
-				typeof(Tent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) }))
+				typeof(Tent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+			new Tuple<Type, MethodInfo>(typeof(CalendarEvent),
+			    typeof(CalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 		};
 
 		public static int GetIdCount() { return types.Length; }

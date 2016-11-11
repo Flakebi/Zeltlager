@@ -15,9 +15,13 @@ namespace Zeltlager.Calendar
 	{
 		LagerClient lager;
 
+		[Serialisation(Type = SerialisationType.Id)]
+		public PacketId Id { get; set; }
+
 		/// <summary>
 		/// The date of this event.
 		/// </summary>
+		[Serialisation]
 		DateTime date;
 		[Editable("Tag")]
 		public DateTime Date
@@ -62,6 +66,7 @@ namespace Zeltlager.Calendar
 
 		string title;
 		[Editable("Titel")]
+		[Serialisation]
 		public string Title
 		{
 			get { return title; }
@@ -70,11 +75,21 @@ namespace Zeltlager.Calendar
 
 		string detail;
 		[Editable("Beschreibung")]
+		[Serialisation]
 		public string Detail
 		{
 			get { return detail; }
 			set { detail = value; OnPropertyChanged(nameof(Detail)); }
 		}
+
+		protected static Task<CalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		{
+			return Task.FromResult(context.LagerClient.Calendar.GetEventFromPacketId(id));
+		}
+
+		public CalendarEvent() {}
+
+		public CalendarEvent(LagerClientSerialisationContext context) : this() {}
 
 		public CalendarEvent(DateTime date, string title, string detail)
 		{
@@ -82,6 +97,19 @@ namespace Zeltlager.Calendar
 			this.title = title;
 			this.detail = detail;
 			timeSpan = date.TimeOfDay;
+		}
+
+		public void Add(LagerClientSerialisationContext context)
+		{
+			Id = context.PacketId;
+			context.LagerClient.Calendar.InsertNewCalendarEvent(this);
+		}
+
+		public void Edit(LagerClientSerialisationContext context)
+		{
+			// remove and insert again so it is in the correct day
+			context.LagerClient.Calendar.RemoveCalendarEvent(this);
+			context.LagerClient.Calendar.InsertNewCalendarEvent(this);
 		}
 
 		#region Interface implementations
