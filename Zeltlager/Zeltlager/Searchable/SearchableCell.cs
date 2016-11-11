@@ -81,12 +81,20 @@ namespace Zeltlager
 			deleteAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnDeleteCommand)));
 			deleteAction.BindingContext = this;
 
-			if (OnEditCommand != null)
-				ContextActions.Add(editAction);
-			if (OnDeleteCommand != null)
-				ContextActions.Add(deleteAction);
+			ContextActions.Add(editAction);
+			ContextActions.Add(deleteAction);
 
 			TextColor = (Color)Application.Current.Resources["textColorStandard"];
+		}
+
+		public void RemoveEditAction()
+		{
+			ContextActions.Remove(editAction);
+		}
+
+		public void RemoveDeleteAction()
+		{
+			ContextActions.Remove(deleteAction);
 		}
 	}
 }
