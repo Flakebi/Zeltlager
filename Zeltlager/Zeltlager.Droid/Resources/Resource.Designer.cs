@@ -28,7 +28,6 @@ namespace Zeltlager.Droid
 		{
 			global::PCLStorage.Resource.String.ApplicationName = global::Zeltlager.Droid.Resource.String.ApplicationName;
 			global::PCLStorage.Resource.String.Hello = global::Zeltlager.Droid.Resource.String.Hello;
-			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::Zeltlager.Droid.Resource.Attribute.actionBarSize;
 		}
 		
 		public partial class Animation
