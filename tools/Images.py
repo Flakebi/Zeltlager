@@ -44,7 +44,7 @@ class TargetImage:
 		# Set the default values
 		if not name:
 			# Without .svg
-			name = source.filename[:-4]
+			name = os.path.splitext(os.path.basename(source.filename))[0]
 		if not image_width:
 			image_width = source.width
 		if not image_height:
@@ -82,6 +82,9 @@ class TargetImage:
 
 	def render(self):
 		print("Rendering {} to {}".format(self.source.filename, os.path.join(self.path, self.name)))
+		# Create the folder if it doesn't exist
+		if not os.path.isdir(self.path):
+			os.mkdir(self.path)
 		args = ["inkscape", "-z", "-e",
 			os.path.join(self.path, self.name) + ".png",
 			"-w", str(self.image_width),
@@ -98,11 +101,55 @@ class TargetImage:
 		if process.returncode != 0:
 			raise ValueError("inkscape exited with non zero status")
 
-def render_icon(filename, paths):
-	source = SourceImage(filename)
+def render_icon(source, paths):
+	if type(source) is str:
+		source = SourceImage(filename)
 	for path in paths:
 		target = TargetImage(source, **path)
 		target.render()
+
+def add_android_paths(source, paths, width = None, height = None, background = None):
+	root = "Zeltlager/Zeltlager.Droid/Resources/"
+	if not width:
+		width = source.width
+	if not height:
+		height = source.height
+	paths.append({
+		"path": root + "drawable-ldpi",
+		"image_width": width * 0.75,
+		"image_height": height * 0.75,
+		"background": background
+	})
+	paths.append({
+		"path": root + "drawable-mdpi",
+		"image_width": width * 1,
+		"image_height": height * 1,
+		"background": background
+	})
+	paths.append({
+		"path": root + "drawable-hdpi",
+		"image_width": width * 1.5,
+		"image_height": height * 1.5,
+		"background": background
+	})
+	paths.append({
+		"path": root + "drawable-xdpi",
+		"image_width": width * 2,
+		"image_height": height * 2,
+		"background": background
+	})
+	paths.append({
+		"path": root + "drawable-xxdpi",
+		"image_width": width * 3,
+		"image_height": height * 3,
+		"background": background
+	})
+	paths.append({
+		"path": root + "drawable-xxxdpi",
+		"image_width": width * 4,
+		"image_height": height * 4,
+		"background": background
+	})
 
 def main():
 	# Check if we are in the right folder
@@ -110,8 +157,20 @@ def main():
 		print("Please call this script from the root directory of the project")
 		return
 
-	logo_paths = [{"path": ".", "image_width": 800, "image_height": 800}]
-	render_icon("Icons/icon.svg", logo_paths)
+	logo = SourceImage("Icons/icon.svg")
+	logo_paths = []
+	# 48px for the application icon
+	add_android_paths(logo, logo_paths, 48, 48)
+	render_icon(logo, logo_paths)
+
+	# Convert all icons
+	icon_paths = []
+	# 24px for system icons
+	add_android_paths(None, paths, 24, 24)
+	icon_dir = "Icons/UIsvg"
+	for icon in os.listdir(icon_dir):
+		icon_path = os.path.join(icon_dir, icon)
+		render_icon(icon_path, icon_paths)
 
 if __name__ == "__main__":
 	main()
