@@ -135,12 +135,18 @@ def add_android_paths(source, paths, width = None, height = None, background = N
 			"background": background
 		})
 
+	paths.append({
+		"path": root + "drawable",
+		"image_width": width * 4,
+		"image_height": height * 4,
+		"background": background
+	})
 	add("l", 0.75)
 	add("m", 1)
 	add("h", 1.5)
-	add("x", 2)
-	add("xx", 3)
-	add("xxx", 4)
+	#add("x", 2)
+	#add("xx", 3)
+	#add("xxx", 4)
 	
 def add_windows_logo_paths(source, paths, width = None, height = None, background = None):
 	root = "Zeltlager/Zeltlager.Windows/Assets"
