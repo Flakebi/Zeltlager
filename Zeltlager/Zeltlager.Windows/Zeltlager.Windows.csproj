@@ -174,7 +174,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\" />
+    <Content Include="Assets\icon-126x126.png" />
+    <Content Include="Assets\icon-150x150.png" />
+    <Content Include="Assets\icon-30x30.png" />
+    <Content Include="Assets\icon-50x50.png" />
+    <Content Include="Assets\icon-620x300.png" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

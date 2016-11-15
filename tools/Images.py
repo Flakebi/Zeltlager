@@ -3,6 +3,9 @@ import os
 import re
 import subprocess
 
+# If images should only be updated when they are newer
+update = True
+
 svg_header = """<?xml version="1.0" encoding="UTF-8"?>
 <svg
 	xmlns="http://www.w3.org/2000/svg"
@@ -32,6 +35,7 @@ class SourceImage:
 			raise ValueError("No match found")
 
 		self.filename = filename
+		self.stat = os.stat(filename)
 		self.width = int(match.group("width"))
 		self.height = int(match.group("height"))
 		self.content = match.group("content")
@@ -81,12 +85,20 @@ class TargetImage:
 		return svg_header.format(self.image_width, self.image_height) + content + svg_end
 
 	def render(self):
-		print("Rendering {} to {}".format(self.source.filename, os.path.join(self.path, self.name)))
+		# Check if the image is already new enough
+		target_filename = os.path.join(self.path, self.name) + ".png"
+		if update and os.path.isfile(target_filename):
+			stat = os.stat(target_filename)
+			if stat.st_mtime > self.source.stat.st_mtime:
+				print("Skipping {} to {}".format(self.source.filename, target_filename))
+				return
+
+		print("Rendering {} to {}".format(self.source.filename, target_filename))
 		# Create the folder if it doesn't exist
 		if not os.path.isdir(self.path):
 			os.mkdir(self.path)
 		args = ["inkscape", "-z", "-e",
-			os.path.join(self.path, self.name) + ".png",
+			target_filename,
 			"-w", str(self.image_width),
 			"-h", str(self.image_height),
 			"/dev/stdin"]
@@ -103,7 +115,7 @@ class TargetImage:
 
 def render_icon(source, paths):
 	if type(source) is str:
-		source = SourceImage(filename)
+		source = SourceImage(source)
 	for path in paths:
 		target = TargetImage(source, **path)
 		target.render()
@@ -114,42 +126,48 @@ def add_android_paths(source, paths, width = None, height = None, background = N
 		width = source.width
 	if not height:
 		height = source.height
-	paths.append({
-		"path": root + "drawable-ldpi",
-		"image_width": width * 0.75,
-		"image_height": height * 0.75,
-		"background": background
-	})
-	paths.append({
-		"path": root + "drawable-mdpi",
-		"image_width": width * 1,
-		"image_height": height * 1,
-		"background": background
-	})
-	paths.append({
-		"path": root + "drawable-hdpi",
-		"image_width": width * 1.5,
-		"image_height": height * 1.5,
-		"background": background
-	})
-	paths.append({
-		"path": root + "drawable-xdpi",
-		"image_width": width * 2,
-		"image_height": height * 2,
-		"background": background
-	})
-	paths.append({
-		"path": root + "drawable-xxdpi",
-		"image_width": width * 3,
-		"image_height": height * 3,
-		"background": background
-	})
-	paths.append({
-		"path": root + "drawable-xxxdpi",
-		"image_width": width * 4,
-		"image_height": height * 4,
-		"background": background
-	})
+
+	def add(name, factor):
+		paths.append({
+			"path": root + "drawable-{}dpi".format(name),
+			"image_width": width * factor,
+			"image_height": height * factor,
+			"background": background
+		})
+
+	add("l", 0.75)
+	add("m", 1)
+	add("h", 1.5)
+	add("x", 2)
+	add("xx", 3)
+	add("xxx", 4)
+	
+def add_windows_logo_paths(source, paths, width = None, height = None, background = None):
+	root = "Zeltlager/Zeltlager.Windows/Assets"
+	if not width:
+		width = source.width
+	if not height:
+		height = source.height
+
+	def add(width, height = None):
+		if not height:
+			height = width
+		name = os.path.splitext(os.path.basename(source.filename))[0]
+		paths.append({
+			"path": root,
+			"name": "{}-{}x{}".format(name, width, height),
+			"icon_width": min(width, height),
+			"icon_height": min(width, height),
+			"image_width": width,
+			"image_height": height,
+			"background": background
+		})
+
+	add(30)
+	add(50)
+	add(126, 126)
+	add(150, 150)
+	add(620, 300)
 
 def main():
 	# Check if we are in the right folder
@@ -161,12 +179,13 @@ def main():
 	logo_paths = []
 	# 48px for the application icon
 	add_android_paths(logo, logo_paths, 48, 48)
+	add_windows_logo_paths(logo, logo_paths, 48, 48)
 	render_icon(logo, logo_paths)
 
 	# Convert all icons
 	icon_paths = []
 	# 24px for system icons
-	add_android_paths(None, paths, 24, 24)
+	#add_android_paths(None, paths, 24, 24)
 	icon_dir = "Icons/UIsvg"
 	for icon in os.listdir(icon_dir):
 		icon_path = os.path.join(icon_dir, icon)

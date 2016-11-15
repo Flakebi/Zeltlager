@@ -2,9 +2,9 @@
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
   <Identity Name="989ba5aa-e8e4-4180-873f-7fa858eb2761" Publisher="CN=Sebi" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>Zeltlager.Windows</DisplayName>
+    <DisplayName>Zeltlager</DisplayName>
     <PublisherDisplayName>Sebi</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Assets/icon-50x50.png</Logo>
   </Properties>
   <Prerequisites>
     <OSMinVersion>6.3.0</OSMinVersion>
@@ -15,8 +15,10 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Zeltlager.Windows.App">
-      <m2:VisualElements DisplayName="Zeltlager" Square150x150Logo="Assets\icon150.png" Square30x30Logo="Assets\SmallLogo.png" Description="Zeltlager" ForegroundText="light" BackgroundColor="#0fb9de">
-        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+      <m2:VisualElements DisplayName="Zeltlager" Square150x150Logo="Assets/icon-150x150.png" Square30x30Logo="Assets/icon-30x30.png" Description="Zeltlager" ForegroundText="light" BackgroundColor="#0fb9de">
+        <m2:DefaultTile ShortName="Zeltlager">
+        </m2:DefaultTile>
+        <m2:SplashScreen Image="Assets/icon-620x300.png" BackgroundColor="#0fb9de" />
       </m2:VisualElements>
     </Application>
   </Applications>
