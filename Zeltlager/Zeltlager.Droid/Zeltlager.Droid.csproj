@@ -133,22 +133,6 @@
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icon.png" />
-    <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
-    <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
-    <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
-    <AndroidResource Include="Resources\drawable\add.png" />
-    <AndroidResource Include="Resources\drawable\cancel.png" />
-    <AndroidResource Include="Resources\drawable\cloud.png" />
-    <AndroidResource Include="Resources\drawable\correct.png" />
-    <AndroidResource Include="Resources\drawable\edit.png" />
-    <AndroidResource Include="Resources\drawable\garbage.png" />
-    <AndroidResource Include="Resources\drawable\leftarrow.png" />
-    <AndroidResource Include="Resources\drawable\rightarrow.png" />
-    <AndroidResource Include="Resources\drawable\settings.png" />
-    <AndroidResource Include="Resources\drawable\timer.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>

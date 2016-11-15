@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Zeltlager.Windows</RootNamespace>
     <AssemblyName>Zeltlager.Windows</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
+    <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -121,24 +121,6 @@
     <None Include="Windows_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\icon.png" />
-    <Content Include="Assets\icon150.scale-100.png" />
-    <Content Include="Assets\Logo.scale-100.png" />
-    <Content Include="Assets\SmallLogo.scale-100.png" />
-    <Content Include="Assets\SplashScreen.scale-100.png" />
-    <Content Include="Assets\StoreLogo.scale-100.png" />
-    <Content Include="add.png" />
-    <Content Include="cancel.png" />
-    <Content Include="cloud.png" />
-    <Content Include="correct.png" />
-    <Content Include="edit.png" />
-    <Content Include="garbage.png" />
-    <Content Include="leftarrow.png" />
-    <Content Include="rightarrow.png" />
-    <Content Include="settings.png" />
-    <Content Include="timer.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
@@ -190,6 +172,9 @@
       <Project>{1E7EBC5E-A1F0-467B-BFE9-FC5C3ECC54F8}</Project>
       <Name>Zeltlager</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
