@@ -9,7 +9,7 @@
 					 Orientation="Vertical"
 					 Spacing="15"
 					 Padding="10,10,10,0">
-			<Button Text="Log" Clicked="OnLogClicked"/>
+			<Button Text="Log" Clicked="OnLogClicked" Style="{StaticResource DarkButtonStyle}"/>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

@@ -42,15 +42,15 @@ namespace Zeltlager
 
 
 			// Bind commands for context actions
-			if (OnEdit != null)
+			//if (OnEdit != null)
 				OnEdit = new Command(sender => onEdit((T)sender));
-			else
-				((SearchableCell)dataTemplate.CreateContent()).RemoveEditAction();
+			//else
+				//((SearchableCell)dataTemplate.CreateContent()).RemoveEditAction();
 
-			if (OnDelete != null)
+			//if (OnDelete != null)
 				OnDelete = new Command(sender => onDelete((T)sender));
-			else
-				((SearchableCell)dataTemplate.CreateContent()).RemoveDeleteAction();
+			//else
+				//((SearchableCell)dataTemplate.CreateContent()).RemoveDeleteAction();
 
 			dataTemplate.SetBinding(SearchableCell.OnEditCommandParameterProperty, new Binding("."));
 			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));

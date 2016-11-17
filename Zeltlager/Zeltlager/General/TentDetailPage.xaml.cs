@@ -19,7 +19,7 @@ namespace Zeltlager.General
 			grid.RowSpacing = 0;
 			RowDefinition rd = new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) };
 			RowDefinition rdfill = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-			RowDefinition rdlist = new RowDefinition { Height = new GridLength(100, GridUnitType.Absolute) };
+			RowDefinition rdlist = new RowDefinition { Height = new GridLength(150, GridUnitType.Absolute) };
 
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });

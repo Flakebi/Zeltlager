@@ -30,8 +30,8 @@ namespace Zeltlager
 		[Serialisation]
 		public bool Girls { get; set; }
 
-		[Editable("Zeltbetreuer")]	
-		public IReadOnlyList<Member> Supervisors => supervisors;
+		[Editable("Zeltbetreuer")]
+		public List<Member> Supervisors => supervisors;
 
 		public string Display => Number + " " + Name + " " + (Girls ? "♀" : "♂");
 
@@ -117,8 +117,7 @@ namespace Zeltlager
 			Tent other = obj as Tent;
 			if (other == null)
 				return false;
-			return Number == other.Number && Name == other.Name && Girls == other.Girls &&
-				Supervisors.SequenceEqual(other.Supervisors);
+			return Number == other.Number && Name == other.Name && Girls == other.Girls;
 		}
 
 		public override int GetHashCode()
