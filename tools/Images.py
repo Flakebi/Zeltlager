@@ -144,9 +144,9 @@ def add_android_paths(source, paths, width = None, height = None, background = N
 	add("l", 0.75)
 	add("m", 1)
 	add("h", 1.5)
-	#add("x", 2)
-	#add("xx", 3)
-	#add("xxx", 4)
+	add("xh", 2)
+	add("xxh", 3)
+	add("xxxh", 4)
 	
 def add_windows_logo_paths(source, paths, width = None, height = None, background = None):
 	root = "Zeltlager/Zeltlager.Windows/Assets"

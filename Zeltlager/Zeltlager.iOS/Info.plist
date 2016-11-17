@@ -12,6 +12,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -35,10 +36,8 @@
 	<key>CFBundleName</key>
 	<string>Zeltlager</string>
 	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcons.appiconset</string>
-	<key>XSLaunchImageAssets</key>
-	<string>Assets.xcassets/LaunchImage.launchimage</string>
+	<string>Resources/Assets.xcassets/AppIcons.appiconset</string>
 	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
+	<string>UIStatusBarStyleBlackTranslucent</string>
 </dict>
 </plist>
