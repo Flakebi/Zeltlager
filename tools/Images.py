@@ -98,7 +98,7 @@ class TargetImage:
 		if not os.path.isdir(self.path):
 			os.mkdir(self.path)
 		args = ["inkscape", "-z", "-e",
-			target_filename,
+			os.path.abspath(target_filename),
 			"-w", str(self.image_width),
 			"-h", str(self.image_height),
 			"/dev/stdin"]
@@ -147,7 +147,7 @@ def add_android_paths(source, paths, width = None, height = None, background = N
 	add("xh", 2)
 	add("xxh", 3)
 	add("xxxh", 4)
-	
+
 def add_windows_logo_paths(source, paths, width = None, height = None, background = None):
 	root = "Zeltlager/Zeltlager.Windows/Assets"
 	if not width:
