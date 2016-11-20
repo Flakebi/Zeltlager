@@ -173,7 +173,7 @@ def add_windows_logo_paths(source, paths, background = None):
 	add(620, 300)
 
 def add_ios_logo_paths(source, paths, background = True):
-	root = "Zeltlager/Zeltlager.iOS/Resources"
+	root = "Zeltlager/Zeltlager.iOS/Assets.xcassets/AppIcons.appiconset"
 
 	def add(name, scales, width, height = None):
 		if not height:
@@ -204,7 +204,7 @@ def add_ios_logo_paths(source, paths, background = True):
 	# iPad Spotlight iOS 5, 6
 	add("Icon-Small-50", [1, 2], 50)
 	# iPad Pro App
-	add("iPad-Pro", [2], 167)
+	add("iPad-Pro", [2], 83.5)
 	# iPad App iOS 5, 6
 	add("Icon-72", [1, 2], 72)
 	# iPad App iOS 7, 8
@@ -213,33 +213,38 @@ def add_ios_logo_paths(source, paths, background = True):
 def add_ios_logo_itunes_paths(source, paths, background = True):
 	root = "Zeltlager/Zeltlager.iOS"
 
-	def add(name, width, image_width, image_height = None):
+	def add(name, scales, width, image_width, image_height = None):
 		if not image_height:
 			image_height = image_width
-		paths.append({
-			"path": root,
-			"name": name,
-			"icon_width": width,
-			"icon_height": width,
-			"image_width": image_width,
-			"image_height": image_height,
-			"background": background,
-			"ending": ""
-		})
+		for scale in scales:
+			if scale == 1:
+				image_name = name
+			else:
+				image_name = "{}@{}x".format(name, scale)
+			paths.append({
+				"path": root,
+				"name": image_name,
+				"icon_width": width * scale,
+				"icon_height": width * scale,
+				"image_width": image_width * scale,
+				"image_height": image_height * scale,
+				"background": background,
+				"ending": ""
+			})
 
 	# iTunes Artwork
-	add("iTunesArtwork", 128, 512)
-	add("iTunesArtwork@2", 265, 1024)
+	add("iTunesArtwork", [1, 2], 128, 512)
 
-def add_ios_logo_big_paths(source, paths, background = True):
-	root = "Zeltlager/Zeltlager.iOS/Resources"
+def add_ios_launchimage_paths(source, paths, background = True):
+	root = "Zeltlager/Zeltlager.iOS/Assets.xcassets/LaunchImage.launchimage"
 
 	def add(name, width, image_width, image_height = None):
 		if not image_height:
 			image_height = image_width
+		image_name = "{}{}x{}".format(name, image_width, image_height)
 		paths.append({
 			"path": root,
-			"name": name,
+			"name": image_name,
 			"icon_width": width,
 			"icon_height": width,
 			"image_width": image_width,
@@ -247,9 +252,28 @@ def add_ios_logo_big_paths(source, paths, background = True):
 			"background": background
 		})
 
-	# iTunes Artwork
-	#add("iTunes", 128, 512)
-	#add("iTunes@2", 265, 1024)
+	# iPhone Portrait iOS 5, 6
+	add("Launch", 128, 320, 480)
+	add("Launch", 256, 640, 960)
+	add("Launch", 256, 640, 1136)
+	# iPhone Portrait iOS 8, 9
+	add("Launch", 300, 750, 1334)
+	add("Launch", 600, 1242, 2208)
+	# iPhone Landscape
+	add("Launch", 600, 2208, 1242)
+	# iPad Portrait
+	add("Launch", 320, 768, 1024)
+	add("Launch", 640, 1536, 2048)
+	# iPad Landscape
+	add("Launch", 320, 1024, 768)
+	add("Launch", 640, 2048, 1536)
+	# iPad Portrait without status bar
+	add("Launch", 320, 768, 1004)
+	add("Launch", 640, 1536, 2008)
+	# iPad Landscape without status bar
+	add("Launch", 640, 2048, 1496)
+	# AppleTV
+	add("Launch", 640, 1920, 1080)
 
 def main():
 	# Check if we are in the right folder
@@ -264,7 +288,7 @@ def main():
 	add_windows_logo_paths(logo, logo_paths)
 	add_ios_logo_paths(logo, logo_paths)
 	add_ios_logo_itunes_paths(logo, logo_paths)
-	add_ios_logo_big_paths(logo, logo_paths)
+	add_ios_launchimage_paths(logo, logo_paths)
 	render_icon(logo, logo_paths)
 
 	# Convert all icons

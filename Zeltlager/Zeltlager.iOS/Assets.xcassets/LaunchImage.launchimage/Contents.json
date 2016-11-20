@@ -6,7 +6,8 @@
       "minimum-system-version": "9.0",
       "scale": "1x",
       "size": "1920x1080",
-      "idiom": "tv"
+      "idiom": "tv",
+      "filename": "Launch1920x1080.png"
     },
     {
       "orientation": "portrait",
@@ -15,7 +16,8 @@
       "subtype": "736h",
       "scale": "3x",
       "size": "1242x2208",
-      "idiom": "iphone"
+      "idiom": "iphone",
+      "filename": "Launch1242x2208.png"
     },
     {
       "orientation": "portrait",
@@ -24,7 +26,8 @@
       "subtype": "667h",
       "scale": "2x",
       "size": "750x1334",
-      "idiom": "iphone"
+      "idiom": "iphone",
+      "filename": "Launch750x1334.png"
     },
     {
       "orientation": "landscape",
@@ -33,7 +36,8 @@
       "subtype": "736h",
       "scale": "3x",
       "size": "2208x1242",
-      "idiom": "iphone"
+      "idiom": "iphone",
+      "filename": "Launch2208x1242.png"
     },
     {
       "orientation": "portrait",
@@ -41,7 +45,8 @@
       "minimum-system-version": "7.0",
       "scale": "2x",
       "size": "640x960",
-      "idiom": "iphone"
+      "idiom": "iphone",
+      "filename": "Launch640x960.png"
     },
     {
       "orientation": "portrait",
@@ -50,7 +55,8 @@
       "subtype": "retina4",
       "scale": "2x",
       "size": "640x1136",
-      "idiom": "iphone"
+      "idiom": "iphone",
+      "filename": "Launch640x1136.png"
     },
     {
       "orientation": "portrait",
@@ -58,7 +64,8 @@
       "minimum-system-version": "7.0",
       "scale": "1x",
       "size": "768x1024",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch768x1024.png"
     },
     {
       "orientation": "portrait",
@@ -66,7 +73,8 @@
       "minimum-system-version": "7.0",
       "scale": "2x",
       "size": "1536x2048",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch1536x2048.png"
     },
     {
       "orientation": "landscape",
@@ -74,7 +82,8 @@
       "minimum-system-version": "7.0",
       "scale": "1x",
       "size": "1024x768",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch1024x768.png"
     },
     {
       "orientation": "landscape",
@@ -82,7 +91,8 @@
       "minimum-system-version": "7.0",
       "scale": "2x",
       "size": "2048x1536",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch2048x1536.png"
     },
     {
       "orientation": "portrait",
@@ -90,7 +100,7 @@
       "scale": "1x",
       "size": "320x480",
       "idiom": "iphone",
-      "filename": "Launch320x480@x1.png"
+      "filename": "Launch320x480.png"
     },
     {
       "orientation": "portrait",
@@ -98,7 +108,7 @@
       "scale": "2x",
       "size": "640x960",
       "idiom": "iphone",
-      "filename": "Launch320x480@x2.png"
+      "filename": "Launch640x960.png"
     },
     {
       "orientation": "portrait",
@@ -107,7 +117,7 @@
       "scale": "2x",
       "size": "640x1136",
       "idiom": "iphone",
-      "filename": "Launch640x1136@x1.png"
+      "filename": "Launch640x1136.png"
     },
     {
       "orientation": "portrait",
@@ -115,7 +125,7 @@
       "scale": "1x",
       "size": "768x1004",
       "idiom": "ipad",
-      "filename": "Launch768x1004@x1.png"
+      "filename": "Launch768x1004.png"
     },
     {
       "orientation": "portrait",
@@ -123,49 +133,55 @@
       "scale": "2x",
       "size": "1536x2008",
       "idiom": "ipad",
-      "filename": "Launch640x1136@x2.png"
+      "filename": "Launch1536x2008.png"
     },
     {
       "orientation": "portrait",
       "extent": "full-screen",
       "scale": "1x",
       "size": "768x1024",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch768x1024.png"
     },
     {
       "orientation": "portrait",
       "extent": "full-screen",
       "scale": "2x",
       "size": "1536x2048",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch1536x2048.png"
     },
     {
       "orientation": "landscape",
       "extent": "to-status-bar",
       "scale": "1x",
       "size": "1024x768",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch1024x768.png"
     },
     {
       "orientation": "landscape",
       "extent": "to-status-bar",
       "scale": "2x",
       "size": "2048x1496",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch2048x1496.png"
     },
     {
       "orientation": "landscape",
       "extent": "full-screen",
       "scale": "1x",
       "size": "1024x768",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch1024x768.png"
     },
     {
       "orientation": "landscape",
       "extent": "full-screen",
       "scale": "2x",
       "size": "2048x1536",
-      "idiom": "ipad"
+      "idiom": "ipad",
+      "filename": "Launch2048x1536.png"
     }
   ],
   "properties": {},
