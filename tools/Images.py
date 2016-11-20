@@ -44,7 +44,7 @@ class TargetImage:
 	def __init__(self, source, path, name = None,
 		icon_width = None, icon_height = None,
 		image_width = None, image_height = None,
-		background = None):
+		background = None, ending = ".png"):
 		# Set the default values
 		if not name:
 			# Without .svg
@@ -66,6 +66,7 @@ class TargetImage:
 		self.image_width = image_width
 		self.image_height = image_height
 		self.background = background
+		self.ending = ending
 
 	"""Assemble the image into a string with the given sizes"""
 	def assemble(self):
@@ -86,7 +87,7 @@ class TargetImage:
 
 	def render(self):
 		# Check if the image is already new enough
-		target_filename = os.path.join(self.path, self.name) + ".png"
+		target_filename = os.path.join(self.path, self.name) + self.ending
 		if update and os.path.isfile(target_filename):
 			stat = os.stat(target_filename)
 			if stat.st_mtime > self.source.stat.st_mtime:
@@ -148,12 +149,8 @@ def add_android_paths(source, paths, width = None, height = None, background = N
 	add("xxh", 3)
 	add("xxxh", 4)
 
-def add_windows_logo_paths(source, paths, width = None, height = None, background = None):
+def add_windows_logo_paths(source, paths, background = None):
 	root = "Zeltlager/Zeltlager.Windows/Assets"
-	if not width:
-		width = source.width
-	if not height:
-		height = source.height
 
 	def add(width, height = None):
 		if not height:
@@ -175,6 +172,85 @@ def add_windows_logo_paths(source, paths, width = None, height = None, backgroun
 	add(150, 150)
 	add(620, 300)
 
+def add_ios_logo_paths(source, paths, background = True):
+	root = "Zeltlager/Zeltlager.iOS/Resources"
+
+	def add(name, scales, width, height = None):
+		if not height:
+			height = width
+		for scale in scales:
+			if scale == 1:
+				image_name = name
+			else:
+				image_name = "{}@{}x".format(name, scale)
+			paths.append({
+				"path": root,
+				"name": image_name,
+				"icon_width": min(width, height) * scale,
+				"icon_height": min(width, height) * scale,
+				"image_width": width * scale,
+				"image_height": height * scale,
+				"background": background
+			})
+
+	# iPhone, iPad Settings
+	add("Icon-Small", [1, 2, 3], 29)
+	# iPhone Spotlight, iPad Spotlight iOS 7, 8
+	add("Icon-Small-40", [1, 2, 3], 40)
+	# iPhone App iOS 5, 6
+	add("Icon", [1, 2], 57)
+	# iPhone App iOS 7, 8
+	add("Icon-60", [2, 3], 60)
+	# iPad Spotlight iOS 5, 6
+	add("Icon-Small-50", [1, 2], 50)
+	# iPad Pro App
+	add("iPad-Pro", [2], 167)
+	# iPad App iOS 5, 6
+	add("Icon-72", [1, 2], 72)
+	# iPad App iOS 7, 8
+	add("Icon-76", [1, 2], 76)
+
+def add_ios_logo_itunes_paths(source, paths, background = True):
+	root = "Zeltlager/Zeltlager.iOS"
+
+	def add(name, width, image_width, image_height = None):
+		if not image_height:
+			image_height = image_width
+		paths.append({
+			"path": root,
+			"name": name,
+			"icon_width": width,
+			"icon_height": width,
+			"image_width": image_width,
+			"image_height": image_height,
+			"background": background,
+			"ending": ""
+		})
+
+	# iTunes Artwork
+	add("iTunesArtwork", 128, 512)
+	add("iTunesArtwork@2", 265, 1024)
+
+def add_ios_logo_big_paths(source, paths, background = True):
+	root = "Zeltlager/Zeltlager.iOS/Resources"
+
+	def add(name, width, image_width, image_height = None):
+		if not image_height:
+			image_height = image_width
+		paths.append({
+			"path": root,
+			"name": name,
+			"icon_width": width,
+			"icon_height": width,
+			"image_width": image_width,
+			"image_height": image_height,
+			"background": background
+		})
+
+	# iTunes Artwork
+	#add("iTunes", 128, 512)
+	#add("iTunes@2", 265, 1024)
+
 def main():
 	# Check if we are in the right folder
 	if not os.path.isfile("tools/Images.py"):
@@ -185,7 +261,10 @@ def main():
 	logo_paths = []
 	# 48px for the application icon
 	add_android_paths(logo, logo_paths, 48, 48)
-	add_windows_logo_paths(logo, logo_paths, 48, 48)
+	add_windows_logo_paths(logo, logo_paths)
+	add_ios_logo_paths(logo, logo_paths)
+	add_ios_logo_itunes_paths(logo, logo_paths)
+	add_ios_logo_big_paths(logo, logo_paths)
 	render_icon(logo, logo_paths)
 
 	# Convert all icons

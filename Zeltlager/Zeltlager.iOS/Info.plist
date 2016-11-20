@@ -39,5 +39,7 @@
 	<string>Resources/Assets.xcassets/AppIcons.appiconset</string>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleBlackTranslucent</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Resources/Assets.xcassets/LaunchImage.launchimage</string>
 </dict>
 </plist>
