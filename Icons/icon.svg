@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -9,65 +7,65 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 48 48"
+   version="1.1"
+   width="48"
+   height="48"
    id="svg2"
-   sodipodi:docname="icon.svg"
-   viewBox="0 0 400 400"
-   sodipodi:version="0.32"
-   version="1.0"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.91 r13725"
-   width="400"
-   height="400"
-   inkscape:export-filename="E:\Projects\Zeltlager\icon.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   sodipodi:docname="icon.svg">
+  <metadata
+     id="metadata36">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
   <defs
-     id="defs4170" />
+     id="defs34" />
   <sodipodi:namedview
-     id="base"
-     bordercolor="#666666"
-     inkscape:pageshadow="2"
-     guidetolerance="10"
      pagecolor="#ffffff"
-     gridtolerance="10000"
-     inkscape:window-height="1017"
-     inkscape:zoom="1.4142136"
+     bordercolor="#666666"
+     borderopacity="1"
      objecttolerance="10"
-     showgrid="true"
-     borderopacity="1.0"
-     inkscape:current-layer="layer8"
-     inkscape:cx="168.05752"
-     inkscape:cy="183.83829"
-     inkscape:window-y="-8"
-     inkscape:window-x="-8"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:pageopacity="0.0"
-     inkscape:document-units="px"
-     inkscape:window-maximized="1">
+     inkscape:window-height="1061"
+     id="namedview32"
+     showgrid="true"
+     inkscape:zoom="4.72"
+     inkscape:cx="3.1527597"
+     inkscape:cy="33.256108"
+     inkscape:window-x="1440"
+     inkscape:window-y="19"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2">
     <inkscape:grid
        type="xygrid"
-       id="grid4172" />
+       id="grid3364" />
   </sodipodi:namedview>
   <g
      id="layer3"
-     inkscape:label="Back"
-     inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="matrix(0.11999924,0,0,0.11999924,0.00260942,-3.8402396)">
     <path
        id="path2943"
-       sodipodi:nodetypes="ccccc"
        style="fill:#c48329"
        d="m 136.73163,219.92664 c -0.67202,2.06667 109.20034,59.4904 127.18988,27.90919 -16.55867,-21.4232 -50.86017,-99.15373 -55.55738,-137.23017 -21.10786,-12.162867 -23.45647,-3.35556 -33.10746,-0.298 11.35817,7.7343 -29.51547,95.74925 -38.52405,109.6162 z"
        inkscape:connector-curvature="0" />
   </g>
   <g
      id="layer6"
-     inkscape:label="Shadow_built (bad idea maybe)"
-     inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="matrix(0.11999924,0,0,0.11999924,0.00260942,-3.8402396)">
     <path
        id="path3043"
-       sodipodi:nodetypes="ccccc"
        style="fill:#2a1800;fill-opacity:0.81165999"
        d="M 357.2628,370.0919 C 308.80059,310.03872 83.294911,337.40356 44.681056,363.57822 c 42.203867,12.35384 66.318524,35.36393 87.022784,67.57253 50.34109,-19.9101 101.60189,-22.16127 149.25491,-3.64435 18.66058,-23.93272 10.00625,-42.50499 76.30013,-57.4145 z"
        inkscape:connector-curvature="0" />
@@ -75,45 +73,36 @@
   <g
      id="layer7"
      style="display:none"
-     inkscape:label="Shadow_building (bad idea maybe"
-     inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="translate(0,-384)">
     <path
        id="path3051"
-       sodipodi:nodetypes="ccccc"
        style="display:inline;fill:#2a1800;fill-opacity:0.81165999"
        d="m 186.46,402.09 c 0.39,-12.12 -3.28,-56.59 52.76,-67.24 41.89,-49.08 -197.46,-4.46 -236.59,23.91 42.768,13.39 67.205,38.33 88.186,73.24 51.014,-21.58 47.344,-49.98 95.644,-29.91 z"
        inkscape:connector-curvature="0" />
   </g>
   <g
      id="layer2"
-     inkscape:label="Sticks"
-     inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="matrix(0.11999924,0,0,0.11999924,0.00260942,-3.8402396)">
     <g
        id="g2931"
        transform="matrix(0.99786173,0,0,0.92113231,-157.24977,-211.32334)">
       <path
          id="path2332"
-         sodipodi:nodetypes="cc"
          style="fill:none;stroke:#7e292d;stroke-width:9.95259953;stroke-linecap:square;stroke-linejoin:bevel"
          d="M 204.71,622.08 C 302.57,524.22 382.14,274.22 382.14,274.22"
          inkscape:connector-curvature="0" />
       <path
          id="path2915"
-         sodipodi:nodetypes="cc"
          style="fill:none;stroke:#7e292d;stroke-width:9.95259953;stroke-linecap:square;stroke-linejoin:bevel"
          d="M 511.29,629.51 C 423.29,531.36 315.57,274.65 315.57,274.65"
          inkscape:connector-curvature="0" />
       <path
          id="path2917"
-         sodipodi:nodetypes="cc"
          style="fill:none;stroke:#7e292d;stroke-width:9.95259953;stroke-linecap:square;stroke-linejoin:bevel"
          d="m 285.14,691.65 c 57.86,-105 75,-420.86 75,-420.86"
          inkscape:connector-curvature="0" />
       <path
          id="path2919"
-         sodipodi:nodetypes="cc"
          style="fill:none;stroke:#7e292d;stroke-width:9.95259953;stroke-linecap:square;stroke-linejoin:bevel"
          d="M 439.93,686.36 C 382.07,581.36 337.5,269.79 337.5,269.79"
          inkscape:connector-curvature="0" />
@@ -121,27 +110,22 @@
   </g>
   <g
      id="layer4"
-     inkscape:label="Tent_building"
-     inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="matrix(0.11999924,0,0,0.11999924,0.00260942,-3.8402396)">
     <g
        id="g3003"
        transform="matrix(0.99786173,0,0,0.92113231,-157.24977,-211.32334)">
       <path
          id="path3005"
-         sodipodi:nodetypes="ccccccc"
          style="fill:#d58f2e"
          d="m 333.23,349.17 c -37.6,128.96 -84.16,193.8 -130.86,262.95 42.3,13.41 66.46,38.39 87.21,73.36 50.45,-21.61 29.82,-93.56 77.58,-73.45 18.7,-25.98 -28.97,-26.65 37.47,-42.84 -53.49,-82.07 1.41,-99.83 -38.22,-219.7 -16.09,7.51 -20.78,5.2 -33.18,-0.32 z"
          inkscape:connector-curvature="0" />
       <path
          id="path3007"
-         sodipodi:nodetypes="ccccc"
          style="fill:#c07d20"
          d="m 215.5,609.36 c 39.56,-68.77 75.13,-93.27 120.5,-252.5 l 7,5 -57,303 c -24.44,-39.12 -47.33,-44.29 -70.5,-55.5 z"
          inkscape:connector-curvature="0" />
       <path
          id="path3009"
-         sodipodi:nodetypes="ccccc"
          style="fill:#d57b2e"
          d="m 301.5,669.36 48,-309.5 c 49.77,76.8 -4.4,147.39 45.33,207.01 -52.65,7.04 -32.65,21 -33.33,32.99 -36.83,-14.65 -41.67,51.12 -60,69.5 z"
          inkscape:connector-curvature="0" />
@@ -149,33 +133,27 @@
   </g>
   <g
      id="layer1"
-     inkscape:label="Tent_built"
-     inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="matrix(0.11999924,0,0,0.11999924,0.00260942,-3.8402396)">
     <g
        id="g2952"
        transform="matrix(0.99786173,0,0,0.92113231,-157.24977,-211.32334)">
       <path
          id="path2921"
-         sodipodi:nodetypes="ccccccc"
          style="fill:#d58f2e"
          d="m 333.23,349.17 c -37.6,128.96 -84.16,193.8 -130.86,262.95 42.3,13.41 66.46,38.39 87.21,73.36 50.45,-21.61 101.82,-24.06 149.58,-3.95 18.7,-25.98 10.03,-46.15 76.47,-62.34 -53.49,-82.07 -109.59,-149.83 -149.22,-269.7 -16.09,7.51 -20.78,5.2 -33.18,-0.32 z"
          inkscape:connector-curvature="0" />
       <path
          id="path2937"
-         sodipodi:nodetypes="ccccc"
          style="fill:#c07d20"
          d="m 215.5,609.36 c 39.56,-68.77 75.13,-93.27 120.5,-252.5 l 7,5 -57,303 c -24.44,-39.12 -47.33,-44.29 -70.5,-55.5 z"
          inkscape:connector-curvature="0" />
       <path
          id="path2939"
-         sodipodi:nodetypes="cccc"
          style="fill:#d57b2e"
          d="m 301.5,669.36 48,-309.5 75.5,308 c -36.83,-14.65 -86.67,-8.88 -123.5,1.5 z"
          inkscape:connector-curvature="0" />
       <path
          id="path2941"
-         sodipodi:nodetypes="cccc"
          style="fill:#e19532"
          d="m 366.08,372.28 c 32.42,83.82 85.08,171.51 135.42,242.73 -27.43,0.29 -45.04,21.81 -62,44.35 L 361,367.86"
          inkscape:connector-curvature="0" />
@@ -183,12 +161,9 @@
   </g>
   <g
      id="layer5"
-     inkscape:label="Door_built"
-     inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="matrix(0.11999924,0,0,0.11999924,0.00260942,-3.8402396)">
     <path
        id="path3023"
-       sodipodi:nodetypes="czzzz"
        style="fill:#9a4020"
        d="m 199.97525,294.71404 c -22.95318,0.51665 -33.89691,27.18953 -30.93647,46.05707 2.96044,18.87676 16.33169,39.88476 33.92651,38.68537 17.60468,-1.19019 27.02872,-23.05623 27.94644,-41.44399 0.90787,-18.39701 -7.98328,-43.81512 -30.93648,-43.29845 z"
        inkscape:connector-curvature="0" />
@@ -200,71 +175,11 @@
   </g>
   <g
      id="layer8"
-     inkscape:label="Flag (bad idea maybe)"
-     inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="matrix(0.11999924,0,0,0.11999924,0.00260942,-3.8402396)">
     <path
        id="path3055"
-       sodipodi:nodetypes="cccc"
        style="fill:#0200df;fill-opacity:1"
        d="m 205.96519,34.034666 c 63.69856,-2.046736 54.5607,38.094885 86.80963,48.820316 -40.36051,-9.431921 -39.00858,-22.734224 -89.80953,-16.581287 l 2.9999,-32.239029 z"
        inkscape:connector-curvature="0" />
   </g>
-  <metadata
-     id="metadata4168">
-    <rdf:RDF>
-      <cc:Work>
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <cc:license
-           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
-        <dc:publisher>
-          <cc:Agent
-             rdf:about="http://openclipart.org/">
-            <dc:title>Openclipart</dc:title>
-          </cc:Agent>
-        </dc:publisher>
-        <dc:title>Cartoon tipi / tent with red flag</dc:title>
-        <dc:date>2008-02-06T00:43:53</dc:date>
-        <dc:description>A tipi I made for http://rtciv.sourceforge.net/
-\n
-\nIt's multi-layer, so a 'building-phase' is possible</dc:description>
-        <dc:source>https://openclipart.org/detail/12920/cartoon-tipi-/-tent-with-red-flag-by-qubodup</dc:source>
-        <dc:creator>
-          <cc:Agent>
-            <dc:title>qubodup</dc:title>
-          </cc:Agent>
-        </dc:creator>
-        <dc:subject>
-          <rdf:Bag>
-            <rdf:li>cartoon</rdf:li>
-            <rdf:li>flag</rdf:li>
-            <rdf:li>game</rdf:li>
-            <rdf:li>game media</rdf:li>
-            <rdf:li>hide</rdf:li>
-            <rdf:li>indian</rdf:li>
-            <rdf:li>play</rdf:li>
-            <rdf:li>red</rdf:li>
-            <rdf:li>rpg</rdf:li>
-            <rdf:li>rtciv</rdf:li>
-            <rdf:li>skin</rdf:li>
-            <rdf:li>tent</rdf:li>
-            <rdf:li>tipi</rdf:li>
-            <rdf:li>toy</rdf:li>
-            <rdf:li>yellow</rdf:li>
-          </rdf:Bag>
-        </dc:subject>
-      </cc:Work>
-      <cc:License
-         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#Reproduction" />
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#Distribution" />
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
-      </cc:License>
-    </rdf:RDF>
-  </metadata>
 </svg>
