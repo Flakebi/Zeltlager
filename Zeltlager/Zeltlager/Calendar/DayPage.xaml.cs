@@ -56,10 +56,7 @@ namespace Zeltlager.Calendar
 				Children = { leftArrow, dayNameLabel, rightArrow }
 			};
 
-			editDishwasherButton = new Button
-			{
-				Text = Icons.EDIT
-			};
+			editDishwasherButton = new Button { Image = Icons.EDIT };
 			editDishwasherButton.Clicked += OnEditDishwasherClicked;
 			editDishwasherButton.HorizontalOptions = LayoutOptions.End;
 			editingDishwashers = false;
@@ -113,7 +110,7 @@ namespace Zeltlager.Calendar
 			editingDishwashers = !editingDishwashers;
 			if (editingDishwashers)
 			{
-				editDishwasherButton.Text = Icons.SAVE;
+				editDishwasherButton.Image = Icons.SAVE;
 				var picker = new Picker
 				{
 					Title = "Spüldienst wählen"
@@ -161,7 +158,7 @@ namespace Zeltlager.Calendar
 					label.Text = "Spüldienst: " + Day.Dishwashers.ToString();
 					label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 				}
-				editDishwasherButton.Text = Icons.EDIT;
+				editDishwasherButton.Image = Icons.EDIT;
 				dishwashers.Children.RemoveAt(0);
 				label.HorizontalOptions = LayoutOptions.CenterAndExpand;
 				label.VerticalOptions = LayoutOptions.CenterAndExpand;

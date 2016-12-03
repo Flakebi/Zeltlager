@@ -275,6 +275,33 @@ def add_ios_launchimage_paths(source, paths, background = True):
 	# AppleTV
 	add("Launch", 640, 1920, 1080)
 
+def add_ios_paths(source, paths, width = None, height = None, background = False):
+	root = "Zeltlager/Zeltlager.iOS/Resources"
+	if not width:
+		width = source.width
+	if not height:
+		height = source.height
+	name = os.path.splitext(os.path.basename(source.filename))[0]
+
+	def add(scales, width, height = None):
+		if not height:
+			height = width
+		for scale in scales:
+			if scale == 1:
+				image_name = name
+			else:
+				image_name = "{}@{}x".format(name, scale)
+			paths.append({
+				"path": root,
+				"name": image_name,
+				"icon_width": min(width, height) * scale,
+				"icon_height": min(width, height) * scale,
+				"image_width": width * scale,
+				"image_height": height * scale,
+				"background": background
+			})
+	add([1, 2, 3], width, height)
+
 def main():
 	# Check if we are in the right folder
 	if not os.path.isfile("tools/Images.py"):
@@ -298,7 +325,11 @@ def main():
 	icon_dir = "Icons/UIsvg"
 	for icon in os.listdir(icon_dir):
 		icon_path = os.path.join(icon_dir, icon)
-		render_icon(icon_path, icon_paths)
+		icon = SourceImage(icon_path)
+		# Clone paths
+		paths = icon_paths[:]
+		add_ios_paths(icon, paths, 24, 24)
+		render_icon(icon, paths)
 
 if __name__ == "__main__":
 	main()

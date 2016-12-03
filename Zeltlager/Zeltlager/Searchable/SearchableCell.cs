@@ -71,12 +71,12 @@ namespace Zeltlager
 
 		public SearchableCell()
 		{
-			editAction = new MenuItem { Text = Icons.EDIT };
+			editAction = new MenuItem { Icon = Icons.EDIT };
 			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnEditCommandParameter)));
 			editAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnEditCommand)));
 			editAction.BindingContext = this;
 
-			deleteAction = new MenuItem { Text = Icons.DELETE, IsDestructive = true };
+			deleteAction = new MenuItem { Icon = Icons.DELETE, IsDestructive = true };
 			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnDeleteCommandParameter)));
 			deleteAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnDeleteCommand)));
 			deleteAction.BindingContext = this;
