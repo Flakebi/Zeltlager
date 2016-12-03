@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Zeltlager.Calendar;
+using Zeltlager.Competition;
 
 namespace Zeltlager.DataPackets
 {
@@ -28,6 +29,10 @@ namespace Zeltlager.DataPackets
 				typeof(Tent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(CalendarEvent),
 			    typeof(CalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+			new Tuple<Type, MethodInfo>(typeof(Competition.Competition),
+				typeof(CalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+			new Tuple<Type, MethodInfo>(typeof(Station),
+				typeof(CalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 		};
 
 		public static int GetIdCount() { return types.Length; }

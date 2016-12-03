@@ -61,7 +61,7 @@ namespace Zeltlager.Competition
 
 		void OnAddStationClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Station>(new Station("", competition), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Station>(new Station(null, "", competition), true, lager)), true);
 		}
 
 		void OnAddParticipantClicked(object sender, EventArgs e)

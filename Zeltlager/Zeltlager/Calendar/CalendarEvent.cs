@@ -13,7 +13,7 @@ namespace Zeltlager.Calendar
 	[Editable("Termin")]
 	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>, IEquatable<CalendarEvent>
 	{
-		public LagerClient Lager { get; set;}
+		public LagerClient Lager { get; set; }
 
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }

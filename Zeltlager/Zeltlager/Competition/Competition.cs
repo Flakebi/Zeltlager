@@ -5,25 +5,42 @@ namespace Zeltlager.Competition
 {
 	using Client;
 	using UAM;
-    using Serialisation;
+	using Serialisation;
+	using Zeltlager.DataPackets;
 
 	[Editable("Wettkampf")]
 	public class Competition : IEditable<Competition>, ISearchable
 	{
-		public LagerClient Lager;
+		private LagerClient lager;
+
+		[Serialisation(Type = SerialisationType.Id)]
+		public PacketId Id { get; set; }
 
 		[Editable("Name")]
 		public string Name;
 
+		// TODO [Editable("Teilnehmer")]
 		public List<Participant> Participants;
+		[Editable("Stationen")]
 		public List<Station> Stations;
 		public Ranking Ranking;
 
+		public Competition() {}
 
-		public Competition(LagerClient lager, string name)
+		public Competition(LagerClientSerialisationContext context) : this() {}
+
+		public Competition(PacketId id, string name, LagerClient lager)
 		{
-			Lager = lager;
+			Id = id;
+			this.lager = lager;
 			Name = name;
+		}
+
+		public void Add(LagerClientSerialisationContext context)
+		{
+			Id = context.PacketId;
+			lager = context.LagerClient;
+			context.LagerClient.CompetitionHandler.AddCompetition(this);
 		}
 
 		public void AddStation(Station station) => Stations.Add(station);
@@ -36,17 +53,21 @@ namespace Zeltlager.Competition
 
 		#region Interface implementation
 
-		public Task OnSaveEditing(
+		public async Task OnSaveEditing(
             Serialiser<LagerClientSerialisationContext> serialiser,
             LagerClientSerialisationContext context, Competition oldObject)
 		{
-			// TODO: durch packets ersetzen
-			return null;
+			DataPacket packet;
+			if (oldObject != null)
+				packet = await EditPacket.Create(serialiser, context, this);
+			else
+				packet = await AddPacket.Create(serialiser, context, this);
+			await context.LagerClient.AddPacket(packet);
 		}
 
 		public Competition Clone()
 		{
-			return new Competition(Lager, Name);
+			return new Competition(Id, Name, lager);
 		}
 
 		public string SearchableText { get { return Name; } }
