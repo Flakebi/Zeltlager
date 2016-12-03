@@ -19,10 +19,15 @@ namespace Zeltlager.Competition
 		public PacketId Id { get; set;}
 
 		[Editable("Name")]
-		string name;
+		[Serialisation]
+		public string Name { get; set; }
+
 		[Editable("Betreuer")]
-		Member supervisor;
-		Ranking ranking;
+		[Serialisation(Type = SerialisationType.Reference)]
+		public Member Supervisor { get; set; }
+
+		[Serialisation]
+		public Ranking Ranking { get; set; }
 
 		protected static Task<Station> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
@@ -36,14 +41,17 @@ namespace Zeltlager.Competition
 		public Station(PacketId id, string name, Competition competition)
 		{
 			Id = id;
-			this.name = name;
+			Name = name;
 			this.competition = competition;
-			ranking =  new Ranking();
+			Ranking =  new Ranking();
 		}
 
-		Station(PacketId id, string name, Competition competition, Ranking ranking) : this(id, name, competition)
+		Station(PacketId id, string name, Competition competition, Ranking ranking)
 		{
-			this.ranking = ranking;
+			Id = id;
+			Name = name;
+			this.competition = competition;
+			Ranking = ranking;
 		}
 
 		public void Add(LagerClientSerialisationContext context)
@@ -59,7 +67,7 @@ namespace Zeltlager.Competition
 
 		#region Interface implementation
 
-		public string SearchableText => name;
+		public string SearchableText => Name;
 
 		public string SearchableDetail => "";
 
@@ -77,7 +85,7 @@ namespace Zeltlager.Competition
 
 		public Station Clone()
 		{
-			return new Station(Id, name, competition, ranking);
+			return new Station(Id, Name, competition, Ranking);
 		}
 
 		#endregion

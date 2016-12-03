@@ -81,12 +81,14 @@ namespace Zeltlager.UAM
 					};
 					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
 				}
+
 				else if (vartype == typeof(DateTime))
 				{
 					// use date picker
 					manip = new DatePicker();
 					manip.SetBinding(DatePicker.DateProperty, new Binding(pi.Name, BindingMode.TwoWay));
 				}
+
 				else if (vartype == typeof(TimeSpan))
 				{
 					// use time picker
@@ -94,6 +96,7 @@ namespace Zeltlager.UAM
 					tp.SetBinding(TimePicker.TimeProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = tp;
 				}
+
 				else if (NUM_TYPES.Contains(vartype))
 				{
 					// use entry with num Keyboard
@@ -103,6 +106,7 @@ namespace Zeltlager.UAM
 					};
 					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
 				}
+
 				else if (vartype == typeof(Tent))
 				{
 					// use picker filled with all tents
@@ -119,6 +123,24 @@ namespace Zeltlager.UAM
 					picker.SelectedIndex = 0;
 					manip = picker;
 				}
+
+				else if (vartype == typeof(Member))
+				{
+					// use picker filled with all members
+					Picker picker = new Picker();
+					foreach (Member mem in lager.Members)
+					{
+						picker.Items.Add(mem.ToString());
+					}
+					picker.SelectedIndexChanged += (sender, args) =>
+					{
+						Member m = lager.GetMemberFromString(picker.Items[picker.SelectedIndex]);
+						type.GetRuntimeProperty(pi.Name).SetValue(Obj, m);
+					};
+					picker.SelectedIndex = 0;
+					manip = picker;
+				}
+
 				else if (vartype == typeof(bool))
 				{
 					// use switch
@@ -127,6 +149,7 @@ namespace Zeltlager.UAM
 					sw.SetBinding(Switch.IsToggledProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = sw;
 				}
+
 				else if (vartype.GetTypeInfo().IsGenericType && vartype.GetGenericTypeDefinition() == typeof(List<>))
 				{
 					// use list edit
@@ -154,7 +177,9 @@ namespace Zeltlager.UAM
 						Navigation.PushModalAsync(new NavigationPage((Page)listEditPage));
 					};
 					manip = b;
-				} else
+				} 
+
+				else
 				{
 					throw new Exception("Type " + vartype + " not supported by UniversalAddModifyPage");
 				}

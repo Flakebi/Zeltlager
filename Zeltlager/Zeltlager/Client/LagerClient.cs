@@ -328,6 +328,11 @@ namespace Zeltlager.Client
 			return t;
 		}
 
+		public Member GetMemberFromString(string memberstring)
+		{
+			return Members.First(x => x.ToString() == memberstring);
+		}
+
 		/// <summary>
 		/// Create some test data if a new lager is created
 		/// </summary>

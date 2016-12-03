@@ -15,11 +15,11 @@
 					 Orientation="Vertical"
 					 Spacing="15"
 					 Padding="10,10,10,0">
-			<Button x:Name="synchronizeButton" Text="Synchronisieren" Clicked="OnSynchronizeClicked" Style="{StaticResource DarkButtonStyle}"/>
-			<Button x:Name="competitionButton" Text="Wettkämpfe" Clicked="OnCompetitionClicked" Style="{StaticResource DarkButtonStyle}"/>
-			<Button x:Name="erwischtButton" Text="Erwischt" Clicked="OnErwischtClicked" Style="{StaticResource DarkButtonStyle}"/>
-			<Button x:Name="calendarButton" Text="Kalender" Clicked="OnCalendarClicked" Style="{StaticResource DarkButtonStyle}"/>
-			<Button x:Name="generalButton" Text="Allgemeines" Clicked="OnGeneralClicked" Style="{StaticResource DarkButtonStyle}"/>
+			<Button x:Name="synchronizeButton" Text="Synchronisieren" Clicked="OnSynchronizeClicked" Style="{StaticResource DarkButtonStyle}"  Image="rocketlaunch.png"/>
+			<Button x:Name="competitionButton" Text="Wettkämpfe" Clicked="OnCompetitionClicked" Style="{StaticResource DarkButtonStyle}" Image="gamepad.png"/>
+			<Button x:Name="erwischtButton" Text="Erwischt" Clicked="OnErwischtClicked" Style="{StaticResource DarkButtonStyle}" Image="target.png"/>
+			<Button x:Name="calendarButton" Text="Kalender" Clicked="OnCalendarClicked" Style="{StaticResource DarkButtonStyle}" Image="calendar.png"/>
+			<Button x:Name="generalButton" Text="Allgemeines" Clicked="OnGeneralClicked" Style="{StaticResource DarkButtonStyle}" Image="padnote.png"/>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

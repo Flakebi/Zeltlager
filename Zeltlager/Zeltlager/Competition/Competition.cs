@@ -23,9 +23,11 @@ namespace Zeltlager.Competition
 		// TODO [Editable("Teilnehmer")]
 		[Serialisation]
 		public List<Participant> Participants { get; set; }
+
 		[Editable("Stationen")]
 		[Serialisation(Type = SerialisationType.Reference)]
 		public List<Station> Stations { get; set; }
+
 		[Serialisation]
 		public Ranking Ranking { get; set; }
 

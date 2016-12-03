@@ -324,6 +324,8 @@ def main():
 	add_android_paths(None, icon_paths, 24, 24)
 	icon_dir = "Icons/UIsvg"
 	for icon in os.listdir(icon_dir):
+		if icon == ".DS_Store":
+			continue
 		icon_path = os.path.join(icon_dir, icon)
 		icon = SourceImage(icon_path)
 		# Clone paths
