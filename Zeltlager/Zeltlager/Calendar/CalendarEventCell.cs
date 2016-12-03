@@ -46,11 +46,11 @@ namespace Zeltlager.Calendar
 			horizontalLayout.Children.Add(title);
 			horizontalLayout.Children.Add(detail);
 
-			var editAction = new MenuItem { Icon = Icons.EDIT };
+			var editAction = new MenuItem { Icon = Icons.EDIT, Text = Icons.EDIT_TEXT };
 			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("."));
 			editAction.Clicked += OnEdit;
 
-			var deleteAction = new MenuItem { Icon = Icons.DELETE, IsDestructive = true };
+			var deleteAction = new MenuItem { Icon = Icons.DELETE, Text = Icons.DELETE_TEXT, IsDestructive = true };
 			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("."));
 			deleteAction.Clicked += OnDelete;
 
