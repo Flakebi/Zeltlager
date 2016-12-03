@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="989ba5aa-e8e4-4180-873f-7fa858eb2761" Publisher="CN=Sebi" Version="1.0.0.0" />
+  <Identity Name="Zeltlager" Publisher="CN=Sebi" Version="1.0.0.0" />
   <Properties>
     <DisplayName>Zeltlager</DisplayName>
     <PublisherDisplayName>Sebi</PublisherDisplayName>

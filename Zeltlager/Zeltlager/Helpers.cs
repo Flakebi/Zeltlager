@@ -15,12 +15,12 @@ namespace Zeltlager
 		public const string SAVE_TEXT = "\ud83d\udcbe";
 		public const string CANCEL_TEXT = "❌";
 
-		public const string EDIT = "edit.png";
-		public const string DELETE = "delete.png";
-		public const string SETTINGS = "settings.png";
 		public const string ADD = "add.png";
-		public const string SAVE = "save.png";
-		public const string CANCEL = "cancel.png";
+		public const string CANCEL = "cancel-1.png";
+		public const string DELETE = "garbage.png";
+		public const string EDIT = "edit.png";
+		public const string SAVE = "correct.png";
+		public const string SETTINGS = "settings-1.png";
 
 		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
 		{

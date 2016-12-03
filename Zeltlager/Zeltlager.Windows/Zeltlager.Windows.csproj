@@ -18,7 +18,7 @@
     <PackageCertificateKeyFile>Zeltlager.Windows_TemporaryKey.pfx</PackageCertificateKeyFile>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PackageCertificateThumbprint>077DBEB94E13143574801CBAEB112508E2368D60</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>37EB49CF45469944CBEC5042510F995F84421F24</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -119,6 +119,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="packages.config" />
+    <None Include="Zeltlager.Windows_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

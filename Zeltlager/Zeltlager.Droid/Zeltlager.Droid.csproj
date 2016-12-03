@@ -217,7 +217,7 @@
     <AndroidResource Include="Resources\drawable\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\cancel-1.png" />
+    <AndroidResource Include="Resources\drawable\cancel1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\clip.png" />
@@ -226,7 +226,7 @@
     <AndroidResource Include="Resources\drawable\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\clock-1.png" />
+    <AndroidResource Include="Resources\drawable\clock1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\cloud.png" />
@@ -235,13 +235,13 @@
     <AndroidResource Include="Resources\drawable\correct.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\credit-card.png" />
+    <AndroidResource Include="Resources\drawable\creditcard.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\cursor-1.png" />
+    <AndroidResource Include="Resources\drawable\cursor1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\cut.png" />
@@ -250,7 +250,7 @@
     <AndroidResource Include="Resources\drawable\cutlery.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\down-arrow.png" />
+    <AndroidResource Include="Resources\drawable\downarrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\download.png" />
@@ -310,10 +310,10 @@
     <AndroidResource Include="Resources\drawable\layout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\left-arrow.png" />
+    <AndroidResource Include="Resources\drawable\leftarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\left-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable\leftarrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\lightning.png" />
@@ -349,13 +349,13 @@
     <AndroidResource Include="Resources\drawable\pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\photo-camera.png" />
+    <AndroidResource Include="Resources\drawable\photocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\placeholder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\play-button.png" />
+    <AndroidResource Include="Resources\drawable\playbutton.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\power.png" />
@@ -373,7 +373,7 @@
     <AndroidResource Include="Resources\drawable\prohibition.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\push-pin.png" />
+    <AndroidResource Include="Resources\drawable\pushpin.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\puzzle.png" />
@@ -388,13 +388,13 @@
     <AndroidResource Include="Resources\drawable\rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\right-arrow.png" />
+    <AndroidResource Include="Resources\drawable\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\right-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable\rightarrow1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\rocket-launch.png" />
+    <AndroidResource Include="Resources\drawable\rocketlaunch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\screen.png" />
@@ -406,10 +406,10 @@
     <AndroidResource Include="Resources\drawable\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\settings-1.png" />
+    <AndroidResource Include="Resources\drawable\settings1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\settings-2.png" />
+    <AndroidResource Include="Resources\drawable\settings2.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\share.png" />
@@ -418,7 +418,7 @@
     <AndroidResource Include="Resources\drawable\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\shopping-cart.png" />
+    <AndroidResource Include="Resources\drawable\shoppingcart.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\shutter.png" />
@@ -427,7 +427,7 @@
     <AndroidResource Include="Resources\drawable\smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\speech-bubble.png" />
+    <AndroidResource Include="Resources\drawable\speechbubble.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\speedometer.png" />
@@ -457,7 +457,7 @@
     <AndroidResource Include="Resources\drawable\unlock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\up-arrow.png" />
+    <AndroidResource Include="Resources\drawable\uparrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\upload.png" />
@@ -466,13 +466,13 @@
     <AndroidResource Include="Resources\drawable\video.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\video-camera.png" />
+    <AndroidResource Include="Resources\drawable\videocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\visible.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\voice-recorder.png" />
+    <AndroidResource Include="Resources\drawable\voicerecorder.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\volume.png" />
@@ -487,7 +487,7 @@
     <AndroidResource Include="Resources\drawable\zoom.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\zoom-out.png" />
+    <AndroidResource Include="Resources\drawable\zoomout.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\bag.png" />
@@ -514,7 +514,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\cancel-1.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\cancel1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\clip.png" />
@@ -523,7 +523,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\clock-1.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\clock1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\cloud.png" />
@@ -532,13 +532,13 @@
     <AndroidResource Include="Resources\drawable-hdpi\correct.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\credit-card.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\creditcard.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\cursor-1.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\cursor1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\cut.png" />
@@ -547,7 +547,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\cutlery.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\down-arrow.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\downarrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\download.png" />
@@ -607,10 +607,10 @@
     <AndroidResource Include="Resources\drawable-hdpi\layout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\left-arrow.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\leftarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\left-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\leftarrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\lightning.png" />
@@ -646,13 +646,13 @@
     <AndroidResource Include="Resources\drawable-hdpi\pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\photo-camera.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\photocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\placeholder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\play-button.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\playbutton.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\power.png" />
@@ -670,7 +670,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\prohibition.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\push-pin.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\pushpin.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\puzzle.png" />
@@ -685,13 +685,13 @@
     <AndroidResource Include="Resources\drawable-hdpi\rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\right-arrow.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\right-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\rightarrow1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\rocket-launch.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\rocketlaunch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\screen.png" />
@@ -703,10 +703,10 @@
     <AndroidResource Include="Resources\drawable-hdpi\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\settings-1.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\settings1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\settings-2.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\settings2.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\share.png" />
@@ -715,7 +715,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\shopping-cart.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\shoppingcart.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\shutter.png" />
@@ -724,7 +724,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\speech-bubble.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\speechbubble.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\speedometer.png" />
@@ -754,7 +754,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\unlock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\up-arrow.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\uparrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\upload.png" />
@@ -763,13 +763,13 @@
     <AndroidResource Include="Resources\drawable-hdpi\video.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\video-camera.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\videocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\visible.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\voice-recorder.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\voicerecorder.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\volume.png" />
@@ -784,7 +784,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\zoom.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\zoom-out.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\zoomout.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\bag.png" />
@@ -811,7 +811,7 @@
     <AndroidResource Include="Resources\drawable-ldpi\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\cancel-1.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\cancel1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\clip.png" />
@@ -820,7 +820,7 @@
     <AndroidResource Include="Resources\drawable-ldpi\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\clock-1.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\clock1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\cloud.png" />
@@ -829,13 +829,13 @@
     <AndroidResource Include="Resources\drawable-ldpi\correct.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\credit-card.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\creditcard.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\cursor-1.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\cursor1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\cut.png" />
@@ -844,7 +844,7 @@
     <AndroidResource Include="Resources\drawable-ldpi\cutlery.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\down-arrow.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\downarrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\download.png" />
@@ -904,10 +904,10 @@
     <AndroidResource Include="Resources\drawable-ldpi\layout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\left-arrow.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\leftarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\left-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\leftarrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\lightning.png" />
@@ -943,13 +943,13 @@
     <AndroidResource Include="Resources\drawable-ldpi\pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\photo-camera.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\photocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\placeholder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\play-button.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\playbutton.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\power.png" />
@@ -967,7 +967,7 @@
     <AndroidResource Include="Resources\drawable-ldpi\prohibition.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\push-pin.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\pushpin.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\puzzle.png" />
@@ -982,13 +982,13 @@
     <AndroidResource Include="Resources\drawable-ldpi\rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\right-arrow.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\right-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\rightarrow1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\rocket-launch.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\rocketlaunch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\screen.png" />
@@ -1000,10 +1000,10 @@
     <AndroidResource Include="Resources\drawable-ldpi\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\settings-1.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\settings1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\settings-2.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\settings2.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\share.png" />
@@ -1012,7 +1012,7 @@
     <AndroidResource Include="Resources\drawable-ldpi\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\shopping-cart.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\shoppingcart.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\shutter.png" />
@@ -1021,7 +1021,7 @@
     <AndroidResource Include="Resources\drawable-ldpi\smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\speech-bubble.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\speechbubble.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\speedometer.png" />
@@ -1051,7 +1051,7 @@
     <AndroidResource Include="Resources\drawable-ldpi\unlock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\up-arrow.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\uparrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\upload.png" />
@@ -1060,13 +1060,13 @@
     <AndroidResource Include="Resources\drawable-ldpi\video.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\video-camera.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\videocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\visible.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\voice-recorder.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\voicerecorder.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\volume.png" />
@@ -1081,7 +1081,7 @@
     <AndroidResource Include="Resources\drawable-ldpi\zoom.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\zoom-out.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\zoomout.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\bag.png" />
@@ -1108,7 +1108,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\cancel-1.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\cancel1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\clip.png" />
@@ -1117,7 +1117,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\clock-1.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\clock1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\cloud.png" />
@@ -1126,13 +1126,13 @@
     <AndroidResource Include="Resources\drawable-mdpi\correct.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\credit-card.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\creditcard.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\cursor-1.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\cursor1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\cut.png" />
@@ -1141,7 +1141,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\cutlery.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\down-arrow.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\downarrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\download.png" />
@@ -1201,10 +1201,10 @@
     <AndroidResource Include="Resources\drawable-mdpi\layout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\left-arrow.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\leftarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\left-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\leftarrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\lightning.png" />
@@ -1240,13 +1240,13 @@
     <AndroidResource Include="Resources\drawable-mdpi\pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\photo-camera.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\photocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\placeholder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\play-button.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\playbutton.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\power.png" />
@@ -1264,7 +1264,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\prohibition.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\push-pin.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\pushpin.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\puzzle.png" />
@@ -1279,13 +1279,13 @@
     <AndroidResource Include="Resources\drawable-mdpi\rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\right-arrow.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\right-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\rightarrow1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\rocket-launch.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\rocketlaunch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\screen.png" />
@@ -1297,10 +1297,10 @@
     <AndroidResource Include="Resources\drawable-mdpi\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\settings-1.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\settings1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\settings-2.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\settings2.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\share.png" />
@@ -1309,7 +1309,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\shopping-cart.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\shoppingcart.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\shutter.png" />
@@ -1318,7 +1318,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\speech-bubble.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\speechbubble.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\speedometer.png" />
@@ -1348,7 +1348,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\unlock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\up-arrow.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\uparrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\upload.png" />
@@ -1357,13 +1357,13 @@
     <AndroidResource Include="Resources\drawable-mdpi\video.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\video-camera.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\videocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\visible.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\voice-recorder.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\voicerecorder.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\volume.png" />
@@ -1378,7 +1378,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\zoom.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\zoom-out.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\zoomout.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\bag.png" />
@@ -1405,7 +1405,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\cancel-1.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\cancel1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\clip.png" />
@@ -1414,7 +1414,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\clock-1.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\clock1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\cloud.png" />
@@ -1423,13 +1423,13 @@
     <AndroidResource Include="Resources\drawable-xhdpi\correct.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\credit-card.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\creditcard.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\cursor-1.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\cursor1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\cut.png" />
@@ -1438,7 +1438,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\cutlery.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\down-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\downarrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\download.png" />
@@ -1498,10 +1498,10 @@
     <AndroidResource Include="Resources\drawable-xhdpi\layout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\left-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\leftarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\left-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\leftarrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\lightning.png" />
@@ -1537,13 +1537,13 @@
     <AndroidResource Include="Resources\drawable-xhdpi\pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\photo-camera.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\photocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\placeholder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\play-button.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\playbutton.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\power.png" />
@@ -1561,7 +1561,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\prohibition.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\push-pin.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\pushpin.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\puzzle.png" />
@@ -1576,13 +1576,13 @@
     <AndroidResource Include="Resources\drawable-xhdpi\rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\right-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\right-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\rightarrow1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\rocket-launch.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\rocketlaunch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\screen.png" />
@@ -1594,10 +1594,10 @@
     <AndroidResource Include="Resources\drawable-xhdpi\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\settings-1.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\settings1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\settings-2.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\settings2.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\share.png" />
@@ -1606,7 +1606,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\shopping-cart.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\shoppingcart.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\shutter.png" />
@@ -1615,7 +1615,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\speech-bubble.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\speechbubble.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\speedometer.png" />
@@ -1645,7 +1645,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\unlock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\up-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\uparrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\upload.png" />
@@ -1654,13 +1654,13 @@
     <AndroidResource Include="Resources\drawable-xhdpi\video.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\video-camera.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\videocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\visible.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\voice-recorder.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\voicerecorder.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\volume.png" />
@@ -1675,7 +1675,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\zoom.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\zoom-out.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\zoomout.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\bag.png" />
@@ -1702,7 +1702,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\cancel-1.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\cancel1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\clip.png" />
@@ -1711,7 +1711,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\clock-1.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\clock1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\cloud.png" />
@@ -1720,13 +1720,13 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\correct.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\credit-card.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\creditcard.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\cursor-1.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\cursor1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\cut.png" />
@@ -1735,7 +1735,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\cutlery.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\down-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\downarrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\download.png" />
@@ -1795,10 +1795,10 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\layout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\left-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\leftarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\left-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\leftarrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\lightning.png" />
@@ -1834,13 +1834,13 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\photo-camera.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\photocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\placeholder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\play-button.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\playbutton.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\power.png" />
@@ -1858,7 +1858,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\prohibition.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\push-pin.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\pushpin.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\puzzle.png" />
@@ -1873,13 +1873,13 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\right-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\right-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\rightarrow1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\rocket-launch.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\rocketlaunch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\screen.png" />
@@ -1891,10 +1891,10 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\settings-1.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\settings1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\settings-2.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\settings2.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\share.png" />
@@ -1903,7 +1903,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\shopping-cart.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\shoppingcart.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\shutter.png" />
@@ -1912,7 +1912,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\speech-bubble.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\speechbubble.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\speedometer.png" />
@@ -1942,7 +1942,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\unlock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\up-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\uparrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\upload.png" />
@@ -1951,13 +1951,13 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\video.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\video-camera.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\videocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\visible.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\voice-recorder.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\voicerecorder.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\volume.png" />
@@ -1972,7 +1972,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\zoom.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\zoom-out.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\zoomout.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\bag.png" />
@@ -1999,7 +1999,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\cancel-1.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\cancel1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\clip.png" />
@@ -2008,7 +2008,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\clock-1.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\clock1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\cloud.png" />
@@ -2017,13 +2017,13 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\correct.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\credit-card.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\creditcard.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\cursor-1.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\cursor1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\cut.png" />
@@ -2032,7 +2032,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\cutlery.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\down-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\downarrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\download.png" />
@@ -2092,10 +2092,10 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\layout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\left-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\leftarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\left-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\leftarrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\lightning.png" />
@@ -2131,13 +2131,13 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\photo-camera.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\photocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\placeholder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\play-button.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\playbutton.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\power.png" />
@@ -2155,7 +2155,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\prohibition.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\push-pin.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\pushpin.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\puzzle.png" />
@@ -2170,13 +2170,13 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\right-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\right-arrow-1.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\rightarrow1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\rocket-launch.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\rocketlaunch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\screen.png" />
@@ -2188,10 +2188,10 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\settings-1.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\settings1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\settings-2.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\settings2.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\share.png" />
@@ -2200,7 +2200,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\shopping-cart.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\shoppingcart.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\shutter.png" />
@@ -2209,7 +2209,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\speech-bubble.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\speechbubble.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\speedometer.png" />
@@ -2239,7 +2239,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\unlock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\up-arrow.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\uparrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\upload.png" />
@@ -2248,13 +2248,13 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\video.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\video-camera.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\videocamera.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\visible.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\voice-recorder.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\voicerecorder.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\volume.png" />
@@ -2269,7 +2269,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\zoom.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\zoom-out.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\zoomout.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets')" />

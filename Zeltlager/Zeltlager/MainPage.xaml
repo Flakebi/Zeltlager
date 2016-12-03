@@ -6,7 +6,7 @@
              Title="Zeltlager"
 		 	 Style="{StaticResource BaseStyle}">
 	<ContentPage.ToolbarItems>
-		<ToolbarItem x:Name="settingsButton" Text="{x:Static local:Icons.SETTINGS}" Clicked="OnSettingsClicked">
+		<ToolbarItem x:Name="settingsButton" Icon="{x:Static local:Icons.SETTINGS}" Clicked="OnSettingsClicked">
 		</ToolbarItem>
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
