@@ -12,6 +12,8 @@ namespace Zeltlager
 	[Editable("Zelt")]
 	public class Tent : IEditable<Tent>, ISearchable
 	{
+		LagerClient lager;
+
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
 
@@ -35,6 +37,14 @@ namespace Zeltlager
 
 		public string Display => Number + " " + Name + " " + (Girls ? "♀" : "♂");
 
+		public string DisplayDetail 
+		{
+			get
+			{
+				return GetMembers().Count + " Teilnehmer, " + ((supervisors.Count > 0)? supervisors.First().Name : "");	
+			}
+		}
+
 		// For deserialisation
 		protected static Task<Tent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
@@ -50,16 +60,17 @@ namespace Zeltlager
 			supervisors = new List<Member>();
 		}
 
-		// For deserialisetion
+		// For deserialisation
 		public Tent(LagerClientSerialisationContext context) : this() { }
 
-		public Tent(PacketId id, int number, string name, bool girls, List<Member> supervisors)
+		public Tent(PacketId id, int number, string name, bool girls, List<Member> supervisors, LagerClient lager)
 		{
 			Id = id;
 			Number = number;
 			Name = name;
 			Girls = girls;
 			this.supervisors = supervisors;
+			this.lager = lager;
 		}
 
 		public override string ToString() => Display;
@@ -74,7 +85,7 @@ namespace Zeltlager
 
 		public bool RemoveSupervisor(Member supervisor) => supervisors.Remove(supervisor);
 
-		public List<Member> GetMembers(LagerClient lager)
+		public List<Member> GetMembers()
 		{
 			return new List<Member>(lager.Members.Where((arg) => arg.Tent.Equals(this)));
 		}
@@ -83,6 +94,7 @@ namespace Zeltlager
 		public void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
+			this.lager = context.LagerClient;
 			context.LagerClient.AddTent(this);
 		}
 
@@ -103,12 +115,12 @@ namespace Zeltlager
 
 		public Tent Clone()
 		{
-			return new Tent(Id?.Clone(), Number, Name, Girls, new List<Member>(supervisors));
+			return new Tent(Id?.Clone(), Number, Name, Girls, new List<Member>(supervisors), lager);
 		}
 
 		public string SearchableText => Display;
 
-		public string SearchableDetail => "";
+		public string SearchableDetail => DisplayDetail;
 
 		#endregion
 

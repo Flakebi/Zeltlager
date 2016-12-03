@@ -337,13 +337,13 @@ namespace Zeltlager.Client
 			context.PacketId = new PacketId(OwnCollaborator);
 
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Tent(null, 0, "Tiger", false, new List<Member>())));
+			    new Tent(null, 0, "Tiger", false, new List<Member>(), context.LagerClient)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Tent(null, 1, "Giraffen", false, new List<Member>())));
+				new Tent(null, 1, "Giraffen", false, new List<Member>(), context.LagerClient)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Tent(null, 2, "Seepferdchen", false, new List<Member>())));
+				new Tent(null, 2, "Seepferdchen", false, new List<Member>(), context.LagerClient)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Tent(null, 3, "Pinguine", false, new List<Member>())));
+				new Tent(null, 3, "Pinguine", false, new List<Member>(), context.LagerClient)));
 
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
 				new Member(null, "Anna", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));

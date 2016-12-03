@@ -13,7 +13,7 @@ namespace Zeltlager.Calendar
 	[Editable("Termin")]
 	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>, IEquatable<CalendarEvent>
 	{
-		LagerClient lager;
+		public LagerClient Lager { get; set;}
 
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
@@ -91,17 +91,20 @@ namespace Zeltlager.Calendar
 
 		public CalendarEvent(LagerClientSerialisationContext context) : this() {}
 
-		public CalendarEvent(DateTime date, string title, string detail)
+		public CalendarEvent(PacketId id, DateTime date, string title, string detail, LagerClient lager)
 		{
+			this.Id = id;
 			this.date = date;
 			this.title = title;
 			this.detail = detail;
+			this.Lager = lager;
 			timeSpan = date.TimeOfDay;
 		}
 
 		public void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
+			Lager = context.LagerClient;
 			context.LagerClient.Calendar.InsertNewCalendarEvent(this);
 		}
 
@@ -140,7 +143,7 @@ namespace Zeltlager.Calendar
 
 		public CalendarEvent Clone()
 		{
-			return new CalendarEvent(date, title, detail);
+			return new CalendarEvent(Id?.Clone(), date, title, detail, Lager);
 		}
 
 		public bool Equals(CalendarEvent other)

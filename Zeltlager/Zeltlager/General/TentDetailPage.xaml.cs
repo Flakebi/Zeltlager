@@ -68,7 +68,7 @@ namespace Zeltlager.General
 			}, 0, 2, 5, 6);
 
 			grid.RowDefinitions.Add(rdfill);
-			grid.Children.Add(new SearchableListView<Member>(tent.GetMembers(lager), null, null, null), 0, 2, 6, 7);
+			grid.Children.Add(new SearchableListView<Member>(tent.GetMembers(), null, null, null), 0, 2, 6, 7);
 
 			var scrollView = new ScrollView();
 			scrollView.Content = grid;
