@@ -16,6 +16,8 @@ namespace Zeltlager
 		public const string CANCEL_TEXT = "❌";
 
 		public const string ADD = "add.png";
+		public const string ARROW_LEFT = "leftarrow1.png";
+		public const string ARROW_RIGHT = "rightarrow1.png";
 		public const string CANCEL = "cancel1.png";
 		public const string DELETE = "garbage.png";
 		public const string EDIT = "edit.png";

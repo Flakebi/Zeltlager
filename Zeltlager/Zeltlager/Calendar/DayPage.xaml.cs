@@ -1,10 +1,11 @@
 using System;
-using System.Collections.Generic;
+
 using Xamarin.Forms;
-using Zeltlager.Client;
 
 namespace Zeltlager.Calendar
 {
+	using Client;
+
 	public partial class DayPage : ContentPage
 	{
 		Button leftArrow, rightArrow;
@@ -32,7 +33,7 @@ namespace Zeltlager.Calendar
 
 			leftArrow = new Button
 			{
-				Text = "←",
+				Image = Icons.ARROW_LEFT,
 				FontAttributes = FontAttributes.Bold,
 				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
 				VerticalOptions = LayoutOptions.CenterAndExpand
@@ -41,7 +42,7 @@ namespace Zeltlager.Calendar
 
 			rightArrow = new Button
 			{
-				Text = "→",
+				Image = Icons.ARROW_RIGHT,
 				FontAttributes = FontAttributes.Bold,
 				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
 				VerticalOptions = LayoutOptions.CenterAndExpand
