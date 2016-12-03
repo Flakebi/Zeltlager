@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Zeltlager.Competition
 {
 	using Client;
+	using Zeltlager.DataPackets;
 
 	/// <summary>
 	/// collects all the competitions of one lager
@@ -15,6 +17,7 @@ namespace Zeltlager.Competition
 		public CompetitionHandler(LagerClient lager)
 		{
 			this.lager = lager;
+			this.Competitions = new List<Competition>();
 		}
 
 		public void AddCompetition(Competition comp)
@@ -24,8 +27,17 @@ namespace Zeltlager.Competition
 
 		public void RemoveCompetition(Competition comp)
 		{
-			Competitions.Remove(comp);
-			// TODO: wie testen ob das geht?
+			// Competitions.Remove(comp);
+		}
+
+		public Competition GetCompetitionFromPacketId(PacketId id)
+		{
+			return Competitions.Find(x => x.Id == id);
+		}
+
+		public Station GetStationFromPacketId(PacketId id)
+		{
+			return Competitions.SelectMany(c => c.Stations).First(x => x.Id == id);
 		}
 	}
 }

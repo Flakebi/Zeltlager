@@ -17,13 +17,22 @@ namespace Zeltlager.Competition
 		public PacketId Id { get; set; }
 
 		[Editable("Name")]
-		public string Name;
+		[Serialisation]
+		public string Name { get; set; }
 
 		// TODO [Editable("Teilnehmer")]
-		public List<Participant> Participants;
+		[Serialisation]
+		public List<Participant> Participants { get; set; }
 		[Editable("Stationen")]
-		public List<Station> Stations;
-		public Ranking Ranking;
+		[Serialisation(Type = SerialisationType.Reference)]
+		public List<Station> Stations { get; set; }
+		[Serialisation]
+		public Ranking Ranking { get; set; }
+
+		protected static Task<Competition> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		{
+			return Task.FromResult(context.LagerClient.CompetitionHandler.GetCompetitionFromPacketId(id));
+		}
 
 		public Competition() {}
 
@@ -34,6 +43,9 @@ namespace Zeltlager.Competition
 			Id = id;
 			this.lager = lager;
 			Name = name;
+			Participants = new List<Participant>();
+			Stations = new List<Station>();
+			Ranking = new Ranking();
 		}
 
 		public void Add(LagerClientSerialisationContext context)

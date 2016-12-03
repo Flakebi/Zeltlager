@@ -24,6 +24,11 @@ namespace Zeltlager.Competition
 		Member supervisor;
 		Ranking ranking;
 
+		protected static Task<Station> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		{
+			return Task.FromResult(context.LagerClient.CompetitionHandler.GetStationFromPacketId(id));
+		}
+
 		public Station() {}
 
 		public Station(LagerClientSerialisationContext context) : this() {}
