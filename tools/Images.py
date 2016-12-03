@@ -294,7 +294,7 @@ def main():
 	# Convert all icons
 	icon_paths = []
 	# 24px for system icons
-	#add_android_paths(None, paths, 24, 24)
+	add_android_paths(None, icon_paths, 24, 24)
 	icon_dir = "Icons/UIsvg"
 	for icon in os.listdir(icon_dir):
 		icon_path = os.path.join(icon_dir, icon)

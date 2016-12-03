@@ -31,7 +31,7 @@
 			<ScrollView>
 				<Label x:Name="logLabel" VerticalOptions="FillAndExpand"/>
 			</ScrollView>
-			<Button Text="Log löschen" Clicked="OnDeleteClicked"/>
+			<Button Image="{x:Static local:Icons.DELETE}" Clicked="OnDeleteClicked"/>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

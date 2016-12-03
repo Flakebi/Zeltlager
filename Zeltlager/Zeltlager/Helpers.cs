@@ -8,12 +8,19 @@ namespace Zeltlager
 {
 	public static class Icons
 	{
-		public const string EDIT = "✏️";
-		public const string DELETE = "\ud83d\uddd1";
-		public const string SETTINGS = "⚙";
-		public const string ADD = "＋";
-		public const string SAVE = "\ud83d\udcbe";
-		public const string CANCEL = "❌";
+		public const string EDIT_TEXT = "✏️";
+		public const string DELETE_TEXT = "\ud83d\uddd1";
+		public const string SETTINGS_TEXT = "⚙";
+		public const string ADD_TEXT = "＋";
+		public const string SAVE_TEXT = "\ud83d\udcbe";
+		public const string CANCEL_TEXT = "❌";
+
+		public const string EDIT = "edit.png";
+		public const string DELETE = "delete.png";
+		public const string SETTINGS = "settings.png";
+		public const string ADD = "add.png";
+		public const string SAVE = "save.png";
+		public const string CANCEL = "cancel.png";
 
 		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
 		{

@@ -28,7 +28,7 @@ namespace Zeltlager.Competition
 				Orientation = StackOrientation.Horizontal
 			};
 			stationHeader.Children.Add(new Label { Text = "Stationen" });
-			Button addStation = new Button { Text = Icons.ADD };
+			Button addStation = new Button { Text = Icons.ADD_TEXT };
 			addStation.Clicked += OnAddStationClicked;
 			stationHeader.Children.Add(addStation);
 
@@ -39,7 +39,7 @@ namespace Zeltlager.Competition
 				Orientation = StackOrientation.Horizontal
 			};
 			participantHeader.Children.Add(new Label { Text = "Stationen" });
-			Button addParticipant = new Button { Text = Icons.ADD };
+			Button addParticipant = new Button { Text = Icons.ADD_TEXT };
 			addParticipant.Clicked += OnAddParticipantClicked;
 			participantHeader.Children.Add(addParticipant);
 

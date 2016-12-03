@@ -73,8 +73,8 @@ namespace Zeltlager
 			vsl.Children.Add(unselectedItemsView);
 			Content = vsl;
 
-			ToolbarItems.Add(new ToolbarItem(Icons.CANCEL, null, OnCancelClicked, ToolbarItemOrder.Primary, 0));
-			ToolbarItems.Add(new ToolbarItem(Icons.SAVE, null, OnSaveClicked, ToolbarItemOrder.Primary, 1));
+			ToolbarItems.Add(new ToolbarItem(null, Icons.CANCEL, OnCancelClicked, ToolbarItemOrder.Primary, 0));
+			ToolbarItems.Add(new ToolbarItem(null, Icons.SAVE, OnSaveClicked, ToolbarItemOrder.Primary, 1));
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			// make page not start directly at the top
 			Padding = new Thickness(10);
