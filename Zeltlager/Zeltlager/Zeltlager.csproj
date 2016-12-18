@@ -135,6 +135,8 @@
     <Compile Include="Cryptography\BCCryptoProvider.cs" />
     <Compile Include="Cryptography\ICryptoProvider.cs" />
     <Compile Include="Client\LagerClientManager.cs" />
+    <Compile Include="Competition\CompetitionPages\ParticipantResultCell.cs" />
+    <Compile Include="Competition\Rankable.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

@@ -7,7 +7,7 @@
 		Title="Wettkämpfe">
 	<ContentPage.ToolbarItems>
 		<ToolbarItem x:Name="AddButton" 
-				Name="{x:Static local:Icons.ADD}" 
+				Icon="{x:Static local:Icons.ADD}" 
 				Clicked="OnAddButtonClicked">
 		</ToolbarItem>
 	</ContentPage.ToolbarItems>

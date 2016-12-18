@@ -30,6 +30,20 @@ namespace Zeltlager.Competition
 			// Competitions.Remove(comp);
 		}
 
+		public void AddCompetitionResult(CompetitionResult cr)
+		{
+			Competition comp = cr.Owner as Competition;
+			if (comp != null)
+			{
+				comp.AddResult(cr);
+			} 
+			else 
+			{
+				Station stat = (Station) cr.Owner;
+				stat.AddResult(cr);
+			}
+		}
+
 		public Competition GetCompetitionFromPacketId(PacketId id)
 		{
 			return Competitions.Find(x => x.Id == id);
@@ -38,6 +52,11 @@ namespace Zeltlager.Competition
 		public Station GetStationFromPacketId(PacketId id)
 		{
 			return Competitions.SelectMany(c => c.Stations).First(x => x.Id == id);
+		}
+
+		public Rankable GetRankableFromId(PacketId id)
+		{
+			return (Rankable)GetStationFromPacketId(id) ?? GetCompetitionFromPacketId(id);
 		}
 	}
 }

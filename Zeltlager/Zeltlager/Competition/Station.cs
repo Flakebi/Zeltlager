@@ -14,7 +14,7 @@ namespace Zeltlager.Competition
 	/// represents one station in the competition and the results achieved there
 	/// </summary>
 	[Editable("Station")]
-	public class Station : ISearchable, IEditable<Station>
+	public class Station : Rankable, ISearchable, IEditable<Station>
 	{
 		[Serialisation(Type = SerialisationType.Reference)]
 		Competition competition;
@@ -32,7 +32,6 @@ namespace Zeltlager.Competition
 
 		public IReadOnlyList<Member> SupervisorList => competition.Lager.Supervisors;
 
-		[Serialisation]
 		public Ranking Ranking { get; set; }
 
 		protected static Task<Station> GetFromId(LagerClientSerialisationContext context, PacketId id)
@@ -40,7 +39,10 @@ namespace Zeltlager.Competition
 			return Task.FromResult(context.LagerClient.CompetitionHandler.GetStationFromPacketId(id));
 		}
 
-		public Station() {}
+		public Station() 
+		{
+			Ranking = new Ranking();
+		}
 
 		public Station(LagerClientSerialisationContext context) : this() {}
 
@@ -49,7 +51,7 @@ namespace Zeltlager.Competition
 			Id = id;
 			Name = name;
 			this.competition = competition;
-			Ranking =  new Ranking();
+			Ranking = new Ranking();
 		}
 
 		Station(PacketId id, string name, Competition competition, Ranking ranking)
@@ -60,15 +62,20 @@ namespace Zeltlager.Competition
 			Ranking = ranking;
 		}
 
-		public void Add(LagerClientSerialisationContext context)
+		public override void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
 			competition.AddStation(this);
 		}
 
-		public void AddResult(Participant participant, int? points = null, int? place = null)
+		public override void AddResult(CompetitionResult cr)
 		{
+			Ranking.AddResult(cr);
+		}
 
+		public override IReadOnlyList<Participant> GetParticipants()
+		{
+			return competition.GetParticipants();
 		}
 
 		#region Interface implementation

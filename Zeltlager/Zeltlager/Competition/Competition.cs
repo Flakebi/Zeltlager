@@ -6,10 +6,10 @@ namespace Zeltlager.Competition
 	using Client;
 	using UAM;
 	using Serialisation;
-	using Zeltlager.DataPackets;
+	using DataPackets;
 
 	[Editable("Wettkampf")]
-	public class Competition : IEditable<Competition>, ISearchable
+	public class Competition : Rankable, IEditable<Competition>, ISearchable
 	{
 		public LagerClient Lager { get; private set; }
 
@@ -21,14 +21,13 @@ namespace Zeltlager.Competition
 		public string Name { get; set; }
 
 		// [Editable("Teilnehmer")]
-		[Serialisation]
+		// [Serialisation]
 		public List<Participant> Participants { get; set; }
 
 		// [Editable("Stationen")]
 		[Serialisation(Type = SerialisationType.Reference)]
 		public List<Station> Stations { get; set; }
 
-		[Serialisation]
 		public Ranking Ranking { get; set; }
 
 		protected static Task<Competition> GetFromId(LagerClientSerialisationContext context, PacketId id)
@@ -36,7 +35,10 @@ namespace Zeltlager.Competition
 			return Task.FromResult(context.LagerClient.CompetitionHandler.GetCompetitionFromPacketId(id));
 		}
 
-		public Competition() {}
+		public Competition() 
+		{
+			Ranking = new Ranking();
+		}
 
 		public Competition(LagerClientSerialisationContext context) : this() {}
 
@@ -50,11 +52,26 @@ namespace Zeltlager.Competition
 			Ranking = new Ranking();
 		}
 
-		public void Add(LagerClientSerialisationContext context)
+		public Competition(LagerClient lager, PacketId id, string name, List<Participant> participants, List<Station> stations, Ranking ranking)
+		{
+			Lager = lager;
+			Id = id;
+			Name = name;
+			Participants = participants;
+			Stations = stations;
+			Ranking = ranking;
+		}
+
+		public override void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
 			Lager = context.LagerClient;
 			context.LagerClient.CompetitionHandler.AddCompetition(this);
+		}
+
+		public override void AddResult(CompetitionResult cr)
+		{
+			Ranking.AddResult(cr);
 		}
 
 		public void AddStation(Station station) => Stations.Add(station);
@@ -64,6 +81,11 @@ namespace Zeltlager.Competition
 		public void AddParticipant(Participant participant) => Participants.Add(participant);
 
 		public void RemoveParticipant(Participant participant) => Participants.Remove(participant);
+
+		public override IReadOnlyList<Participant> GetParticipants()
+		{
+			return Participants;
+		}
 
 		#region Interface implementation
 
@@ -81,7 +103,7 @@ namespace Zeltlager.Competition
 
 		public Competition Clone()
 		{
-			return new Competition(Id, Name, Lager);
+			return new Competition(Lager, Id, Name, Participants, Stations, Ranking);
 		}
 
 		public string SearchableText { get { return Name; } }

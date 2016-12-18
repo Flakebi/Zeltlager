@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Zeltlager.UAM
 {
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
 	public class EditableAttribute : Attribute
 	{
 		/// <summary>

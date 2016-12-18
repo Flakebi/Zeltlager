@@ -11,20 +11,22 @@ namespace Zeltlager.Competition
 	[Editable("Teilnehmer")]
 	public class Participant : ISearchable, IEditable<Participant>
 	{
+		// TODO Participants serialisieren
+
 		Competition competition;
 
 		[Editable("Name")]
-		string name;
+		string Name { get; set; }
 
 		public Participant(string name, Competition competition)
 		{
-			this.name = name;
+			this.Name = name;
 			this.competition = competition;
 		}
 
 		#region Interface implementation
 
-		public string SearchableText => name;
+		public string SearchableText => Name;
 
 		public string SearchableDetail => "";
 
@@ -37,7 +39,7 @@ namespace Zeltlager.Competition
 
 		public Participant Clone()
 		{
-			return new Participant(name, competition);
+			return new Participant(Name, competition);
 		}
 
 		#endregion

@@ -26,6 +26,7 @@ namespace Zeltlager.DataPackets
 			   typeof(CalendarEvent).GetRuntimeMethod("Edit", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(Competition.Competition), null),
 			new Tuple<Type, MethodInfo>(typeof(Station), null),
+			new Tuple<Type, MethodInfo>(typeof(CompetitionResult), null),
 		};
 
 		public static int GetIdCount() { return types.Length; }

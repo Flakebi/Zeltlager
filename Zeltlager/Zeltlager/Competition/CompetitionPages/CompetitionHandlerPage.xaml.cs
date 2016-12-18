@@ -10,6 +10,7 @@ namespace Zeltlager.Competition
 	public partial class CompetitionHandlerPage : ContentPage
 	{
 		LagerClient lager;
+
 		public CompetitionHandlerPage(LagerClient lager)
 		{
 			InitializeComponent();
@@ -24,7 +25,7 @@ namespace Zeltlager.Competition
 
 		void OnEdit(Competition comp)
 		{
-			// TODO edit competitons
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Competition>(comp,false, lager)));
 		}
 
 		void OnDelete(Competition comp)
@@ -34,7 +35,7 @@ namespace Zeltlager.Competition
 
 		void OnClick(Competition comp)
 		{
-			// TODO what should happen if competition is selected
+			Navigation.PushAsync(new CompetitionPage(comp, lager));
 		}
 	}
 }
