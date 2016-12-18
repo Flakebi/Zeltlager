@@ -1,9 +1,13 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Zeltlager.Competition
 {
+	using System.Collections;
 	using Serialisation;
 	using UAM;
+	using Zeltlager.Client;
 	using Zeltlager.DataPackets;
 
 	/// <summary>
@@ -25,6 +29,8 @@ namespace Zeltlager.Competition
 		[Editable("Betreuer")]
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Member Supervisor { get; set; }
+
+		public IReadOnlyList<Member> SupervisorList => competition.Lager.Supervisors;
 
 		[Serialisation]
 		public Ranking Ranking { get; set; }
@@ -62,7 +68,7 @@ namespace Zeltlager.Competition
 
 		public void AddResult(Participant participant, int? points = null, int? place = null)
 		{
-			
+
 		}
 
 		#region Interface implementation
@@ -87,7 +93,6 @@ namespace Zeltlager.Competition
 		{
 			return new Station(Id, Name, competition, Ranking);
 		}
-
 		#endregion
 	}
 }

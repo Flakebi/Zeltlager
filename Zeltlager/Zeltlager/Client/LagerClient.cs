@@ -35,6 +35,7 @@ namespace Zeltlager.Client
 		public string Name { get; set; }
 		public IReadOnlyList<Member> Members => members;
 		public IReadOnlyList<Tent> Tents => tents;
+		public IReadOnlyList<Member> Supervisors { get { return new List<Member>(Members.Where(x => x.Supervisor == true)); } }
 
 		// Subspaces
 		public Competition.CompetitionHandler CompetitionHandler { get; private set; }
@@ -351,17 +352,17 @@ namespace Zeltlager.Client
 				new Tent(null, 3, "Pinguine", false, new List<Member>(), context.LagerClient)));
 
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Anna", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));
+				new Member(null, "Anna", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Bernd", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true)));
+				new Member(null, "Bernd", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Claudius", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+				new Member(null, "Claudius", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Don", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+				new Member(null, "Don", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Emily", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+				new Member(null, "Emily", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Franz", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false)));
+				new Member(null, "Franz", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
 		}
 	
 		/// <summary>

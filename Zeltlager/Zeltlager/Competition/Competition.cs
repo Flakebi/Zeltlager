@@ -11,7 +11,7 @@ namespace Zeltlager.Competition
 	[Editable("Wettkampf")]
 	public class Competition : IEditable<Competition>, ISearchable
 	{
-		private LagerClient lager;
+		public LagerClient Lager { get; private set; }
 
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
@@ -20,11 +20,11 @@ namespace Zeltlager.Competition
 		[Serialisation]
 		public string Name { get; set; }
 
-		// TODO [Editable("Teilnehmer")]
+		// [Editable("Teilnehmer")]
 		[Serialisation]
 		public List<Participant> Participants { get; set; }
 
-		[Editable("Stationen")]
+		// [Editable("Stationen")]
 		[Serialisation(Type = SerialisationType.Reference)]
 		public List<Station> Stations { get; set; }
 
@@ -43,7 +43,7 @@ namespace Zeltlager.Competition
 		public Competition(PacketId id, string name, LagerClient lager)
 		{
 			Id = id;
-			this.lager = lager;
+			this.Lager = lager;
 			Name = name;
 			Participants = new List<Participant>();
 			Stations = new List<Station>();
@@ -53,7 +53,7 @@ namespace Zeltlager.Competition
 		public void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
-			lager = context.LagerClient;
+			Lager = context.LagerClient;
 			context.LagerClient.CompetitionHandler.AddCompetition(this);
 		}
 
@@ -81,7 +81,7 @@ namespace Zeltlager.Competition
 
 		public Competition Clone()
 		{
-			return new Competition(Id, Name, lager);
+			return new Competition(Id, Name, Lager);
 		}
 
 		public string SearchableText { get { return Name; } }

@@ -35,13 +35,18 @@ namespace Zeltlager
 		[Editable("Zeltbetreuer")]
 		public List<Member> Supervisors => supervisors;
 
+		public IReadOnlyList<Member> SupervisorsList => lager.Supervisors;
 		public string Display => Number + " " + Name + " " + (Girls ? "♀" : "♂");
 
 		public string DisplayDetail 
 		{
 			get
 			{
-				return GetMembers().Count + " Teilnehmer, " + ((supervisors.Count > 0)? supervisors.First().Name : "");	
+				if (supervisors.Any())
+				{
+					return GetMembers().Count + " Teilnehmer, " + (supervisors.First().Name);
+				}
+				return GetMembers().Count + " Teilnehmer";
 			}
 		}
 

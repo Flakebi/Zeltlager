@@ -12,6 +12,12 @@ namespace Zeltlager.UAM
 	using DataPackets;
 	using Serialisation;
 
+	/// <summary>
+	/// A page to manipulate annotated properties from any given type.
+	/// Supports these types of properties:
+	/// string, DateTime, TimeSpan, any Number, Tent, Member, bool, List
+	/// </summary>
+
 	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
 	{
 		public T Obj { get; }
@@ -111,7 +117,8 @@ namespace Zeltlager.UAM
 				{
 					// use picker filled with all tents
 					Picker picker = new Picker();
-					foreach (Tent tent in lager.Tents)
+					IReadOnlyList<Tent> list = (IReadOnlyList<Tent>)type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
+					foreach (Tent tent in list)
 					{
 						picker.Items.Add(tent.ToString());
 					}
@@ -128,7 +135,8 @@ namespace Zeltlager.UAM
 				{
 					// use picker filled with all members
 					Picker picker = new Picker();
-					foreach (Member mem in lager.Members)
+					IReadOnlyList<Member> list = (IReadOnlyList<Member>) type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
+					foreach (Member mem in list)
 					{
 						picker.Items.Add(mem.ToString());
 					}
@@ -153,24 +161,19 @@ namespace Zeltlager.UAM
 				else if (vartype.GetTypeInfo().IsGenericType && vartype.GetGenericTypeDefinition() == typeof(List<>))
 				{
 					// use list edit
-					// var type = typeof(AnimalContext<>).MakeGenericType(a.GetType());
 					var genericListType = vartype.GenericTypeArguments[0];
 					var typeForListEdit = typeof(ListEditPage<>).MakeGenericType(genericListType);
-					var list = type.GetRuntimeProperty(pi.Name).GetValue(Obj);
+					var currentValue = type.GetRuntimeProperty(pi.Name).GetValue(Obj);
 					object listEditPage = null;
-					//var ilist = (IList)list;
-					//ilist.Add(new Member{ Tent = new Tent(), Id = new MemberId(new Co)});
 					if (genericListType == typeof(Member))
 					{
-						listEditPage = typeForListEdit.GetTypeInfo().DeclaredConstructors.First().Invoke(new object[] { lager.Members.ToList(), list, Title });
+						IReadOnlyList<Member> list = (IReadOnlyList<Member>)type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
+						listEditPage = typeForListEdit.GetTypeInfo().DeclaredConstructors.First().Invoke(new object[] { list, currentValue, Title });
 					}
-					//Page lep = (Page)listEditPage;
-					//lep.SetBinding((BindableProperty)typeForListEdit.GetTypeInfo()
-					//               .GetDeclaredField("SelectedItemsProperty").GetValue(null),
-					//               new Binding(pi.Name, BindingMode.TwoWay));
 					Button b = new Button
 					{
-						Text = "Zeltbetreuer bearbeiten"
+						Text = pi.GetCustomAttribute<EditableAttribute>().Name + " bearbeiten",
+						Style = (Style)Application.Current.Resources["DarkButtonStyle"]
 					};
 					b.Clicked += (sender, e) =>
 					{

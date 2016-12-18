@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Zeltlager.Client;
 
 namespace Zeltlager
 {
@@ -11,18 +13,21 @@ namespace Zeltlager
 	[Editable("Teilnehmer")]
 	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
 	{
+		LagerClient lager;
+
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
 
 		[Editable("Name")]
 		[Serialisation]
 		public string Name { get; set; }
-		/// <summary>
-		/// The tent in which this member lives, this attribute can not be null.
-		/// </summary>
+
+		// The tent in which this member lives, this attribute can not be null.
 		[Editable("Zelt")]
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Tent Tent { get; set; }
+
+		public IReadOnlyList<Tent> TentList => lager.Tents;
 
 		[Editable("Betreuer")]
 		[Serialisation]
@@ -41,23 +46,26 @@ namespace Zeltlager
 			Id = new PacketId(null);
 			Name = "";
 			Supervisor = false;
+			lager = null;
 		}
 
-		// For deserialisetion
+		// For deserialisation
 		public Member(LagerClientSerialisationContext context) : this() { }
 
-		public Member(PacketId id, string name, Tent tent, bool supervisor)
+		public Member(PacketId id, string name, Tent tent, bool supervisor, LagerClient lager)
 		{
 			Id = id;
 			Name = name;
 			Tent = tent;
 			Supervisor = supervisor;
+			this.lager = lager;
 		}
 
 		// Add the member to a lager after deserialising it
 		public void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
+			this.lager = context.LagerClient;
 			context.LagerClient.AddMember(this);
 		}
 
@@ -81,7 +89,7 @@ namespace Zeltlager
 
 		public Member Clone()
 		{
-			return new Member(Id?.Clone(), Name, Tent, Supervisor);
+			return new Member(Id?.Clone(), Name, Tent, Supervisor, lager);
 		}
 
 		public string SearchableText => Display;

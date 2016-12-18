@@ -14,12 +14,6 @@ namespace Zeltlager
 			get { return new List<T> (selectedItems); }
 			set { selectedItems = new ObservableCollection<T>(value); }
 		}
-		//public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create("SelectedItems", typeof(List<T>), typeof(ListEditPage<T>), defaultValueCreator: (bindable) => new List<T>());
-
-		//static void OnSelectedItemsChanged(BindableObject bindable, object oldValue, object newValue)
-		//{
-			
-		//}
 
 		private ObservableCollection<T> selectedItems;
 

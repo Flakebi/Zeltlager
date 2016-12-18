@@ -35,7 +35,7 @@
 			<Color x:Key="textColor">White</Color>
 <!--			<Color x:Key="buttonColor">#1a1a1a</Color>-->
 			<Color x:Key="textColorStandard">#07BADE</Color>
-			<Color x:Key="textColorButton">#593fa6</Color>
+			<Color x:Key="textColorButton">#2f82da</Color>
 			<Color x:Key="darkButtonColor">#181832</Color>
 			<Color x:Key="separatorColor">#4b358d</Color>
 			<Color x:Key="whiteColor">#dddddd</Color>
