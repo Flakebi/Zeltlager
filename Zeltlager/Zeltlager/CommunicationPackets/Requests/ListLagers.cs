@@ -8,13 +8,17 @@ using Zeltlager.Network;
 
 namespace Zeltlager.CommunicationPackets.Requests
 {
-    public class ListGames : CommunicationRequest
+    public class ListLagers : CommunicationRequest
     {
-		public ListGames() { }
+		public ListLagers()
+		{
+			Data = new byte[0];
+		}
 
 		public override void Apply(INetworkConnection connection, LagerManager manager)
 		{
 			// Create a response
+			connection.WritePacket(new Responses.ListLagers(manager));
 		}
 	}
 }

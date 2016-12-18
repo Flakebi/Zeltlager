@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Zeltlager
 {
@@ -157,6 +159,19 @@ namespace Zeltlager
 			foreach (var b in bytes)
 				sb.Append(b.ToString("X2"));
 			return sb.ToString();
+		}
+
+		public static async Task<byte[]> ReadAsyncSafe(this Stream stream, int count)
+		{
+			byte[] result = new byte[count];
+			do
+			{
+				int read = await stream.ReadAsync(result, result.Length - count, count);
+				if (read == 0)
+					throw new EndOfStreamException("Unexpected end of stream while reading async");
+				count -= read;
+			} while (count > 0);
+			return result;
 		}
 	}
 }

@@ -34,6 +34,7 @@ namespace Zeltlager
 		/// All this data is signed with the lager private key.
 		/// </summary>
 		protected byte[] data;
+		public byte[] Data => data;
 
 		protected Serialiser<LagerSerialisationContext> serialiser;
 

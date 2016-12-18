@@ -17,8 +17,8 @@ namespace Zeltlager.CommunicationPackets
 		const int VERSION = 0;
 
 		static readonly Type[] packetTypes = {
-			typeof(Requests.ListGames),
-			typeof(Responses.ListGames)
+			typeof(Requests.ListLagers),
+			typeof(Responses.ListLagers)
 		};
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace Zeltlager.CommunicationPackets
 		/// </summary>
 		/// <param name="data">The input data.</param>
 		/// <returns>The read packet.</returns>
-		protected static CommunicationPacket ReadPacket(byte[] data)
+		public static CommunicationPacket ReadPacket(byte[] data)
 		{
 			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
 			{
@@ -47,7 +47,7 @@ namespace Zeltlager.CommunicationPackets
 
 		protected byte[] Data { get; set; }
 
-		protected void WritePacket(BinaryWriter output)
+		public void WritePacket(BinaryWriter output)
 		{
 			var index = Array.IndexOf(packetTypes, GetType());
 			if (index == -1)

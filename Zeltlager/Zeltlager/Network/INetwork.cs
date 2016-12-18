@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Network
 {
@@ -6,25 +7,27 @@ namespace Zeltlager.Network
 
 	public interface INetworkClient
 	{
-		INetworkConnection OpenConnection(byte[] address, ushort port);
+		Task<INetworkConnection> OpenConnection(string address, ushort port);
 	}
 
 	public interface INetworkServer
 	{
-		INetworkConnection AcceptConnection();
+		Task Start(ushort port);
+		void SetOnAcceptConnection(Func<INetworkConnection, Task> onAccept);
 	}
 
 	public interface INetworkConnection : IDisposable
 	{
-		byte[] GetAddress();
-		ushort GetPort();
+		string GetRemoteAddress();
+		ushort GetRemotePort();
 
-		void WritePacket(CommunicationPacket packet);
+		Task WritePacket(CommunicationPacket packet);
 		/// <summary>
 		/// More efficient for multiple packets because they can be bundled.
 		/// </summary>
 		/// <param name="packets">A list of packets that should be written to this connection.</param>
-		void WritePackets(CommunicationPacket[] packets);
-		CommunicationPacket ReadPacket();
+		Task WritePackets(CommunicationPacket[] packets);
+		Task<CommunicationPacket> ReadPacket();
+		Task Close();
 	}
 }

@@ -38,8 +38,8 @@ namespace Zeltlager
 			try
 			{
 				loadingScreen.Status = "Einstellungen laden";
-                await manager.Load();
 				await LagerManager.Log.Load();
+				await manager.Load();
 			} catch (Exception e)
 			{
 				// Log the exception
