@@ -11,7 +11,7 @@ namespace Zeltlager.Competition
 	[Editable("Wettkampf")]
 	public class Competition : Rankable, IEditable<Competition>, ISearchable
 	{
-		public LagerClient Lager { get; private set; }
+		LagerClient lager;
 
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
@@ -20,12 +20,8 @@ namespace Zeltlager.Competition
 		[Serialisation]
 		public string Name { get; set; }
 
-		// [Editable("Teilnehmer")]
-		// [Serialisation]
 		public List<Participant> Participants { get; set; }
 
-		// [Editable("Stationen")]
-		[Serialisation(Type = SerialisationType.Reference)]
 		public List<Station> Stations { get; set; }
 
 		public Ranking Ranking { get; set; }
@@ -38,6 +34,8 @@ namespace Zeltlager.Competition
 		public Competition() 
 		{
 			Ranking = new Ranking();
+			Participants = new List<Participant>();
+			Stations = new List<Station>();
 		}
 
 		public Competition(LagerClientSerialisationContext context) : this() {}
@@ -45,7 +43,7 @@ namespace Zeltlager.Competition
 		public Competition(PacketId id, string name, LagerClient lager)
 		{
 			Id = id;
-			this.Lager = lager;
+			this.lager = lager;
 			Name = name;
 			Participants = new List<Participant>();
 			Stations = new List<Station>();
@@ -54,7 +52,7 @@ namespace Zeltlager.Competition
 
 		public Competition(LagerClient lager, PacketId id, string name, List<Participant> participants, List<Station> stations, Ranking ranking)
 		{
-			Lager = lager;
+			this.lager = lager;
 			Id = id;
 			Name = name;
 			Participants = participants;
@@ -65,7 +63,7 @@ namespace Zeltlager.Competition
 		public override void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
-			Lager = context.LagerClient;
+			lager = context.LagerClient;
 			context.LagerClient.CompetitionHandler.AddCompetition(this);
 		}
 
@@ -87,6 +85,11 @@ namespace Zeltlager.Competition
 			return Participants;
 		}
 
+		public LagerClient GetLagerClient()
+		{
+			return lager;
+		}
+
 		#region Interface implementation
 
 		public async Task OnSaveEditing(
@@ -103,7 +106,7 @@ namespace Zeltlager.Competition
 
 		public Competition Clone()
 		{
-			return new Competition(Lager, Id, Name, Participants, Stations, Ranking);
+			return new Competition(lager, Id, Name, Participants, Stations, Ranking);
 		}
 
 		public string SearchableText { get { return Name; } }

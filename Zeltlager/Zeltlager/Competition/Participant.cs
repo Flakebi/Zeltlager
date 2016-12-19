@@ -4,7 +4,9 @@ namespace Zeltlager.Competition
 {
 	using Serialisation;
 	using UAM;
-	
+	using Zeltlager.Client;
+	using Zeltlager.DataPackets;
+
 	/// <summary>
 	/// represents a participant in a comptetion, could be a tent, a mixed group or a single person
 	/// </summary>
@@ -12,16 +14,41 @@ namespace Zeltlager.Competition
 	public class Participant : ISearchable, IEditable<Participant>
 	{
 		// TODO Participants serialisieren
+		[Serialisation(Type = SerialisationType.Id)]
+		public PacketId Id { get; set; }
 
+		[Serialisation(Type = SerialisationType.Reference)]
 		Competition competition;
 
 		[Editable("Name")]
-		string Name { get; set; }
+		[Serialisation]
+		public string Name { get; set; }
 
-		public Participant(string name, Competition competition)
+		public Participant() {}
+
+		public Participant(LagerClientSerialisationContext context) : this() {}
+
+		public Participant(PacketId id, string name, Competition competition)
 		{
 			this.Name = name;
 			this.competition = competition;
+			Id = id;
+		}
+
+		public void Add(LagerClientSerialisationContext context) 
+		{
+			Id = context.PacketId;
+			competition.AddParticipant(this);
+		}
+
+		private static Task<Participant> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		{
+			return Task.FromResult(context.LagerClient.CompetitionHandler.GetParticipantFromId(id));
+		}
+
+		public LagerClient GetLagerClient()
+		{
+			return competition.GetLagerClient();
 		}
 
 		#region Interface implementation
@@ -34,12 +61,17 @@ namespace Zeltlager.Competition
 			Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, Participant oldObject)
 		{
-			// TODO: Packets
+			DataPacket packet;
+			if (oldObject != null)
+				packet = await EditPacket.Create(serialiser, context, this);
+			else
+				packet = await AddPacket.Create(serialiser, context, this);
+			await context.LagerClient.AddPacket(packet);
 		}
 
 		public Participant Clone()
 		{
-			return new Participant(Name, competition);
+			return new Participant(Id, Name, competition);
 		}
 
 		#endregion

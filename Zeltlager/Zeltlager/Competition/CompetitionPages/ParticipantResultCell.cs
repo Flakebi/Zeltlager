@@ -1,8 +1,7 @@
 ﻿using System;
-
 using Xamarin.Forms;
 
-namespace Zeltlager
+namespace Zeltlager.Competition
 {
 	public class ParticipantResultCell : ViewCell
 	{

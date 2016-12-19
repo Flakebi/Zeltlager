@@ -138,6 +138,9 @@
     <Compile Include="Competition\CompetitionPages\ParticipantResultCell.cs" />
     <Compile Include="Network\TcpNetwork.cs" />
     <Compile Include="Competition\Rankable.cs" />
+    <Compile Include="Competition\CompetitionPages\AddEditParticipantPage.xaml.cs">
+      <DependentUpon>AddEditParticipantPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -185,6 +188,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="General\TentDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Competition\CompetitionPages\AddEditParticipantPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

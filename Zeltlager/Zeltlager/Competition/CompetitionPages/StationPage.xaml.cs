@@ -1,3 +1,4 @@
+using System;
 using Xamarin.Forms;
 
 namespace Zeltlager.Competition
@@ -11,14 +12,21 @@ namespace Zeltlager.Competition
 			InitializeComponent();
 			this.station = station;
 
-			StackLayout vsl = new StackLayout { Orientation = StackOrientation.Vertical, VerticalOptions = LayoutOptions.StartAndExpand };
+			StackLayout vsl = new StackLayout 
+			{ 
+				Orientation = StackOrientation.Vertical, 
+				VerticalOptions = LayoutOptions.StartAndExpand,
+				Padding = new Thickness(10),
+			};
 
 			Button addResult = new Button
 			{
 				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
 				Text = "Ergebnis hinzufügen",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
+			addResult.Clicked += OnAddButtonClicked;
 
 			ListView participantResults = new ListView
 			{
@@ -30,11 +38,13 @@ namespace Zeltlager.Competition
 			StackLayout hsl = new StackLayout { Orientation = StackOrientation.Horizontal, VerticalOptions = LayoutOptions.End };
 			Button increasing = new Button
 			{
-				Text = "aufsteigend sortieren"
+				Text = "aufsteigend sortieren",
+				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
 			};
 			Button decreasing = new Button
 			{
-				Text = "absteigend sortieren"
+				Text = "absteigend sortieren",
+				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
 			};
 			hsl.Children.Add(increasing);
 			hsl.Children.Add(decreasing);
@@ -44,6 +54,11 @@ namespace Zeltlager.Competition
 			vsl.Children.Add(hsl);
 
 			Content = vsl;
+		}
+
+		void OnAddButtonClicked(object sender, EventArgs e)
+		{
+			// TODO call uam on competition result
 		}
 	}
 }

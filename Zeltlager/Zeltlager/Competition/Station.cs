@@ -30,7 +30,7 @@ namespace Zeltlager.Competition
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Member Supervisor { get; set; }
 
-		public IReadOnlyList<Member> SupervisorList => competition.Lager.Supervisors;
+		public IReadOnlyList<Member> SupervisorList => competition.GetLagerClient().Supervisors;
 
 		public Ranking Ranking { get; set; }
 

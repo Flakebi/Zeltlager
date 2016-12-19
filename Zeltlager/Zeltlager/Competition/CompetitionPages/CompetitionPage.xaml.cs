@@ -20,14 +20,20 @@ namespace Zeltlager.Competition
 			{
 				Orientation = StackOrientation.Vertical,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.FillAndExpand
+				VerticalOptions = LayoutOptions.FillAndExpand,
+				Padding = new Thickness(10, 2)
 			};
 
 			StackLayout stationHeader = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal
 			};
-			stationHeader.Children.Add(new Label { Text = "Stationen", HorizontalOptions = LayoutOptions.CenterAndExpand });
+			stationHeader.Children.Add(new Label
+			{ 
+				Text = "Stationen", 
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				VerticalOptions = LayoutOptions.Center
+			});
 			Button addStation = new Button { Image = Icons.ADD, HorizontalOptions = LayoutOptions.End };
 			addStation.Clicked += OnAddStationClicked;
 			stationHeader.Children.Add(addStation);
@@ -38,7 +44,12 @@ namespace Zeltlager.Competition
 			{
 				Orientation = StackOrientation.Horizontal
 			};
-			participantHeader.Children.Add(new Label { Text = "Teilnehmer", HorizontalOptions = LayoutOptions.CenterAndExpand });
+			participantHeader.Children.Add(new Label 
+			{ 
+				Text = "Teilnehmer", 
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				VerticalOptions = LayoutOptions.Center
+			});
 			Button addParticipant = new Button { Image = Icons.ADD, HorizontalOptions = LayoutOptions.End };
 			addParticipant.Clicked += OnAddParticipantClicked;
 			participantHeader.Children.Add(addParticipant);
@@ -68,7 +79,7 @@ namespace Zeltlager.Competition
 
 		void OnAddParticipantClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(new Participant("", competition), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new AddEditParticipantPage(new Participant(null, "", competition), true)), true);
 		}
 
 		#region Searchable implementaition
@@ -95,7 +106,7 @@ namespace Zeltlager.Competition
 
 		void OnEditParticipant(Participant participant)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Participant>(participant, false, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new AddEditParticipantPage(participant, false)), true);
 		}
 
 		void OnDeleteParticipant(Participant participant)

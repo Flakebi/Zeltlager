@@ -70,7 +70,7 @@ namespace Zeltlager.Calendar
 			}
 			else
 			{
-				label.Text = "Spüldienst: " + Day.Dishwashers.ToString();
+				label.Text = "Spüldienst: " + Day.Dishwashers;
 				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 			}
 			Label dishwasherLabel = label;

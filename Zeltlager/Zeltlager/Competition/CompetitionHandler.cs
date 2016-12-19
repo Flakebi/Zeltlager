@@ -58,5 +58,10 @@ namespace Zeltlager.Competition
 		{
 			return (Rankable)GetStationFromPacketId(id) ?? GetCompetitionFromPacketId(id);
 		}
+
+		public Participant GetParticipantFromId(PacketId id)
+		{
+			return Competitions.SelectMany(c => c.Participants).First(x => x.Id == id);
+		}
 	}
 }
