@@ -44,7 +44,9 @@ namespace Zeltlager.Network
 
 	class TcpSocketNetworkConnection : INetworkConnection
 	{
-		ITcpSocketClient socketClient;
+		readonly ITcpSocketClient socketClient;
+
+		public bool IsClosed => !socketClient.ReadStream.CanRead || !socketClient.WriteStream.CanWrite;
 
 		public TcpSocketNetworkConnection(ITcpSocketClient socketClient)
 		{
@@ -77,7 +79,7 @@ namespace Zeltlager.Network
 			return WritePackets(new CommunicationPacket[] { packet });
 		}
 
-		public Task WritePackets(CommunicationPacket[] packets)
+		public async Task WritePackets(CommunicationPacket[] packets)
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter writer = new BinaryWriter(mem))
@@ -88,12 +90,13 @@ namespace Zeltlager.Network
 					using (BinaryWriter tmpWriter = new BinaryWriter(tmp))
 						packet.WritePacket(tmpWriter);
 					byte[] data = tmp.ToArray();
-					writer.Write(data.Length);
+					writer.Write(data.Length.ToBytes());
 					writer.Write(data);
 				}
 			}
 			byte[] result = mem.ToArray();
-			return socketClient.WriteStream.WriteAsync(result, 0, result.Length);
+			await socketClient.WriteStream.WriteAsync(result, 0, result.Length);
+			await socketClient.WriteStream.FlushAsync();
 		}
 
 		public Task Close()

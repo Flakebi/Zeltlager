@@ -1,11 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 using System.Linq;
+
+using Xamarin.Forms;
 
 namespace Zeltlager
 {
 	using Client;
+	using Network;
 
 	public partial class App : Application
 	{
@@ -27,6 +29,7 @@ namespace Zeltlager
             LagerManager.IsClient = true;
 
             manager = new LagerClientManager(new IoProvider());
+			manager.NetworkClient = new TcpNetworkClient();
 
 			loadingScreen = new LoadingScreen();
 			MainPage = new NavigationPage(loadingScreen);
