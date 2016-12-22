@@ -35,8 +35,12 @@ namespace Zeltlager.DataPackets
 			    typeof(Station).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(CompetitionResult),
 			    typeof(CompetitionResult).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
-			new Tuple<Type, MethodInfo>(typeof(Participant),
-			     typeof(Participant).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+			new Tuple<Type, MethodInfo>(typeof(GroupParticipant),
+			     typeof(GroupParticipant).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+			new Tuple<Type, MethodInfo>(typeof(MemberParticipant),
+				 typeof(MemberParticipant).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+			new Tuple<Type, MethodInfo>(typeof(TentParticipant),
+				 typeof(TentParticipant).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 		};
 
 		public static int GetIdCount() { return types.Length; }

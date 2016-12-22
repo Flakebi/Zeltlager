@@ -113,7 +113,6 @@
       <DependentUpon>LogPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Competition\CompetitionHandler.cs" />
-    <Compile Include="Competition\Participant.cs" />
     <Compile Include="Competition\Station.cs" />
     <Compile Include="Competition\CompetitionResult.cs" />
     <Compile Include="Competition\CompetitionPages\CompetitionHandlerPage.xaml.cs">
@@ -141,6 +140,10 @@
     <Compile Include="Competition\CompetitionPages\AddEditParticipantPage.xaml.cs">
       <DependentUpon>AddEditParticipantPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Competition\Participants\GroupParticipant.cs" />
+    <Compile Include="Competition\Participants\MemberParticipant.cs" />
+    <Compile Include="Competition\Participants\Participant.cs" />
+    <Compile Include="Competition\Participants\TentParticipant.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -231,6 +234,9 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Competition\Participants\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.3.175\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.3.175\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
 </Project>

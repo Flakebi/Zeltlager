@@ -79,7 +79,7 @@ namespace Zeltlager.Competition
 
 		void OnAddParticipantClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new AddEditParticipantPage(new Participant(null, "", competition), true)), true);
+			Navigation.PushModalAsync(new NavigationPage(new AddEditParticipantPage(new GroupParticipant(null, "", competition), true)), true);
 		}
 
 		#region Searchable implementaition

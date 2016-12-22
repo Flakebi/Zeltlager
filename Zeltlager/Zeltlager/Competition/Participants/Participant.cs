@@ -10,27 +10,23 @@ namespace Zeltlager.Competition
 	/// <summary>
 	/// represents a participant in a comptetion, could be a tent, a mixed group or a single person
 	/// </summary>
-	[Editable("Teilnehmer")]
-	public class Participant : ISearchable, IEditable<Participant>
+	public abstract class Participant : ISearchable, IEditable<Participant>
 	{
 		// TODO Participants serialisieren
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
 
 		[Serialisation(Type = SerialisationType.Reference)]
-		Competition competition;
+		protected Competition competition;
 
-		[Editable("Name")]
-		[Serialisation]
-		public string Name { get; set; }
+		public virtual string Name { get; set; }
 
 		public Participant() {}
 
 		public Participant(LagerClientSerialisationContext context) : this() {}
 
-		public Participant(PacketId id, string name, Competition competition)
+		public Participant(PacketId id, Competition competition)
 		{
-			this.Name = name;
 			this.competition = competition;
 			Id = id;
 		}
@@ -41,7 +37,7 @@ namespace Zeltlager.Competition
 			competition.AddParticipant(this);
 		}
 
-		private static Task<Participant> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		static Task<Participant> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
 			return Task.FromResult(context.LagerClient.CompetitionHandler.GetParticipantFromId(id));
 		}
@@ -49,6 +45,11 @@ namespace Zeltlager.Competition
 		public LagerClient GetLagerClient()
 		{
 			return competition.GetLagerClient();
+		}
+
+		public Competition GetCompetition()
+		{
+			return competition;
 		}
 
 		#region Interface implementation
@@ -69,10 +70,7 @@ namespace Zeltlager.Competition
 			await context.LagerClient.AddPacket(packet);
 		}
 
-		public Participant Clone()
-		{
-			return new Participant(Id, Name, competition);
-		}
+		public abstract Participant Clone();
 
 		#endregion
 	}

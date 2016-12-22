@@ -20,7 +20,7 @@ namespace Zeltlager.Competition
 		public AddEditParticipantPage(Participant participant, bool isAddPage)
 		{
 			InitializeComponent();
-			this.participant = participant;
+			this.participant = participant.Clone();
 			if (isAddPage)
 				oldParticipant = null;
 			else
@@ -75,7 +75,7 @@ namespace Zeltlager.Competition
 					picker.SelectedIndexChanged += (sender, args) =>
 					{
 						Tent t = participant.GetLagerClient().GetTentFromDisplay(picker.Items[picker.SelectedIndex]);
-						participant.Name = t.Display;
+						participant = new TentParticipant(null, t, participant.GetCompetition());
 					};
 					picker.SelectedIndex = 0;
 					manip = picker;
@@ -91,7 +91,7 @@ namespace Zeltlager.Competition
 					memberpicker.SelectedIndexChanged += (sender, args) =>
 					{
 						Member m = participant.GetLagerClient().GetMemberFromString(memberpicker.Items[memberpicker.SelectedIndex]);
-						participant.Name = m.Display;
+						participant = new MemberParticipant(null, m, participant.GetCompetition());
 					};
 					memberpicker.SelectedIndex = 0;
 					manip = memberpicker;
@@ -99,6 +99,7 @@ namespace Zeltlager.Competition
 				case GROUP:
 					label.Text = "Gruppenname: ";
 					manip = new Entry();
+					participant = new GroupParticipant(null, "", participant.GetCompetition());
 					manip.BindingContext = participant;
 					manip.SetBinding(Entry.TextProperty, new Binding("Name", BindingMode.TwoWay));
 					break;
