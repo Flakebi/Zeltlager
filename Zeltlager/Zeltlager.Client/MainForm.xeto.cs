@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 
 using Eto.Drawing;
 using Eto.Forms;
@@ -21,7 +17,10 @@ namespace Zeltlager.Client
 		readonly INetworkClient client = new TcpNetworkClient();
 		INetworkConnection connection;
 
+		// Disable the not assigned warning, the field will be assigned from the xaml.
+#pragma warning disable 0649
 		Label statusLabel;
+#pragma warning restore 0649
 
 		public MainForm()
 		{
