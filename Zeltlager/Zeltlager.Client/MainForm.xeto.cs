@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
-using Eto.Forms;
 using Eto.Drawing;
+using Eto.Forms;
 using Eto.Serialization.Xaml;
 
 namespace Zeltlager.Client
@@ -13,19 +16,42 @@ namespace Zeltlager.Client
 
 	public class MainForm : Form
 	{
+		string Status { set { statusLabel.Text = value; } }
+
+		readonly INetworkClient client = new TcpNetworkClient();
+		INetworkConnection connection;
+
+		Label statusLabel;
+
 		public MainForm()
 		{
 			XamlReader.Load(this);
+			Icon = Icon.FromResource("Zeltlager.Client.icon.ico");
 		}
 
-		protected void Connect(object sender, EventArgs e)
+		protected async void Connect(object sender, EventArgs e)
 		{
-			MessageBox.Show("I was clicked!");
+			connection = await client.OpenConnection("localhost", LagerManager.PORT);
+			Status = "Connected";
 		}
 
-		protected void ListLagers(object sender, EventArgs e)
+		protected async void ListLagers(object sender, EventArgs e)
 		{
-			MessageBox.Show("I was clicked!");
+			if (connection == null)
+			{
+				Status = "Not connected";
+				return;
+			}
+			Status = "Requesting lager list";
+			await connection.WritePacket(new Requests.ListLagers());
+			var packet = (Responses.ListLagers)await connection.ReadPacket();
+			if (packet != null)
+			{
+				Status = "Got lager list";
+			} else
+			{
+				Status = "Got no packet";
+			}
 		}
 
 		protected void HandleQuit(object sender, EventArgs e)

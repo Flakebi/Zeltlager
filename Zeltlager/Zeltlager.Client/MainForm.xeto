@@ -5,8 +5,7 @@
 	Title="Zeltlager"
 	ClientSize="400, 350">
   <StackLayout>
-    <Label></Label>
-	  <!-- <Command x:Name="clickCommand" MenuText="Click Me!" ToolBarText="Click Me!" Executed="HandleClickMe" /> -->
+    <Label x:Name="statusLabel"/>
 	<Button Click="Connect">Connect</Button>
 	<Button Click="ListLagers">List lagers</Button>
   </StackLayout>
