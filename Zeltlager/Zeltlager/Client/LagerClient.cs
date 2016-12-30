@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Client
 {
@@ -32,7 +31,6 @@ namespace Zeltlager.Client
 
 		const string CLIENT_LAGER_FILE = "client.data";
 
-		public string Name { get; set; }
 		public IReadOnlyList<Member> Members => members;
 		public IReadOnlyList<Tent> Tents => tents;
 		public IReadOnlyList<Member> Supervisors { get { return new List<Member>(Members.Where(x => x.Supervisor == true)); } }
@@ -68,13 +66,6 @@ namespace Zeltlager.Client
 		/// </summary>
 		LagerStatus serverStatus;
 
-		// Crypto
-		/// <summary>
-		/// The salt used for the key derivation functions.
-		/// </summary>
-		byte[] salt;
-		public byte[] SymmetricKey { get; private set; }
-
 		/// <summary>
 		/// The password supplied by the user and used to generate the shared keys.
 		/// </summary>
@@ -95,15 +86,15 @@ namespace Zeltlager.Client
 		/// </summary>
 		public async Task Init(string name, string password, Action<InitStatus> statusUpdate)
 		{
-			Name = name;
+			data.Name = name;
 			this.password = password;
 
 			// Create the keys for this instance
 			statusUpdate?.Invoke(InitStatus.CreateSymmetricKey);
-			salt = await LagerManager.CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
-			SymmetricKey = await LagerManager.CryptoProvider.DeriveSymmetricKey(password, salt);
+			data.Salt = await LagerManager.CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
+			data.SymmetricKey = await LagerManager.CryptoProvider.DeriveSymmetricKey(password, data.Salt);
 			statusUpdate?.Invoke(InitStatus.CreateGameAsymmetricKey);
-			AsymmetricKey = await LagerManager.CryptoProvider.CreateAsymmetricKey();
+			data.AsymmetricKey = await LagerManager.CryptoProvider.CreateAsymmetricKey();
 
 			// Create the keys for our own collaborator
 			statusUpdate?.Invoke(InitStatus.CreateCollaboratorAsymmetricKey);
@@ -215,11 +206,9 @@ namespace Zeltlager.Client
 			return (await Task.WhenAll(collaborators.Values.Select(async col =>
 			{
 				context.PacketId = new PacketId(col);
-				return (await Task.WhenAll(col.Bundles.Values.Select(b =>
-				{
-					context.PacketId = context.PacketId.Clone(b);
-					return b.GetPackets(context);
-				}))).SelectMany(p => p).Select(p => p.Item2);
+				return (await Task.WhenAll(col.Bundles.Values.Select(
+					b => b.GetPackets(context)
+				))).SelectMany(p => p);
 			})))
 				// Use OrderBy which is a stable sorting algorithm
 				.SelectMany(p => p)
@@ -242,7 +231,7 @@ namespace Zeltlager.Client
 			{
 				try
 				{
-					context.PacketId = packet.Id.Clone();
+					context.PacketId = packet.Id;
 					await packet.Deserialise(ClientSerialiser, context);
 				}
 				catch (Exception e)
@@ -364,78 +353,13 @@ namespace Zeltlager.Client
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
 				new Member(null, "Franz", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
 		}
-	
-		/// <summary>
-		/// Fill the data array.
-		/// </summary>
-		async Task Serialise()
-		{
-			if (data == null)
-			{
-				// Serialise the encrypted data
-				MemoryStream mem = new MemoryStream();
-				using (BinaryWriter writer = new BinaryWriter(mem))
-				{
-					writer.Write(Name);
-					writer.WritePrivateKey(AsymmetricKey);
-				}
-				byte[] iv = await LagerManager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
-				byte[] encryptedData = await LagerManager.CryptoProvider.EncryptSymetric(SymmetricKey, iv, mem.ToArray());
-
-				// Serialise the unencrypted data
-				mem = new MemoryStream();
-				using (BinaryWriter writer = new BinaryWriter(mem))
-				{
-					writer.Write(VERSION);
-					writer.WritePublicKey(AsymmetricKey);
-					writer.Write(salt);
-					writer.Write(iv);
-					writer.Write(encryptedData);
-					writer.Flush();
-
-					// Sign the data
-					byte[] signature = await LagerManager.CryptoProvider.Sign(AsymmetricKey, mem.ToArray());
-					writer.Write(signature);
-				}
-				data = mem.ToArray();
-			}
-		}
-
-		/// <summary>
-		/// Decrypt the data array.
-		/// </summary>
-		async Task Deserialise()
-		{
-			// Read the encrypted data
-			byte[] iv;
-			byte[] encryptedData;
-			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
-			{
-				// Version
-				input.ReadInt32();
-				input.ReadPublicKey();
-				salt = input.ReadBytes(CryptoConstants.SALT_LENGTH);
-				iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
-				encryptedData = input.ReadBytes((int)(input.BaseStream.Length
-					- input.BaseStream.Position - CryptoConstants.SIGNATURE_LENGTH));
-			}
-
-			// Decrypt the data
-			SymmetricKey = await LagerManager.CryptoProvider.DeriveSymmetricKey(password, salt);
-			byte[] unencryptedData = await LagerManager.CryptoProvider.DecryptSymetric(SymmetricKey, iv, encryptedData);
-			using (BinaryReader input = new BinaryReader(new MemoryStream(unencryptedData)))
-			{
-				Name = input.ReadString();
-				AsymmetricKey = input.ReadPrivateKey();
-			}
-		}
 
 		// Serialisation with a LagerSerialisationContext
 		public override async Task Write(BinaryWriter output,
 			Serialiser<LagerSerialisationContext> serialiser,
 			LagerSerialisationContext context)
 		{
-			await Serialise();
+			await data.Serialise();
 			await base.Write(output, serialiser, context);
 		}
 
@@ -444,7 +368,7 @@ namespace Zeltlager.Client
 			LagerSerialisationContext context)
 		{
 			await base.Read(input, serialiser, context);
-			await Deserialise();
+			await data.Decrypt(password);
 		}
 
 		// Serialisation with a LagerClientSerialisationContext

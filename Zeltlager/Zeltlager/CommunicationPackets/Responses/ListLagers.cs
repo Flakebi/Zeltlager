@@ -3,10 +3,6 @@ using System.Collections.Generic;
 
 namespace Zeltlager.CommunicationPackets.Responses
 {
-	public class LagerData
-	{
-	}
-
 	public class ListLagers : CommunicationResponse
 	{
 		ListLagers() { }
@@ -20,16 +16,15 @@ namespace Zeltlager.CommunicationPackets.Responses
 				foreach (var pair in manager.Lagers)
 				{
 					output.Write(pair.Key);
-					output.Write(pair.Value.Data.Length);
 					output.Write(pair.Value.Data);
 				}
 			}
 			Data = mem.ToArray();
 		}
 
-		public Dictionary<int, byte[]> GetLagerData()
+		public Dictionary<int, LagerData> GetLagerData()
 		{
-			Dictionary<int, byte[]> result = new Dictionary<int, byte[]>();
+			Dictionary<int, LagerData> result = new Dictionary<int, LagerData>();
 			MemoryStream mem = new MemoryStream(Data);
 			using (BinaryReader input = new BinaryReader(mem))
 			{
@@ -37,8 +32,7 @@ namespace Zeltlager.CommunicationPackets.Responses
 				for (int i = 0; i < count; i++)
 				{
 					int id = input.ReadInt32();
-					int length = input.ReadInt32();
-					byte[] data = input.ReadBytes(length);
+					var data = input.ReadLagerData();
 					result.Add(id, data);
 				}
 			}

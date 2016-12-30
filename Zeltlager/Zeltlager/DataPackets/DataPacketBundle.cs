@@ -80,6 +80,7 @@ namespace Zeltlager.DataPackets
 		/// <param name="unencryptedData">The byte array that contains the packets.</param>
 		void Unpack(LagerClientSerialisationContext context, byte[] unencryptedData)
 		{
+			context.PacketId = context.PacketId.Clone(this);
 			MemoryStream mem = new MemoryStream(unencryptedData);
 			using (BinaryReader input = new BinaryReader(new GZipStream(mem, CompressionMode.Decompress)))
 			{
@@ -114,7 +115,7 @@ namespace Zeltlager.DataPackets
 				// Write iv
 				output.Write(iv);
 				// Write encrypted packet data
-				output.Write(await LagerManager.CryptoProvider.EncryptSymetric(context.LagerClient.SymmetricKey, iv, packed));
+				output.Write(await LagerManager.CryptoProvider.EncryptSymetric(context.LagerClient.Data.SymmetricKey, iv, packed));
 			}
 			byte[] encryptedData = mem.ToArray();
 
@@ -165,23 +166,16 @@ namespace Zeltlager.DataPackets
 		{
 			var verificationResult = await VerifyAndGetEncryptedData(context);
 			byte[] unencryptedData = await LagerManager.CryptoProvider.DecryptSymetric(
-				context.LagerClient.SymmetricKey, verificationResult.Item1, verificationResult.Item2);
+				context.LagerClient.Data.SymmetricKey, verificationResult.Item1, verificationResult.Item2);
 			Unpack(context, unencryptedData);
 		}
 
-		public async Task<Tuple<PacketId, DataPacket>[]> GetPackets(LagerClientSerialisationContext context)
+		public async Task<IReadOnlyList<DataPacket>> GetPackets(LagerClientSerialisationContext context)
 		{
 			if (packets == null)
 				await Deserialise(context);
 
-			Tuple<PacketId, DataPacket>[] result = new Tuple<PacketId, DataPacket>[packets.Count];
-			PacketId id = context.PacketId.Clone(this);
-			for (int i = 0; i < packets.Count; i++)
-			{
-				id = id.Clone(i);
-				result[i] = new Tuple<PacketId, DataPacket>(id, packets[i]);
-			}
-			return result;
+			return packets;
 		}
 
 		public async Task AddPacket(LagerClientSerialisationContext context, DataPacket packet)

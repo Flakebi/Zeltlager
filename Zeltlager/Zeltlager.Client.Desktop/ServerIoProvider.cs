@@ -10,8 +10,10 @@ namespace Zeltlager
 		public Task<Tuple<string, FileType>[]> ListContents(string path)
 		{
 			return Task.FromResult(
-			    Directory.GetFiles(path).Select(f => new Tuple<string, FileType>(f, FileType.File)).Concat(
-				    Directory.GetDirectories(path).Select(f => new Tuple<string, FileType>(f, FileType.Folder))
+				Directory.GetFiles(path).Select(f =>
+					new Tuple<string, FileType>(Path.GetFileName(f), FileType.File)
+				).Concat(Directory.GetDirectories(path).Select(
+					f => new Tuple<string, FileType>(Path.GetFileName(f), FileType.Folder))
 				).ToArray()
 			);
 		}
