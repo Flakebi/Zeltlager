@@ -80,6 +80,7 @@ namespace Zeltlager.DataPackets
 		/// <param name="unencryptedData">The byte array that contains the packets.</param>
 		void Unpack(LagerClientSerialisationContext context, byte[] unencryptedData)
 		{
+			context.PacketId = context.PacketId.Clone(this);
 			MemoryStream mem = new MemoryStream(unencryptedData);
 			using (BinaryReader input = new BinaryReader(new GZipStream(mem, CompressionMode.Decompress)))
 			{
@@ -169,19 +170,12 @@ namespace Zeltlager.DataPackets
 			Unpack(context, unencryptedData);
 		}
 
-		public async Task<Tuple<PacketId, DataPacket>[]> GetPackets(LagerClientSerialisationContext context)
+		public async Task<IReadOnlyList<DataPacket>> GetPackets(LagerClientSerialisationContext context)
 		{
 			if (packets == null)
 				await Deserialise(context);
 
-			Tuple<PacketId, DataPacket>[] result = new Tuple<PacketId, DataPacket>[packets.Count];
-			PacketId id = context.PacketId.Clone(this);
-			for (int i = 0; i < packets.Count; i++)
-			{
-				id = id.Clone(i);
-				result[i] = new Tuple<PacketId, DataPacket>(id, packets[i]);
-			}
-			return result;
+			return packets;
 		}
 
 		public async Task AddPacket(LagerClientSerialisationContext context, DataPacket packet)

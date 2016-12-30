@@ -206,11 +206,9 @@ namespace Zeltlager.Client
 			return (await Task.WhenAll(collaborators.Values.Select(async col =>
 			{
 				context.PacketId = new PacketId(col);
-				return (await Task.WhenAll(col.Bundles.Values.Select(b =>
-				{
-					context.PacketId = context.PacketId.Clone(b);
-					return b.GetPackets(context);
-				}))).SelectMany(p => p).Select(p => p.Item2);
+				return (await Task.WhenAll(col.Bundles.Values.Select(
+					b => b.GetPackets(context)
+				))).SelectMany(p => p);
 			})))
 				// Use OrderBy which is a stable sorting algorithm
 				.SelectMany(p => p)
@@ -233,7 +231,7 @@ namespace Zeltlager.Client
 			{
 				try
 				{
-					context.PacketId = packet.Id.Clone();
+					context.PacketId = packet.Id;
 					await packet.Deserialise(ClientSerialiser, context);
 				}
 				catch (Exception e)
