@@ -19,7 +19,8 @@ namespace Zeltlager
 		/// <summary>
 		/// The version of the data packet protocol.
 		/// </summary>
-		protected const int VERSION = 0;
+		public const int VERSION = 0;
+
 		const string LAGER_FILE = "lager.data";
 		protected const string COLLABORATOR_FILE = "collaborator.data";
 
@@ -28,13 +29,8 @@ namespace Zeltlager
 
 		protected IIoProvider ioProvider;
 
-		/// <summary>
-		/// The data of this lager.
-		/// This contains the version, the public key, salt, iv and (encrypted) the name and private key.
-		/// All this data is signed with the lager private key.
-		/// </summary>
-		protected byte[] data;
-		public byte[] Data => data;
+		protected LagerData data;
+		public LagerData Data => data;
 
 		protected Serialiser<LagerSerialisationContext> serialiser;
 
@@ -125,15 +121,9 @@ namespace Zeltlager
 			return status;
 		}
 
-		async Task Verify()
+		Task Verify()
 		{
-			// Check if the data signature is valid
-			byte[] signature = new byte[CryptoConstants.SIGNATURE_LENGTH];
-            byte[] signedData = new byte[data.Length - signature.Length];
-			Array.Copy(data, data.Length - signature.Length, signature, 0, signature.Length);
-            Array.Copy(data, signedData, signedData.Length);
-            if (!await LagerManager.CryptoProvider.Verify(AsymmetricKey, signature, signedData))
-				throw new InvalidDataException("The signature of the lager is wrong");
+			return data.Verify();
 		}
 
 		string GetBundlePath(PacketId id)
@@ -171,10 +161,11 @@ namespace Zeltlager
 		}
 
 		// Serialisation with a LagerSerialisationContext
-		public virtual async Task Write(BinaryWriter output,
+		public virtual Task Write(BinaryWriter output,
 			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			await serialiser.Write(output, context, data);
+			output.Write(data);
+			return Task.WhenAll();
 		}
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser,
@@ -187,14 +178,7 @@ namespace Zeltlager
 		public virtual async Task Read(BinaryReader input,
 			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			data = await serialiser.Read<byte[]>(input, context, null);
-			using (BinaryReader reader = new BinaryReader(new MemoryStream(data)))
-			{
-				int version = reader.ReadInt32();
-				if (version != VERSION)
-					throw new InvalidDataException("The lager has an unknown version");
-				AsymmetricKey = reader.ReadPublicKey();
-			}
+			data = input.ReadLagerData();
 			await Verify();
 		}
 

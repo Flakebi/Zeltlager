@@ -145,6 +145,7 @@
     <Compile Include="Competition\Participants\Participant.cs" />
     <Compile Include="Competition\Participants\TentParticipant.cs" />
     <Compile Include="UAM\Editable.cs" />
+    <Compile Include="LagerData.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

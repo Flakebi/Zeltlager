@@ -9,8 +9,8 @@ namespace Zeltlager
 	/// </summary>
 	public class RootedIoProvider : IIoProvider
 	{
-		IIoProvider ioProvider;
-		string root;
+		readonly IIoProvider ioProvider;
+		readonly string root;
 
 		public RootedIoProvider(IIoProvider ioProvider, string root)
 		{
@@ -18,18 +18,39 @@ namespace Zeltlager
 			this.root = root;
 		}
 
-		public Task<Tuple<string, FileType>[]> ListContents(string path) => ioProvider.ListContents(Path.Combine(root, path));
+		public async Task<Tuple<string, FileType>[]> ListContents(string path)
+		{
+			return await ioProvider.ListContents(Path.Combine(root, path));
+		}
 
-		public Task CreateFolder(string path) => ioProvider.CreateFolder(Path.Combine(root, path));
+		public async Task CreateFolder(string path)
+		{
+			await ioProvider.CreateFolder(Path.Combine(root, path));
+		}
 
-		public Task<bool> ExistsFile(string path) => ioProvider.ExistsFile(Path.Combine(root, path));
+		public async Task<bool> ExistsFile(string path)
+		{
+			return await ioProvider.ExistsFile(Path.Combine(root, path));
+		}
 
-		public Task<bool> ExistsFolder(string path) => ioProvider.ExistsFolder(Path.Combine(root, path));
+		public async Task<bool> ExistsFolder(string path)
+		{
+			return await ioProvider.ExistsFolder(Path.Combine(root, path));
+		}
 
-		public Task<Stream> ReadFile(string path) => ioProvider.ReadFile(Path.Combine(root, path));
+		public async Task<Stream> ReadFile(string path)
+		{
+			return await ioProvider.ReadFile(Path.Combine(root, path));
+		}
 
-		public Task<Stream> WriteFile(string path) => ioProvider.WriteFile(Path.Combine(root, path));
+		public async Task<Stream> WriteFile(string path)
+		{
+			return await ioProvider.WriteFile(Path.Combine(root, path));
+		}
 
-		public Task<Stream> AppendFile(string path) => ioProvider.AppendFile(Path.Combine(root, path));
+		public async Task<Stream> AppendFile(string path)
+		{
+			return await ioProvider.AppendFile(Path.Combine(root, path));
+		}
 	}
 }

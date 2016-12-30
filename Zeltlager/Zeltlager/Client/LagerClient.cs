@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 
 namespace Zeltlager.Client
 {
@@ -397,7 +396,7 @@ namespace Zeltlager.Client
 					byte[] signature = await LagerManager.CryptoProvider.Sign(AsymmetricKey, mem.ToArray());
 					writer.Write(signature);
 				}
-				data = mem.ToArray();
+				data = new LagerData(mem.ToArray());
 			}
 		}
 
@@ -406,28 +405,7 @@ namespace Zeltlager.Client
 		/// </summary>
 		async Task Deserialise()
 		{
-			// Read the encrypted data
-			byte[] iv;
-			byte[] encryptedData;
-			using (BinaryReader input = new BinaryReader(new MemoryStream(data)))
-			{
-				// Version
-				input.ReadInt32();
-				input.ReadPublicKey();
-				salt = input.ReadBytes(CryptoConstants.SALT_LENGTH);
-				iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
-				encryptedData = input.ReadBytes((int)(input.BaseStream.Length
-					- input.BaseStream.Position - CryptoConstants.SIGNATURE_LENGTH));
-			}
-
-			// Decrypt the data
-			SymmetricKey = await LagerManager.CryptoProvider.DeriveSymmetricKey(password, salt);
-			byte[] unencryptedData = await LagerManager.CryptoProvider.DecryptSymetric(SymmetricKey, iv, encryptedData);
-			using (BinaryReader input = new BinaryReader(new MemoryStream(unencryptedData)))
-			{
-				Name = input.ReadString();
-				AsymmetricKey = input.ReadPrivateKey();
-			}
+			await data.Decrypt(password);
 		}
 
 		// Serialisation with a LagerSerialisationContext
