@@ -18,6 +18,8 @@ namespace Zeltlager.Network
 
 	public interface INetworkConnection : IDisposable
 	{
+		bool IsClosed { get; }
+		
 		string GetRemoteAddress();
 		ushort GetRemotePort();
 

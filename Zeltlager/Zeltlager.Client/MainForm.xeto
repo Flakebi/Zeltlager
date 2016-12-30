@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Form
+	xmlns="http://schema.picoe.ca/eto.forms" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Zeltlager"
+	ClientSize="400, 350">
+	<StackLayout Padding="10" Spacing="5">
+	    <Label x:Name="statusLabel"/>
+		<Button Click="Connect">Connect</Button>
+		<Button Click="ListLagers">List lagers</Button>
+	</StackLayout>
+</Form>

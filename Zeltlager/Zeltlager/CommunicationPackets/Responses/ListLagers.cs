@@ -9,6 +9,8 @@ namespace Zeltlager.CommunicationPackets.Responses
 
 	public class ListLagers : CommunicationResponse
 	{
+		ListLagers() { }
+		
 		public ListLagers(LagerManager manager)
 		{
 			MemoryStream mem = new MemoryStream();

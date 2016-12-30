@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Zeltlager
 {
 	using Cryptography;
 	using Network;
+	using Requests = CommunicationPackets.Requests;
+	using Responses = CommunicationPackets.Responses;
 
 	public class LagerManager
 	{
 		/// <summary>
 		/// 5, 7, 9
 		/// </summary>
-		protected const ushort PORT = 57911;
+		public const ushort PORT = 57911;
 
 		public static bool IsClient { get; set; }
 		public static ICryptoProvider CryptoProvider { get; set; }
@@ -95,14 +98,36 @@ namespace Zeltlager
 		{
 			try
 			{
-				await connection.WritePacket(new CommunicationPackets.Requests.ListLagers());
-				var response = await connection.ReadPacket();
-				await connection.Close();
-				connection.Dispose();
+				// Handle all requests
+				while (!connection.IsClosed)
+				{
+					var packet = await connection.ReadPacket();
+					var request = packet as Requests.CommunicationRequest;
+					if (request == null)
+					{
+						throw new InvalidOperationException("Unexpectd communication packet type");
+					}
+					request.Apply(connection, this);
+				}
 			}
+			// Ignore if the connection shut down
+			catch (EndOfStreamException) {}
 			catch (Exception e)
 			{
 				await Log.Exception("Network connection", e);
+			}
+			finally
+			{
+				try
+				{
+					await connection.Close();
+				}
+				// Ignore if closing the connection failed
+				catch (Exception e)
+				{
+					await Log.Exception("Network connection closing", e);
+				}
+				connection.Dispose();
 			}
 		}
 	}

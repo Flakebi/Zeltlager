@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-
 namespace Zeltlager.Server
 {
 	using Network;
@@ -24,9 +23,7 @@ namespace Zeltlager.Server
 
 		static async Task AsyncMain(string[] args)
 		{
-			//UdpSocketClient c = new UdpSocketClient();
-			//await c.SendToAsync(new byte[] { 65 }, "192.168.1.100", 44444);
-
+			// Load LagerManager
 			LagerManager.IsClient = false;
 			var io = new RootedIoProvider(new ServerIoProvider(), Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
 			LagerManager lagerManager = new LagerManager(io);
@@ -34,7 +31,9 @@ namespace Zeltlager.Server
 			lagerManager.NetworkServer = new TcpNetworkServer();
 			await LagerManager.Log.Load();
 			await lagerManager.Load();
-			await Task.Delay(1000 * 10);
+
+			// Let the server run for a while
+			await Task.Delay(1000 * 60 * 60);
 		}
 	}
 }
