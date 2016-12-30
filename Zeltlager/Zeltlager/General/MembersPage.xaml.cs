@@ -28,7 +28,7 @@ namespace Zeltlager.General
 				DisplayAlert("Keine Zelte vorhanden", "Bitte füge ein Zelt hinzu. Jeder Teilnehmer muss ein Zelt haben.", "Ok");
 				return;
 			}
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(new Member(), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member>(new Member(lager), true, lager)), true);
 		}
 
 		void OnContextActionEdit(Member member)
@@ -40,6 +40,12 @@ namespace Zeltlager.General
 		{
 			//TODO Revert packets
 			//await lager.AddPacket(new DeleteMember(member));
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			Content = new SearchableListView<Member>(lager.Members, OnContextActionEdit, OnContextActionDelete, null);
 		}
 	}
 }

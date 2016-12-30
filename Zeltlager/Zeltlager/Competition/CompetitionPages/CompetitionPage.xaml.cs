@@ -16,6 +16,11 @@ namespace Zeltlager.Competition
 			this.competition = competition;
 			this.lager = lager;
 
+			CreateUI();
+		}
+
+		void CreateUI()
+		{
 			StackLayout vsl = new StackLayout
 			{
 				Orientation = StackOrientation.Vertical,
@@ -29,8 +34,8 @@ namespace Zeltlager.Competition
 				Orientation = StackOrientation.Horizontal
 			};
 			stationHeader.Children.Add(new Label
-			{ 
-				Text = "Stationen", 
+			{
+				Text = "Stationen",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				VerticalOptions = LayoutOptions.Center
 			});
@@ -44,9 +49,9 @@ namespace Zeltlager.Competition
 			{
 				Orientation = StackOrientation.Horizontal
 			};
-			participantHeader.Children.Add(new Label 
-			{ 
-				Text = "Teilnehmer", 
+			participantHeader.Children.Add(new Label
+			{
+				Text = "Teilnehmer",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				VerticalOptions = LayoutOptions.Center
 			});
@@ -82,6 +87,12 @@ namespace Zeltlager.Competition
 			Navigation.PushModalAsync(new NavigationPage(new AddEditParticipantPage(new GroupParticipant(null, "", competition), true)), true);
 		}
 
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			CreateUI();
+		}
+
 		#region Searchable implementaition
 
 		void OnClickStation(Station station)
@@ -101,7 +112,7 @@ namespace Zeltlager.Competition
 
 		void OnClickParticipant(Participant participant)
 		{
-			// TODO packets
+			// TODO Packet Detail Page?
 		}
 
 		void OnEditParticipant(Participant participant)

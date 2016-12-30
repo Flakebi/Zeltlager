@@ -37,5 +37,11 @@ namespace Zeltlager.Competition
 		{
 			Navigation.PushAsync(new CompetitionPage(comp, lager));
 		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEdit, OnDelete, OnClick);
+		}
 	}
 }

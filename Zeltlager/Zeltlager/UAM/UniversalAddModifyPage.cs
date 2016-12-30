@@ -125,7 +125,7 @@ namespace Zeltlager.UAM
 				{
 					// use picker filled with all tents
 					Picker picker = new Picker();
-					IReadOnlyList<Tent> list = (IReadOnlyList<Tent>)type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
+					IReadOnlyList<Tent> list = (IReadOnlyList<Tent>) type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
 					foreach (Tent tent in list)
 					{
 						picker.Items.Add(tent.ToString());

@@ -46,6 +46,12 @@ namespace Zeltlager.General
 		{
 			Navigation.PushAsync(new TentDetailPage(tent, lager));
 		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			Content = new SearchableListView<Tent>(lager.Tents, OnContextActionEdit, OnContextActionDelete, OnTentClick);
+		}
 	}
 }
 

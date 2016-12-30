@@ -41,16 +41,16 @@ namespace Zeltlager
 			return Task.FromResult(context.LagerClient.Members.First(m => m.Id == id));
 		}
 
-		public Member()
+		public Member(LagerClient lager)
 		{
 			Id = new PacketId(null);
 			Name = "";
 			Supervisor = false;
-			lager = null;
+			this.lager = lager;
 		}
 
 		// For deserialisation
-		public Member(LagerClientSerialisationContext context) : this() { }
+		public Member(LagerClientSerialisationContext context) : this(context.LagerClient) {}
 
 		public Member(PacketId id, string name, Tent tent, bool supervisor, LagerClient lager)
 		{
