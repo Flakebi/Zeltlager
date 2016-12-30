@@ -4,6 +4,7 @@ using Zeltlager.DataPackets;
 using Zeltlager.UAM;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Zeltlager.Competition
 {
@@ -25,7 +26,16 @@ namespace Zeltlager.Competition
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Participant Participant { get; set; }
 
-		public IReadOnlyList<Participant> ParticipantList => Owner.GetParticipants();
+		public IReadOnlyList<Participant> ParticipantList 
+		{ 
+			get 
+			{
+				return Owner.GetParticipants()
+					        .Except(Owner.Ranking.Results
+					                .Where(cr => cr.Points.HasValue || cr.Place.HasValue)
+					                .Select(cr => cr.Participant)).ToList();
+			}
+		}
 
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Rankable Owner { get; set; }

@@ -12,6 +12,8 @@ namespace Zeltlager
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
 
+		public Ranking Ranking { get; set; }
+
 		static Task<Rankable> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
 			return Task.FromResult(context.LagerClient.CompetitionHandler.GetRankableFromId(id));

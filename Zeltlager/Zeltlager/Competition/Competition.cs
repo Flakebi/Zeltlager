@@ -21,8 +21,6 @@ namespace Zeltlager.Competition
 
 		public List<Station> Stations { get; set; }
 
-		public Ranking Ranking { get; set; }
-
 		protected static Task<Competition> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
 			return Task.FromResult(context.LagerClient.CompetitionHandler.GetCompetitionFromPacketId(id));
