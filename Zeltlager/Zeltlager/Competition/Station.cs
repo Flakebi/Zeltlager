@@ -27,8 +27,6 @@ namespace Zeltlager.Competition
 
 		public IReadOnlyList<Member> SupervisorList => competition.GetLagerClient().Supervisors;
 
-		public Ranking Ranking { get; set; }
-
 		protected static Task<Station> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
 			return Task.FromResult(context.LagerClient.CompetitionHandler.GetStationFromPacketId(id));
