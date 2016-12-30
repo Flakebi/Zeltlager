@@ -2352,8 +2352,8 @@ namespace Zeltlager.Droid
 			// aapt resource value: 0x7f0200d2
 			public const int mr_ic_play_light = 2130837714;
 			
-			// aapt resource value: 0x7f020105
-			public const int notification_template_icon_bg = 2130837765;
+			// aapt resource value: 0x7f020106
+			public const int notification_template_icon_bg = 2130837766;
 			
 			// aapt resource value: 0x7f0200d3
 			public const int padnote = 2130837715;
@@ -2374,136 +2374,139 @@ namespace Zeltlager.Droid
 			public const int playbutton = 2130837720;
 			
 			// aapt resource value: 0x7f0200d9
-			public const int power = 2130837721;
+			public const int podium = 2130837721;
 			
 			// aapt resource value: 0x7f0200da
-			public const int presentation = 2130837722;
+			public const int power = 2130837722;
 			
 			// aapt resource value: 0x7f0200db
-			public const int printer = 2130837723;
+			public const int presentation = 2130837723;
 			
 			// aapt resource value: 0x7f0200dc
-			public const int profile = 2130837724;
+			public const int printer = 2130837724;
 			
 			// aapt resource value: 0x7f0200dd
-			public const int prohibition = 2130837725;
+			public const int profile = 2130837725;
 			
 			// aapt resource value: 0x7f0200de
-			public const int pushpin = 2130837726;
+			public const int prohibition = 2130837726;
 			
 			// aapt resource value: 0x7f0200df
-			public const int puzzle = 2130837727;
+			public const int pushpin = 2130837727;
 			
 			// aapt resource value: 0x7f0200e0
-			public const int refresh = 2130837728;
+			public const int puzzle = 2130837728;
 			
 			// aapt resource value: 0x7f0200e1
-			public const int remove = 2130837729;
+			public const int refresh = 2130837729;
 			
 			// aapt resource value: 0x7f0200e2
-			public const int rewind = 2130837730;
+			public const int remove = 2130837730;
 			
 			// aapt resource value: 0x7f0200e3
-			public const int rightarrow = 2130837731;
+			public const int rewind = 2130837731;
 			
 			// aapt resource value: 0x7f0200e4
-			public const int rightarrow1 = 2130837732;
+			public const int rightarrow = 2130837732;
 			
 			// aapt resource value: 0x7f0200e5
-			public const int rocketlaunch = 2130837733;
+			public const int rightarrow1 = 2130837733;
 			
 			// aapt resource value: 0x7f0200e6
-			public const int screen = 2130837734;
+			public const int rocketlaunch = 2130837734;
 			
 			// aapt resource value: 0x7f0200e7
-			public const int search = 2130837735;
+			public const int screen = 2130837735;
 			
 			// aapt resource value: 0x7f0200e8
-			public const int settings = 2130837736;
+			public const int search = 2130837736;
 			
 			// aapt resource value: 0x7f0200e9
-			public const int settings1 = 2130837737;
+			public const int settings = 2130837737;
 			
 			// aapt resource value: 0x7f0200ea
-			public const int settings2 = 2130837738;
+			public const int settings1 = 2130837738;
 			
 			// aapt resource value: 0x7f0200eb
-			public const int share = 2130837739;
+			public const int settings2 = 2130837739;
 			
 			// aapt resource value: 0x7f0200ec
-			public const int shield = 2130837740;
+			public const int share = 2130837740;
 			
 			// aapt resource value: 0x7f0200ed
-			public const int shoppingcart = 2130837741;
+			public const int shield = 2130837741;
 			
 			// aapt resource value: 0x7f0200ee
-			public const int shutter = 2130837742;
+			public const int shoppingcart = 2130837742;
 			
 			// aapt resource value: 0x7f0200ef
-			public const int smartphone = 2130837743;
+			public const int shutter = 2130837743;
 			
 			// aapt resource value: 0x7f0200f0
-			public const int speechbubble = 2130837744;
+			public const int smartphone = 2130837744;
 			
 			// aapt resource value: 0x7f0200f1
-			public const int speedometer = 2130837745;
+			public const int speechbubble = 2130837745;
 			
 			// aapt resource value: 0x7f0200f2
-			public const int stats = 2130837746;
+			public const int speedometer = 2130837746;
 			
 			// aapt resource value: 0x7f0200f3
-			public const int store = 2130837747;
+			public const int stats = 2130837747;
 			
 			// aapt resource value: 0x7f0200f4
-			public const int sun = 2130837748;
+			public const int store = 2130837748;
 			
 			// aapt resource value: 0x7f0200f5
-			public const int switch1 = 2130837749;
+			public const int sun = 2130837749;
 			
 			// aapt resource value: 0x7f0200f6
-			public const int tag = 2130837750;
+			public const int switch1 = 2130837750;
 			
 			// aapt resource value: 0x7f0200f7
-			public const int target = 2130837751;
+			public const int tag = 2130837751;
 			
 			// aapt resource value: 0x7f0200f8
-			public const int timer = 2130837752;
+			public const int target = 2130837752;
 			
 			// aapt resource value: 0x7f0200f9
-			public const int unlock = 2130837753;
+			public const int timer = 2130837753;
 			
 			// aapt resource value: 0x7f0200fa
-			public const int uparrow = 2130837754;
+			public const int unlock = 2130837754;
 			
 			// aapt resource value: 0x7f0200fb
-			public const int upload = 2130837755;
+			public const int uparrow = 2130837755;
 			
 			// aapt resource value: 0x7f0200fc
-			public const int video = 2130837756;
+			public const int upload = 2130837756;
 			
 			// aapt resource value: 0x7f0200fd
-			public const int videocamera = 2130837757;
+			public const int video = 2130837757;
 			
 			// aapt resource value: 0x7f0200fe
-			public const int visible = 2130837758;
+			public const int videocamera = 2130837758;
 			
 			// aapt resource value: 0x7f0200ff
-			public const int voicerecorder = 2130837759;
+			public const int visible = 2130837759;
 			
 			// aapt resource value: 0x7f020100
-			public const int volume = 2130837760;
+			public const int voicerecorder = 2130837760;
 			
 			// aapt resource value: 0x7f020101
-			public const int waiting = 2130837761;
+			public const int volume = 2130837761;
 			
 			// aapt resource value: 0x7f020102
-			public const int wifi = 2130837762;
+			public const int waiting = 2130837762;
 			
 			// aapt resource value: 0x7f020103
-			public const int zoom = 2130837763;
+			public const int wifi = 2130837763;
 			
 			// aapt resource value: 0x7f020104
-			public const int zoomout = 2130837764;
+			public const int zoom = 2130837764;
+			
+			// aapt resource value: 0x7f020105
+			public const int zoomout = 2130837765;
 			
 			static Drawable()
 			{

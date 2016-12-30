@@ -26,6 +26,8 @@ namespace Zeltlager
 		public const string EDIT = "edit.png";
 		public const string SAVE = "correct.png";
 		public const string SETTINGS = "settings1.png";
+		public const string PODIUM = "podium.png";
+		public const string TIMER = "timer.png";
 
 		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
 		{

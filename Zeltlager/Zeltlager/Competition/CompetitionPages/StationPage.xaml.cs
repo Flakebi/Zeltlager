@@ -57,12 +57,12 @@ namespace Zeltlager.Competition
 
 			prh.Children.Add(new Button
 			{
-				Image = Icons.ADD,
+				Image = Icons.TIMER,
 				HorizontalOptions = LayoutOptions.Center,
 			});
 			prh.Children.Add(new Button
 			{
-				Image = Icons.DELETE,
+				Image = Icons.PODIUM,
 				HorizontalOptions = LayoutOptions.End,
 			});
 			participantResults.Header = prh;
@@ -73,7 +73,6 @@ namespace Zeltlager.Competition
 				Text = "aufsteigend ranken",
 				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
 				HorizontalOptions = LayoutOptions.StartAndExpand,
-				Margin = new Thickness(5),
 			};
 			increasing.Clicked += (sender, e) =>
 			{
@@ -85,7 +84,6 @@ namespace Zeltlager.Competition
 				Text = "absteigend ranken",
 				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
 				HorizontalOptions = LayoutOptions.EndAndExpand,
-				Margin = new Thickness(5),
 			};
 			decreasing.Clicked += (sender, e) =>
 			{
@@ -98,6 +96,16 @@ namespace Zeltlager.Competition
 			vsl.Children.Add(addResult);
 			vsl.Children.Add(participantResults);
 			vsl.Children.Add(hsl);
+
+			EventHandler updateWidth = (sender, e) =>
+			{
+				increasing.WidthRequest = Width * 0.5;
+				decreasing.WidthRequest = Width * 0.5;
+			};
+
+			updateWidth(null, null);
+
+			SizeChanged += updateWidth;
 
 			Content = vsl;
 		}
