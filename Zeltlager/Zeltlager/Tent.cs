@@ -10,7 +10,7 @@ namespace Zeltlager
 	using UAM;
 
 	[Editable("Zelt")]
-	public class Tent : IEditable<Tent>, ISearchable
+	public class Tent : Editable<Tent>, ISearchable
 	{
 		LagerClient lager;
 
@@ -106,19 +106,7 @@ namespace Zeltlager
 
 		#region Interface implementations
 
-		public async Task OnSaveEditing(
-			Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, Tent oldObject)
-		{
-            DataPacket packet;
-			if (oldObject != null)
-				packet = await EditPacket.Create(serialiser, context, this);
-            else
-				packet = await AddPacket.Create(serialiser, context, this);
-			await context.LagerClient.AddPacket(packet);
-		}
-
-		public Tent Clone()
+		public override Tent Clone()
 		{
 			return new Tent(Id?.Clone(), Number, Name, Girls, new List<Member>(supervisors), lager);
 		}

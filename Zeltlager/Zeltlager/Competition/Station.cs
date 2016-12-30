@@ -14,7 +14,7 @@ namespace Zeltlager.Competition
 	/// represents one station in the competition and the results achieved there
 	/// </summary>
 	[Editable("Station")]
-	public class Station : Rankable, ISearchable, IEditable<Station>
+	public class Station : Rankable, ISearchable
 	{
 		[Serialisation(Type = SerialisationType.Reference)]
 		Competition competition;
@@ -91,19 +91,7 @@ namespace Zeltlager.Competition
 
 		public string SearchableDetail => "";
 
-		public async Task OnSaveEditing(
-			Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, Station oldObject)
-		{
-			DataPacket packet;
-			if (oldObject != null)
-				packet = await EditPacket.Create(serialiser, context, this);
-			else
-				packet = await AddPacket.Create(serialiser, context, this);
-			await context.LagerClient.AddPacket(packet);
-		}
-
-		public Station Clone()
+		public override Rankable Clone()
 		{
 			return new Station(Id, Name, competition, Ranking);
 		}

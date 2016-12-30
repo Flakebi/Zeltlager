@@ -10,7 +10,7 @@ namespace Zeltlager.Competition
 	/// <summary>
 	/// represents a participant in a comptetion, could be a tent, a mixed group or a single person
 	/// </summary>
-	public abstract class Participant : ISearchable, IEditable<Participant>
+	public abstract class Participant : Editable<Participant>, ISearchable
 	{
 		// TODO Participants serialisieren
 		[Serialisation(Type = SerialisationType.Id)]
@@ -58,19 +58,7 @@ namespace Zeltlager.Competition
 
 		public string SearchableDetail => "";
 
-		public async Task OnSaveEditing(
-			Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, Participant oldObject)
-		{
-			DataPacket packet;
-			if (oldObject != null)
-				packet = await EditPacket.Create(serialiser, context, this);
-			else
-				packet = await AddPacket.Create(serialiser, context, this);
-			await context.LagerClient.AddPacket(packet);
-		}
-
-		public abstract Participant Clone();
+		public override abstract Participant Clone();
 
 		#endregion
 	}

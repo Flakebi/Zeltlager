@@ -12,7 +12,7 @@ namespace Zeltlager.General
 		public TentDetailPage(Tent tent, LagerClient lager)
 		{
 			InitializeComponent();
-			Title = "Zeltdetails " + tent.Display;
+			Title = tent.Display;
 			Padding = new Thickness(10);
 
 			Grid grid = new Grid();

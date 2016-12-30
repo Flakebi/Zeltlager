@@ -7,7 +7,7 @@ using Zeltlager.Competition;
 using System.Collections.Generic;
 namespace Zeltlager
 {
-	public abstract class Rankable
+	public abstract class Rankable : Editable<Rankable>
 	{
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }

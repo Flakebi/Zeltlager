@@ -28,7 +28,7 @@ namespace Zeltlager.Calendar
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			//Navigation.PushModalAsync(new NavigationPage(new CalendarEventEditPage(new CalendarEvent(((DayPage)CurrentPage).Day.Date, ""))));
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent>(new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date, "", "", lager), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, CalendarEvent>(new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date, "", "", lager), true, lager)), true);
 		}
 	}
 }

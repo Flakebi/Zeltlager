@@ -11,7 +11,7 @@ namespace Zeltlager.Calendar
 	using UAM;
 
 	[Editable("Termin")]
-	public class CalendarEvent : INotifyPropertyChanged, IComparable<CalendarEvent>, IEditable<CalendarEvent>, IEquatable<CalendarEvent>
+	public class CalendarEvent : Editable<CalendarEvent>, INotifyPropertyChanged, IComparable<CalendarEvent>, IEquatable<CalendarEvent>
 	{
 		public LagerClient Lager { get; set; }
 
@@ -129,19 +129,7 @@ namespace Zeltlager.Calendar
 			return Date.CompareTo(other.Date);
 		}
 
-		public async Task OnSaveEditing(
-			Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, CalendarEvent oldObject)
-		{
-			DataPacket packet;
-			if (oldObject != null)
-				packet = await EditPacket.Create(serialiser, context, this);
-			else
-				packet = await AddPacket.Create(serialiser, context, this);
-			await context.LagerClient.AddPacket(packet);
-		}
-
-		public CalendarEvent Clone()
+		public override CalendarEvent Clone()
 		{
 			return new CalendarEvent(Id?.Clone(), date, title, detail, Lager);
 		}

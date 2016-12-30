@@ -19,7 +19,7 @@ namespace Zeltlager.UAM
 	/// string, DateTime, TimeSpan, any Number, Tent, Member, Partipant, bool, List
 	/// </summary>
 
-	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
+	public class UniversalAddModifyPage<T, U> : ContentPage where T : IEditable<U>, U
 	{
 		public T Obj { get; }
 		T oldObj;
@@ -51,10 +51,10 @@ namespace Zeltlager.UAM
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
+			// Save old object so we can delete it when save is clicked
 			oldObj = obj;
 
-			// Save old object so we can delete it when save is clicked
-			Obj = oldObj.Clone();
+			Obj = (T)obj.Clone();
 
 			// Set the binding context so the binding of variables work
 			BindingContext = Obj;

@@ -63,7 +63,7 @@ namespace Zeltlager.Competition
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			// TODO call uam on competition result
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CompetitionResult>(new CompetitionResult(null, station, null), true, station.GetLagerClient())), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CompetitionResult, CompetitionResult>(new CompetitionResult(null, station, null), true, station.GetLagerClient())), true);
 		}
 	}
 }

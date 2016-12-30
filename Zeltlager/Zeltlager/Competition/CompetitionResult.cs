@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Zeltlager.Competition
 {
 	[Editable("Ergebnis")]
-	public class CompetitionResult : IEditable<CompetitionResult>
+	public class CompetitionResult : Editable<CompetitionResult>
 	{
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
@@ -54,17 +54,7 @@ namespace Zeltlager.Competition
 
 		#region Interface implementation
 
-		public async Task OnSaveEditing(Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context, CompetitionResult oldObject)
-		{
-			DataPacket packet;
-			if (oldObject != null)
-				packet = await EditPacket.Create(serialiser, context, this);
-			else
-				packet = await AddPacket.Create(serialiser, context, this);
-			await context.LagerClient.AddPacket(packet);
-		}
-
-		public CompetitionResult Clone()
+		public override CompetitionResult Clone()
 		{
 			return new CompetitionResult(Id, Owner, Participant, Points, Place);
 		}

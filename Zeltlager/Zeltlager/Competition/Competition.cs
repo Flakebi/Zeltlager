@@ -9,7 +9,7 @@ namespace Zeltlager.Competition
 	using DataPackets;
 
 	[Editable("Wettkampf")]
-	public class Competition : Rankable, IEditable<Competition>, ISearchable
+	public class Competition : Rankable, ISearchable
 	{
 		LagerClient lager;
 
@@ -89,19 +89,7 @@ namespace Zeltlager.Competition
 
 		#region Interface implementation
 
-		public async Task OnSaveEditing(
-            Serialiser<LagerClientSerialisationContext> serialiser,
-            LagerClientSerialisationContext context, Competition oldObject)
-		{
-			DataPacket packet;
-			if (oldObject != null)
-				packet = await EditPacket.Create(serialiser, context, this);
-			else
-				packet = await AddPacket.Create(serialiser, context, this);
-			await context.LagerClient.AddPacket(packet);
-		}
-
-		public Competition Clone()
+		public override Rankable Clone()
 		{
 			return new Competition(lager, Id, Name, Participants, Stations, Ranking);
 		}

@@ -11,7 +11,7 @@ namespace Zeltlager
 	using UAM;
 
 	[Editable("Teilnehmer")]
-	public class Member : IComparable<Member>, IEditable<Member>, ISearchable
+	public class Member : Editable<Member>, IComparable<Member>, ISearchable
 	{
 		LagerClient lager;
 
@@ -75,19 +75,7 @@ namespace Zeltlager
 
 		#region Interface implementation
 
-		public async Task OnSaveEditing(
-            Serialiser<LagerClientSerialisationContext> serialiser,
-            LagerClientSerialisationContext context, Member oldObject)
-		{
-            DataPacket packet;
-			if (oldObject != null)
-                packet = await EditPacket.Create(serialiser, context, this);
-            else
-                packet = await AddPacket.Create(serialiser, context, this);
-            await context.LagerClient.AddPacket(packet);
-		}
-
-		public Member Clone()
+		public override Member Clone()
 		{
 			return new Member(Id?.Clone(), Name, Tent, Supervisor, lager);
 		}
