@@ -13,9 +13,6 @@ namespace Zeltlager.Competition
 	{
 		LagerClient lager;
 
-		[Serialisation(Type = SerialisationType.Id)]
-		public PacketId Id { get; set; }
-
 		[Editable("Name")]
 		[Serialisation]
 		public string Name { get; set; }

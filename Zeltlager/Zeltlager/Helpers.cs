@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -172,6 +173,16 @@ namespace Zeltlager
 				count -= read;
 			} while (count > 0);
 			return result;
+		}
+
+		public static object ConvertParam(string value, Type targetType)
+		{
+			if (targetType == typeof(string))
+				return value;
+			if (targetType.IsConstructedGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+				targetType = targetType.GenericTypeArguments[0];
+
+			return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
 		}
 	}
 }

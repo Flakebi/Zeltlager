@@ -51,7 +51,7 @@ namespace Zeltlager.Competition
 
 		public Station GetStationFromPacketId(PacketId id)
 		{
-			return Competitions.SelectMany(c => c.Stations).First(x => x.Id == id);
+			return Competitions.SelectMany(c => c.Stations).FirstOrDefault(x => x.Id == id);
 		}
 
 		public Rankable GetRankableFromId(PacketId id)
@@ -62,6 +62,11 @@ namespace Zeltlager.Competition
 		public Participant GetParticipantFromId(PacketId id)
 		{
 			return Competitions.SelectMany(c => c.Participants).First(x => x.Id == id);
+		}
+
+		public Participant GetParticipantFromName(string name)
+		{
+			return Competitions.SelectMany(c => c.Participants).First(x => x.Name == name);
 		}
 	}
 }

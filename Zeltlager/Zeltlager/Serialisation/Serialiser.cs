@@ -299,7 +299,7 @@ namespace Zeltlager.Serialisation
 				else
 				{
 					// Read the object
-					obj = await Read(input, context, Convert.ChangeType(obj, nullableType), nullableType);
+					obj = await Read(input, context, obj, nullableType);
 				}
 			} else if (type == typeof(DateTime))
 			{

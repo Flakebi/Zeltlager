@@ -1,5 +1,6 @@
 using System;
 using Xamarin.Forms;
+using Zeltlager.UAM;
 
 namespace Zeltlager.Competition
 {
@@ -23,7 +24,7 @@ namespace Zeltlager.Competition
 			{
 				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
 				Text = "Ergebnis hinzufügen",
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				HorizontalOptions = LayoutOptions.FillAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
 			addResult.Clicked += OnAddButtonClicked;
@@ -34,17 +35,20 @@ namespace Zeltlager.Competition
 				BindingContext = station.Ranking.Results,
 				ItemsSource = station.Ranking.Results,
 			};
+			participantResults.ItemSelected += (sender, e) => { participantResults.SelectedItem = null; };
 
 			StackLayout hsl = new StackLayout { Orientation = StackOrientation.Horizontal, VerticalOptions = LayoutOptions.End };
 			Button increasing = new Button
 			{
 				Text = "aufsteigend sortieren",
 				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
+				HorizontalOptions = LayoutOptions.StartAndExpand,
 			};
 			Button decreasing = new Button
 			{
 				Text = "absteigend sortieren",
 				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
+				HorizontalOptions = LayoutOptions.EndAndExpand,
 			};
 			hsl.Children.Add(increasing);
 			hsl.Children.Add(decreasing);
@@ -59,6 +63,7 @@ namespace Zeltlager.Competition
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			// TODO call uam on competition result
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CompetitionResult>(new CompetitionResult(null, station, null), true, station.GetLagerClient())), true);
 		}
 	}
 }

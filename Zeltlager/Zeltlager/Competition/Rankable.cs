@@ -9,6 +9,9 @@ namespace Zeltlager
 {
 	public abstract class Rankable
 	{
+		[Serialisation(Type = SerialisationType.Id)]
+		public PacketId Id { get; set; }
+
 		static Task<Rankable> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
 			return Task.FromResult(context.LagerClient.CompetitionHandler.GetRankableFromId(id));

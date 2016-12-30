@@ -19,9 +19,6 @@ namespace Zeltlager.Competition
 		[Serialisation(Type = SerialisationType.Reference)]
 		Competition competition;
 
-		[Serialisation(Type = SerialisationType.Id)]
-		public PacketId Id { get; set;}
-
 		[Editable("Name")]
 		[Serialisation]
 		public string Name { get; set; }
@@ -76,6 +73,16 @@ namespace Zeltlager.Competition
 		public override IReadOnlyList<Participant> GetParticipants()
 		{
 			return competition.GetParticipants();
+		}
+
+		public Competition GetCompetition()
+		{
+			return competition;
+		}
+
+		public LagerClient GetLagerClient()
+		{
+			return competition.GetLagerClient();
 		}
 
 		#region Interface implementation

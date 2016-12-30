@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 
 using Xamarin.Forms;
+using Zeltlager.Competition;
 
 namespace Zeltlager.UAM
 {
@@ -15,7 +16,7 @@ namespace Zeltlager.UAM
 	/// <summary>
 	/// A page to manipulate annotated properties from any given type.
 	/// Supports these types of properties:
-	/// string, DateTime, TimeSpan, any Number, Tent, Member, bool, List
+	/// string, DateTime, TimeSpan, any Number, Tent, Member, Partipant, bool, List
 	/// </summary>
 
 	public class UniversalAddModifyPage<T> : ContentPage where T : IEditable<T>
@@ -33,7 +34,8 @@ namespace Zeltlager.UAM
 			typeof(uint),
 			typeof(int),
 			typeof(ulong),
-			typeof(long)
+			typeof(long),
+			typeof(int?),
 		};
 
 		public UniversalAddModifyPage(T obj, bool isAddPage, LagerClient lager)
@@ -106,11 +108,17 @@ namespace Zeltlager.UAM
 				else if (NUM_TYPES.Contains(vartype))
 				{
 					// use entry with num Keyboard
-					manip = new Entry
+					Entry entry = new Entry
 					{
-						Keyboard = Keyboard.Numeric
+						Keyboard = Keyboard.Numeric,
 					};
-					manip.SetBinding(Entry.TextProperty, new Binding(pi.Name, BindingMode.TwoWay));
+					object text = type.GetRuntimeProperty(pi.Name).GetValue(Obj) ?? string.Empty;
+					entry.Text = text.ToString();
+					entry.TextChanged += (sender, e) => 
+					{
+						type.GetRuntimeProperty(pi.Name).SetValue(Obj, Helpers.ConvertParam(((Entry)sender).Text, vartype));
+					};
+					manip = entry;
 				}
 
 				else if (vartype == typeof(Tent))
@@ -144,6 +152,24 @@ namespace Zeltlager.UAM
 					{
 						Member m = lager.GetMemberFromString(picker.Items[picker.SelectedIndex]);
 						type.GetRuntimeProperty(pi.Name).SetValue(Obj, m);
+					};
+					picker.SelectedIndex = 0;
+					manip = picker;
+				}
+
+				else if (vartype == typeof(Participant))
+				{
+					// use picker filled with all members
+					Picker picker = new Picker();
+					IReadOnlyList<Participant> list = (IReadOnlyList<Participant>)type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
+					foreach (Participant par in list)
+					{
+						picker.Items.Add(par.Name);
+					}
+					picker.SelectedIndexChanged += (sender, args) =>
+					{
+						Participant p = lager.CompetitionHandler.GetParticipantFromName(picker.Items[picker.SelectedIndex]);
+						type.GetRuntimeProperty(pi.Name).SetValue(Obj, p);
 					};
 					picker.SelectedIndex = 0;
 					manip = picker;
