@@ -98,5 +98,10 @@ namespace Zeltlager
 		{
 			return Name.GetHashCode() ^ Supervisor.GetHashCode() ^ Tent.GetHashCode();
 		}
+
+		public static Member GetFromString(LagerClient lager, string str)
+		{
+			return lager.GetMemberFromString(str);
+		}
 	}
 }

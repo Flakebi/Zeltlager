@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Zeltlager.Competition
 {
 	[Editable("Ergebnis")]
-	public class CompetitionResult : Editable<CompetitionResult>
+	public class CompetitionResult : Editable<CompetitionResult>, IComparable<CompetitionResult>
 	{
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
@@ -57,6 +57,19 @@ namespace Zeltlager.Competition
 		public override CompetitionResult Clone()
 		{
 			return new CompetitionResult(Id, Owner, Participant, Points, Place);
+		}
+
+		public int CompareTo(CompetitionResult other)
+		{
+			int placeCompare = Place.CompareTo(other.Place);
+			if (placeCompare == 0)
+			{
+				return Points.CompareTo(other.Points);
+			}
+			else
+			{
+				return placeCompare;
+			}
 		}
 
 		#endregion

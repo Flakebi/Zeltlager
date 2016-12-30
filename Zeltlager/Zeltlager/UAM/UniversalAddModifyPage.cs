@@ -38,6 +38,12 @@ namespace Zeltlager.UAM
 			typeof(int?),
 		};
 
+		static readonly Type[] OWN_TYPES = {
+			typeof(Member),
+			typeof(Tent),
+			typeof(Participant),
+		};
+
 		public UniversalAddModifyPage(T obj, bool isAddPage, LagerClient lager)
 		{
 			this.lager = lager;
@@ -121,55 +127,20 @@ namespace Zeltlager.UAM
 					manip = entry;
 				}
 
-				else if (vartype == typeof(Tent))
-				{
-					// use picker filled with all tents
-					Picker picker = new Picker();
-					IReadOnlyList<Tent> list = (IReadOnlyList<Tent>) type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
-					foreach (Tent tent in list)
-					{
-						picker.Items.Add(tent.ToString());
-					}
-					picker.SelectedIndexChanged += (sender, args) =>
-					{
-						Tent t = lager.GetTentFromDisplay(picker.Items[picker.SelectedIndex]);
-						type.GetRuntimeProperty(pi.Name).SetValue(Obj, t);
-					};
-					picker.SelectedIndex = 0;
-					manip = picker;
-				}
-
-				else if (vartype == typeof(Member))
+				else if (OWN_TYPES.Contains(vartype))
 				{
 					// use picker filled with all members
 					Picker picker = new Picker();
-					IReadOnlyList<Member> list = (IReadOnlyList<Member>) type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
-					foreach (Member mem in list)
+					var typeForList = typeof(IReadOnlyList<>).MakeGenericType(vartype);
+					IReadOnlyList<object> list = (IReadOnlyList<object>)type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
+					foreach (object o in list)
 					{
-						picker.Items.Add(mem.ToString());
+						picker.Items.Add(o.ToString());
 					}
 					picker.SelectedIndexChanged += (sender, args) =>
 					{
-						Member m = lager.GetMemberFromString(picker.Items[picker.SelectedIndex]);
-						type.GetRuntimeProperty(pi.Name).SetValue(Obj, m);
-					};
-					picker.SelectedIndex = 0;
-					manip = picker;
-				}
-
-				else if (vartype == typeof(Participant))
-				{
-					// use picker filled with all members
-					Picker picker = new Picker();
-					IReadOnlyList<Participant> list = (IReadOnlyList<Participant>)type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
-					foreach (Participant par in list)
-					{
-						picker.Items.Add(par.Name);
-					}
-					picker.SelectedIndexChanged += (sender, args) =>
-					{
-						Participant p = lager.CompetitionHandler.GetParticipantFromName(picker.Items[picker.SelectedIndex]);
-						type.GetRuntimeProperty(pi.Name).SetValue(Obj, p);
+						object o = vartype.GetTypeInfo().GetDeclaredMethod("GetFromString").Invoke(null, new object[] { lager, picker.Items[picker.SelectedIndex] });
+						type.GetRuntimeProperty(pi.Name).SetValue(Obj, o);
 					};
 					picker.SelectedIndex = 0;
 					manip = picker;
@@ -179,7 +150,6 @@ namespace Zeltlager.UAM
 				{
 					// use switch
 					var sw = new Switch();
-					//sw.IsToggled = (bool) type.GetRuntimeProperty(pi.Name).GetValue(Obj);
 					sw.SetBinding(Switch.IsToggledProperty, new Binding(pi.Name, BindingMode.TwoWay));
 					manip = sw;
 				}

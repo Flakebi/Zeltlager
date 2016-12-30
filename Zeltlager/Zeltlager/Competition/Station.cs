@@ -1,10 +1,8 @@
 using System.Threading.Tasks;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Zeltlager.Competition
 {
-	using System.Collections;
 	using Serialisation;
 	using UAM;
 	using Zeltlager.Client;
@@ -68,6 +66,7 @@ namespace Zeltlager.Competition
 		public override void AddResult(CompetitionResult cr)
 		{
 			Ranking.AddResult(cr);
+			Ranking.Results.Sort();
 		}
 
 		public override IReadOnlyList<Participant> GetParticipants()

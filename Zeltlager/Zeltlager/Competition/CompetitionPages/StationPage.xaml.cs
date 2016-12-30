@@ -13,9 +13,19 @@ namespace Zeltlager.Competition
 			InitializeComponent();
 			this.station = station;
 
-			StackLayout vsl = new StackLayout 
-			{ 
-				Orientation = StackOrientation.Vertical, 
+			CreateUI();
+		}
+
+		void OnAddButtonClicked(object sender, EventArgs e)
+		{
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CompetitionResult, CompetitionResult>(new CompetitionResult(null, station, null), true, station.GetLagerClient())), true);
+		}
+
+		void CreateUI()
+		{
+			StackLayout vsl = new StackLayout
+			{
+				Orientation = StackOrientation.Vertical,
 				VerticalOptions = LayoutOptions.StartAndExpand,
 				Padding = new Thickness(10),
 			};
@@ -36,19 +46,51 @@ namespace Zeltlager.Competition
 				ItemsSource = station.Ranking.Results,
 			};
 			participantResults.ItemSelected += (sender, e) => { participantResults.SelectedItem = null; };
+			StackLayout prh = new StackLayout
+			{
+				Orientation = StackOrientation.Horizontal,
+			};
+			prh.Children.Add(new ContentView
+			{
+				HorizontalOptions = LayoutOptions.StartAndExpand,
+			});// so icons get moved to the right
+
+			prh.Children.Add(new Button
+			{
+				Image = Icons.ADD,
+				HorizontalOptions = LayoutOptions.Center,
+			});
+			prh.Children.Add(new Button
+			{
+				Image = Icons.DELETE,
+				HorizontalOptions = LayoutOptions.End,
+			});
+			participantResults.Header = prh;
 
 			StackLayout hsl = new StackLayout { Orientation = StackOrientation.Horizontal, VerticalOptions = LayoutOptions.End };
 			Button increasing = new Button
 			{
-				Text = "aufsteigend sortieren",
+				Text = "aufsteigend ranken",
 				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
 				HorizontalOptions = LayoutOptions.StartAndExpand,
+				Margin = new Thickness(5),
+			};
+			increasing.Clicked += (sender, e) =>
+			{
+				station.Ranking.Rank(true);
+				CreateUI();
 			};
 			Button decreasing = new Button
 			{
-				Text = "absteigend sortieren",
+				Text = "absteigend ranken",
 				Style = (Style)Application.Current.Resources["DarkButtonStyle"],
 				HorizontalOptions = LayoutOptions.EndAndExpand,
+				Margin = new Thickness(5),
+			};
+			decreasing.Clicked += (sender, e) =>
+			{
+				station.Ranking.Rank(false);
+				CreateUI();
 			};
 			hsl.Children.Add(increasing);
 			hsl.Children.Add(decreasing);
@@ -60,10 +102,10 @@ namespace Zeltlager.Competition
 			Content = vsl;
 		}
 
-		void OnAddButtonClicked(object sender, EventArgs e)
+		protected override void OnAppearing()
 		{
-			// TODO call uam on competition result
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CompetitionResult, CompetitionResult>(new CompetitionResult(null, station, null), true, station.GetLagerClient())), true);
+			base.OnAppearing();
+			CreateUI();
 		}
 	}
 }

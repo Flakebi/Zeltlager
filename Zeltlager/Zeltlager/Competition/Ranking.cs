@@ -8,7 +8,7 @@ namespace Zeltlager.Competition
 	public class Ranking
 	{
 		[Serialisation]
-		public List<CompetitionResult> Results { get; private set; }
+		public List<CompetitionResult> Results { get; set; }
 
 		public Ranking() 
 		{
@@ -23,6 +23,16 @@ namespace Zeltlager.Competition
 		public void RemoveResult(Participant p)
 		{
 			// TODO wie tun wir das?
+		}
+
+		public void Rank(bool increasing)
+		{
+			IEnumerable<CompetitionResult> x;
+			if (!increasing)
+				x = Results.OrderByDescending(r => r.Points);
+			else
+				x = Results.OrderBy(r => r.Points);
+			x.Select((cr, i) => cr.Place = i);
 		}
 	}
 }

@@ -184,5 +184,25 @@ namespace Zeltlager
 
 			return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
 		}
+
+		public static int CompareTo(this int? number, int? other)
+		{
+			if (!number.HasValue || !other.HasValue)
+			{
+				if (!other.HasValue)
+				{
+					if (!number.HasValue)
+					{
+						return 0;	
+					} 
+					else
+					{
+						return 1;
+					}
+				}
+				return -1;
+			}
+			return number.Value.CompareTo(other.Value);
+		}
 	}
 }

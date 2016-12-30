@@ -242,7 +242,7 @@ namespace Zeltlager.Client
 			{
 				try
 				{
-					context.PacketId = packet.Id;
+					context.PacketId = packet.Id.Clone();
 					await packet.Deserialise(ClientSerialiser, context);
 				}
 				catch (Exception e)

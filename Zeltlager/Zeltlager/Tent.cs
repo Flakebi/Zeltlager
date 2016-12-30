@@ -129,5 +129,10 @@ namespace Zeltlager
 		{
 			return Number.GetHashCode() ^ Name.GetHashCode() ^ Girls.GetHashCode() ^ Supervisors.GetHashCode();
 		}
+
+		public static Tent GetFromString(LagerClient lager, string str)
+		{
+			return lager.GetTentFromDisplay(str);
+		}
 	}
 }

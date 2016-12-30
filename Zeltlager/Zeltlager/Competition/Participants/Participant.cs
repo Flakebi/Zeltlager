@@ -52,6 +52,16 @@ namespace Zeltlager.Competition
 			return competition;
 		}
 
+		public static Participant GetFromString(LagerClient lager, string str)
+		{
+			return lager.CompetitionHandler.GetParticipantFromName(str);
+		}
+
+		public override string ToString()
+		{
+			return Name;
+		}
+
 		#region Interface implementation
 
 		public string SearchableText => Name;
