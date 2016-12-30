@@ -16,8 +16,8 @@ namespace Zeltlager.Client
 
 	public class MainForm : Form
 	{
-		IIoProvider io;
 		LagerClientManager manager;
+		LagerClient lager;
 		
 		string Status { set { statusLabel.Text = value; } }
 
@@ -31,19 +31,30 @@ namespace Zeltlager.Client
 
 		public MainForm(IIoProvider io)
 		{
-			this.io = io;
 			XamlReader.Load(this);
 			Icon = Icon.FromResource("Zeltlager.Client.icon.ico");
-		}
 
-		public new async Task Load()
-		{
-			// Load LagerManager
 			LagerManager.IsClient = true;
 			manager = new LagerClientManager(io);
 			manager.NetworkClient = new TcpNetworkClient();
-			//await LagerManager.Log.Load();
-			//await manager.Load();
+		}
+
+		public async void LoadLagers(object sender, EventArgs e)
+		{
+			// Load LagerManager
+			Status = "Load settings";
+			await LagerManager.Log.Load();
+			await manager.Load();
+			Status = manager.Lagers.Count + " lagers loaded";
+
+			// Load lager
+			Status = "Load lager";
+			int lagerId = manager.Settings.LastLager;
+			lager = (LagerClient)manager.Lagers[lagerId];
+			if (!await lager.LoadBundles())
+				Status = "Error while loading the lager files";
+			if (!await lager.ApplyHistory())
+				Status = "Error while loading the lager";
 		}
 
 		protected async void Connect(object sender, EventArgs e)
@@ -79,6 +90,11 @@ namespace Zeltlager.Client
 
 		protected async void AddMember(object sender, EventArgs e)
 		{
+			if (!manager.Lagers.ContainsKey(0))
+			{
+				Status = "No lager 0 loaded";
+				return;
+			}
 			var lager = (LagerClient)manager.Lagers[0];
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(manager, lager);
 			context.PacketId = new PacketId(lager.OwnCollaborator);

@@ -16,10 +16,16 @@ namespace Zeltlager
 		public byte[] Data { get; private set; }
 
 		// Semantic data
-		public byte[] Salt { get; private set; }
-		public byte[] SymmetricKey { get; private set; }
-		public KeyPair AsymmetricKey { get; private set; }
-		public string Name { get; private set; }
+		/// <summary>
+		/// The salt used for the key derivation functions.
+		/// </summary>
+		public byte[] Salt { get; set; }
+		public byte[] SymmetricKey { get; set; }
+		/// <summary>
+		/// The asymmetric keys of this lager, the private key is null for the server.
+		/// </summary>
+		public KeyPair AsymmetricKey { get; set; }
+		public string Name { get; set; }
 
 		public LagerData() { }
 		
@@ -45,6 +51,42 @@ namespace Zeltlager
 			Array.Copy(Data, signedData, signedData.Length);
 			if (!await LagerManager.CryptoProvider.Verify(AsymmetricKey, signature, signedData))
 				throw new InvalidDataException("The signature of the lager is wrong");
+		}
+
+		/// <summary>
+		/// Fill the data array.
+		/// </summary>
+		public async Task Serialise()
+		{
+			if (Data == null)
+			{
+				// Serialise the encrypted data
+				MemoryStream mem = new MemoryStream();
+				using (BinaryWriter writer = new BinaryWriter(mem))
+				{
+					writer.Write(Name);
+					writer.WritePrivateKey(AsymmetricKey);
+				}
+				byte[] iv = await LagerManager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
+				byte[] encryptedData = await LagerManager.CryptoProvider.EncryptSymetric(SymmetricKey, iv, mem.ToArray());
+
+				// Serialise the unencrypted data
+				mem = new MemoryStream();
+				using (BinaryWriter writer = new BinaryWriter(mem))
+				{
+					writer.Write(LagerBase.VERSION);
+					writer.WritePublicKey(AsymmetricKey);
+					writer.Write(Salt);
+					writer.Write(iv);
+					writer.Write(encryptedData);
+					writer.Flush();
+
+					// Sign the data
+					byte[] signature = await LagerManager.CryptoProvider.Sign(AsymmetricKey, mem.ToArray());
+					writer.Write(signature);
+				}
+				Data = mem.ToArray();
+			}
 		}
 
 		/// <summary>

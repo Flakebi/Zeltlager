@@ -43,12 +43,6 @@ namespace Zeltlager
 		/// </summary>
 		protected LagerStatus Status;
 
-		// Crypto
-		/// <summary>
-		/// The asymmetric keys of this lager, the private key is null for the server.
-		/// </summary>
-		public KeyPair AsymmetricKey { get; protected set; }
-
 		public LagerBase(LagerManager manager, IIoProvider io, int id)
 		{
 			Manager = manager;

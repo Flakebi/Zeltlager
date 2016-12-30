@@ -8,6 +8,7 @@
 	    <Label x:Name="statusLabel"/>
 		<Button Click="Connect">Connect</Button>
 		<Button Click="ListLagers">List lagers</Button>
+		<Button Click="LoadLagers">Load lagers</Button>
 		<Button Click="CreateLager">Create lager</Button>
 		<Button Click="AddMember">Add member</Button>
 	</StackLayout>

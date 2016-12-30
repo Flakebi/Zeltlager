@@ -92,7 +92,7 @@ namespace Zeltlager
 
 				// Check the signatures
 				// Verify the lager signature
-				if (!await LagerManager.CryptoProvider.Verify(context.Lager.AsymmetricKey, lagerSignature, keyData))
+				if (!await LagerManager.CryptoProvider.Verify(context.Lager.Data.AsymmetricKey, lagerSignature, keyData))
 					throw new InvalidDataException("The lager signature of the collaborator is wrong");
 				// Verify the collaborator signature
 				if (!await LagerManager.CryptoProvider.Verify(Key, collaboratorSignature, signedData))
@@ -112,7 +112,7 @@ namespace Zeltlager
 					writer.WritePublicKey(Key);
 					byte[] keyData = mem.ToArray();
 					// Sign the key with the lager private key
-					writer.Write(await LagerManager.CryptoProvider.Sign(context.Lager.AsymmetricKey, keyData));
+					writer.Write(await LagerManager.CryptoProvider.Sign(context.Lager.Data.AsymmetricKey, keyData));
 					keyData = mem.ToArray();
 					// Sign the data with our own private key
 					writer.Write(await LagerManager.CryptoProvider.Sign(Key, keyData));
