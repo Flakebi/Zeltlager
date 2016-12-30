@@ -99,8 +99,8 @@ namespace Zeltlager.Competition
 
 			EventHandler updateWidth = (sender, e) =>
 			{
-				increasing.WidthRequest = Width * 0.5;
-				decreasing.WidthRequest = Width * 0.5;
+				increasing.WidthRequest = Width * 0.45;
+				decreasing.WidthRequest = Width * 0.45;
 			};
 
 			updateWidth(null, null);

@@ -131,7 +131,7 @@ namespace Zeltlager.UAM
 				{
 					// use picker filled with all members
 					Picker picker = new Picker();
-					var typeForList = typeof(IReadOnlyList<>).MakeGenericType(vartype);
+					// var typeForList = typeof(IReadOnlyList<>).MakeGenericType(vartype);
 					IReadOnlyList<object> list = (IReadOnlyList<object>)type.GetRuntimeProperty(pi.Name + "List").GetValue(Obj);
 					foreach (object o in list)
 					{
@@ -203,6 +203,16 @@ namespace Zeltlager.UAM
 
 		async void OnSaveClicked()
 		{
+			// check if any string properties are empty
+			PropertyInfo propInfo = Obj.GetType().GetRuntimeProperties()
+			   .FirstOrDefault(pi => pi.GetCustomAttribute<EditableAttribute>() != null 
+			                   && pi.PropertyType == typeof(string) 
+			                   && string.IsNullOrEmpty((string)Obj.GetType().GetRuntimeProperty(pi.Name).GetValue(Obj)));
+			if (propInfo != null)
+			{
+				await DisplayAlert("Achtung!", propInfo.Name + " erforderlich :D", "Ok :)");
+				return;
+			}
 			if (isAddPage)
 				oldObj = default(T);
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);

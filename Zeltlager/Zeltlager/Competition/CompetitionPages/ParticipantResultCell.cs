@@ -17,21 +17,15 @@ namespace Zeltlager.Competition
 			{
 				HorizontalOptions = LayoutOptions.Center,
 			};
-			Button scrap = new Button
-			{
-				Image = Icons.PODIUM,
-			};
-			hsl.Children.Add(scrap);
 			Label place = new Label
 			{
 				HorizontalOptions = LayoutOptions.End,
-				WidthRequest = scrap.Width,
+				WidthRequest = 35,
 			};
 
 			hsl.Children.Add(participant);
 			hsl.Children.Add(points);
 			hsl.Children.Add(place);
-			hsl.Children.Remove(scrap);
 
 			participant.SetBinding(Label.TextProperty, "Participant.Name");
 			points.SetBinding(Label.TextProperty, "PointsString");
