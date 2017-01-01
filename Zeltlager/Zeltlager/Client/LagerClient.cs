@@ -86,6 +86,7 @@ namespace Zeltlager.Client
 		/// </summary>
 		public async Task Init(string name, string password, Action<InitStatus> statusUpdate)
 		{
+			data = new LagerData();
 			data.Name = name;
 			this.password = password;
 

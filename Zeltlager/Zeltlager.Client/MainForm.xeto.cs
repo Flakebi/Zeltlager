@@ -50,6 +50,11 @@ namespace Zeltlager.Client
 			// Load lager
 			Status = "Load lager";
 			int lagerId = manager.Settings.LastLager;
+			if (!manager.Lagers.ContainsKey(lagerId))
+			{
+				Status = "No lager found";
+				return;
+			}
 			lager = (LagerClient)manager.Lagers[lagerId];
 			if (!await lager.LoadBundles())
 				Status = "Error while loading the lager files";
