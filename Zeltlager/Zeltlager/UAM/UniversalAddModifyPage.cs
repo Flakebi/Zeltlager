@@ -210,7 +210,7 @@ namespace Zeltlager.UAM
 			                   && string.IsNullOrEmpty((string)Obj.GetType().GetRuntimeProperty(pi.Name).GetValue(Obj)));
 			if (propInfo != null)
 			{
-				await DisplayAlert("Achtung!", propInfo.Name + " erforderlich :D", "Ok :)");
+				await DisplayAlert("Achtung!", propInfo.GetCustomAttribute<EditableAttribute>().Name + " erforderlich :D", "Ok :)");
 				return;
 			}
 			if (isAddPage)

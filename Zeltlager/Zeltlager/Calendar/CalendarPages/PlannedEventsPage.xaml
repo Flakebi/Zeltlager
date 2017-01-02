@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="Zeltlager.Calendar.CalendarPages.PlannedEventsPage">
+	<ContentPage.ToolbarItems>
+		<ToolbarItem x:Name="AddButton" Icon="{x:Static local:Icons.ADD}" Clicked="OnAddClicked">
+    </ToolbarItem>
+	</ContentPage.ToolbarItems>
+	<ContentPage.Content>
+		<ListView x:Name="calendarEventList"
+				ItemsSource="{x:Static local:calendar.StandardEvents}">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<CalendarEventCell>
+					</CalendarEventCell>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+	</ContentPage.Content>
+</ContentPage>

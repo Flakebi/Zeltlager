@@ -8,7 +8,7 @@ namespace Zeltlager.Calendar
 	{
 		public Tent Dishwashers { get; set; }
 
-		private ObservableCollection<CalendarEvent> events;
+		ObservableCollection<CalendarEvent> events;
 		public ObservableCollection<CalendarEvent> Events
 		{
 			get { return events; }
@@ -22,7 +22,7 @@ namespace Zeltlager.Calendar
 			}
 		}
 
-		private DateTime date;
+		DateTime date;
 		public DateTime Date
 		{
 			get { return date; }

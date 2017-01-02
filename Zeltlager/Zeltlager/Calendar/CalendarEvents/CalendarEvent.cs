@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Zeltlager.Calendar
@@ -11,7 +10,7 @@ namespace Zeltlager.Calendar
 	using UAM;
 
 	[Editable("Termin")]
-	public class CalendarEvent : Editable<CalendarEvent>, INotifyPropertyChanged, IComparable<CalendarEvent>, IEquatable<CalendarEvent>
+	public class CalendarEvent : StandardCalendarEvent, IListCalendarEvent
 	{
 		public LagerClient Lager { get; set; }
 
@@ -129,14 +128,14 @@ namespace Zeltlager.Calendar
 			return Date.CompareTo(other.Date);
 		}
 
-		public override CalendarEvent Clone()
+		public override PlannedCalendarEvent Clone()
 		{
 			return new CalendarEvent(Id?.Clone(), date, title, detail, Lager);
 		}
 
-		public bool Equals(CalendarEvent other)
+		public CalendarEvent GetEditableCalendarEvent()
 		{
-			return Title.Equals(other.Title) && Detail.Equals(other.Detail) && Date.Equals(other.Date);
+			throw new NotImplementedException();
 		}
 
 		#endregion

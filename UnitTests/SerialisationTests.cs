@@ -50,12 +50,12 @@ namespace UnitTests
 				context = new LagerClientSerialisationContext(manager, lager);
 				context.PacketId = new PacketId(ownCollaborator);
 
-				tent = new Tent(null, 0, "Tent", false, new List<Member>());
+				tent = new Tent(null, 0, "Tent", false, new List<Member>(), lager);
 				await lager.AddPacket(await AddPacket.Create(serialiser, context, tent));
 				// Get the newly created objects
 				tent = lager.Tents.First();
 
-				member = new Member(null, "Member", tent, true);
+				member = new Member(null, "Member", tent, true, lager);
 				await lager.AddPacket(await AddPacket.Create(serialiser, context, member));
 				member = lager.Members.First();
 
@@ -110,7 +110,7 @@ namespace UnitTests
 			mem = new MemoryStream(mem.ToArray());
 			using (BinaryReader input = new BinaryReader(mem))
 			{
-				Member m = new Member();
+				Member m = new Member(lager);
 				await serialiser.Read(input, context, m);
 				Assert.AreEqual(member, m);
 			}

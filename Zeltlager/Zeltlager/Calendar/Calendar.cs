@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Zeltlager.DataPackets;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace Zeltlager.Calendar
 {
@@ -9,12 +10,15 @@ namespace Zeltlager.Calendar
 	{
 		public List<Day> Days { get; }
 
+		public ObservableCollection<CalendarEvent> StandardEvents { get; }
+		public ObservableCollection<CalendarEvent> FutureEvents { get; }
+
 		public Calendar()
 		{
 			Days = new List<Day>();
 
-			//TODO For testing
-			InitCalendar(new DateTime(2016, 8, 2), new DateTime(2016, 8, 12));
+			// For testing
+			//InitCalendar(new DateTime(2016, 8, 2), new DateTime(2016, 8, 12));
 		}
 
 		public void InitCalendar(DateTime startDate, DateTime endDate)
@@ -61,7 +65,13 @@ namespace Zeltlager.Calendar
 
 		Day FindCorrectDay(CalendarEvent ce)
 		{
-			return Days.Find(x => x.Date.Date == ce.Date.Date);
+			Day d = Days.Find(x => x.Date.Date == ce.Date.Date);
+			if (d == null)
+			{
+				d = new Day(ce.Date.Date);
+				Days.Add(d);
+			}
+			return d;
 		}
 
 		public CalendarEvent GetEventFromPacketId(PacketId id)

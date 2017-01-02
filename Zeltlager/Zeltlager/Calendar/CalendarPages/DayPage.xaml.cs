@@ -17,9 +17,8 @@ namespace Zeltlager.Calendar
 
 		public DayPage(Day day, LagerClient lager)
 		{
-			this.lager = lager;
 			InitializeComponent();
-
+			this.lager = lager;
 			Day = day;
 
 			Padding = new Thickness(10);
