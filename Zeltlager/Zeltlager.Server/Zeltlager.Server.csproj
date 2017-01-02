@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerIoProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -81,6 +80,10 @@
     <ProjectReference Include="..\Zeltlager\Zeltlager.csproj">
       <Project>{1e7ebc5e-a1f0-467b-bfe9-fc5c3ecc54f8}</Project>
       <Name>Zeltlager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Zeltlager.Desktop\Zeltlager.Desktop.csproj">
+      <Project>{BCADD466-45C5-43FA-949A-710A02064517}</Project>
+      <Name>Zeltlager.Desktop</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

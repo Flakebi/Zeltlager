@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,24 +11,38 @@ namespace Zeltlager.Client
 {
 	using DataPackets;
 	using Network;
-	using Serialisation;
 	using Requests = CommunicationPackets.Requests;
 	using Responses = CommunicationPackets.Responses;
+	using Serialisation;
 
 	public class MainForm : Form
 	{
-		LagerClientManager manager;
-		LagerClient lager;
-		
-		string Status { set { statusLabel.Text = value; } }
-
 		readonly INetworkClient client = new TcpNetworkClient();
 		INetworkConnection connection;
 
-		// Disable the not assigned warning, the field will be assigned from the xaml.
+		LagerClientManager manager;
+		LagerClient lager;
+		Dictionary<int, LagerData> serverLagers;
+		
+		string Status
+		{
+			get { return statusLabel.Text; }			
+			set { statusLabel.Text = value; statusTimer.Start(); }
+		}
+
+		// Disable the not assigned warning, the fields will be assigned from the xaml.
 #pragma warning disable 0649
 		Label statusLabel;
+		Button downloadButton;
+		Panel downloadContent;
+		TextBox downloadPasswordText;
 #pragma warning restore 0649
+		/// <summary>
+		/// Remove the status message after some time.
+		/// </summary>
+		UITimer statusTimer = new UITimer();
+
+		List<Control> contents = new List<Control>();
 
 		public MainForm(IIoProvider io)
 		{
@@ -37,9 +52,19 @@ namespace Zeltlager.Client
 			LagerManager.IsClient = true;
 			manager = new LagerClientManager(io);
 			manager.NetworkClient = new TcpNetworkClient();
+
+			contents.Add(downloadContent);
+			statusTimer.Interval = 5;
+			statusTimer.Elapsed += (sender, e) =>
+			{
+				Status = "";
+				statusTimer.Stop();
+			};
+
+			ShowContent(null);
 		}
 
-		public async void LoadLagers(object sender, EventArgs e)
+		public async Task LoadLagers()
 		{
 			// Load LagerManager
 			Status = "Load settings";
@@ -57,50 +82,100 @@ namespace Zeltlager.Client
 			}
 			lager = (LagerClient)manager.Lagers[lagerId];
 			if (!await lager.LoadBundles())
+			{
 				Status = "Error while loading the lager files";
+				return;
+			}
 			if (!await lager.ApplyHistory())
+			{
 				Status = "Error while loading the lager";
+				return;
+			}
+			Status = "Lager loaded";
 		}
 
-		protected async void Connect(object sender, EventArgs e)
+		void ShowContent(Control content)
 		{
-			connection = await client.OpenConnection("localhost", LagerManager.PORT);
-			Status = "Connected";
+			foreach (var c in contents)
+				c.Visible = false;
+			if (content != null)
+				content.Visible = true;
 		}
 
-		protected async void ListLagers(object sender, EventArgs e)
+		async void Connect(object sender, EventArgs args)
+		{
+			bool success = false;
+			try
+			{
+				connection = await client.OpenConnection("localhost", LagerManager.PORT);
+				success = true;
+			}
+			catch (Exception e)
+			{
+				Status = "Can't connect: " + e;
+			}
+			if (success)
+			{
+				Status = "Connected";
+				downloadButton.Enabled = true;
+			}
+		}
+
+		async void Download(object sender, EventArgs args)
 		{
 			if (connection == null)
 			{
 				Status = "Not connected";
 				return;
 			}
+
 			Status = "Requesting lager list";
 			await connection.WritePacket(new Requests.ListLagers());
 			var packet = (Responses.ListLagers)await connection.ReadPacket();
+			serverLagers = packet.GetLagerData();
 			if (packet != null)
-			{
-				Status = "Got lager list";
-			} else
-			{
+				Status = "Got " + serverLagers.Count + " lagers";
+			else
 				Status = "Got no packet";
-			}
+
+			// Show the download content panel
+			ShowContent(downloadContent);
 		}
 
-		protected async void CreateLager(object sender, EventArgs e)
+		async void Decrypt(object sender, EventArgs args)
 		{
-			var lager = await manager.CreateLager("test", "pass", status => Status = status.ToString());
+			if (serverLagers == null)
+			{
+				Status = "No lagers available";
+				return;
+			}
+			string password = downloadPasswordText.Text;
+			foreach (var d in serverLagers)
+			{
+				if (await d.Value.Decrypt(password))
+				{
+					Status = "Success for lager " + d.Key;
+					lager = new LagerClient(manager, manager.IoProvider, d.Key);
+					//TODO lager.Data = d.Value;
+					return;
+				}
+			}
+			Status = "No lager found";
+		}
+
+		async void CreateLager(object sender, EventArgs args)
+		{
+			lager = await manager.CreateLager("test", "pass", status => Status = status.ToString());
 			await lager.CreateTestData();
 		}
 
-		protected async void AddMember(object sender, EventArgs e)
+		async void AddMember(object sender, EventArgs args)
 		{
 			if (!manager.Lagers.ContainsKey(0))
 			{
 				Status = "No lager 0 loaded";
 				return;
 			}
-			var lager = (LagerClient)manager.Lagers[0];
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(manager, lager);
 			context.PacketId = new PacketId(lager.OwnCollaborator);
 			await lager.AddPacket(await AddPacket.Create(lager.ClientSerialiser, context,
@@ -108,7 +183,7 @@ namespace Zeltlager.Client
 			Status = "Member added";
 		}
 
-		protected void HandleQuit(object sender, EventArgs e)
+		void Quit(object sender, EventArgs args)
 		{
 			Application.Instance.Quit();
 		}

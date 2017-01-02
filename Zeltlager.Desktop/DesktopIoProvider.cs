@@ -1,17 +1,19 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Zeltlager
 {
-	public class ServerIoProvider : IIoProvider
+	public class DesktopIoProvider : IIoProvider
 	{
 		public Task<Tuple<string, FileType>[]> ListContents(string path)
 		{
 			return Task.FromResult(
-			    Directory.GetFiles(path).Select(f => new Tuple<string, FileType>(f, FileType.File)).Concat(
-				    Directory.GetDirectories(path).Select(f => new Tuple<string, FileType>(f, FileType.Folder))
+				Directory.GetFiles(path).Select(f =>
+					new Tuple<string, FileType>(Path.GetFileName(f), FileType.File)
+				).Concat(Directory.GetDirectories(path).Select(
+					f => new Tuple<string, FileType>(Path.GetFileName(f), FileType.Folder))
 				).ToArray()
 			);
 		}

@@ -25,12 +25,14 @@ namespace Zeltlager.Server
 		{
 			// Load LagerManager
 			LagerManager.IsClient = false;
-			var io = new RootedIoProvider(new ServerIoProvider(), Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
+			var io = new RootedIoProvider(new DesktopIoProvider(), Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
 			LagerManager lagerManager = new LagerManager(io);
 			lagerManager.NetworkClient = new TcpNetworkClient();
 			lagerManager.NetworkServer = new TcpNetworkServer();
 			await LagerManager.Log.Load();
+			LagerManager.Log.OnMessage += Console.WriteLine;
 			await lagerManager.Load();
+			await LagerManager.Log.Info("Server", "Is running");
 
 			// Let the server run for a while
 			await Task.Delay(1000 * 60 * 60);

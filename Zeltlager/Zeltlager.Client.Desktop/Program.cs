@@ -12,8 +12,10 @@ namespace Zeltlager.Client.Desktop
 		static void Main(string[] args)
 		{
 			var app = new Application(Platform.Detect);
-			var io = new RootedIoProvider(new ServerIoProvider(), Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
+			var io = new RootedIoProvider(new DesktopIoProvider(), Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
 			var main = new MainForm(io);
+			app.AsyncInvoke(async () => await main.LoadLagers());
+			app.AsyncInvoke(() => LagerManager.Log.OnMessage += Console.WriteLine);
 			app.Run(main);
 		}
 	}

@@ -18,6 +18,8 @@ namespace Zeltlager
 
 		public class Message
 		{
+			const string TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+			
 			public DateTime Timestamp { get; }
 			public LogType Type { get; }
 			public string Section { get; }
@@ -35,7 +37,7 @@ namespace Zeltlager
 
 			public override string ToString()
 			{
-				return string.Format("{0}|{1}|{2}|{3}", Timestamp, Type, Escape(Section).Replace("|", " "), Escape(Text));
+				return string.Format("{0}|{1}|{2}|{3}", Timestamp.ToString(TIME_FORMAT), Type, Escape(Section).Replace("|", " "), Escape(Text));
 			}
 
 			static string Escape(string s)
@@ -45,6 +47,10 @@ namespace Zeltlager
 		}
 
 		const string FILENAME = "log.txt";
+
+		public delegate void OnMessageHandler(Message message);
+
+		public event OnMessageHandler OnMessage;
 
 		readonly List<Message> messages = new List<Message>();
         readonly IIoProvider ioProvider;
@@ -107,6 +113,7 @@ namespace Zeltlager
 		async Task AddMessage(Message message)
 		{
 			messages.Add(message);
+			OnMessage?.Invoke(message);
 			using (StreamWriter writer = new StreamWriter(await ioProvider.AppendFile(FILENAME)))
 				writer.WriteLine(message);
 		}

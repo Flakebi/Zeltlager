@@ -3,13 +3,41 @@
 	xmlns="http://schema.picoe.ca/eto.forms" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Zeltlager"
-	ClientSize="400, 350">
-	<StackLayout Padding="10" Spacing="5">
-	    <Label x:Name="statusLabel"/>
-		<Button Click="Connect">Connect</Button>
-		<Button Click="ListLagers">List lagers</Button>
-		<Button Click="LoadLagers">Load lagers</Button>
-		<Button Click="CreateLager">Create lager</Button>
-		<Button Click="AddMember">Add member</Button>
-	</StackLayout>
+	ClientSize="500, 350">
+	<TableLayout Padding="5">
+		<TableRow>
+			<!-- Button menu bar -->
+			<StackLayout Orientation="Horizontal" Spacing="5">
+				<Button Click="CreateLager">Create lager</Button>
+				<Button Click="Connect">Connect</Button>
+				<Button x:Name="downloadButton" Click="Download" Enabled="False">Download</Button>
+				<Button Click="AddMember">Add member</Button>
+				<Button Click="Quit">Beenden</Button>
+			</StackLayout>
+		</TableRow>
+		<TableRow ScaleHeight="True">
+			<TableLayout Spacing="10, 10" Padding="5">
+				<TableRow>
+					<TableRow>
+						<!-- Left sidebar -->
+						<Label>Sidebar</Label>
+					</TableRow>
+					<TableRow ScaleHeight="True">
+						<!-- Content -->
+						<StackLayout Orientation="Vertical" x:Name="downloadContent">
+							<StackLayout Orientation="Horizontal" Spacing="5">
+								<Label>Password</Label>
+								<TextBox x:Name="downloadPasswordText"/>
+								<Button Click="Decrypt">Open</Button>
+							</StackLayout>
+						</StackLayout>
+					</TableRow>
+				</TableRow>
+			</TableLayout>
+		</TableRow>
+		<TableRow>
+			<!-- Status bar -->
+	    	<Label x:Name="statusLabel"/>
+		</TableRow>
+	</TableLayout>
 </Form>

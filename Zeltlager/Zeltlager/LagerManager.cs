@@ -28,6 +28,7 @@ namespace Zeltlager
 		}
 
 		protected IIoProvider ioProvider;
+		public IIoProvider IoProvider => ioProvider;
 
 		/// <summary>
 		/// The lagers with their respective ids.
@@ -79,6 +80,7 @@ namespace Zeltlager
 				{
 					LagerBase lager = await LoadLager(i);
 					lagers.Add(i, lager);
+					await Log.Info("Loading lagers", "Added lager " + i);
 				} catch (Exception e)
 				{
 					await Log.Exception("Loading lagers", e);
