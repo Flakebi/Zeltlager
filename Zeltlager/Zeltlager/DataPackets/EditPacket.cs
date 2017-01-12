@@ -30,6 +30,9 @@ namespace Zeltlager.DataPackets
 			new Tuple<Type, MethodInfo>(typeof(GroupParticipant), null),
 			new Tuple<Type, MethodInfo>(typeof(MemberParticipant), null),
 			new Tuple<Type, MethodInfo>(typeof(TentParticipant), null),
+			new Tuple<Type, MethodInfo>(typeof(PlannedCalendarEvent), null),
+			new Tuple<Type, MethodInfo>(typeof(StandardCalendarEvent), null),
+			new Tuple<Type, MethodInfo>(typeof(ReferenceCalendarEvent), null),
 		};
 
 		public static int GetIdCount() { return types.Length; }

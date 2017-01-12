@@ -12,16 +12,11 @@ namespace Zeltlager.Calendar
 	[Editable("Termin")]
 	public class CalendarEvent : StandardCalendarEvent, IListCalendarEvent
 	{
-		public LagerClient Lager { get; set; }
-
-		[Serialisation(Type = SerialisationType.Id)]
-		public PacketId Id { get; set; }
-
 		/// <summary>
 		/// The date of this event.
 		/// </summary>
 		[Serialisation]
-		DateTime date;
+		protected DateTime date;
 		[Editable("Tag")]
 		public DateTime Date
 		{
@@ -29,56 +24,17 @@ namespace Zeltlager.Calendar
 			// make date reflect correct time of day (hate to the DatePicker!!!)
 			set
 			{
-				date = value.Date.Add(timeSpan);
-				OnPropertyChanged(nameof(Date));
-				OnPropertyChanged(nameof(TimeSpan));
-				OnPropertyChanged(nameof(TimeString));
+				date = value.Date.Add(TimeSpan);
 			}
 		}
-		/// <summary>
-		/// The time of this event, used to edit only the time.
-		/// </summary>
+
 		/// A private attribute is needed, so binding Date to a DatePicker does not fuck up our time
 		/// (changes in the TimeOfDay in Date are not reflected in TimeSpan)
-		TimeSpan timeSpan;
 		[Editable("Uhrzeit")]
-		public TimeSpan TimeSpan
+		public override TimeSpan TimeSpan 
 		{
-			get { return timeSpan; }
-			set
-			{
-				date = date.Date.Add(value);
-				timeSpan = value;
-				OnPropertyChanged(nameof(Date));
-				OnPropertyChanged(nameof(TimeSpan));
-				OnPropertyChanged(nameof(TimeString));
-			}
-		}
-		/// <summary>
-		/// used to display the time of the event nicely
-		/// </summary>
-		/// <value>The time string.</value>
-		public string TimeString
-		{
-			get { return date.ToString("HH:mm"); }
-		}
-
-		string title;
-		[Editable("Titel")]
-		[Serialisation]
-		public string Title
-		{
-			get { return title; }
-			set { title = value; OnPropertyChanged(nameof(Title)); }
-		}
-
-		string detail;
-		[Editable("Beschreibung")]
-		[Serialisation]
-		public string Detail
-		{
-			get { return detail; }
-			set { detail = value; OnPropertyChanged(nameof(Detail)); }
+			get { return Date.TimeOfDay; }
+			set { Date.Date.Add(value); }
 		}
 
 		protected static Task<CalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
@@ -91,19 +47,15 @@ namespace Zeltlager.Calendar
 		public CalendarEvent(LagerClientSerialisationContext context) : this() {}
 
 		public CalendarEvent(PacketId id, DateTime date, string title, string detail, LagerClient lager)
+			: base (id, date.TimeOfDay, title, detail, lager)
 		{
-			this.Id = id;
-			this.date = date;
-			this.title = title;
-			this.detail = detail;
-			this.Lager = lager;
-			timeSpan = date.TimeOfDay;
+			Date = date;
 		}
 
-		public void Add(LagerClientSerialisationContext context)
+		public new void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
-			Lager = context.LagerClient;
+			lager = context.LagerClient;
 			context.LagerClient.Calendar.InsertNewCalendarEvent(this);
 		}
 
@@ -116,13 +68,6 @@ namespace Zeltlager.Calendar
 
 		#region Interface implementations
 
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		public void OnPropertyChanged(string propertyName)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
-
 		public int CompareTo(CalendarEvent other)
 		{
 			return Date.CompareTo(other.Date);
@@ -130,7 +75,7 @@ namespace Zeltlager.Calendar
 
 		public override PlannedCalendarEvent Clone()
 		{
-			return new CalendarEvent(Id?.Clone(), date, title, detail, Lager);
+			return new CalendarEvent(Id?.Clone(), date, Title, Detail, lager);
 		}
 
 		public CalendarEvent GetEditableCalendarEvent()

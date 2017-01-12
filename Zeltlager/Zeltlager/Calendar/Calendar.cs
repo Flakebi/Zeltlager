@@ -8,18 +8,14 @@ namespace Zeltlager.Calendar
 {
 	public class Calendar
 	{
-		public List<Day> Days { get; }
+		public List<Day> Days { get; } = new List<Day>();
 
-		public ObservableCollection<CalendarEvent> StandardEvents { get; }
-		public ObservableCollection<CalendarEvent> FutureEvents { get; }
+		public ObservableCollection<StandardCalendarEvent> StandardEvents { get; } 
+			= new ObservableCollection<StandardCalendarEvent>();
+		public ObservableCollection<PlannedCalendarEvent> PlannedEvents { get; } 
+			= new ObservableCollection<PlannedCalendarEvent>();
 
-		public Calendar()
-		{
-			Days = new List<Day>();
-
-			// For testing
-			//InitCalendar(new DateTime(2016, 8, 2), new DateTime(2016, 8, 12));
-		}
+		public Calendar() {}
 
 		public void InitCalendar(DateTime startDate, DateTime endDate)
 		{
@@ -70,6 +66,7 @@ namespace Zeltlager.Calendar
 			{
 				d = new Day(ce.Date.Date);
 				Days.Add(d);
+				Days.Sort();
 			}
 			return d;
 		}
@@ -78,5 +75,40 @@ namespace Zeltlager.Calendar
 		{
 			return Days.SelectMany(day => day.Events).First(x => x.Id == id);
 		}
+
+		#region PlannedCEs
+		public void InsertNewPlannedCalendarEvent(PlannedCalendarEvent pce)
+		{
+			PlannedEvents.Add(pce);
+			PlannedEvents.Sort();
+		}
+
+		public void RemovePlannedCalendarEvent(PlannedCalendarEvent pce)
+		{
+			PlannedEvents.Remove(pce);
+		}
+
+		public PlannedCalendarEvent GetPlannedEventFromPacketId(PacketId id)
+		{
+			return PlannedEvents.First(x => x.Id == id);
+		}
+		#endregion
+
+		#region StandardCEs
+		public void InsertNewStandardCalendarEvent(StandardCalendarEvent sce)
+		{
+			StandardEvents.Add(sce);
+		}
+
+		public void RemoveStandardCalendarEvent(StandardCalendarEvent sce)
+		{
+			StandardEvents.Remove(sce);
+		}
+
+		public StandardCalendarEvent GetStandardEventFromPacketId(PacketId id)
+		{
+			return StandardEvents.First(x => x.Id == id);
+		}
+		#endregion
 	}
 }
