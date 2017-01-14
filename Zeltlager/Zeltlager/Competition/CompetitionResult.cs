@@ -66,7 +66,7 @@ namespace Zeltlager.Competition
 
 		public override CompetitionResult Clone()
 		{
-			return new CompetitionResult(Id, Owner, Participant, Points, Place);
+			return new CompetitionResult(Id?.Clone(), Owner, Participant, Points, Place);
 		}
 
 		public int CompareTo(CompetitionResult other)

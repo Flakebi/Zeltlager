@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
 using Zeltlager.Serialisation;
@@ -7,6 +8,7 @@ using Zeltlager.UAM;
 namespace Zeltlager.Calendar
 {
 	// events that do not yet have a day or time assignedt
+	[Editable("geplanten Termin")]
 	public class PlannedCalendarEvent : Editable<PlannedCalendarEvent>, IComparable<PlannedCalendarEvent>
 	{
 		protected LagerClient lager;
@@ -32,6 +34,11 @@ namespace Zeltlager.Calendar
 			Title = title;
 			Detail = detail;
 			this.lager = lager;
+		}
+
+		static Task<PlannedCalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		{
+			return Task.FromResult(context.LagerClient.Calendar.GetPlannedEventFromPacketId(id));
 		}
 
 		public void Add(LagerClientSerialisationContext context)

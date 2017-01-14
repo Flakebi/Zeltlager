@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Zeltlager.Calendar
@@ -24,22 +23,22 @@ namespace Zeltlager.Calendar
 			// make date reflect correct time of day (hate to the DatePicker!!!)
 			set
 			{
-				date = value.Date.Add(TimeSpan);
+				date = value.Date.Add(Time);
 			}
 		}
 
 		/// A private attribute is needed, so binding Date to a DatePicker does not fuck up our time
 		/// (changes in the TimeOfDay in Date are not reflected in TimeSpan)
 		[Editable("Uhrzeit")]
-		public override TimeSpan TimeSpan 
+		public override TimeSpan Time 
 		{
 			get { return Date.TimeOfDay; }
 			set { Date.Date.Add(value); }
 		}
 
-		protected static Task<CalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		static Task<CalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
-			return Task.FromResult(context.LagerClient.Calendar.GetEventFromPacketId(id));
+			return Task.FromResult((CalendarEvent)context.LagerClient.Calendar.GetEventFromPacketId(id));
 		}
 
 		public CalendarEvent() {}
@@ -80,7 +79,12 @@ namespace Zeltlager.Calendar
 
 		public CalendarEvent GetEditableCalendarEvent()
 		{
-			throw new NotImplementedException();
+			return this;
+		}
+
+		public int CompareTo(IListCalendarEvent other)
+		{
+			return CompareTo(other.GetEditableCalendarEvent());
 		}
 
 		#endregion

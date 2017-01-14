@@ -46,7 +46,7 @@ namespace Zeltlager.Calendar
 			return new DateTime(day.Year, day.Month, day.Day, newHour, newMin, 0);
 		}
 
-		public void InsertNewCalendarEvent(CalendarEvent calendarEvent)
+		public void InsertNewCalendarEvent(IListCalendarEvent calendarEvent)
 		{
 			// Find correct day
 			Day d = FindCorrectDay(calendarEvent);
@@ -54,12 +54,12 @@ namespace Zeltlager.Calendar
 			d.Events.Sort();
 		}
 
-		public void RemoveCalendarEvent(CalendarEvent caldendarEvent)
+		public void RemoveCalendarEvent(IListCalendarEvent caldendarEvent)
 		{
 			FindCorrectDay(caldendarEvent).Events.Remove(caldendarEvent);
 		}
 
-		Day FindCorrectDay(CalendarEvent ce)
+		Day FindCorrectDay(IListCalendarEvent ce)
 		{
 			Day d = Days.Find(x => x.Date.Date == ce.Date.Date);
 			if (d == null)
@@ -71,7 +71,7 @@ namespace Zeltlager.Calendar
 			return d;
 		}
 
-		public CalendarEvent GetEventFromPacketId(PacketId id)
+		public IListCalendarEvent GetEventFromPacketId(PacketId id)
 		{
 			return Days.SelectMany(day => day.Events).First(x => x.Id == id);
 		}

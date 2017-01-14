@@ -1,9 +1,13 @@
 ﻿using System;
+using Zeltlager.DataPackets;
+
 namespace Zeltlager.Calendar
 {
 	// for those shown in the Day-Event Lists
-	public interface IListCalendarEvent
+	public interface IListCalendarEvent : IComparable<IListCalendarEvent>
 	{
 		CalendarEvent GetEditableCalendarEvent();
+		DateTime Date { get; set; }
+		PacketId Id { get; set; }
 	}
 }
