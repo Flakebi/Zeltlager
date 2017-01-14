@@ -27,11 +27,6 @@ namespace Zeltlager
 	public class Collaborator : ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>
 	{
 		/// <summary>
-		/// The id that this collaborator has on the server.
-		/// </summary>
-		public int Id { get; set; }
-		
-		/// <summary>
 		/// The data of this collaborator.
 		/// This contains the public key of this collaborator, signed with
 		/// the private lager key. This data is signed with the private
@@ -125,9 +120,7 @@ namespace Zeltlager
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			// Get our collaborator id from the LagerStatus
-			output.Write(Id);
-			return Task.WhenAll();
+			throw new InvalidOperationException("You can't write the id of a collaborator");
 		}
 
 		public async Task Read(BinaryReader input,
@@ -146,11 +139,7 @@ namespace Zeltlager
 			Serialiser<LagerSerialisationContext> serialiser,
 			LagerSerialisationContext context)
 		{
-			int id = input.ReadInt32();
-			Collaborator collaborator = context.Lager.Collaborators.Values.First(c => c.Id == id);
-			// Update the context
-			context.PacketId = context.PacketId.Clone(collaborator);
-			return Task.FromResult(collaborator);
+			throw new InvalidOperationException("You can't read the id of a collaborator");
 		}
 
 		// Serialisation with a LagerClientSerialisationContext

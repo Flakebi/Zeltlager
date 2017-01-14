@@ -41,7 +41,12 @@ namespace Zeltlager
 		/// The number of packets that were generated so far by each client.
 		/// This is the state of the local data.
 		/// </summary>
-		protected LagerStatus Status;
+		public LagerStatus Status { get; set; }
+
+		/// <summary>
+		/// Information about a remote lager that is used for synchronisation, if set.
+		/// </summary>
+		public LagerRemote Remote { get; set; }
 
 		public LagerBase(LagerManager manager, IIoProvider io, int id)
 		{
@@ -61,8 +66,7 @@ namespace Zeltlager
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(LAGER_FILE)))
 				await serialiser.Read(input, context, this);
 
-			Status = await ReadLagerStatus();
-			collaborators = Status.BundleCount.Select(c => c.Item1).ToDictionary(c => c.Key);
+			await ReadLagerStatus();
 		}
 
         public virtual async Task Save()
@@ -78,11 +82,12 @@ namespace Zeltlager
 		/// <summary>
 		/// Find out which bundles are currently saved on the disk and read a
 		/// list of collaborators.
+		/// The collaborators list is also set by this function
 		/// </summary>
 		/// <returns>The list of operators and bundles currently saved.</returns>
-		protected async Task<LagerStatus> ReadLagerStatus()
+		protected async Task ReadLagerStatus()
 		{
-			LagerStatus status = new LagerStatus();
+			Status = new LagerStatus();
 			// Check for collaborator folders
 			var folders = await ioProvider.ListContents("");
 			try
@@ -94,7 +99,6 @@ namespace Zeltlager
 					// Read the collaborator if possible
 					IIoProvider rootedIo = new RootedIoProvider(ioProvider, collaboratorId.ToString());
 					Collaborator collaborator = new Collaborator();
-					collaborator.Id = collaboratorId;
 					LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
 					context.PacketId = new PacketId(collaborator);
 
@@ -106,13 +110,13 @@ namespace Zeltlager
 					int bundleCount = 0;
 					while (files.Contains(new Tuple<string, FileType>(bundleCount.ToString(), FileType.File)))
 						bundleCount++;
-					status.BundleCount.Add(new Tuple<Collaborator, int>(collaborator, bundleCount));
+					Status.BundleCount.Add(new Tuple<KeyPair, int>(collaborator.Key, bundleCount));
+					collaborators.Add(collaborator.Key, collaborator);
 				}
 			} catch (Exception e)
 			{
 				await LagerManager.Log.Exception("LagerStatus", e);
 			}
-			return status;
 		}
 
 		Task Verify()
@@ -123,7 +127,7 @@ namespace Zeltlager
 		string GetBundlePath(PacketId id)
 		{
 			// Get the local collaborator id
-			int collaboratorId = Status.BundleCount.FindIndex(c => c.Item1 == id.Creator);
+			int collaboratorId = Status.BundleCount.FindIndex(c => c.Item1 == id.Creator.Key);
 			if (collaboratorId == -1)
 				throw new InvalidOperationException("Can't get the bundle path for an unknown collaborator");
 			return Path.Combine(collaboratorId.ToString(), id.Bundle.Id.ToString());
@@ -155,11 +159,14 @@ namespace Zeltlager
 		}
 
 		// Serialisation with a LagerSerialisationContext
-		public virtual Task Write(BinaryWriter output,
+		public virtual async Task Write(BinaryWriter output,
 			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			output.Write(data);
-			return Task.WhenAll();
+			// Write server related data only if this lager is connected to a server
+			output.Write(Remote != null);
+			if (Remote != null)
+				await serialiser.Write(output, context, Remote);
 		}
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser,
@@ -173,6 +180,12 @@ namespace Zeltlager
 			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			data = input.ReadLagerData();
+			// Read server related data only if this lager is connected to a server
+			if (input.ReadBoolean())
+			{
+				Remote = new LagerRemote();
+				await serialiser.Read(input, context, Remote);
+			}
 			await Verify();
 		}
 

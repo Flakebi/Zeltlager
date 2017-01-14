@@ -26,13 +26,20 @@ namespace Zeltlager.Client
             return lager;
         }
 
+		/// <summary>
+		/// Create a new lager and save it.
+		/// </summary>
+		/// <returns>The created lager.</returns>
+		/// <param name="name">The name of the new lager.</param>
+		/// <param name="password">The password of the new lager.</param>
+		/// <param name="statusUpdate">A function that receivs status updates.</param>
         public async Task<LagerClient> CreateLager(string name, string password,
             Action<LagerClient.InitStatus> statusUpdate)
         {
             int id = Lagers.Count;
             IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
             LagerClient lager = new LagerClient(this, io, id);
-            await lager.Init(name, password, statusUpdate);
+            await lager.InitLocal(name, password, statusUpdate);
             // Save the lager
             await lager.Save();
 
@@ -42,5 +49,22 @@ namespace Zeltlager.Client
             await Settings.Save(ioProvider);
             return lager;
         }
+
+		public async Task<LagerClient> AddLager(int serverId, LagerData data, string password,
+			Action<LagerClient.InitStatus> statusUpdate)
+		{
+			int id = Lagers.Count;
+			IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
+			LagerClient lager = new LagerClient(this, io, id);
+			await lager.InitFromServer(serverId, data, password, statusUpdate);
+			// Save the lager
+			await lager.Save();
+
+			// Store lager as last used lager
+			lagers.Add(id, lager);
+			Settings.LastLager = id;
+			await Settings.Save(ioProvider);
+			return lager;
+		}
     }
 }

@@ -15,6 +15,54 @@ namespace Zeltlager.Client
 	using Responses = CommunicationPackets.Responses;
 	using Serialisation;
 
+	class LagerItemTextBinding : IIndirectBinding<string>
+	{
+		public string GetValue(object dataItem)
+		{
+			Tuple<int, LagerClient> item = (Tuple<int, LagerClient>)dataItem;
+			return item.Item2.Data.Name;
+		}
+
+		public void SetValue(object dataItem, string value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Unbind()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Update(BindingUpdateMode mode = BindingUpdateMode.Source)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	class LagerItemKeyBinding : IIndirectBinding<string>
+	{
+		public string GetValue(object dataItem)
+		{
+			Tuple<int, LagerClient> item = (Tuple<int, LagerClient>)dataItem;
+			return item.Item1.ToString();
+		}
+
+		public void SetValue(object dataItem, string value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Unbind()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Update(BindingUpdateMode mode = BindingUpdateMode.Source)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
 	public class MainForm : Form
 	{
 		readonly INetworkClient client = new TcpNetworkClient();
@@ -33,9 +81,13 @@ namespace Zeltlager.Client
 		// Disable the not assigned warning, the fields will be assigned from the xaml.
 #pragma warning disable 0649
 		Label statusLabel;
-		Button downloadButton;
+		Button listLagersButton;
+		DropDown lagerDropDown;
+		DropDown collaboratorDropDown;
+
 		Panel downloadContent;
 		TextBox downloadPasswordText;
+		Label lagerInfoLabel;
 #pragma warning restore 0649
 		/// <summary>
 		/// Remove the status message after some time.
@@ -71,8 +123,12 @@ namespace Zeltlager.Client
 			await LagerManager.Log.Load();
 			await manager.Load();
 			Status = manager.Lagers.Count + " lagers loaded";
+			// Add the names to the dropdown
+			lagerDropDown.ItemTextBinding = new LagerItemTextBinding();
+			lagerDropDown.ItemKeyBinding = new LagerItemTextBinding();
+			lagerDropDown.DataStore = manager.Lagers.Select(pair => new Tuple<int, LagerClient>(pair.Key, (LagerClient)pair.Value));
 
-			// Load lager
+			// Load the last lager
 			Status = "Load lager";
 			int lagerId = manager.Settings.LastLager;
 			if (!manager.Lagers.ContainsKey(lagerId))
@@ -81,17 +137,21 @@ namespace Zeltlager.Client
 				return;
 			}
 			lager = (LagerClient)manager.Lagers[lagerId];
+			bool success = true;
 			if (!await lager.LoadBundles())
 			{
 				Status = "Error while loading the lager files";
-				return;
+				success = false;
 			}
 			if (!await lager.ApplyHistory())
 			{
 				Status = "Error while loading the lager";
-				return;
+				success = false;
 			}
-			Status = "Lager loaded";
+			if (success)
+				Status = "Lager loaded";
+			// Pick the current lager in the drop down menu
+			lagerDropDown.SelectedKey = lagerId.ToString();
 		}
 
 		void ShowContent(Control content)
@@ -117,11 +177,11 @@ namespace Zeltlager.Client
 			if (success)
 			{
 				Status = "Connected";
-				downloadButton.Enabled = true;
+				listLagersButton.Enabled = true;
 			}
 		}
 
-		async void Download(object sender, EventArgs args)
+		async void ListLagers(object sender, EventArgs args)
 		{
 			if (connection == null)
 			{
@@ -155,8 +215,10 @@ namespace Zeltlager.Client
 				if (await d.Value.Decrypt(password))
 				{
 					Status = "Success for lager " + d.Key;
-					lager = new LagerClient(manager, manager.IoProvider, d.Key);
-					//TODO lager.Data = d.Value;
+					// Display the lager info
+					lagerInfoLabel.Text = "Name: " + d.Value.Name + "\nSymmetricKey: " + d.Value.SymmetricKey.ToHexString();
+					//lager = await manager.AddLager(d.Key, d.Value, password, (status) => Status = status.ToString());
+					//TODO Download button
 					return;
 				}
 			}
@@ -167,6 +229,13 @@ namespace Zeltlager.Client
 		{
 			lager = await manager.CreateLager("test", "pass", status => Status = status.ToString());
 			await lager.CreateTestData();
+		}
+
+		async void SelectedLagerChanged(object sender, EventArgs args)
+		{
+			// Get the currently selected lager
+			//TODO Load the newly selected lager
+			//lagerDropDown.SelectedKey;
 		}
 
 		async void AddMember(object sender, EventArgs args)
@@ -181,6 +250,12 @@ namespace Zeltlager.Client
 			await lager.AddPacket(await AddPacket.Create(lager.ClientSerialiser, context,
 				new Member(null, "Anna", lager.Tents.Skip(new Random().Next(0, lager.Tents.Count)).First(), true, lager)));
 			Status = "Member added";
+		}
+
+		void DownloadPasswordTextKeyUp(object sender, KeyEventArgs args)
+		{
+			if (args.Key == Keys.Enter)
+				Decrypt(null, null);
 		}
 
 		void Quit(object sender, EventArgs args)

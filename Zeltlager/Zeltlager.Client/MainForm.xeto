@@ -8,9 +8,10 @@
 		<TableRow>
 			<!-- Button menu bar -->
 			<StackLayout Orientation="Horizontal" Spacing="5">
+				<DropDown x:Name="lagerDropDown" SelectedKeyChanged="SelectedLagerChanged"/>
 				<Button Click="CreateLager">Create lager</Button>
 				<Button Click="Connect">Connect</Button>
-				<Button x:Name="downloadButton" Click="Download" Enabled="False">Download</Button>
+				<Button x:Name="listLagersButton" Click="ListLagers" Enabled="False">List lagers</Button>
 				<Button Click="AddMember">Add member</Button>
 				<Button Click="Quit">Beenden</Button>
 			</StackLayout>
@@ -20,16 +21,19 @@
 				<TableRow>
 					<TableRow>
 						<!-- Left sidebar -->
-						<Label>Sidebar</Label>
+						<StackLayout Orientation="Vertical">
+							<DropDown x:Name="collaboratorDropDown"/>
+						</StackLayout>
 					</TableRow>
 					<TableRow ScaleHeight="True">
 						<!-- Content -->
 						<StackLayout Orientation="Vertical" x:Name="downloadContent">
 							<StackLayout Orientation="Horizontal" Spacing="5">
 								<Label>Password</Label>
-								<TextBox x:Name="downloadPasswordText"/>
+								<TextBox x:Name="downloadPasswordText" KeyUp="DownloadPasswordTextKeyUp"/>
 								<Button Click="Decrypt">Open</Button>
 							</StackLayout>
+							<Label x:Name="lagerInfoLabel"/>
 						</StackLayout>
 					</TableRow>
 				</TableRow>

@@ -35,7 +35,8 @@ namespace Zeltlager.Server
 			await LagerManager.Log.Info("Server", "Is running");
 
 			// Let the server run for a while
-			await Task.Delay(1000 * 60 * 60);
+			//TODO Make this better
+			Console.Read();
 		}
 	}
 }

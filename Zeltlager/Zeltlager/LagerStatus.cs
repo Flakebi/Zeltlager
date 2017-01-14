@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using Cryptography;
 	using Serialisation;
 
 	/// <summary>
@@ -17,20 +18,15 @@ namespace Zeltlager
 		/// This is the next bundle id that can be uploaded to the server.
 		/// The index in this list is the collaborator id as seen from the owner of this object.
 		/// </summary>
-		public List<Tuple<Collaborator, int>> BundleCount { get; private set; }
-
-		public LagerStatus()
-		{
-			BundleCount = new List<Tuple<Collaborator, int>>();
-		}
+		public List<Tuple<KeyPair, int>> BundleCount { get; private set; } = new List<Tuple<KeyPair, int>>();
 
 		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			output.Write(BundleCount.Count);
 			foreach (var c in BundleCount)
 			{
-				// Write the collaborator id from our point of view
-				await serialiser.WriteId(output, context, c.Item1);
+				// Write the collaborator order from the point of view of this object
+				output.WritePublicKey(c.Item1);
 				await serialiser.Write(output, context, c.Item2);
 			}
 		}
@@ -43,14 +39,13 @@ namespace Zeltlager
 		public async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			int count = input.ReadByte();
-			List<Tuple<Collaborator, int>> newBundleCount = new List<Tuple<Collaborator, int>>(count);
+			BundleCount = new List<Tuple<KeyPair, int>>(count);
 			for (int i = 0; i < count; i++)
 			{
-				Collaborator collaborator = await serialiser.ReadFromId<Collaborator>(input, context);
+				KeyPair key = input.ReadPublicKey();
 				int packets = await serialiser.Read(input, context, 0);
-				newBundleCount.Add(new Tuple<Collaborator, int>(collaborator, packets));
+				BundleCount.Add(new Tuple<KeyPair, int>(key, packets));
 			}
-			BundleCount = newBundleCount;
 		}
 	}
 }
