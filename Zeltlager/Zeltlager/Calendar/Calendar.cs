@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using Zeltlager.DataPackets;
 using System.Linq;
 using System.Collections.ObjectModel;
+using Zeltlager.Client;
 
 namespace Zeltlager.Calendar
 {
 	public class Calendar
 	{
+		LagerClient lager;
+
 		public List<Day> Days { get; } = new List<Day>();
 
 		public ObservableCollection<StandardCalendarEvent> StandardEvents { get; } 
@@ -15,7 +18,10 @@ namespace Zeltlager.Calendar
 		public ObservableCollection<PlannedCalendarEvent> PlannedEvents { get; } 
 			= new ObservableCollection<PlannedCalendarEvent>();
 
-		public Calendar() {}
+		public Calendar(LagerClient lager)
+		{
+			this.lager = lager;
+		}
 
 		public void InitCalendar(DateTime startDate, DateTime endDate)
 		{
@@ -44,6 +50,11 @@ namespace Zeltlager.Calendar
 		public static DateTime GetSpecificTime(DateTime day, int newHour, int newMin)
 		{
 			return new DateTime(day.Year, day.Month, day.Day, newHour, newMin, 0);
+		}
+
+		public LagerClient GetLager()
+		{
+			return lager;
 		}
 
 		public void InsertNewCalendarEvent(IListCalendarEvent calendarEvent)

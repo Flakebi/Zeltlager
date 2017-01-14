@@ -1,9 +1,12 @@
+﻿using System;
 using Xamarin.Forms;
 
-namespace Zeltlager
+namespace Zeltlager.Calendar
 {
-	public class SearchableCell : TextCell
+	public class GeneralCalendarEventCell : ViewCell
 	{
+		#region Bindable Properties
+
 		/// <summary>
 		/// The bindable property implementation
 		/// </summary>
@@ -67,10 +70,48 @@ namespace Zeltlager
 			}
 		}
 
-		MenuItem editAction, deleteAction;
+		#endregion
 
-		public SearchableCell()
+		MenuItem editAction, deleteAction;
+		Label time, title, detail;
+
+		public GeneralCalendarEventCell()
 		{
+			time = new Label
+			{
+				VerticalTextAlignment = TextAlignment.Center,
+				HorizontalTextAlignment = TextAlignment.End,
+				TextColor = (Color)Application.Current.Resources["whiteColor"]
+			};
+			title = new Label
+			{
+				VerticalTextAlignment = TextAlignment.Center,
+				HorizontalTextAlignment = TextAlignment.End
+			};
+			detail = new Label
+			{
+				VerticalTextAlignment = TextAlignment.Center,
+				HorizontalTextAlignment = TextAlignment.End,
+				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+			};
+
+			StackLayout horizontalLayout = new StackLayout();
+
+			horizontalLayout.Padding = new Thickness(10, 0);
+
+			//set bindings
+			time.SetBinding(Label.TextProperty, "TimeString");
+			title.SetBinding(Label.TextProperty, "Title");
+			detail.SetBinding(Label.TextProperty, "Detail");
+
+
+			horizontalLayout.Orientation = StackOrientation.Horizontal;
+			time.HorizontalOptions = LayoutOptions.Start;
+
+			horizontalLayout.Children.Add(time);
+			horizontalLayout.Children.Add(title);
+			horizontalLayout.Children.Add(detail);
+
 			editAction = new MenuItem { Icon = Icons.EDIT, Text = Icons.EDIT_TEXT };
 			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnEditCommandParameter)));
 			editAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnEditCommand)));
@@ -84,7 +125,7 @@ namespace Zeltlager
 			ContextActions.Add(editAction);
 			ContextActions.Add(deleteAction);
 
-			TextColor = (Color)Application.Current.Resources["textColorStandard"];
+			View = horizontalLayout;
 		}
 	}
 }

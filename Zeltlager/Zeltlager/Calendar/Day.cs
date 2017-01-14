@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Zeltlager.Calendar
 {
-	public class Day
+	public class Day : IComparable<Day>
 	{
 		public Tent Dishwashers { get; set; }
 
@@ -16,6 +16,11 @@ namespace Zeltlager.Calendar
 		{
 			Date = date;
 			Events = new ObservableCollection<IListCalendarEvent>();
+		}
+
+		public int CompareTo(Day other)
+		{
+			return Date.CompareTo(other.Date);
 		}
 	}
 }

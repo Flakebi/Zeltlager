@@ -30,5 +30,15 @@ namespace Zeltlager.Calendar
 			//Navigation.PushModalAsync(new NavigationPage(new CalendarEventEditPage(new CalendarEvent(((DayPage)CurrentPage).Day.Date, ""))));
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>(new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date, "", "", lager), true, lager)), true);
 		}
+
+		void OnRecurrentButtonClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new StandardEventsPage(lager.Calendar));
+		}
+
+		void OnPlannedButtonClicked(object sender, EventArgs e)
+		{
+			
+		}
 	}
 }

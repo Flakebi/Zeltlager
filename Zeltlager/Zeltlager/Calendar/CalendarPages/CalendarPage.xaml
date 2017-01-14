@@ -8,5 +8,9 @@
   <CarouselPage.ToolbarItems>
     <ToolbarItem x:Name="AddButton" Icon="{x:Static local:Icons.ADD}" Clicked="OnAddButtonClicked">
     </ToolbarItem>
+    <ToolbarItem x:Name="RecurrentButton" Icon="{x:Static local:Icons.FOOD}" Clicked="OnRecurrentButtonClicked">
+    </ToolbarItem>
+    <ToolbarItem x:Name="PlannedButton" Icon="{x:Static local:Icons.PLAN}" Clicked="OnPlannedButtonClicked">
+    </ToolbarItem>
   </CarouselPage.ToolbarItems>
 </CarouselPage>

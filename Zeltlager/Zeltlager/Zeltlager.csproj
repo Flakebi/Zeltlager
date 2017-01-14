@@ -157,6 +157,7 @@
     <Compile Include="Calendar\CalendarEvents\IListCalendarEvent.cs" />
     <Compile Include="Calendar\CalendarEvents\ReferenceCalendarEvent.cs" />
     <Compile Include="Calendar\CalendarEvents\ExRefCalendarEvent.cs" />
+    <Compile Include="Calendar\CalendarPages\GeneralCalendarEventCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
