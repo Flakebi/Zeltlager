@@ -13,6 +13,7 @@ namespace Zeltlager.Client
 		{
 			Connecting,
 			ListLagers,
+			RegisterCollaborator,
 			Ready
 		}
 
@@ -79,7 +80,19 @@ namespace Zeltlager.Client
 			await lager.Save();
 
 			// Register ourself as contributor
+			{
+				networkStatusUpdate?.Invoke(NetworkStatus.Connecting);
+				var connection = await NetworkClient.OpenConnection(Settings.ServerAddress, PORT);
+				networkStatusUpdate?.Invoke(NetworkStatus.RegisterCollaborator);
+				await connection.WritePacket(await Requests.Register.Create(lager));
+				var packet = (Responses.Register)await connection.ReadPacket();
+				await connection.Close();
+				if (!packet.GetSuccess())
+					throw new UnauthorizedAccessException("Failed to register our contributor for the lager");
+				networkStatusUpdate?.Invoke(NetworkStatus.Ready);
+			}
 			// Synchronize the lager
+			await lager.Synchronise(networkStatusUpdate);
 
 			// Store lager as last used lager
 			lagers.Add(id, lager);
@@ -100,8 +113,10 @@ namespace Zeltlager.Client
 			statusUpdate?.Invoke(NetworkStatus.ListLagers);
 			await connection.WritePacket(new Requests.ListLagers());
 			var packet = (Responses.ListLagers)await connection.ReadPacket();
+			await connection.Close();
+			var result = packet.GetLagerData();
 			statusUpdate?.Invoke(NetworkStatus.Ready);
-			return packet.GetLagerData();
+			return result;
 		}
     }
 }

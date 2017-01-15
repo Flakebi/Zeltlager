@@ -94,29 +94,18 @@ namespace Zeltlager.Client
 
 		async Task Init(Action<InitStatus> statusUpdate)
 		{
+			Status = new LagerStatus();
+
 			// Create the keys for our own collaborator
 			statusUpdate?.Invoke(InitStatus.CreateCollaboratorAsymmetricKey);
 			KeyPair ownCollaboratorPrivateKey = await LagerManager.CryptoProvider.CreateAsymmetricKey();
 			OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);
-			collaborators.Add(OwnCollaborator.Key, OwnCollaborator);
-
-			// Set the lager status
-			Status = new LagerStatus();
-			Status.BundleCount.Add(new Tuple<KeyPair, int>(OwnCollaborator.Key, 0));
-
-			// Save the lager
-			await Save();
-
-			// Save the new collaborator
-			IIoProvider io = new RootedIoProvider(ioProvider, Status.BundleCount.FindIndex(c => c.Item1 == OwnCollaborator.Key).ToString());
-			await io.CreateFolder("");
-			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(COLLABORATOR_FILE)))
-				await serialiser.Write(output, new LagerSerialisationContext(Manager, this), OwnCollaborator);
+			await AddCollaborator(OwnCollaborator);
 
 			// Add the collaborator to his own list
 			var context = new LagerClientSerialisationContext(Manager, this);
 			context.PacketId = new PacketId(OwnCollaborator);
-			var packet = await AddCollaborator.Create(ClientSerialiser, context, OwnCollaborator);
+			var packet = await DataPackets.AddCollaborator.Create(ClientSerialiser, context, OwnCollaborator);
 			await AddPacket(packet);
 
 			statusUpdate?.Invoke(InitStatus.Ready);

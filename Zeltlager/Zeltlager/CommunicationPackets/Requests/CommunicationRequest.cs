@@ -1,5 +1,4 @@
-using System;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace Zeltlager.CommunicationPackets.Requests
 {
@@ -10,7 +9,8 @@ namespace Zeltlager.CommunicationPackets.Requests
 		/// <summary>
 		/// Apply the request to a lager and send a response.
 		/// </summary>
-		/// <param name="lagerServer"></param>
-		public abstract void Apply(INetworkConnection connection, LagerManager manager);
+		/// <param name="connection">The connection where this request was read.</param>
+		/// <param name="manager">The lager manager.</param>
+		public abstract Task Apply(INetworkConnection connection, LagerManager manager);
 	}
 }

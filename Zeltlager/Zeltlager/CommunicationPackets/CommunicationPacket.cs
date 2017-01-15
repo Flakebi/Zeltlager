@@ -18,7 +18,9 @@ namespace Zeltlager.CommunicationPackets
 
 		static readonly Type[] packetTypes = {
 			typeof(Requests.ListLagers),
-			typeof(Responses.ListLagers)
+			typeof(Responses.ListLagers),
+			typeof(Requests.Register),
+			typeof(Responses.Register)
 		};
 
 		/// <summary>

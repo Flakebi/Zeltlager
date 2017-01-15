@@ -147,6 +147,8 @@
     <Compile Include="UAM\Editable.cs" />
     <Compile Include="LagerData.cs" />
     <Compile Include="LagerRemote.cs" />
+    <Compile Include="CommunicationPackets\Requests\Register.cs" />
+    <Compile Include="CommunicationPackets\Responses\Register.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

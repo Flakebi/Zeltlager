@@ -84,7 +84,8 @@ namespace Zeltlager.Client
 			LagerManager.IsClient = true;
 			manager = new LagerClientManager(io);
 			manager.NetworkClient = new TcpNetworkClient();
-			manager.Settings.ServerAddress = "localhost";
+			if (manager.Settings.ServerAddress == null)
+				manager.Settings.ServerAddress = "localhost";
 
 			contents.Add(downloadContent);
 			statusTimer.Interval = 5;
@@ -172,6 +173,8 @@ namespace Zeltlager.Client
 
 		async void Decrypt(object sender, EventArgs args)
 		{
+			lagerInfoLabel.Text = string.Empty;
+			lagerDownloadButton.Visible = false;
 			if (serverLagers == null)
 			{
 				Status = "No lagers available";
@@ -198,7 +201,15 @@ namespace Zeltlager.Client
 			{
 				if (await d.Value.Decrypt(serverPassword))
 				{
-					lager = await manager.DownloadLager(d.Key, d.Value, serverPassword, status => Status = "Initing lager: " + status, status => Status = "Downloading lager: " + status);
+					try
+					{
+						lager = await manager.DownloadLager(d.Key, d.Value, serverPassword, status => Status = "Initing lager: " + status, status => Status = "Downloading lager: " + status);
+					}
+					catch (Exception e)
+					{
+						await LagerManager.Log.Exception("Download lager", e);
+						Status = "Error: " + e;
+					}
 					return;
 				}
 			}

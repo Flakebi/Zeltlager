@@ -106,7 +106,7 @@ namespace Zeltlager
 					if (request == null)
 						throw new InvalidOperationException("Unexpectd communication packet type");
 
-					request.Apply(connection, this);
+					await request.Apply(connection, this);
 				}
 			}
 			// Ignore if the connection shut down
