@@ -17,7 +17,7 @@ namespace Zeltlager.Client
 		/// <summary>
 		/// The address of the server for remote games.
 		/// </summary>
-		[Serialisation]
+		[Serialisation(Optional = true)]
 		public string ServerAddress { get; set; }
 
         public async Task Load(IIoProvider io)

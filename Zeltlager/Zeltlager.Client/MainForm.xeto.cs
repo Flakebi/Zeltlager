@@ -16,12 +16,12 @@ namespace Zeltlager.Client
 	class WrapTextBinding<T> : IIndirectBinding<string>
 	{
 		Func<T, string> wrapper;
-		
+
 		public WrapTextBinding(Func<T, string> wrapper)
 		{
 			this.wrapper = wrapper;
 		}
-		
+
 		public string GetValue(object dataItem)
 		{
 			return wrapper((T)dataItem);
