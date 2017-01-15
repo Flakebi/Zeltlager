@@ -34,7 +34,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Zeltlager\Zeltlager\Zeltlager.csproj">
+    <ProjectReference Include="..\Zeltlager\Zeltlager.csproj">
       <Project>{1E7EBC5E-A1F0-467B-BFE9-FC5C3ECC54F8}</Project>
       <Name>Zeltlager</Name>
     </ProjectReference>

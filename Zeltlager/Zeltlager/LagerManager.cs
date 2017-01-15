@@ -9,7 +9,6 @@ namespace Zeltlager
 	using Cryptography;
 	using Network;
 	using Requests = CommunicationPackets.Requests;
-	using Responses = CommunicationPackets.Responses;
 
 	public class LagerManager
 	{
@@ -71,7 +70,6 @@ namespace Zeltlager
 		/// </summary>
         public virtual async Task Load()
 		{
-			// TODO This could be improved to only load lagers completely on demand.
 			// Search folders for lagers
 			var folders = await ioProvider.ListContents("");
 			for (int i = 0; folders.Contains(new Tuple<string, FileType>(i.ToString(), FileType.Folder)); i++)
@@ -106,9 +104,8 @@ namespace Zeltlager
 					var packet = await connection.ReadPacket();
 					var request = packet as Requests.CommunicationRequest;
 					if (request == null)
-					{
 						throw new InvalidOperationException("Unexpectd communication packet type");
-					}
+
 					request.Apply(connection, this);
 				}
 			}

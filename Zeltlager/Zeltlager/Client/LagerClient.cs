@@ -181,6 +181,21 @@ namespace Zeltlager.Client
 				await ClientSerialiser.Write(output, context, this);
 		}
 
+
+		/// <summary>
+		/// Synchronise this lager with the remote lager.
+		/// 1. Update the remote lager status from the server
+		/// 2. Fetch the data of all new contributors
+		/// 3. Download all new bundles
+		/// 4. Upload our own new bundles
+		/// </summary>
+		/// <param name="statusUpdate">Status update.</param>
+		public Task Synchronise(Action<LagerClientManager.NetworkStatus> statusUpdate)
+		{
+			//TODO
+			return Task.WhenAll();
+		}
+
 		/// <summary>
 		/// Assemble the packet history from all collaborators.
 		/// This orders the packets in chronological order and removes packet bundles.

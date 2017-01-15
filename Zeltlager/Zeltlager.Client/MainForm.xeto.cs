@@ -11,66 +11,45 @@ namespace Zeltlager.Client
 {
 	using DataPackets;
 	using Network;
-	using Requests = CommunicationPackets.Requests;
-	using Responses = CommunicationPackets.Responses;
 	using Serialisation;
 
-	class LagerItemTextBinding : IIndirectBinding<string>
+	class WrapTextBinding<T> : IIndirectBinding<string>
 	{
+		Func<T, string> wrapper;
+		
+		public WrapTextBinding(Func<T, string> wrapper)
+		{
+			this.wrapper = wrapper;
+		}
+		
 		public string GetValue(object dataItem)
 		{
-			Tuple<int, LagerClient> item = (Tuple<int, LagerClient>)dataItem;
-			return item.Item2.Data.Name;
+			return wrapper((T)dataItem);
 		}
 
 		public void SetValue(object dataItem, string value)
 		{
-			throw new NotImplementedException();
+			throw new InvalidOperationException("Only a getter");
 		}
 
 		public void Unbind()
 		{
-			throw new NotImplementedException();
+			throw new InvalidOperationException("Only a getter");
 		}
 
 		public void Update(BindingUpdateMode mode = BindingUpdateMode.Source)
 		{
-			throw new NotImplementedException();
-		}
-	}
-
-	class LagerItemKeyBinding : IIndirectBinding<string>
-	{
-		public string GetValue(object dataItem)
-		{
-			Tuple<int, LagerClient> item = (Tuple<int, LagerClient>)dataItem;
-			return item.Item1.ToString();
-		}
-
-		public void SetValue(object dataItem, string value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void Unbind()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void Update(BindingUpdateMode mode = BindingUpdateMode.Source)
-		{
-			throw new NotImplementedException();
+			throw new InvalidOperationException("Only a getter");
 		}
 	}
 
 	public class MainForm : Form
 	{
-		readonly INetworkClient client = new TcpNetworkClient();
-		INetworkConnection connection;
-
 		LagerClientManager manager;
 		LagerClient lager;
 		Dictionary<int, LagerData> serverLagers;
+
+		string serverPassword;
 		
 		string Status
 		{
@@ -81,14 +60,15 @@ namespace Zeltlager.Client
 		// Disable the not assigned warning, the fields will be assigned from the xaml.
 #pragma warning disable 0649
 		Label statusLabel;
-		Button listLagersButton;
 		DropDown lagerDropDown;
 		DropDown collaboratorDropDown;
 
 		Panel downloadContent;
 		TextBox downloadPasswordText;
 		Label lagerInfoLabel;
+		Button lagerDownloadButton;
 #pragma warning restore 0649
+
 		/// <summary>
 		/// Remove the status message after some time.
 		/// </summary>
@@ -104,6 +84,7 @@ namespace Zeltlager.Client
 			LagerManager.IsClient = true;
 			manager = new LagerClientManager(io);
 			manager.NetworkClient = new TcpNetworkClient();
+			manager.Settings.ServerAddress = "localhost";
 
 			contents.Add(downloadContent);
 			statusTimer.Interval = 5;
@@ -113,19 +94,34 @@ namespace Zeltlager.Client
 				statusTimer.Stop();
 			};
 
+			lagerDropDown.ItemTextBinding = new WrapTextBinding<Tuple<int, LagerClient>>(t => t.Item2.Data.Name);
+			lagerDropDown.ItemKeyBinding = new WrapTextBinding<Tuple<int, LagerClient>>(t => t.Item1.ToString());
+
 			ShowContent(null);
 		}
 
 		public async Task LoadLagers()
 		{
+			try
+			{
+				Status = "Load log";
+				await LagerManager.Log.Load();
+			}
+			catch (Exception e)
+			{
+				await LagerManager.Log.Exception("Load log", e);
+			}
 			// Load LagerManager
-			Status = "Load settings";
-			await LagerManager.Log.Load();
-			await manager.Load();
+			try
+			{
+				Status = "Load lagers";
+				await manager.Load();
+			} catch (Exception e)
+			{
+				await LagerManager.Log.Exception("Load lagers", e);
+			}
 			Status = manager.Lagers.Count + " lagers loaded";
 			// Add the names to the dropdown
-			lagerDropDown.ItemTextBinding = new LagerItemTextBinding();
-			lagerDropDown.ItemKeyBinding = new LagerItemTextBinding();
 			lagerDropDown.DataStore = manager.Lagers.Select(pair => new Tuple<int, LagerClient>(pair.Key, (LagerClient)pair.Value));
 
 			// Load the last lager
@@ -133,7 +129,7 @@ namespace Zeltlager.Client
 			int lagerId = manager.Settings.LastLager;
 			if (!manager.Lagers.ContainsKey(lagerId))
 			{
-				Status = "No lager found";
+				Status = "No last lager found";
 				return;
 			}
 			lager = (LagerClient)manager.Lagers[lagerId];
@@ -162,43 +158,15 @@ namespace Zeltlager.Client
 				content.Visible = true;
 		}
 
-		async void Connect(object sender, EventArgs args)
-		{
-			bool success = false;
-			try
-			{
-				connection = await client.OpenConnection("localhost", LagerManager.PORT);
-				success = true;
-			}
-			catch (Exception e)
-			{
-				Status = "Can't connect: " + e;
-			}
-			if (success)
-			{
-				Status = "Connected";
-				listLagersButton.Enabled = true;
-			}
-		}
-
 		async void ListLagers(object sender, EventArgs args)
 		{
-			if (connection == null)
-			{
-				Status = "Not connected";
-				return;
-			}
+			serverLagers = await manager.RemoteListLagers(status => Status = "Network: " + status);
 
-			Status = "Requesting lager list";
-			await connection.WritePacket(new Requests.ListLagers());
-			var packet = (Responses.ListLagers)await connection.ReadPacket();
-			serverLagers = packet.GetLagerData();
-			if (packet != null)
-				Status = "Got " + serverLagers.Count + " lagers";
-			else
-				Status = "Got no packet";
+			Status = "Got " + serverLagers.Count + " lagers";
 
 			// Show the download content panel
+			lagerInfoLabel.Text = "";
+			lagerDownloadButton.Visible = false;
 			ShowContent(downloadContent);
 		}
 
@@ -209,29 +177,40 @@ namespace Zeltlager.Client
 				Status = "No lagers available";
 				return;
 			}
-			string password = downloadPasswordText.Text;
+			serverPassword = downloadPasswordText.Text;
 			foreach (var d in serverLagers)
 			{
-				if (await d.Value.Decrypt(password))
+				if (await d.Value.Decrypt(serverPassword))
 				{
 					Status = "Success for lager " + d.Key;
 					// Display the lager info
 					lagerInfoLabel.Text = "Name: " + d.Value.Name + "\nSymmetricKey: " + d.Value.SymmetricKey.ToHexString();
-					//lager = await manager.AddLager(d.Key, d.Value, password, (status) => Status = status.ToString());
-					//TODO Download button
+					lagerDownloadButton.Visible = true;
 					return;
 				}
 			}
 			Status = "No lager found";
 		}
 
+		async void DownloadLager(object sender, EventArgs args)
+		{
+			foreach (var d in serverLagers)
+			{
+				if (await d.Value.Decrypt(serverPassword))
+				{
+					lager = await manager.DownloadLager(d.Key, d.Value, serverPassword, status => Status = "Initing lager: " + status, status => Status = "Downloading lager: " + status);
+					return;
+				}
+			}
+		}
+
 		async void CreateLager(object sender, EventArgs args)
 		{
-			lager = await manager.CreateLager("test", "pass", status => Status = status.ToString());
+			lager = await manager.CreateLager("test", "pass", status => Status = "Create lager: " + status);
 			await lager.CreateTestData();
 		}
 
-		async void SelectedLagerChanged(object sender, EventArgs args)
+		void SelectedLagerChanged(object sender, EventArgs args)
 		{
 			// Get the currently selected lager
 			//TODO Load the newly selected lager

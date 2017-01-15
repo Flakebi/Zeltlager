@@ -13,6 +13,13 @@ namespace Zeltlager.Client
         [Serialisation]
 		public int LastLager { get; set; }
 
+
+		/// <summary>
+		/// The address of the server for remote games.
+		/// </summary>
+		[Serialisation]
+		public string ServerAddress { get; set; }
+
         public async Task Load(IIoProvider io)
 		{
 			// Set default values

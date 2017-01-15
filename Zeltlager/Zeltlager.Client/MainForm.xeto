@@ -10,8 +10,7 @@
 			<StackLayout Orientation="Horizontal" Spacing="5">
 				<DropDown x:Name="lagerDropDown" SelectedKeyChanged="SelectedLagerChanged"/>
 				<Button Click="CreateLager">Create lager</Button>
-				<Button Click="Connect">Connect</Button>
-				<Button x:Name="listLagersButton" Click="ListLagers" Enabled="False">List lagers</Button>
+				<Button Click="ListLagers">List lagers</Button>
 				<Button Click="AddMember">Add member</Button>
 				<Button Click="Quit">Beenden</Button>
 			</StackLayout>
@@ -34,6 +33,7 @@
 								<Button Click="Decrypt">Open</Button>
 							</StackLayout>
 							<Label x:Name="lagerInfoLabel"/>
+							<Button x:Name="lagerDownloadButton" Click="DownloadLager">Download</Button>
 						</StackLayout>
 					</TableRow>
 				</TableRow>

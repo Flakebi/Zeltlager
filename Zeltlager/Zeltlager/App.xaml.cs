@@ -37,28 +37,38 @@ namespace Zeltlager
 
 		protected async override void OnStart()
 		{
+			// Load the log
+			try
+			{
+				loadingScreen.Status = "Log laden";
+				await LagerManager.Log.Load();
+			} catch (Exception e)
+			{
+				// Log the exception
+				await LagerManager.Log.Exception("Load log", e);
+				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
+			}
 			// Load settings
 			try
 			{
 				loadingScreen.Status = "Einstellungen laden";
-				await LagerManager.Log.Load();
 				await manager.Load();
 			} catch (Exception e)
 			{
 				// Log the exception
-				await LagerManager.Log.Exception("App", e);
+				await LagerManager.Log.Exception("Load lagers", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 
 			bool loadedLager = false;
 			LagerClient lager = null;
-            if (manager.Lagers.Any())
+			int lagerId = manager.Settings.LastLager;
+			if (manager.Lagers.ContainsKey(lagerId))
 			{
 				// Load lager
 				try
 				{
 					loadingScreen.Status = "Lager laden";
-                    int lagerId = manager.Settings.LastLager;
                     lager = (LagerClient)manager.Lagers[lagerId];
 					if (!await lager.LoadBundles())
 						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden der Lagerdateien sind Fehler aufgetreten", "Ok");
@@ -68,7 +78,7 @@ namespace Zeltlager
 				} catch (Exception e)
 				{
 					// Log the exception
-					await LagerManager.Log.Exception("App", e);
+					await LagerManager.Log.Exception("Load lager", e);
 					await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 				}
 			}
@@ -79,6 +89,7 @@ namespace Zeltlager
 			{
 				// Create lager
 				loadingScreen.Status = "Lager erstellen";
+				//TODO Go to the settings screen here so the user can set the server and download a lager
 				MainPage = new NavigationPage(new CreateLager(this));
 			}
 		}

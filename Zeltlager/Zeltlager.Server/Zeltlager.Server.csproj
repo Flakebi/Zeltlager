@@ -81,7 +81,7 @@
       <Project>{1e7ebc5e-a1f0-467b-bfe9-fc5c3ecc54f8}</Project>
       <Name>Zeltlager</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Zeltlager.Desktop\Zeltlager.Desktop.csproj">
+    <ProjectReference Include="..\Zeltlager.Desktop\Zeltlager.Desktop.csproj">
       <Project>{BCADD466-45C5-43FA-949A-710A02064517}</Project>
       <Name>Zeltlager.Desktop</Name>
     </ProjectReference>
@@ -99,7 +99,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

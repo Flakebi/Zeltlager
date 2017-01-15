@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zeltlager.Client", "Zeltlag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zeltlager.Client.Desktop", "Zeltlager\Zeltlager.Client.Desktop\Zeltlager.Client.Desktop.csproj", "{190107A7-AB56-4396-A659-91BEAC4B3605}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zeltlager.Desktop", "Zeltlager.Desktop\Zeltlager.Desktop.csproj", "{BCADD466-45C5-43FA-949A-710A02064517}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zeltlager.Desktop", "Zeltlager\Zeltlager.Desktop\Zeltlager.Desktop.csproj", "{BCADD466-45C5-43FA-949A-710A02064517}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
