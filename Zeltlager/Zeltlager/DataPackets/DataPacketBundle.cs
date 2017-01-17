@@ -148,14 +148,14 @@ namespace Zeltlager.DataPackets
 
 			// Verify signature
 			if (!await LagerManager.CryptoProvider.Verify(context.PacketId.Creator.Key, signature, encryptedData))
-				throw new Exception("The bundle has an invalid signature.");
+				throw new LagerException("The bundle has an invalid signature.");
 
 			MemoryStream mem = new MemoryStream(encryptedData);
 			using (BinaryReader input = new BinaryReader(mem))
 			{
 				// Check if the bundle has the right id
 				if (input.ReadInt32() != Id)
-					throw new Exception("The bundle has an invalid id.");
+					throw new LagerException("The bundle has an invalid id.");
 				byte[] iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
 				return new Tuple<byte[], byte[]>(iv,
 					input.ReadBytes((int)(input.BaseStream.Length - input.BaseStream.Position)));

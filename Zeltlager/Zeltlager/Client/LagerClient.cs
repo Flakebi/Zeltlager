@@ -270,27 +270,27 @@ namespace Zeltlager.Client
 		public void AddMember(Member member)
 		{
 			if (Members.Any(m => m.Id == member.Id))
-				throw new InvalidOperationException("A member with this id exists already.");
+				throw new LagerException("A member with this id exists already.");
 			members.Add(member);
 		}
 
 		public void RemoveMember(Member member)
 		{
 			if (!members.Remove(member))
-				throw new InvalidOperationException("A member with this id wasn't found for deletion.");
+				throw new LagerException("A member with this id wasn't found for deletion.");
 		}
 
 		public void AddTent(Tent tent)
 		{
 			if (Tents.Any(t => t.Id == tent.Id))
-				throw new InvalidOperationException("A tent with this id exists already.");
+				throw new LagerException("A tent with this id exists already.");
 			tents.Add(tent);
 		}
 
 		public void RemoveTent(Tent tent)
 		{
 			if (!tents.Remove(tent))
-				throw new InvalidOperationException("A tent with this id wasn't found for deletion.");
+				throw new LagerException("A tent with this id wasn't found for deletion.");
 		}
 
 		public Tent GetTentFromDisplay(string display)

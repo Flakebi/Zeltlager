@@ -88,7 +88,7 @@ namespace Zeltlager.Client
 				var packet = (Responses.Register)await connection.ReadPacket();
 				await connection.Close();
 				if (!packet.GetSuccess())
-					throw new UnauthorizedAccessException("Failed to register our contributor for the lager");
+					throw new LagerException("Failed to register our contributor for the lager");
 				networkStatusUpdate?.Invoke(NetworkStatus.Ready);
 			}
 			// Synchronize the lager

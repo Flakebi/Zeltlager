@@ -180,7 +180,7 @@ namespace Zeltlager.UAM
 
 				else
 				{
-					throw new Exception("Type " + vartype + " not supported by UniversalAddModifyPage");
+					throw new InvalidOperationException("Type " + vartype + " is not supported by UniversalAddModifyPage");
 				}
 
 				grid.Children.Add(manip, 1, attributeNumber);

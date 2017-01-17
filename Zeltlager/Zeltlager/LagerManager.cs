@@ -104,7 +104,7 @@ namespace Zeltlager
 					var packet = await connection.ReadPacket();
 					var request = packet as Requests.CommunicationRequest;
 					if (request == null)
-						throw new InvalidOperationException("Unexpectd communication packet type");
+						throw new LagerException("Unexpectd communication packet type");
 
 					await request.Apply(connection, this);
 				}

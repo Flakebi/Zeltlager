@@ -35,7 +35,7 @@ namespace Zeltlager.CommunicationPackets
 				int packetType = input.ReadInt32();
 
 				if (packetType >= packetTypes.Length)
-					throw new IOException("Invalid communication packet type");
+					throw new LagerException("Invalid communication packet type");
 
 				// Create a new packet of the specified type using the default constructor
 				CommunicationPacket packet = (CommunicationPacket)packetTypes[packetType].GetTypeInfo().DeclaredConstructors

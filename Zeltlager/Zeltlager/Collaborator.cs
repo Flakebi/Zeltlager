@@ -64,7 +64,7 @@ namespace Zeltlager
 		public void AddBundle(int id, DataPacketBundle bundle)
 		{
 			if (bundles.ContainsKey(id))
-				throw new InvalidOperationException("Can't add a packet bundle with an id that is already taken");
+				throw new LagerException("Can't add a packet bundle with an id that is already taken");
 			bundles.Add(id, bundle);
 		}
 
@@ -88,10 +88,10 @@ namespace Zeltlager
 				// Check the signatures
 				// Verify the lager signature
 				if (!await LagerManager.CryptoProvider.Verify(context.Lager.Data.AsymmetricKey, lagerSignature, keyData))
-					throw new InvalidDataException("The lager signature of the collaborator is wrong");
+					throw new LagerException("The lager signature of the collaborator is wrong");
 				// Verify the collaborator signature
 				if (!await LagerManager.CryptoProvider.Verify(Key, collaboratorSignature, signedData))
-					throw new InvalidDataException("The collaborator signature of the collaborator is wrong");
+					throw new LagerException("The collaborator signature of the collaborator is wrong");
 			}
 		}
 

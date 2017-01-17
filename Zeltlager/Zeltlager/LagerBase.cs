@@ -129,7 +129,7 @@ namespace Zeltlager
 			// Get the local collaborator id
 			int collaboratorId = Status.BundleCount.FindIndex(c => c.Item1 == id.Creator.Key);
 			if (collaboratorId == -1)
-				throw new InvalidOperationException("Can't get the bundle path for an unknown collaborator");
+				throw new LagerException("Can't get the bundle path for an unknown collaborator");
 			return Path.Combine(collaboratorId.ToString(), id.Bundle.Id.ToString());
 		}
 

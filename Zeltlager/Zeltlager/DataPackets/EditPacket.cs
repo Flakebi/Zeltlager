@@ -67,7 +67,7 @@ namespace Zeltlager.DataPackets
 					}
 				}
 				if (!success)
-					throw new ArgumentException("The object is not supported for editing, add it to the types array in EditPacket");
+					throw new InvalidOperationException("The object is not supported for editing, add it to the types array in EditPacket");
 			}
 			Data = mem.ToArray();
 		}

@@ -40,7 +40,7 @@ namespace Zeltlager
 			{
 				int version = reader.ReadInt32();
 				if (version != LagerBase.VERSION)
-					throw new InvalidDataException("The lager has an unknown version");
+					throw new LagerException("The lager has an unknown version");
 				AsymmetricKey = reader.ReadPublicKey();
 			}
 
@@ -50,7 +50,7 @@ namespace Zeltlager
 			Array.Copy(Data, Data.Length - signature.Length, signature, 0, signature.Length);
 			Array.Copy(Data, signedData, signedData.Length);
 			if (!await LagerManager.CryptoProvider.Verify(AsymmetricKey, signature, signedData))
-				throw new InvalidDataException("The signature of the lager is wrong");
+				throw new LagerException("The signature of the lager is wrong");
 		}
 
 		/// <summary>

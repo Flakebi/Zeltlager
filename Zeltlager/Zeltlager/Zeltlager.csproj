@@ -149,6 +149,7 @@
     <Compile Include="LagerRemote.cs" />
     <Compile Include="CommunicationPackets\Requests\Register.cs" />
     <Compile Include="CommunicationPackets\Responses\Register.cs" />
+    <Compile Include="LagerException.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
