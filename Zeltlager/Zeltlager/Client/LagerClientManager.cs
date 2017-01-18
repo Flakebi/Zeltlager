@@ -79,16 +79,16 @@ namespace Zeltlager.Client
 			// Save the lager
 			await lager.Save();
 
-			// Register ourself as contributor
+			// Register ourself as collaborator
 			{
 				networkStatusUpdate?.Invoke(NetworkStatus.Connecting);
 				var connection = await NetworkClient.OpenConnection(Settings.ServerAddress, PORT);
 				networkStatusUpdate?.Invoke(NetworkStatus.RegisterCollaborator);
 				await connection.WritePacket(await Requests.Register.Create(lager));
-				var packet = (Responses.Register)await connection.ReadPacket();
+				var packet = (Responses.Status)await connection.ReadPacket();
 				await connection.Close();
 				if (!packet.GetSuccess())
-					throw new LagerException("Failed to register our contributor for the lager");
+					throw new LagerException("Failed to register our collaborator for the lager");
 				networkStatusUpdate?.Invoke(NetworkStatus.Ready);
 			}
 			// Synchronize the lager

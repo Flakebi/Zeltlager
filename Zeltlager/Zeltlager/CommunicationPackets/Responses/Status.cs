@@ -2,11 +2,11 @@ using System.IO;
 
 namespace Zeltlager.CommunicationPackets.Responses
 {
-	public class Register : CommunicationResponse
+	public class Status : CommunicationResponse
 	{
-		Register() { }
+		Status() { }
 		
-		public Register(bool success)
+		public Status(bool success)
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))

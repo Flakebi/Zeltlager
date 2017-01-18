@@ -54,7 +54,7 @@ namespace Zeltlager
 		/// </summary>
 		/// <param name="key">
 		/// The public key of the collaborator and also the
-		/// private key if our own contributor is initialised.
+		/// private key if our own collaborator is initialised.
 		/// </param>
 		public Collaborator(KeyPair key)
 		{

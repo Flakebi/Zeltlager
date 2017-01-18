@@ -20,7 +20,7 @@ namespace Zeltlager.CommunicationPackets
 			typeof(Requests.ListLagers),
 			typeof(Responses.ListLagers),
 			typeof(Requests.Register),
-			typeof(Responses.Register)
+			typeof(Responses.Status)
 		};
 
 		/// <summary>

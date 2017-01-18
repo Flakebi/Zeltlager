@@ -63,7 +63,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 			}
 
 			// Create a response
-			await connection.WritePacket(new Responses.Register(success));
+			await connection.WritePacket(new Responses.Status(success));
 		}
 	}
 }

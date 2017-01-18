@@ -8,6 +8,9 @@ namespace Zeltlager.Client
 {
 	using Cryptography;
 	using DataPackets;
+	using Network;
+	using Requests = CommunicationPackets.Requests;
+	using Responses = CommunicationPackets.Responses;
 	using Serialisation;
 
 	/// <summary>
@@ -43,6 +46,8 @@ namespace Zeltlager.Client
 		public Serialiser<LagerClientSerialisationContext> ClientSerialiser { get; private set; }
 			= new Serialiser<LagerClientSerialisationContext>();
 
+		public LagerClientManager ClientManager { get; private set; }
+
 		List<Member> members = new List<Member>();
 		List<Tent> tents = new List<Tent>();
 
@@ -56,9 +61,11 @@ namespace Zeltlager.Client
 		/// </summary>
 		string password;
 
-		public LagerClient(LagerManager manager, IIoProvider ioProvider, int id) :
+		public LagerClient(LagerClientManager manager, IIoProvider ioProvider, int id) :
 			base(manager, ioProvider, id)
 		{
+			ClientManager = manager;
+			
 			CompetitionHandler = new Competition.CompetitionHandler(this);
 			Erwischt = new Erwischt.Erwischt(this);
 			Calendar = new Calendar.Calendar();
@@ -174,15 +181,24 @@ namespace Zeltlager.Client
 		/// <summary>
 		/// Synchronise this lager with the remote lager.
 		/// 1. Update the remote lager status from the server
-		/// 2. Fetch the data of all new contributors
+		/// 2. Fetch the data of all new collaborators
 		/// 3. Download all new bundles
 		/// 4. Upload our own new bundles
 		/// </summary>
 		/// <param name="statusUpdate">Status update.</param>
-		public Task Synchronise(Action<LagerClientManager.NetworkStatus> statusUpdate)
+		public async Task Synchronise(Action<LagerClientManager.NetworkStatus> statusUpdate)
 		{
+			// Open a connection
+			INetworkConnection connection = await Manager.NetworkClient.OpenConnection(
+				ClientManager.Settings.ServerAddress, LagerManager.PORT);
+			// Request the lager status
+			await connection.WritePacket(await Requests.LagerStatus.Create(this));
+			var response = await connection.ReadPacket() as Responses.LagerStatus;
+			if (response == null)
+				throw new LagerException("Got no lager status as response");
+			await response.ReadRemoteStatus(this);
+			// Check for new collaborators
 			//TODO
-			return Task.WhenAll();
 		}
 
 		/// <summary>
