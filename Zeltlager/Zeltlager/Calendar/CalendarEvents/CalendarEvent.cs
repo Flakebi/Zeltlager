@@ -30,7 +30,7 @@ namespace Zeltlager.Calendar
 		/// A private attribute is needed, so binding Date to a DatePicker does not fuck up our time
 		/// (changes in the TimeOfDay in Date are not reflected in TimeSpan)
 		[Editable("Uhrzeit")]
-		public override TimeSpan Time 
+		public new TimeSpan Time
 		{
 			get { return Date.TimeOfDay; }
 			set { Date.Date.Add(value); }

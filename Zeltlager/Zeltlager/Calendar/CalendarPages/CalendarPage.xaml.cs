@@ -38,7 +38,7 @@ namespace Zeltlager.Calendar
 
 		void OnPlannedButtonClicked(object sender, EventArgs e)
 		{
-			
+			Navigation.PushAsync(new PlannedEventsPage(lager.Calendar));
 		}
 	}
 }

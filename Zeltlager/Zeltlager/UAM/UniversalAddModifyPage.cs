@@ -213,6 +213,8 @@ namespace Zeltlager.UAM
 				await DisplayAlert("Achtung!", propInfo.GetCustomAttribute<EditableAttribute>().Name + " erforderlich :D", "Ok :)");
 				return;
 			}
+			// end of check
+
 			if (isAddPage)
 				oldObj = default(T);
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);

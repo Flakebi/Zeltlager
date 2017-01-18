@@ -2,10 +2,10 @@ Coding Standards für die Zeltlager-App:
 
 LagerClient lager:
  - immer als private Variable & wenn nötig: GetLagerClient()
- - wo übergeben? (Anfang oder Ende der Parameter?)
+ - am Ende der Parameterliste übergeben
 
  LagerClientSerialisationContext context
- - wo übergeben? (Anfang oder Ende?)
+ - am Ende übergeben (nie mit LagerClient zusammen, da ist einer drin)
 
  PacketId id
- - wo übergeben?
+ - am Anfang übergeben

@@ -8,7 +8,7 @@ using Zeltlager.UAM;
 namespace Zeltlager.Calendar
 {
 	// events that do not yet have a day or time assignedt
-	[Editable("geplanten Termin")]
+	[Editable("Geplanten Termin")]
 	public class PlannedCalendarEvent : Editable<PlannedCalendarEvent>, IComparable<PlannedCalendarEvent>
 	{
 		protected LagerClient lager;

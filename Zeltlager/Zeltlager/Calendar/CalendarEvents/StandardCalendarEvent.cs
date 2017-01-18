@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 namespace Zeltlager.Calendar
 {
 	// events that occour on multiple days at the same time
-	[Editable("regelmäßigen Termin")]
-	public class StandardCalendarEvent : PlannedCalendarEvent, IComparable<StandardCalendarEvent>
+	[Editable("Regelmäßigen Termin")]
+	public class StandardCalendarEvent : PlannedCalendarEvent, IComparable<StandardCalendarEvent>, IEquatable<StandardCalendarEvent>
 	{
 		/// <summary>
 		/// The time of this event, used to edit only the time.
 		/// </summary>
 		[Editable("Uhrzeit")]
-		public virtual TimeSpan Time { get; set; }
+		[Serialisation]
+		public TimeSpan Time { get; set; }
 
 		public string TimeString
 		{
@@ -51,7 +52,12 @@ namespace Zeltlager.Calendar
 
 		public int CompareTo(StandardCalendarEvent other)
 		{
-			return Time.CompareTo(Time);
+			return Time.CompareTo(other.Time);
+		}
+
+		public bool Equals(StandardCalendarEvent other)
+		{
+			return Time.Equals(other.Time) && Title.Equals(other.Title) && Detail.Equals(other.Detail);
 		}
 	}
 }

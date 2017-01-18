@@ -90,8 +90,17 @@ namespace Zeltlager.Calendar
 			};
 
 			var calendarList = new ListView();
-			var customCell = new DataTemplate(typeof(CalendarEventCell));
-			calendarList.ItemTemplate = customCell;
+
+			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
+			Command onEdit = new Command(sender => OnEditClicked((IListCalendarEvent)sender));
+			Command onDelete = new Command(sender => OnDeleteClicked((IListCalendarEvent)sender));
+
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandParameterProperty, new Binding("."));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(onEdit), source: this));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandParameterProperty, new Binding("."));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(onDelete), source: this));
+
+			calendarList.ItemTemplate = dataTemplate;
 			calendarList.ItemsSource = day.Events;
 			calendarList.Header = headerWithDishwashers;
 			calendarList.HorizontalOptions = LayoutOptions.CenterAndExpand;
@@ -103,6 +112,18 @@ namespace Zeltlager.Calendar
 
 			header.HorizontalOptions = LayoutOptions.FillAndExpand;
 			Content = calendarList;
+		}
+
+		void OnEditClicked(IListCalendarEvent pce)
+		{
+			// FIXME Check whetehr pce is reference (then push add page with exrefce) or normal (push edit)
+			//Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+					   //(pce, false, calendar.GetLager())), true);
+		}
+
+		void OnDeleteClicked(IListCalendarEvent pce)
+		{
+			//TODO revert packages
 		}
 
 		public void OnEditDishwasherClicked(object sender, EventArgs e)
@@ -182,7 +203,7 @@ namespace Zeltlager.Calendar
 			}
 		}
 
-		private void OnLeftButtonClicked(object sender, EventArgs e)
+		void OnLeftButtonClicked(object sender, EventArgs e)
 		{
 			CarouselPage p = (CarouselPage)Parent;
 
@@ -191,7 +212,7 @@ namespace Zeltlager.Calendar
 				p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) - 1];
 		}
 
-		private void OnRightButtonClicked(object sender, EventArgs e)
+		void OnRightButtonClicked(object sender, EventArgs e)
 		{
 			CarouselPage p = (CarouselPage)Parent;
 

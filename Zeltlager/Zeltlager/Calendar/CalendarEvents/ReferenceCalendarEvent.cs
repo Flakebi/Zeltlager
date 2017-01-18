@@ -8,7 +8,7 @@ namespace Zeltlager.Calendar
 	// not editable!, serialiseable
 	public class ReferenceCalendarEvent : IListCalendarEvent
 	{
-		StandardCalendarEvent reference;
+		public StandardCalendarEvent Reference { get; set; }
 
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
@@ -20,7 +20,7 @@ namespace Zeltlager.Calendar
 			get { return date; }
 			set
 			{
-				date = value.Date.Add(reference.Time);
+				date = value.Date.Add(Reference.Time);
 			}
 		}
 
@@ -33,13 +33,13 @@ namespace Zeltlager.Calendar
 
 		public ReferenceCalendarEvent(PacketId id, StandardCalendarEvent reference)
 		{
-			this.reference = reference;
+			Reference = reference;
 			Id = id;
 		}
 
 		public CalendarEvent GetEditableCalendarEvent()
 		{
-			return new ExRefCalendarEvent(Id, Date, reference.Title, reference.Detail, this, reference.GetLager());
+			return new ExRefCalendarEvent(Id, Date, Reference.Title, Reference.Detail, this, Reference.GetLager());
 		}
 
 		public void makeInvisible()

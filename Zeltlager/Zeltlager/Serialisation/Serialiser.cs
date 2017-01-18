@@ -153,6 +153,10 @@ namespace Zeltlager.Serialisation
 				// Check for dates
 				DateTime dateTime = (DateTime)obj;
 				await Write(output, context, dateTime.ToBinary());
+			} else if (type == typeof(TimeSpan))
+			{
+				TimeSpan timeSpan = (TimeSpan)obj;
+				await Write(output, context, timeSpan.TotalMilliseconds);
 			} else if (typeof(IList).GetTypeInfo().IsAssignableFrom(typeInfo))
 			{
 				// Check for lists and arrays
@@ -305,7 +309,11 @@ namespace Zeltlager.Serialisation
 			{
 				// Check for dates
 				obj = DateTime.FromBinary(await Read(input, context, (long)0));
-			} else if (typeof(IList).GetTypeInfo().IsAssignableFrom(typeInfo))
+			} else if (type == typeof(TimeSpan))
+			{
+				obj = TimeSpan.FromMilliseconds(await Read(input, context, (double)0));
+			}
+			else if (typeof(IList).GetTypeInfo().IsAssignableFrom(typeInfo))
 			{
 				// Check for lists and arrays
 				int count = input.ReadInt32();

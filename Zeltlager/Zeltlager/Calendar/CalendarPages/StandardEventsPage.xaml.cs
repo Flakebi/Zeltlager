@@ -9,6 +9,7 @@ namespace Zeltlager.Calendar
 	public partial class StandardEventsPage : ContentPage
 	{
 		Calendar calendar;
+		Command onEdit, onDelete;
 
 		public StandardEventsPage(Calendar c)
 		{
@@ -17,13 +18,13 @@ namespace Zeltlager.Calendar
 			BindingContext = calendar;
 
 			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
-			var onEdit = new Command(sender => OnEditClicked((StandardCalendarEvent) sender));
-			var onDelete = new Command(sender => OnDeleteClicked((StandardCalendarEvent) sender));
+			onEdit = new Command(sender => OnEditClicked((StandardCalendarEvent) sender));
+			onDelete = new Command(sender => OnDeleteClicked((StandardCalendarEvent) sender));
 
-			dataTemplate.SetBinding(SearchableCell.OnEditCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, new Binding(nameof(onEdit), source: this));
-			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, new Binding(nameof(onDelete), source: this));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandParameterProperty, new Binding("."));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(onEdit), source: this));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandParameterProperty, new Binding("."));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(onDelete), source: this));
 
 			ListView calendarEventList = new ListView
 			{
