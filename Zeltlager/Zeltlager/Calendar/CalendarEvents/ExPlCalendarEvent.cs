@@ -1,32 +1,31 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using Zeltlager.DataPackets;
 using Zeltlager.Serialisation;
 using Zeltlager.UAM;
-
 namespace Zeltlager.Calendar
 {
-	// Editable, not serialisable
-	[Editable("(exref)Termin")]
-	public class ExRefCalendarEvent : CalendarEvent
+	[Editable("(expl)Termin")]
+	public class ExPlCalendarEvent : CalendarEvent
 	{
-		ReferenceCalendarEvent Reference { get; set; }
+		PlannedCalendarEvent PlannedEvent { get; set; }
 
-		public ExRefCalendarEvent(ReferenceCalendarEvent reference)
-			: base(reference.Id, reference.Date, reference.Reference.Title, reference.Reference.Detail, reference.Reference.GetLager())
+		public ExPlCalendarEvent(PlannedCalendarEvent plannedEvent)
+			: base(plannedEvent.Id, DateTime.Now, plannedEvent.Title, plannedEvent.Detail, plannedEvent.GetLager())
 		{
-			Reference = reference;
+			PlannedEvent = plannedEvent;
 		}
-		
+
 		public async Task OnSaveEditing(
 			Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, CalendarEvent oldObject)
 		{
-			Reference.MakeInvisible();
+			PlannedEvent.MakeInvisible();
 			DataPacket packet;
 			if (oldObject != null)
 			{
-				throw new Exception("a ReferenceCalendarEvent can not be added!!! Serialization will probably break from it..");
+				throw new Exception("a ExPlannedCalendarEvent can not be edited!!! Serialization will probably break from it..");
 				//packet = await EditPacket.Create(serialiser, context, new CalendarEvent(Id, Date, Title, Detail, lager));
 			}
 			else

@@ -8,6 +8,7 @@ namespace Zeltlager.Calendar
 	// not editable!, serialiseable
 	public class ReferenceCalendarEvent : IListCalendarEvent
 	{
+		[Serialisation(Type = SerialisationType.Reference)]
 		public StandardCalendarEvent Reference { get; set; }
 
 		[Serialisation(Type = SerialisationType.Id)]
@@ -46,7 +47,7 @@ namespace Zeltlager.Calendar
 			return new ExRefCalendarEvent(this);
 		}
 
-		public void makeInvisible()
+		public void MakeInvisible()
 		{
 			IsShown = false;
 		}

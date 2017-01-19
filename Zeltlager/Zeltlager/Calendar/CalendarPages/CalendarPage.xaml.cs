@@ -28,7 +28,10 @@ namespace Zeltlager.Calendar
 				Children.Add(dp);
 			}
 			foreach (ContentPage cp in Children)
+			{
+				((DayPage)cp).UpdateUI();
 				((DayPage)cp).removeNavButtons();
+			}
 			lager.Calendar.IncludeStandardEvents();
 		}
 

@@ -15,6 +15,8 @@ namespace Zeltlager.Calendar
 		StackLayout dishwashers;
 		bool editingDishwashers;
 		Button editDishwasherButton;
+		public Command OnEdit { get; set; }
+		public Command OnDelete { get; set; }
 
 		public DayPage(Day day, LagerClient lager)
 		{
@@ -22,105 +24,13 @@ namespace Zeltlager.Calendar
 			this.lager = lager;
 			Day = day;
 
+			UpdateUI();
 			Padding = new Thickness(10);
-
-			var dayNameLabel = new Label
-			{
-				Text = day.Date.ToString(Icons.WEEKDAYS[day.Date.DayOfWeek] + " dddd, dd.MM.yy"),
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				VerticalOptions = LayoutOptions.CenterAndExpand
-			};
-
-			leftArrow = new Button
-			{
-				Image = Icons.ARROW_LEFT,
-				FontAttributes = FontAttributes.Bold,
-				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
-				VerticalOptions = LayoutOptions.CenterAndExpand
-			};
-			leftArrow.Clicked += OnLeftButtonClicked;
-
-			rightArrow = new Button
-			{
-				Image = Icons.ARROW_RIGHT,
-				FontAttributes = FontAttributes.Bold,
-				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
-				VerticalOptions = LayoutOptions.CenterAndExpand
-			};
-			rightArrow.Clicked += OnRightButtonClicked;
-
-			var header = new StackLayout
-			{
-				Orientation = StackOrientation.Horizontal,
-				HorizontalOptions = LayoutOptions.Center,
-				VerticalOptions = LayoutOptions.Center,
-				Children = { leftArrow, dayNameLabel, rightArrow }
-			};
-
-			editDishwasherButton = new Button { Image = Icons.EDIT };
-			editDishwasherButton.Clicked += OnEditDishwasherClicked;
-			editDishwasherButton.HorizontalOptions = LayoutOptions.End;
-			editingDishwashers = false;
-
-			var label = new Label();
-			if (Day.Dishwashers == null)
-			{
-				label.Text = "kein Spüldienst";
-				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
-			}
-			else
-			{
-				label.Text = "Spüldienst: " + Day.Dishwashers;
-				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
-			}
-			Label dishwasherLabel = label;
-			dishwasherLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-			dishwasherLabel.VerticalOptions = LayoutOptions.CenterAndExpand;
-
-			dishwashers = new StackLayout
-			{
-				Orientation = StackOrientation.Horizontal,
-				Children = { dishwasherLabel, editDishwasherButton },
-				Padding = new Thickness(10, 0, 0, 0)
-			};
-
-			var headerWithDishwashers = new StackLayout
-			{
-				Orientation = StackOrientation.Vertical,
-				Children = { header, dishwashers }
-			};
-
-			var calendarList = new ListView();
-
-			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
-			Command onEdit = new Command(sender => OnEditClicked((IListCalendarEvent)sender));
-			Command onDelete = new Command(sender => OnDeleteClicked((IListCalendarEvent)sender));
-
-			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(onEdit), source: this));
-			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(onDelete), source: this));
-
-			calendarList.ItemTemplate = dataTemplate;
-			calendarList.ItemsSource = day.Events;
-			calendarList.Header = headerWithDishwashers;
-			calendarList.HorizontalOptions = LayoutOptions.CenterAndExpand;
-			// disable selection
-			calendarList.ItemSelected += (sender, e) =>
-			{
-				((ListView)sender).SelectedItem = null;
-			};
-
-			header.HorizontalOptions = LayoutOptions.FillAndExpand;
-			Content = calendarList;
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnEditClicked(IListCalendarEvent ilce)
 		{
-			// FIXME Check whetehr pce is reference (then push add page with exrefce) or normal (push edit)
-			//Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-					   //(pce, false, calendar.GetLager())), true);
 			if (ilce is ReferenceCalendarEvent)
 			{
 				Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<ExRefCalendarEvent, PlannedCalendarEvent>
@@ -232,6 +142,99 @@ namespace Zeltlager.Calendar
 
 			if (p.Children.IndexOf(p.CurrentPage) < p.Children.Count - 1)
 				p.CurrentPage = p.Children[p.Children.IndexOf(p.CurrentPage) + 1];
+		}
+
+		public void UpdateUI()
+		{
+			var dayNameLabel = new Label
+			{
+				Text = Day.Date.ToString(Icons.WEEKDAYS[Day.Date.DayOfWeek] + " dddd, dd.MM.yy"),
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				VerticalOptions = LayoutOptions.CenterAndExpand
+			};
+
+			leftArrow = new Button
+			{
+				Image = Icons.ARROW_LEFT,
+				FontAttributes = FontAttributes.Bold,
+				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
+				VerticalOptions = LayoutOptions.CenterAndExpand
+			};
+			leftArrow.Clicked += OnLeftButtonClicked;
+
+			rightArrow = new Button
+			{
+				Image = Icons.ARROW_RIGHT,
+				FontAttributes = FontAttributes.Bold,
+				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button)),
+				VerticalOptions = LayoutOptions.CenterAndExpand
+			};
+			rightArrow.Clicked += OnRightButtonClicked;
+
+			var header = new StackLayout
+			{
+				Orientation = StackOrientation.Horizontal,
+				HorizontalOptions = LayoutOptions.Center,
+				VerticalOptions = LayoutOptions.Center,
+				Children = { leftArrow, dayNameLabel, rightArrow }
+			};
+
+			editDishwasherButton = new Button { Image = Icons.EDIT };
+			editDishwasherButton.Clicked += OnEditDishwasherClicked;
+			editDishwasherButton.HorizontalOptions = LayoutOptions.End;
+			editingDishwashers = false;
+
+			var label = new Label();
+			if (Day.Dishwashers == null)
+			{
+				label.Text = "kein Spüldienst";
+				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
+			}
+			else
+			{
+				label.Text = "Spüldienst: " + Day.Dishwashers;
+				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
+			}
+			Label dishwasherLabel = label;
+			dishwasherLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
+			dishwasherLabel.VerticalOptions = LayoutOptions.CenterAndExpand;
+
+			dishwashers = new StackLayout
+			{
+				Orientation = StackOrientation.Horizontal,
+				Children = { dishwasherLabel, editDishwasherButton },
+				Padding = new Thickness(10, 0, 0, 0)
+			};
+
+			var headerWithDishwashers = new StackLayout
+			{
+				Orientation = StackOrientation.Vertical,
+				Children = { header, dishwashers }
+			};
+
+			var calendarList = new ListView();
+
+			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
+			OnEdit = new Command(sender => OnEditClicked((IListCalendarEvent)sender));
+			OnDelete = new Command(sender => OnDeleteClicked((IListCalendarEvent)sender));
+
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandParameterProperty, new Binding("."));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandParameterProperty, new Binding("."));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
+
+			calendarList.ItemTemplate = dataTemplate;
+			calendarList.ItemsSource = Day.Events;
+			calendarList.Header = headerWithDishwashers;
+			calendarList.HorizontalOptions = LayoutOptions.CenterAndExpand;
+			// disable selection
+			calendarList.ItemSelected += (sender, e) =>
+			{
+				((ListView)sender).SelectedItem = null;
+			};
+
+			header.HorizontalOptions = LayoutOptions.FillAndExpand;
+			Content = calendarList;
 		}
 	}
 }

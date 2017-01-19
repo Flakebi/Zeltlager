@@ -24,6 +24,8 @@ namespace Zeltlager.Calendar
 		[Serialisation]
 		public string Detail { get; set; }
 
+		public bool IsShown { get; private set; }
+
 		public PlannedCalendarEvent() {}
 
 		public PlannedCalendarEvent(LagerClientSerialisationContext context) : this() {}
@@ -55,9 +57,9 @@ namespace Zeltlager.Calendar
 
 		public int CompareTo(PlannedCalendarEvent other)
 		{
-			int t = Title.CompareTo(other.Title);
+			int t = string.Compare(Title, other.Title, StringComparison.Ordinal);
 			if (t == 0)
-				t = Detail.CompareTo(other.Detail);
+				t = string.Compare(Detail, other.Detail, StringComparison.Ordinal);
 			return t;
 		}
 
@@ -69,6 +71,11 @@ namespace Zeltlager.Calendar
 		public LagerClient GetLager()
 		{
 			return lager;
+		}
+
+		public void MakeInvisible()
+		{
+			IsShown = false;
 		}
 	}
 }

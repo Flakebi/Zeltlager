@@ -9,7 +9,8 @@ namespace Zeltlager.Calendar
 	public partial class PlannedEventsPage : ContentPage
 	{
 		Calendar calendar;
-		Command onEdit, onDelete;
+		public Command OnEdit { get; set; }
+		public Command OnDelete { get; set; }
 
 		public PlannedEventsPage(Calendar c)
 		{
@@ -18,13 +19,13 @@ namespace Zeltlager.Calendar
 			BindingContext = calendar;
 
 			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
-			onEdit = new Command(sender => OnEditClicked((PlannedCalendarEvent)sender));
-			onDelete = new Command(sender => OnDeleteClicked((PlannedCalendarEvent)sender));
+			OnEdit = new Command(sender => OnEditClicked((PlannedCalendarEvent)sender));
+			OnDelete = new Command(sender => OnDeleteClicked((PlannedCalendarEvent)sender));
 
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(onEdit), source: this));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(onDelete), source: this));
+			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 
 			ListView calendarEventList = new ListView
 			{
@@ -32,8 +33,14 @@ namespace Zeltlager.Calendar
 				ItemTemplate = dataTemplate,
 				BindingContext = calendar.PlannedEvents,
 			};
-			calendarEventList.ItemSelected += 
-				((sender, e) => calendarEventList.SelectedItem = null);
+			calendarEventList.ItemSelected += ((sender, e) =>
+			{
+				if (calendarEventList.SelectedItem != null)
+				{
+					OnPlannedEventClicked((PlannedCalendarEvent)calendarEventList.SelectedItem);
+					calendarEventList.SelectedItem = null;
+				}
+			});
 
 			Content = calendarEventList;
 			Style = (Style)Application.Current.Resources["BaseStyle"];
@@ -55,6 +62,12 @@ namespace Zeltlager.Calendar
 		void OnDeleteClicked(PlannedCalendarEvent pce)
 		{
 			//TODO revert packages
+		}
+
+		void OnPlannedEventClicked(PlannedCalendarEvent pce)
+		{
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+			           (new ExPlCalendarEvent(pce), true, pce.GetLager())), true);
 		}
 	}
 }
