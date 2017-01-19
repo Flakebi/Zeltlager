@@ -20,6 +20,27 @@ namespace Zeltlager
 		/// </summary>
 		public List<Tuple<KeyPair, int>> BundleCount { get; private set; } = new List<Tuple<KeyPair, int>>();
 
+		/// <summary>
+		/// Get the collaborator id from the view of the owner of this object.
+		/// </summary>
+		/// <returns>The collaborator id.</returns>
+		/// <param name="c">The collaborator whos id will be returned.</param>
+		public int GetCollaboratorId(Collaborator c)
+		{
+			return BundleCount.FindIndex(t => t.Item1 == c.Key);
+		}
+
+		/// <summary>
+		/// Get the amount of bundles of a collaborator.
+		/// </summary>
+		/// <returns>How many bundles the given collaborator created.</returns>
+		/// <param name="c">The creator of the bundles.</param>
+		public int GetBundleCount(Collaborator c)
+		{
+			return BundleCount.Find(t => t.Item1 == c.Key).Item2;
+		}
+
+		// Serialisation with a LagerSerialisationContext
 		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			output.Write(BundleCount.Count);

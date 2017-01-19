@@ -153,6 +153,13 @@
     <Compile Include="CommunicationPackets\Requests\LagerCommunicationRequest.cs" />
     <Compile Include="CommunicationPackets\Requests\LagerStatus.cs" />
     <Compile Include="CommunicationPackets\Responses\LagerStatus.cs" />
+    <Compile Include="CommunicationPackets\Requests\CollaboratorData.cs" />
+    <Compile Include="CommunicationPackets\CommunicationLagerData.cs" />
+    <Compile Include="CommunicationPackets\Responses\CollaboratorData.cs" />
+    <Compile Include="Client\NetworkStatus.cs" />
+    <Compile Include="CommunicationPackets\Requests\Bundles.cs" />
+    <Compile Include="CommunicationPackets\Responses\Bundle.cs" />
+    <Compile Include="CommunicationPackets\Requests\UploadBundle.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

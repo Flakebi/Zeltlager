@@ -127,7 +127,7 @@ namespace Zeltlager
 		string GetBundlePath(PacketId id)
 		{
 			// Get the local collaborator id
-			int collaboratorId = Status.BundleCount.FindIndex(c => c.Item1 == id.Creator.Key);
+			int collaboratorId = Status.GetCollaboratorId(id.Creator);
 			if (collaboratorId == -1)
 				throw new LagerException("Can't get the bundle path for an unknown collaborator");
 			return Path.Combine(collaboratorId.ToString(), id.Bundle.Id.ToString());
@@ -158,6 +158,17 @@ namespace Zeltlager
 			await Serialiser.Write(output, context, id.Bundle);
 		}
 
+		/// <summary>
+		/// Add and save a bundle for a specified collaborator.
+		/// </summary>
+		/// <param name="collaborator">The collaborator to whom a bundle should be added.</param>
+		/// <param name="bundle">The new bundle for the collaborator.</param>
+		public async Task AddBundle(Collaborator collaborator, DataPacketBundle bundle)
+		{
+			collaborator.AddBundle(bundle);
+			await SaveBundle(new PacketId(collaborator, bundle));
+		}
+
 		public async Task AddCollaborator(Collaborator collaborator)
 		{
 			collaborators.Add(collaborator.Key, collaborator);
@@ -167,7 +178,7 @@ namespace Zeltlager
 			await Save();
 
 			// Save the new collaborator
-			IIoProvider io = new RootedIoProvider(ioProvider, Status.BundleCount.FindIndex(c => c.Item1 == collaborator.Key).ToString());
+			IIoProvider io = new RootedIoProvider(ioProvider, Status.GetCollaboratorId(collaborator).ToString());
 			await io.CreateFolder("");
 			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(COLLABORATOR_FILE)))
 				await Serialiser.Write(output, new LagerSerialisationContext(Manager, this), collaborator);

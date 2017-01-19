@@ -155,7 +155,7 @@ namespace Zeltlager.Client
 					for (int i = 0; i < bundleCount.Item2; i++)
 					{
 						var bundle = await LoadBundle(collaborator, i);
-						collaborator.AddBundle(i, bundle);
+						collaborator.AddBundle(bundle);
 					}
 				}
 				catch (Exception e)
@@ -177,7 +177,6 @@ namespace Zeltlager.Client
 				await ClientSerialiser.Write(output, context, this);
 		}
 
-
 		/// <summary>
 		/// Synchronise this lager with the remote lager.
 		/// 1. Update the remote lager status from the server
@@ -186,18 +185,90 @@ namespace Zeltlager.Client
 		/// 4. Upload our own new bundles
 		/// </summary>
 		/// <param name="statusUpdate">Status update.</param>
-		public async Task Synchronise(Action<LagerClientManager.NetworkStatus> statusUpdate)
+		public async Task Synchronise(Action<NetworkStatus> statusUpdate)
 		{
 			// Open a connection
+			statusUpdate?.Invoke(NetworkStatus.Connecting);
 			INetworkConnection connection = await Manager.NetworkClient.OpenConnection(
 				ClientManager.Settings.ServerAddress, LagerManager.PORT);
+
 			// Request the lager status
+			statusUpdate?.Invoke(NetworkStatus.LagerStatusRequest);
 			await connection.WritePacket(await Requests.LagerStatus.Create(this));
-			var response = await connection.ReadPacket() as Responses.LagerStatus;
-			if (response == null)
+			var lagerStatusResponse = await connection.ReadPacket() as Responses.LagerStatus;
+			if (lagerStatusResponse == null)
 				throw new LagerException("Got no lager status as response");
-			await response.ReadRemoteStatus(this);
+			await lagerStatusResponse.ReadRemoteStatus(this);
+			await Save();
+
 			// Check for new collaborators
+			statusUpdate?.Invoke(NetworkStatus.CollaboratorDataRequest);
+			// First, send all requests then wait for the answers
+			var missingCollaborators = Remote.Status.BundleCount.Select(c => c.Item1).Except(Status.BundleCount.Select(c => c.Item1)).ToArray();
+			await connection.WritePackets(await Task.WhenAll(missingCollaborators.Select(async key =>
+				await Requests.CollaboratorData.Create(this, key))));
+			// Wait for the answers
+			foreach (var key in missingCollaborators)
+			{
+				var collaboratorDataResponse = await connection.ReadPacket() as Responses.CollaboratorData;
+				if (collaboratorDataResponse == null)
+					throw new LagerException("Got no collaborator data as response");
+				var collaborator = await collaboratorDataResponse.GetCollaborator(this);
+				if (collaborator.Key != key)
+					throw new LagerException("Got the wrong collaborator data as response");
+
+				// Add the collaborator
+				await AddCollaborator(collaborator);
+			}
+
+			// Download new bundles
+			statusUpdate?.Invoke(NetworkStatus.BundlesRequest);
+			int requestedBundles = 0;
+			var packets = new List<CommunicationPackets.CommunicationPacket>();
+			// Request 100 packets at once
+			var currentPacketRequest = new List<Tuple<Collaborator, int>>();
+			for (int i = 0; i < Status.BundleCount.Count; i++)
+			{
+				var collaborator = Collaborators[Status.BundleCount[i].Item1];
+				for (int bundleId = Status.GetBundleCount(collaborator);
+				     bundleId < Remote.Status.GetBundleCount(collaborator);
+				     bundleId++)
+				{
+					requestedBundles++;
+					currentPacketRequest.Add(new Tuple<Collaborator, int>(collaborator, bundleId));
+					if (currentPacketRequest.Count == 100)
+					{
+						packets.Add(await Requests.Bundles.Create(this, currentPacketRequest));
+						currentPacketRequest.Clear();
+					}
+				}
+			}
+			if (currentPacketRequest.Any())
+				packets.Add(await Requests.Bundles.Create(this, currentPacketRequest));
+			await connection.WritePackets(packets);
+			// Wait for the bundles
+			statusUpdate?.Invoke(NetworkStatus.DownloadBundles);
+			for (int i = 0; i < requestedBundles; i++)
+			{
+				var bundleResponse = await connection.ReadPacket() as Responses.Bundle;
+				if (bundleResponse == null)
+					throw new LagerException("Got no bundle as response");
+				await bundleResponse.ReadBundle(this);
+			}
+
+			// Upload new bundles
+			statusUpdate?.Invoke(NetworkStatus.UploadBundles);
+			packets.Clear();
+			for (int bundleId = Remote.Status.GetBundleCount(OwnCollaborator);
+			     bundleId < Status.GetBundleCount(OwnCollaborator);
+			     bundleId++)
+			{
+				//packets
+			}
+			await connection.WritePackets(packets);
+			//TODO Check the response
+
+			// Reload the history
 			//TODO
 		}
 
@@ -268,8 +339,7 @@ namespace Zeltlager.Client
 			{
 				bundle = new DataPacketBundle();
 				bundle.Id = maxBundleId + 1;
-				OwnCollaborator.AddBundle(bundle.Id, bundle);
-
+				OwnCollaborator.AddBundle(bundle);
 			}
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
 			PacketId id = new PacketId(OwnCollaborator, bundle, bundle.Packets == null ? 0 : bundle.Packets.Count);

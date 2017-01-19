@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Zeltlager.Network
@@ -28,7 +29,7 @@ namespace Zeltlager.Network
 		/// More efficient for multiple packets because they can be bundled.
 		/// </summary>
 		/// <param name="packets">A list of packets that should be written to this connection.</param>
-		Task WritePackets(CommunicationPacket[] packets);
+		Task WritePackets(IEnumerable<CommunicationPacket> packets);
 		Task<CommunicationPacket> ReadPacket();
 		Task Close();
 	}

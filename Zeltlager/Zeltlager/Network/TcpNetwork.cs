@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -79,7 +80,7 @@ namespace Zeltlager.Network
 			return WritePackets(new CommunicationPacket[] { packet });
 		}
 
-		public async Task WritePackets(CommunicationPacket[] packets)
+		public async Task WritePackets(IEnumerable<CommunicationPacket> packets)
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter writer = new BinaryWriter(mem))

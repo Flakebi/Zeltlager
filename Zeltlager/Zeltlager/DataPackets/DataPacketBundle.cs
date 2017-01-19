@@ -133,11 +133,11 @@ namespace Zeltlager.DataPackets
 		}
 
 		/// <summary>
-		/// Verifies the packet signature and id.
+		/// Verify the signature of this bundle.
+		/// This function throws an exception if it can't be verified successfully.
 		/// </summary>
-		/// <param name="context">The context for the verification.</param>
-		/// <returns>The packet iv und encrypted data.</returns>
-		public async Task<Tuple<byte[], byte[]>> VerifyAndGetEncryptedData(LagerSerialisationContext context)
+		/// <param name="creator">The creator of this bundle.</param>
+		public async Task Verify(Collaborator creator)
 		{
 			byte[] signature = new byte[CryptoConstants.SIGNATURE_LENGTH];
 			byte[] encryptedData = new byte[data.Length - CryptoConstants.SIGNATURE_LENGTH];
@@ -147,8 +147,23 @@ namespace Zeltlager.DataPackets
 			Array.Copy(data, signature.Length, encryptedData, 0, encryptedData.Length);
 
 			// Verify signature
-			if (!await LagerManager.CryptoProvider.Verify(context.PacketId.Creator.Key, signature, encryptedData))
+			if (!await LagerManager.CryptoProvider.Verify(creator.Key, signature, encryptedData))
 				throw new LagerException("The bundle has an invalid signature.");
+		}
+
+		/// <summary>
+		/// Verifies the packet signature and id.
+		/// </summary>
+		/// <param name="context">The context for the verification.</param>
+		/// <returns>The packet iv und encrypted data.</returns>
+		public async Task<Tuple<byte[], byte[]>> VerifyAndGetEncryptedData(LagerSerialisationContext context)
+		{
+			await Verify(context.PacketId.Creator);
+			
+			byte[] encryptedData = new byte[data.Length - CryptoConstants.SIGNATURE_LENGTH];
+
+			// Read the encrypted data
+			Array.Copy(data, CryptoConstants.SIGNATURE_LENGTH, encryptedData, 0, encryptedData.Length);
 
 			MemoryStream mem = new MemoryStream(encryptedData);
 			using (BinaryReader input = new BinaryReader(mem))

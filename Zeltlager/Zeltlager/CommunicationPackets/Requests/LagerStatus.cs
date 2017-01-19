@@ -22,7 +22,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 
 		async Task Init(LagerClient lager)
 		{
-			await CreateData(lager, new byte[0], new byte[0]);
+			await CreateData(new CommunicationLagerData(lager, new byte[0], new byte[0]));
 		}
 
 		public override async Task Apply(INetworkConnection connection, LagerManager manager)
@@ -30,8 +30,9 @@ namespace Zeltlager.CommunicationPackets.Requests
 			// Verify the signatures
 			try
 			{
-				await GetData(manager);
+				CommunicationLagerData data = await GetData(manager);
 				// Send the lager status
+				await connection.WritePacket(await Responses.LagerStatus.Create(data.Lager));
 			}
 			catch (Exception e)
 			{

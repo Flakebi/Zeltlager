@@ -9,14 +9,6 @@ namespace Zeltlager.Client
 
 	public class LagerClientManager : LagerManager
     {
-		public enum NetworkStatus
-		{
-			Connecting,
-			ListLagers,
-			RegisterCollaborator,
-			Ready
-		}
-
         public ClientSettings Settings { get; private set; }
         
         public LagerClientManager(IIoProvider io) : base(io)

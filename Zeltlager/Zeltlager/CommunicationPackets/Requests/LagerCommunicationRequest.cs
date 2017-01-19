@@ -26,30 +26,29 @@ namespace Zeltlager.CommunicationPackets.Requests
 		/// <param name="encrypted">
 		/// The encrypted data that should be sent with the packet.
 		/// </param>
-		protected async Task CreateData(LagerClient lager, byte[] unencrypted, byte[] encrypted)
+		protected async Task CreateData(CommunicationLagerData data)
 		{
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 			{
-				output.Write(lager.Remote.Id);
-				output.Write(lager.Remote.Status.BundleCount.FindIndex(
-					c => c.Item1 == lager.OwnCollaborator.Key));
+				output.Write(data.Lager.Remote.Id);
+				output.Write(data.Lager.Remote.Status.GetCollaboratorId(data.LagerClient.OwnCollaborator));
 				// Write unencrypted data
-				output.Write(unencrypted.Length);
-				output.Write(unencrypted);
+				output.Write(data.Unencrypted.Length);
+				output.Write(data.Unencrypted);
 				// Encrypt data
 				byte[] iv = await LagerManager.CryptoProvider.GetRandom(CryptoConstants.IV_LENGTH);
-				encrypted = await LagerManager.CryptoProvider.EncryptSymetric(
-					lager.Data.SymmetricKey, iv, encrypted);
+				byte[] encrypted = await LagerManager.CryptoProvider.EncryptSymetric(
+					data.Lager.Data.SymmetricKey, iv, data.Encrypted);
 				output.Write(encrypted.Length);
 				output.Write(encrypted);
 				// Sign data
-				byte[] data = mem.ToArray();
+				byte[] bytes = mem.ToArray();
 				output.Write(await LagerManager.CryptoProvider.Sign(
-					lager.Data.AsymmetricKey, data));
-				data = mem.ToArray();
+					data.Lager.Data.AsymmetricKey, bytes));
+				bytes = mem.ToArray();
 				output.Write(await LagerManager.CryptoProvider.Sign(
-					lager.OwnCollaborator.Key, data));
+					data.LagerClient.OwnCollaborator.Key, bytes));
 			}
 			Data = mem.ToArray();
 		}
@@ -64,7 +63,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 		/// the encrypted data.
 		/// This function throws an exception if an error occurs.
 		/// </returns>
-		protected async Task<Tuple<Collaborator, byte[], byte[]>> GetData(LagerManager manager)
+		protected async Task<CommunicationLagerData> GetData(LagerManager manager)
 		{
 			MemoryStream mem = new MemoryStream(Data);
 			using (BinaryReader input = new BinaryReader(mem))
@@ -93,7 +92,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 				Array.Copy(Data, data, data.Length);
 				if (!await LagerManager.CryptoProvider.Verify(collaborator.Key, signature, data))
 					throw new LagerException("Invalid collaborator signature");
-				return new Tuple<Collaborator, byte[], byte[]>(collaborator, unencrypted, encrypted);
+				return new CommunicationLagerData(lager, collaborator, unencrypted, encrypted);
 			}
 		}
 	}

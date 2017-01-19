@@ -61,11 +61,11 @@ namespace Zeltlager
 			Key = key;
 		}
 
-		public void AddBundle(int id, DataPacketBundle bundle)
+		public void AddBundle(DataPacketBundle bundle)
 		{
-			if (bundles.ContainsKey(id))
+			if (bundles.ContainsKey(bundle.Id))
 				throw new LagerException("Can't add a packet bundle with an id that is already taken");
-			bundles.Add(id, bundle);
+			bundles.Add(bundle.Id, bundle);
 		}
 
 		/// <summary>
