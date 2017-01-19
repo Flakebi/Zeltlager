@@ -15,6 +15,12 @@ namespace Zeltlager.Calendar
 		{
 			this.lager = lager;
 			InitializeComponent();
+			NavigationPage.SetBackButtonTitle(this, "");
+			UpdateUI();
+		}
+
+		void UpdateUI()
+		{
 			var days = lager.Calendar.Days;
 			foreach (Day day in days)
 			{
@@ -23,12 +29,13 @@ namespace Zeltlager.Calendar
 			}
 			foreach (ContentPage cp in Children)
 				((DayPage)cp).removeNavButtons();
+			lager.Calendar.IncludeStandardEvents();
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			//Navigation.PushModalAsync(new NavigationPage(new CalendarEventEditPage(new CalendarEvent(((DayPage)CurrentPage).Day.Date, ""))));
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>(new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date, "", "", lager), true, lager)), true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+			           (new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date, "", "", lager), true, lager)), true);
 		}
 
 		void OnRecurrentButtonClicked(object sender, EventArgs e)
@@ -39,6 +46,12 @@ namespace Zeltlager.Calendar
 		void OnPlannedButtonClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new PlannedEventsPage(lager.Calendar));
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			UpdateUI();
 		}
 	}
 }

@@ -123,14 +123,14 @@ namespace Zeltlager.Calendar
 			return StandardEvents.First(x => x.Id == id);
 		}
 
-		void IncludeStandardEvents()
+		public void IncludeStandardEvents()
 		{
 			foreach (Day d in Days)
 			{
 				foreach (StandardCalendarEvent sce in StandardEvents)
 				{
 					// check whether the event was added before that day+eventtime & ignore in that case
-					if (sce.Id.Bundle.Packets[sce.Id.PacketIndex.Value].Timestamp < d.Date.Add(sce.Time))
+					if (sce.Id.Bundle.Packets[sce.Id.PacketIndex.Value].Timestamp > d.Date.Add(sce.Time))
 					{
 						continue;
 					}

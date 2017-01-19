@@ -24,7 +24,11 @@ namespace Zeltlager.Calendar
 			}
 		}
 
-		bool isShown = true;
+		public string TimeString => Reference.TimeString;
+		public string Title => Reference.Title;
+		public string Detail => Reference.Detail;
+
+		public bool IsShown { get; private set; }  = true;
 
 		static Task<ReferenceCalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
@@ -39,12 +43,12 @@ namespace Zeltlager.Calendar
 
 		public CalendarEvent GetEditableCalendarEvent()
 		{
-			return new ExRefCalendarEvent(Id, Date, Reference.Title, Reference.Detail, this, Reference.GetLager());
+			return new ExRefCalendarEvent(this);
 		}
 
 		public void makeInvisible()
 		{
-			isShown = false;
+			IsShown = false;
 		}
 
 		public int CompareTo(IListCalendarEvent other)

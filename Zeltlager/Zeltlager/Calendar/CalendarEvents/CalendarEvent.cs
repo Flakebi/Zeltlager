@@ -14,9 +14,9 @@ namespace Zeltlager.Calendar
 		/// <summary>
 		/// The date of this event.
 		/// </summary>
-		[Serialisation]
 		protected DateTime date;
 		[Editable("Tag")]
+		[Serialisation]
 		public DateTime Date
 		{
 			get { return date; }
@@ -33,7 +33,12 @@ namespace Zeltlager.Calendar
 		public new TimeSpan Time
 		{
 			get { return Date.TimeOfDay; }
-			set { Date.Date.Add(value); }
+			set { Date = Date.Date.Add(value); }
+		}
+
+		public new string TimeString
+		{
+			get { return Date.ToString("HH:mm"); }
 		}
 
 		static Task<CalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)

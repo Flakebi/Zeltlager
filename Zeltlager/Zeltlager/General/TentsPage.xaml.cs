@@ -20,6 +20,7 @@ namespace Zeltlager.General
 			Padding = new Thickness(10);
 			this.lager = lager;
 			Content = new SearchableListView<Tent>(lager.Tents, OnContextActionEdit, OnContextActionDelete, OnTentClick);
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)

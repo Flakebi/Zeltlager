@@ -74,6 +74,7 @@ namespace Zeltlager.General
 			scrollView.Content = grid;
 
 			Content = scrollView;
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 	}
 }

@@ -32,9 +32,12 @@ namespace Zeltlager.Calendar
 				ItemTemplate = dataTemplate,
 				BindingContext = calendar.StandardEvents,
 			};
+			calendarEventList.ItemSelected +=
+				((sender, e) => calendarEventList.SelectedItem = null);
 
 			Content = calendarEventList;
 			Style = (Style)Application.Current.Resources["BaseStyle"];
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnAddClicked(object sender, EventArgs e)

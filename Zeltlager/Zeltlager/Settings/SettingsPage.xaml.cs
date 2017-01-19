@@ -11,6 +11,7 @@ namespace Zeltlager.Settings
 		public SettingsPage()
 		{
 			InitializeComponent();
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnLogClicked(object sender, EventArgs e)

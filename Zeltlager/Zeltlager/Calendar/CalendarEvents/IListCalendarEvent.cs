@@ -9,5 +9,10 @@ namespace Zeltlager.Calendar
 		CalendarEvent GetEditableCalendarEvent();
 		DateTime Date { get; set; }
 		PacketId Id { get; set; }
+
+		// for displaying
+		string TimeString { get; }
+		string Title { get; }
+		string Detail { get; }
 	}
 }

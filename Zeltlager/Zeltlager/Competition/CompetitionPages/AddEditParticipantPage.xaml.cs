@@ -53,6 +53,7 @@ namespace Zeltlager.Competition
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			Padding = new Thickness(10);
 			Title = "Wettbewerbsteilnehmer";
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void UpdateUI(string selection)

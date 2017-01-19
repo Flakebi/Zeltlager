@@ -10,19 +10,19 @@ namespace Zeltlager.Calendar
 	[Editable("(exref)Termin")]
 	public class ExRefCalendarEvent : CalendarEvent
 	{
-		ReferenceCalendarEvent reference;
+		ReferenceCalendarEvent Reference { get; set; }
 
-		public ExRefCalendarEvent(PacketId id, DateTime date, string title, string detail, ReferenceCalendarEvent reference, Client.LagerClient lager)
-			: base(id, date, title, detail, lager)
+		public ExRefCalendarEvent(ReferenceCalendarEvent reference)
+			: base(reference.Id, reference.Date, reference.Reference.Title, reference.Reference.Detail, reference.Reference.GetLager())
 		{
-			this.reference = reference;
+			Reference = reference;
 		}
 		
 		public async Task OnSaveEditing(
 			Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, CalendarEvent oldObject)
 		{
-			reference.makeInvisible();
+			Reference.makeInvisible();
 			DataPacket packet;
 			if (oldObject != null)
 			{

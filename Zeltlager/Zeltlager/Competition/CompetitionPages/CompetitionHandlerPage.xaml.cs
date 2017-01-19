@@ -16,6 +16,7 @@ namespace Zeltlager.Competition
 			InitializeComponent();
 			this.lager = lager;
 			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEdit, OnDelete, OnClick);
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)

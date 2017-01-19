@@ -72,6 +72,7 @@ namespace Zeltlager
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			// make page not start directly at the top
 			Padding = new Thickness(10);
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnUnselectedItemClicked(object sender, SelectedItemChangedEventArgs e)

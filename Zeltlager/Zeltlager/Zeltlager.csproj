@@ -138,7 +138,6 @@
     <Compile Include="Competition\Participants\TentParticipant.cs" />
     <Compile Include="UAM\Editable.cs" />
     <Compile Include="LagerData.cs" />
-    <Compile Include="Calendar\CalendarPages\CalendarEventCell.cs" />
     <Compile Include="Calendar\CalendarPages\CalendarPage.xaml.cs">
       <DependentUpon>CalendarPage.xaml</DependentUpon>
     </Compile>

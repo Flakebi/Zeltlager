@@ -19,6 +19,7 @@ namespace Zeltlager.General
 			this.lager = lager;
 			// TODO: think about what should happen if member is clicked
 			Content = new SearchableListView<Member>(lager.Members, OnContextActionEdit, OnContextActionDelete, null);
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)

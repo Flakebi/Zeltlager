@@ -1,6 +1,7 @@
 using System;
 
 using Xamarin.Forms;
+using Zeltlager.UAM;
 
 namespace Zeltlager.Calendar
 {
@@ -112,18 +113,31 @@ namespace Zeltlager.Calendar
 
 			header.HorizontalOptions = LayoutOptions.FillAndExpand;
 			Content = calendarList;
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
-		void OnEditClicked(IListCalendarEvent pce)
+		void OnEditClicked(IListCalendarEvent ilce)
 		{
 			// FIXME Check whetehr pce is reference (then push add page with exrefce) or normal (push edit)
 			//Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
 					   //(pce, false, calendar.GetLager())), true);
+			if (ilce is ReferenceCalendarEvent)
+			{
+				Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<ExRefCalendarEvent, PlannedCalendarEvent>
+				           (new ExRefCalendarEvent((ReferenceCalendarEvent)ilce), true, lager)),true);
+			} else if (ilce is CalendarEvent)
+			{
+				Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+						   ((CalendarEvent) ilce, true, lager)), true);
+			}
 		}
 
-		void OnDeleteClicked(IListCalendarEvent pce)
+		void OnDeleteClicked(IListCalendarEvent ilce)
 		{
 			//TODO revert packages
+			if (ilce is ReferenceCalendarEvent)
+			{
+			}
 		}
 
 		public void OnEditDishwasherClicked(object sender, EventArgs e)

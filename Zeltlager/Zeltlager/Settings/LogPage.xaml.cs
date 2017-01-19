@@ -22,6 +22,7 @@ namespace Zeltlager
 
 			BindingContext = this;
 			UpdateUI(null, null);
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void UpdateUI(object sender, EventArgs e)
