@@ -190,6 +190,9 @@ namespace Zeltlager.DataPackets
 			if (packets == null)
 				await Deserialise(context);
 
+			// Make sure that the id of the packets are set
+			for (int i = 0; i < packets.Count; i++)
+				packets[i].Id = context.PacketId.Clone(i);
 			return packets;
 		}
 

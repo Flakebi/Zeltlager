@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Client
 {
+	using Cryptography;
+	using Network;
 	using Requests = CommunicationPackets.Requests;
 	using Responses = CommunicationPackets.Responses;
 
@@ -72,16 +74,27 @@ namespace Zeltlager.Client
 			await lager.Save();
 
 			// Register ourself as collaborator
+			networkStatusUpdate?.Invoke(NetworkStatus.Connecting);
+			INetworkConnection connection = null;
+			try
 			{
-				networkStatusUpdate?.Invoke(NetworkStatus.Connecting);
-				var connection = await NetworkClient.OpenConnection(Settings.ServerAddress, PORT);
+				connection = await NetworkClient.OpenConnection(Settings.ServerAddress, PORT);
 				networkStatusUpdate?.Invoke(NetworkStatus.RegisterCollaborator);
 				await connection.WritePacket(await Requests.Register.Create(lager));
-				var packet = (Responses.Status)await connection.ReadPacket();
+				var packet = await connection.ReadPacket() as Responses.Register;
 				await connection.Close();
-				if (!packet.GetSuccess())
-					throw new LagerException("Failed to register our collaborator for the lager");
-				networkStatusUpdate?.Invoke(NetworkStatus.Ready);
+				if (packet == null)
+					throw new LagerException("Got no register packet as response");
+				int collaboratorId = packet.GetCollaboratorId();
+				// Temporarily add our own collaborator to the remote status with the id we obtained from the server
+				for (int i = 0; i < collaboratorId; i++)
+					lager.Remote.Status.BundleCount.Add(null);
+				lager.Remote.Status.BundleCount.Add(new Tuple<KeyPair, int>(lager.OwnCollaborator.Key, 0));
+			}
+			finally
+			{
+				if (connection != null)
+					await connection.Close();
 			}
 			// Synchronize the lager
 			await lager.Synchronise(networkStatusUpdate);
@@ -101,14 +114,23 @@ namespace Zeltlager.Client
 		public async Task<Dictionary<int, LagerData>> RemoteListLagers(Action<NetworkStatus> statusUpdate)
 		{
 			statusUpdate?.Invoke(NetworkStatus.Connecting);
-			var connection = await NetworkClient.OpenConnection(Settings.ServerAddress, PORT);
-			statusUpdate?.Invoke(NetworkStatus.ListLagers);
-			await connection.WritePacket(new Requests.ListLagers());
-			var packet = (Responses.ListLagers)await connection.ReadPacket();
-			await connection.Close();
-			var result = packet.GetLagerData();
-			statusUpdate?.Invoke(NetworkStatus.Ready);
-			return result;
+			INetworkConnection connection = null;
+			try
+			{
+				connection = await NetworkClient.OpenConnection(Settings.ServerAddress, PORT);
+				statusUpdate?.Invoke(NetworkStatus.ListLagers);
+				await connection.WritePacket(new Requests.ListLagers());
+				var packet = (Responses.ListLagers)await connection.ReadPacket();
+				await connection.Close();
+				var result = packet.GetLagerData();
+				statusUpdate?.Invoke(NetworkStatus.Ready);
+				return result;
+			}
+			finally
+			{
+				if (connection != null)
+					await connection.Close();
+			}
 		}
     }
 }

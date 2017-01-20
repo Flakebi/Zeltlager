@@ -160,6 +160,7 @@
     <Compile Include="CommunicationPackets\Requests\Bundles.cs" />
     <Compile Include="CommunicationPackets\Responses\Bundle.cs" />
     <Compile Include="CommunicationPackets\Requests\UploadBundle.cs" />
+    <Compile Include="CommunicationPackets\Responses\Register.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

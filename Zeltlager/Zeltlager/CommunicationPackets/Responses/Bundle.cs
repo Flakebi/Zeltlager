@@ -40,7 +40,7 @@ namespace Zeltlager.CommunicationPackets.Responses
 				int collaboratorId = input.ReadInt32();
 				if (collaboratorId < 0 || collaboratorId >= lager.Status.BundleCount.Count)
 					throw new LagerException("Received bundle for unknown collaborator");
-				Collaborator collaborator = lager.Collaborators[lager.Status.BundleCount[collaboratorId].Item1];
+				Collaborator collaborator = lager.Collaborators[lager.Remote.Status.BundleCount[collaboratorId].Item1];
 				int bundleId = input.ReadInt32();
 				DataPacketBundle bundle = new DataPacketBundle();
 				await lager.Serialiser.Read(input,

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.CommunicationPackets.Requests
 {
-	using Client;
 	using Cryptography;
 	
 	public abstract class LagerCommunicationRequest : CommunicationRequest
@@ -17,14 +16,8 @@ namespace Zeltlager.CommunicationPackets.Requests
 		/// lager key in this function) and
 		/// sign everything with the collaborator key.
 		/// </summary>
-		/// <param name="lager">
-		/// The lager that is refered by this packet.
-		/// </param>
-		/// <param name="unencrypted">
-		/// The unencrypted data that should be sent with the packet.
-		/// </param>
-		/// <param name="encrypted">
-		/// The encrypted data that should be sent with the packet.
+		/// <param name="data">
+		/// The data to create the packet
 		/// </param>
 		protected async Task CreateData(CommunicationLagerData data)
 		{
@@ -33,6 +26,8 @@ namespace Zeltlager.CommunicationPackets.Requests
 			{
 				output.Write(data.Lager.Remote.Id);
 				output.Write(data.Lager.Remote.Status.GetCollaboratorId(data.LagerClient.OwnCollaborator));
+				// Timestamp
+				output.Write(DateTime.UtcNow.ToBinary());
 				// Write unencrypted data
 				output.Write(data.Unencrypted.Length);
 				output.Write(data.Unencrypted);
@@ -72,13 +67,19 @@ namespace Zeltlager.CommunicationPackets.Requests
 				int lagerId = input.ReadInt32();
 				if (!manager.Lagers.ContainsKey(lagerId))
 					throw new LagerException("Lager not found");
-				LagerBase lager = manager.Lagers[input.ReadInt32()];
+				LagerBase lager = manager.Lagers[lagerId];
 				// Get the collaborator
 				int collaboratorId = input.ReadInt32();
 				if (collaboratorId < 0 || collaboratorId >= lager.Status.BundleCount.Count)
 					throw new LagerException("Collaborator not found");
 				KeyPair collaboratorKey = lager.Status.BundleCount[collaboratorId].Item1;
 				Collaborator collaborator = lager.Collaborators[collaboratorKey];
+				// Timestamp
+				var timestamp = DateTime.FromBinary(input.ReadInt64());
+				var diff = DateTime.UtcNow - timestamp;
+				if (diff.TotalMinutes < 0 || diff.TotalMinutes > 1)
+					throw new LagerException("Message too old");
+				// Data
 				int length = input.ReadInt32();
 				byte[] unencrypted = input.ReadBytes(length);
 				length = input.ReadInt32();

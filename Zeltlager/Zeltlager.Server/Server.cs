@@ -32,11 +32,20 @@ namespace Zeltlager.Server
 			await LagerManager.Log.Load();
 			LagerManager.Log.OnMessage += Console.WriteLine;
 			await lagerManager.Load();
+
+			// Load all bundles
+			foreach (var lager in lagerManager.Lagers)
+			{
+				if (!await lager.Value.LoadBundles())
+					await LagerManager.Log.Error("Server", "Loading the bundles for lager " + lager.Value.Id + " failed");
+			}
+
 			await LagerManager.Log.Info("Server", "Is running");
 
 			// Let the server run for a while
 			//TODO Make this better
-			Console.Read();
+			//Console.Read();
+			await Task.Delay(new TimeSpan(1, 0, 0));
 		}
 	}
 }

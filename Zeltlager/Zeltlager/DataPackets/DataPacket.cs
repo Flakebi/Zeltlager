@@ -26,7 +26,6 @@ namespace Zeltlager.DataPackets
 		/// <summary>
 		/// Read a packet. This function can throw an IOException, e.g. if the packet type is invalid.
 		/// </summary>
-		/// <param name="input">The input reader</param>
 		/// <returns>The read packet.</returns>
 		public static DataPacket ReadPacket(PacketId id, byte[] data)
 		{
@@ -70,7 +69,7 @@ namespace Zeltlager.DataPackets
 		public byte[] Signature { get; set; }
 		public byte[] Iv { get; set; }
 
-		public PacketId Id { get; private set; }
+		public PacketId Id { get; set; }
 		/// <summary>
 		/// The timestamp in UTC.
 		/// </summary>
@@ -120,7 +119,6 @@ namespace Zeltlager.DataPackets
 		/// Applies the content of this packet to a lager.
 		/// The packet has to deserialise itself from Data.
 		/// </summary>
-		/// <param name="lager">The lager to which this packet should be applied.</param>
 		public abstract Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context);
 	}

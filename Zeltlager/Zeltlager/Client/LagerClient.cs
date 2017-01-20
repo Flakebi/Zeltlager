@@ -48,8 +48,8 @@ namespace Zeltlager.Client
 
 		public LagerClientManager ClientManager { get; private set; }
 
-		List<Member> members = new List<Member>();
-		List<Tent> tents = new List<Tent>();
+		List<Member> members;
+		List<Tent> tents;
 
 		/// <summary>
 		/// The collaborator that we are.
@@ -65,6 +65,17 @@ namespace Zeltlager.Client
 			base(manager, ioProvider, id)
 		{
 			ClientManager = manager;
+			Reset();
+		}
+
+		/// <summary>
+		/// Resets all loaded data of this lager instance.
+		/// This should be used before reloading the history.
+		/// </summary>
+		public void Reset()
+		{
+			members = new List<Member>();
+			tents = new List<Tent>();
 			
 			CompetitionHandler = new Competition.CompetitionHandler(this);
 			Erwischt = new Erwischt.Erwischt(this);
@@ -136,37 +147,6 @@ namespace Zeltlager.Client
 			collaborators.Add(OwnCollaborator.Key, OwnCollaborator);
 		}
 
-		/// <summary>
-		/// Load all bundles of this lager.
-		/// </summary>
-		/// <returns>
-		/// The status of the lager loading.
-		/// true if the lager was loaded successfully, false otherwise.
-		/// </returns>
-		public async Task<bool> LoadBundles()
-		{
-			// Read all packets
-			bool success = true;
-			foreach (var bundleCount in Status.BundleCount)
-			{
-				Collaborator collaborator = Collaborators[bundleCount.Item1];
-				try
-				{
-					for (int i = 0; i < bundleCount.Item2; i++)
-					{
-						var bundle = await LoadBundle(collaborator, i);
-						collaborator.AddBundle(bundle);
-					}
-				}
-				catch (Exception e)
-				{
-					await LagerManager.Log.Exception("Bundle loading", e);
-					success = false;
-				}
-			}
-			return success;
-		}
-
 		public override async Task Save()
 		{
 			await base.Save();
@@ -189,87 +169,105 @@ namespace Zeltlager.Client
 		{
 			// Open a connection
 			statusUpdate?.Invoke(NetworkStatus.Connecting);
-			INetworkConnection connection = await Manager.NetworkClient.OpenConnection(
-				ClientManager.Settings.ServerAddress, LagerManager.PORT);
-
-			// Request the lager status
-			statusUpdate?.Invoke(NetworkStatus.LagerStatusRequest);
-			await connection.WritePacket(await Requests.LagerStatus.Create(this));
-			var lagerStatusResponse = await connection.ReadPacket() as Responses.LagerStatus;
-			if (lagerStatusResponse == null)
-				throw new LagerException("Got no lager status as response");
-			await lagerStatusResponse.ReadRemoteStatus(this);
-			await Save();
-
-			// Check for new collaborators
-			statusUpdate?.Invoke(NetworkStatus.CollaboratorDataRequest);
-			// First, send all requests then wait for the answers
-			var missingCollaborators = Remote.Status.BundleCount.Select(c => c.Item1).Except(Status.BundleCount.Select(c => c.Item1)).ToArray();
-			await connection.WritePackets(await Task.WhenAll(missingCollaborators.Select(async key =>
-				await Requests.CollaboratorData.Create(this, key))));
-			// Wait for the answers
-			foreach (var key in missingCollaborators)
+			INetworkConnection connection = null;
+			try
 			{
-				var collaboratorDataResponse = await connection.ReadPacket() as Responses.CollaboratorData;
-				if (collaboratorDataResponse == null)
-					throw new LagerException("Got no collaborator data as response");
-				var collaborator = await collaboratorDataResponse.GetCollaborator(this);
-				if (collaborator.Key != key)
-					throw new LagerException("Got the wrong collaborator data as response");
+				connection = await Manager.NetworkClient.OpenConnection(
+					ClientManager.Settings.ServerAddress, LagerManager.PORT);
 
-				// Add the collaborator
-				await AddCollaborator(collaborator);
-			}
+				// Request the lager status
+				statusUpdate?.Invoke(NetworkStatus.LagerStatusRequest);
+				await connection.WritePacket(await Requests.LagerStatus.Create(this));
+				var lagerStatusResponse = await connection.ReadPacket() as Responses.LagerStatus;
+				if (lagerStatusResponse == null)
+					throw new LagerException("Got no lager status as response");
+				await lagerStatusResponse.ReadRemoteStatus(this);
+				await Save();
 
-			// Download new bundles
-			statusUpdate?.Invoke(NetworkStatus.BundlesRequest);
-			int requestedBundles = 0;
-			var packets = new List<CommunicationPackets.CommunicationPacket>();
-			// Request 100 packets at once
-			var currentPacketRequest = new List<Tuple<Collaborator, int>>();
-			for (int i = 0; i < Status.BundleCount.Count; i++)
-			{
-				var collaborator = Collaborators[Status.BundleCount[i].Item1];
-				for (int bundleId = Status.GetBundleCount(collaborator);
-				     bundleId < Remote.Status.GetBundleCount(collaborator);
-				     bundleId++)
+				// Check for new collaborators
+				statusUpdate?.Invoke(NetworkStatus.CollaboratorDataRequest);
+				// First, send all requests then wait for the answers
+				var missingCollaborators = Remote.Status.BundleCount.Select(c => c.Item1).Except(Status.BundleCount.Select(c => c.Item1)).ToArray();
+				await connection.WritePackets(await Task.WhenAll(missingCollaborators.Select(async key =>
+					await Requests.CollaboratorData.Create(this, key))));
+				// Wait for the answers
+				foreach (var key in missingCollaborators)
 				{
-					requestedBundles++;
-					currentPacketRequest.Add(new Tuple<Collaborator, int>(collaborator, bundleId));
-					if (currentPacketRequest.Count == 100)
+					var collaboratorDataResponse = await connection.ReadPacket() as Responses.CollaboratorData;
+					if (collaboratorDataResponse == null)
+						throw new LagerException("Got no collaborator data as response");
+					var collaborator = await collaboratorDataResponse.GetCollaborator(this);
+					if (collaborator.Key != key)
+						throw new LagerException("Got the wrong collaborator data as response");
+
+					// Add the collaborator
+					await AddCollaborator(collaborator);
+				}
+
+				// Download new bundles
+				statusUpdate?.Invoke(NetworkStatus.BundlesRequest);
+				int requestedBundles = 0;
+				var packets = new List<CommunicationPackets.CommunicationPacket>();
+				// Request 100 packets at once
+				var currentPacketRequest = new List<Tuple<Collaborator, int>>();
+				for (int i = 0; i < Status.BundleCount.Count; i++)
+				{
+					var collaborator = Collaborators[Status.BundleCount[i].Item1];
+					for (int bundleId = Status.GetBundleCount(collaborator);
+						 bundleId < Remote.Status.GetBundleCount(collaborator);
+						 bundleId++)
 					{
-						packets.Add(await Requests.Bundles.Create(this, currentPacketRequest));
-						currentPacketRequest.Clear();
+						requestedBundles++;
+						currentPacketRequest.Add(new Tuple<Collaborator, int>(collaborator, bundleId));
+						if (currentPacketRequest.Count == 100)
+						{
+							packets.Add(await Requests.Bundles.Create(this, currentPacketRequest));
+							currentPacketRequest.Clear();
+						}
 					}
 				}
-			}
-			if (currentPacketRequest.Any())
-				packets.Add(await Requests.Bundles.Create(this, currentPacketRequest));
-			await connection.WritePackets(packets);
-			// Wait for the bundles
-			statusUpdate?.Invoke(NetworkStatus.DownloadBundles);
-			for (int i = 0; i < requestedBundles; i++)
-			{
-				var bundleResponse = await connection.ReadPacket() as Responses.Bundle;
-				if (bundleResponse == null)
-					throw new LagerException("Got no bundle as response");
-				await bundleResponse.ReadBundle(this);
-			}
+				if (currentPacketRequest.Any())
+					packets.Add(await Requests.Bundles.Create(this, currentPacketRequest));
+				await connection.WritePackets(packets);
+				// Wait for the bundles
+				statusUpdate?.Invoke(NetworkStatus.DownloadBundles);
+				for (int i = 0; i < requestedBundles; i++)
+				{
+					var bundleResponse = await connection.ReadPacket() as Responses.Bundle;
+					if (bundleResponse == null)
+						throw new LagerException("Got no bundle as response");
+					await bundleResponse.ReadBundle(this);
+				}
 
-			// Upload new bundles
-			statusUpdate?.Invoke(NetworkStatus.UploadBundles);
-			packets.Clear();
-			for (int bundleId = Remote.Status.GetBundleCount(OwnCollaborator);
-			     bundleId < Status.GetBundleCount(OwnCollaborator);
-			     bundleId++)
-			{
-				//packets
-			}
-			await connection.WritePackets(packets);
-			//TODO Check the response
+				// Upload new bundles
+				statusUpdate?.Invoke(NetworkStatus.UploadBundles);
+				packets.Clear();
+				for (int bundleId = Remote.Status.GetBundleCount(OwnCollaborator);
+					 bundleId < Status.GetBundleCount(OwnCollaborator);
+					 bundleId++)
+				{
+					packets.Add(await Requests.UploadBundle.Create(this, OwnCollaborator.Bundles[bundleId]));
+				}
+				await connection.WritePackets(packets);
+				// Check the response
+				for (int i = 0; i < packets.Count; i++)
+				{
+					var uploadResponse = await connection.ReadPacket() as Responses.Status;
+					if (uploadResponse == null)
+						throw new LagerException("Got no status as response");
+					if (!uploadResponse.GetSuccess())
+						throw new LagerException("Uploading a bundle failed");
+				}
 
-			// Reload the history
-			//TODO
+				// Reload the history
+				Reset();
+				await ApplyHistory();
+			}
+			finally
+			{
+				if (connection != null)
+					await connection.Close();
+			}
 		}
 
 		/// <summary>

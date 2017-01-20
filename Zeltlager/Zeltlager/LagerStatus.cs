@@ -27,7 +27,7 @@ namespace Zeltlager
 		/// <param name="c">The collaborator whos id will be returned.</param>
 		public int GetCollaboratorId(Collaborator c)
 		{
-			return BundleCount.FindIndex(t => t.Item1 == c.Key);
+			return BundleCount.FindIndex(t => t != null && t.Item1 == c.Key);
 		}
 
 		/// <summary>
@@ -41,15 +41,16 @@ namespace Zeltlager
 		}
 
 		// Serialisation with a LagerSerialisationContext
-		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			output.Write(BundleCount.Count);
 			foreach (var c in BundleCount)
 			{
 				// Write the collaborator order from the point of view of this object
 				output.WritePublicKey(c.Item1);
-				await serialiser.Write(output, context, c.Item2);
+				output.Write(c.Item2);
 			}
+			return Task.WhenAll();
 		}
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
@@ -57,16 +58,17 @@ namespace Zeltlager
 			throw new InvalidOperationException("You can't write the id of a lager status");
 		}
 
-		public async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			int count = input.ReadByte();
+			int count = input.ReadInt32();
 			BundleCount = new List<Tuple<KeyPair, int>>(count);
 			for (int i = 0; i < count; i++)
 			{
 				KeyPair key = input.ReadPublicKey();
-				int packets = await serialiser.Read(input, context, 0);
+				int packets = input.ReadInt32();
 				BundleCount.Add(new Tuple<KeyPair, int>(key, packets));
 			}
+			return Task.WhenAll();
 		}
 	}
 }

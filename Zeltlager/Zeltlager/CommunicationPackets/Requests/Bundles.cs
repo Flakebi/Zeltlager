@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Zeltlager.CommunicationPackets.Requests
@@ -27,6 +28,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 			{
+				output.Write(requestedBundles.Count());
 				foreach (var b in requestedBundles)
 				{
 					// Write collaborator and bundle id
@@ -44,11 +46,11 @@ namespace Zeltlager.CommunicationPackets.Requests
 			{
 				CommunicationLagerData data = await GetData(manager);
 				// Send the requested bundles
-				int bundleCount = data.Unencrypted.Length / (4 * 2); // Collaborator and bundle id
 				var packets = new List<CommunicationPacket>();
 				MemoryStream mem = new MemoryStream(data.Unencrypted);
 				using (BinaryReader input = new BinaryReader(mem))
 				{
+					int bundleCount = input.ReadInt32();
 					for (int i = 0; i < bundleCount; i++)
 					{
 						int collaboratorId = input.ReadInt32();

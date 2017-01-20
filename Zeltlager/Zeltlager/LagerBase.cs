@@ -133,6 +133,36 @@ namespace Zeltlager
 			return Path.Combine(collaboratorId.ToString(), id.Bundle.Id.ToString());
 		}
 
+		/// <summary>
+		/// Load all bundles of this lager.
+		/// </summary>
+		/// <returns>
+		/// The status of the lager loading.
+		/// true if the lager was loaded successfully, false otherwise.
+		/// </returns>
+		public async Task<bool> LoadBundles()
+		{
+			// Read all packets
+			bool success = true;
+			foreach (var bundleCount in Status.BundleCount)
+			{
+				Collaborator collaborator = Collaborators[bundleCount.Item1];
+				try
+				{
+					for (int i = 0; i < bundleCount.Item2; i++)
+					{
+						var bundle = await LoadBundle(collaborator, i);
+						collaborator.AddBundle(bundle);
+					}
+				} catch (Exception e)
+				{
+					await LagerManager.Log.Exception("Bundle loading", e);
+					success = false;
+				}
+			}
+			return success;
+		}
+
 		public async Task<DataPacketBundle> LoadBundle(Collaborator creator, int bundleId)
 		{
 			DataPacketBundle bundle = new DataPacketBundle();

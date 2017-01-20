@@ -53,6 +53,9 @@ namespace Zeltlager.CommunicationPackets.Requests
 						if (!lager.Collaborators.ContainsKey(collaborator.Key))
 							// Add the collaborator
 							await lager.AddCollaborator(collaborator);
+						else
+							collaborator = lager.Collaborators[collaborator.Key];
+						await connection.WritePacket(new Responses.Register(lager.Status.GetCollaboratorId(collaborator)));
 						success = true;
 					}
 					catch (Exception e)
@@ -63,7 +66,8 @@ namespace Zeltlager.CommunicationPackets.Requests
 			}
 
 			// Create a response
-			await connection.WritePacket(new Responses.Status(success));
+			if (!success)
+				await connection.WritePacket(new Responses.Status(success));
 		}
 	}
 }
