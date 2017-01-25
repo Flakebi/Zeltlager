@@ -37,7 +37,7 @@ namespace Zeltlager
 			{DayOfWeek.Thursday, "\ud83c\udf33"},
 			{DayOfWeek.Friday, "\ud83c\udfc5"},
 			{DayOfWeek.Saturday, "\ud83c\udf0d"},
-			{DayOfWeek.Sunday, "☀️"},
+			{DayOfWeek.Sunday, "☀️"}
 		};
 	}
 
@@ -162,6 +162,14 @@ namespace Zeltlager
 			foreach (var b in bytes)
 				sb.Append(b.ToString("X2"));
 			return sb.ToString();
+		}
+
+		public static byte[] FromHexString(this string s)
+		{
+			byte[] result = new byte[s.Length / 2];
+			for (int i = 0; i < result.Length; i++)
+				result[i] = Convert.ToByte(s.Substring(i * 2, 2), 16);
+			return result;
 		}
 
 		public static async Task<byte[]> ReadAsyncSafe(this Stream stream, int count)

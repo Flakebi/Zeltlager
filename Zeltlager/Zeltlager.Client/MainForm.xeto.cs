@@ -97,6 +97,12 @@ namespace Zeltlager.Client
 
 			lagerDropDown.ItemTextBinding = new WrapTextBinding<Tuple<int, LagerClient>>(t => t.Item2.Data.Name);
 			lagerDropDown.ItemKeyBinding = new WrapTextBinding<Tuple<int, LagerClient>>(t => t.Item1.ToString());
+			collaboratorDropDown.ItemTextBinding = new WrapTextBinding<Collaborator>(c =>
+			{
+				string mod = c.Key.Modulus.ToHexString();
+				return mod.Substring(mod.Length - 5);
+			});
+			collaboratorDropDown.ItemKeyBinding = new WrapTextBinding<Collaborator>(c => c.Key.Modulus.ToHexString());
 
 			ShowContent(null);
 		}
@@ -134,19 +140,6 @@ namespace Zeltlager.Client
 				return;
 			}
 			lager = (LagerClient)manager.Lagers[lagerId];
-			bool success = true;
-			if (!await lager.LoadBundles())
-			{
-				Status = "Error while loading the lager files";
-				success = false;
-			}
-			if (!await lager.ApplyHistory())
-			{
-				Status = "Error while loading the lager";
-				success = false;
-			}
-			if (success)
-				Status = "Lager loaded";
 			// Pick the current lager in the drop down menu
 			lagerDropDown.SelectedKey = lagerId.ToString();
 		}
@@ -221,11 +214,39 @@ namespace Zeltlager.Client
 			await lager.CreateTestData();
 		}
 
-		void SelectedLagerChanged(object sender, EventArgs args)
+		async void Synchronise(object sender, EventArgs args)
+		{
+			try
+			{
+				await lager.Synchronise(status => Status = "Synchronise lager: " + status);
+			}
+			catch (Exception e)
+			{
+				await LagerManager.Log.Exception("Synchronise lager", e);
+				Status = "Error: " + e;
+			}
+		}
+
+		async void SelectedLagerChanged(object sender, EventArgs args)
 		{
 			// Get the currently selected lager
-			//TODO Load the newly selected lager
-			//lagerDropDown.SelectedKey;
+			lager = (LagerClient)manager.Lagers[int.Parse(lagerDropDown.SelectedKey)];
+			// Load the newly selected lager
+			bool success = true;
+			if (!await lager.LoadBundles())
+			{
+				Status = "Error while loading the lager files";
+				success = false;
+			}
+			if (!await lager.ApplyHistory())
+			{
+				Status = "Error while loading the lager";
+				success = false;
+			}
+			if (success)
+				Status = "Lager loaded";
+
+			collaboratorDropDown.DataStore = lager.Collaborators.Values;
 		}
 
 		async void AddMember(object sender, EventArgs args)

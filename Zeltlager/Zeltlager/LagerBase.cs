@@ -197,6 +197,8 @@ namespace Zeltlager
 		{
 			collaborator.AddBundle(bundle);
 			await SaveBundle(new PacketId(collaborator, bundle));
+			int index = Status.BundleCount.FindIndex(c => c.Item1 == collaborator.Key);
+			Status.BundleCount[index] = new Tuple<KeyPair, int>(collaborator.Key, collaborator.Bundles.Count);
 		}
 
 		public async Task AddCollaborator(Collaborator collaborator)
