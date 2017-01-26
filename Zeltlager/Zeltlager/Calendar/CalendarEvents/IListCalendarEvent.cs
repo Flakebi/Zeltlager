@@ -14,5 +14,7 @@ namespace Zeltlager.Calendar
 		string TimeString { get; }
 		string Title { get; }
 		string Detail { get; }
+
+		bool IsShown { get; }
 	}
 }

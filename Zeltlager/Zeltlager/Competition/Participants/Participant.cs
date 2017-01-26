@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using System;
 
 namespace Zeltlager.Competition
 {
@@ -10,9 +11,8 @@ namespace Zeltlager.Competition
 	/// <summary>
 	/// represents a participant in a comptetion, could be a tent, a mixed group or a single person
 	/// </summary>
-	public abstract class Participant : Editable<Participant>, ISearchable
+	public abstract class Participant : Editable<Participant>, ISearchable, IEquatable<Participant>
 	{
-		// TODO Participants serialisieren
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
 
@@ -69,6 +69,8 @@ namespace Zeltlager.Competition
 		public string SearchableDetail => "";
 
 		public override abstract Participant Clone();
+
+		public abstract bool Equals(Participant other);
 
 		#endregion
 	}

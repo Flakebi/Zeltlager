@@ -13,6 +13,7 @@ namespace Zeltlager.Competition
 		Participant oldParticipant;
 		Grid grid;
 
+		const string AUTOMATIC = "automatisch Hinzufügen";
 		const string TENT = "ganzes Zelt";
 		const string MEMBER = "einzelner Teilnehmer";
 		const string GROUP = "gemischte Gruppe";
@@ -32,6 +33,7 @@ namespace Zeltlager.Competition
 
 			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
 			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
 			Label label = new Label
 			{
 				Text = "Typ: ",
@@ -42,6 +44,7 @@ namespace Zeltlager.Competition
 			typePicker.Items.Add(TENT);
 			typePicker.Items.Add(MEMBER);
 			typePicker.Items.Add(GROUP);
+			typePicker.Items.Add(AUTOMATIC);
 			typePicker.SelectedIndexChanged += (sender, args) =>
 			{
 				UpdateUI(typePicker.Items[typePicker.SelectedIndex]);
@@ -63,8 +66,25 @@ namespace Zeltlager.Competition
 				TextColor = (Color)Application.Current.Resources["textColorSecondary"],
 			};
 			View manip = new Button();
-			switch(selection)
+			switch (selection)
 			{
+				case AUTOMATIC:
+					Button allTents = new Button
+					{
+						Text = "Alle Zelte hinzufügen",
+						Style = (Style)Application.Current.Resources["DarkButtonStyle"],
+					};
+					allTents.Clicked += AddAllTents;
+					Button allMembers = new Button
+					{
+						Text = "Alle Teilnehmer hinzufügen",
+						Style = (Style)Application.Current.Resources["DarkButtonStyle"],
+					};
+					allMembers.Clicked += AddAllMembers;
+					grid.Children.Add(allTents, 0, 2, 1, 2);
+					grid.Children.Add(allMembers, 0, 2, 2, 3);
+					// we don't want the rest of the gui to be added
+					return;
 				case TENT:
 					label.Text = "Zelt wählen: ";
 					Picker picker = new Picker();
@@ -116,9 +136,39 @@ namespace Zeltlager.Competition
 
 		async void OnSaveClicked()
 		{
+			// check if this participant already exists
+			if (participant.GetCompetition().Participants.Contains(participant))
+			{
+				await DisplayAlert("Achtung!", "Es gibt diesen Teilnehmer bereits.", "Ok :D");
+				return;
+			}
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(participant.GetLagerClient().Manager, participant.GetLagerClient());
 			context.PacketId = new PacketId(participant.GetLagerClient().OwnCollaborator);
 			await participant.OnSaveEditing(participant.GetLagerClient().ClientSerialiser, context, oldParticipant);
+			await Navigation.PopModalAsync(true);
+		}
+
+		async void AddAllTents(object sender, EventArgs e)
+		{
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(participant.GetLagerClient().Manager, participant.GetLagerClient());
+			context.PacketId = new PacketId(participant.GetLagerClient().OwnCollaborator);
+			foreach (Tent t in participant.GetLagerClient().Tents)
+			{
+				TentParticipant par = new TentParticipant(null, t, participant.GetCompetition());
+				await par.OnSaveEditing(participant.GetLagerClient().ClientSerialiser, context, null);
+			}
+			await Navigation.PopModalAsync(true);
+		}
+
+		async void AddAllMembers(object sender, EventArgs e)
+		{
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(participant.GetLagerClient().Manager, participant.GetLagerClient());
+			context.PacketId = new PacketId(participant.GetLagerClient().OwnCollaborator);
+			foreach (Member m in participant.GetLagerClient().Members)
+			{
+				MemberParticipant par = new MemberParticipant(null, m, participant.GetCompetition());
+				await par.OnSaveEditing(participant.GetLagerClient().ClientSerialiser, context, null);
+			}
 			await Navigation.PopModalAsync(true);
 		}
 	}

@@ -22,15 +22,11 @@ namespace Zeltlager.Calendar
 		void UpdateUI()
 		{
 			var days = lager.Calendar.Days;
+			Children.Clear();
 			foreach (Day day in days)
 			{
 				DayPage dp = new DayPage(day, lager);
 				Children.Add(dp);
-			}
-			foreach (ContentPage cp in Children)
-			{
-				((DayPage)cp).UpdateUI();
-				((DayPage)cp).removeNavButtons();
 			}
 			lager.Calendar.IncludeStandardEvents();
 		}

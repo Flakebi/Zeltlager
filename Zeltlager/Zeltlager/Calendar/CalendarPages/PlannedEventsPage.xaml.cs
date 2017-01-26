@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Xamarin.Forms;
 using Zeltlager.UAM;
+using System.Linq;
 
 namespace Zeltlager.Calendar
 {
@@ -29,7 +30,7 @@ namespace Zeltlager.Calendar
 
 			ListView calendarEventList = new ListView
 			{
-				ItemsSource = calendar.PlannedEvents,
+				ItemsSource = calendar.PlannedEvents.Where(x => x.IsShown),
 				ItemTemplate = dataTemplate,
 				BindingContext = calendar.PlannedEvents,
 			};

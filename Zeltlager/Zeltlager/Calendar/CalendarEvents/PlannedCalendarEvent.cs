@@ -24,7 +24,7 @@ namespace Zeltlager.Calendar
 		[Serialisation]
 		public string Detail { get; set; }
 
-		public bool IsShown { get; private set; }
+		public bool IsShown { get; private set; } = true;
 
 		public PlannedCalendarEvent() {}
 

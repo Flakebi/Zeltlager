@@ -2,6 +2,7 @@ using System;
 
 using Xamarin.Forms;
 using Zeltlager.UAM;
+using System.Linq;
 
 namespace Zeltlager.Calendar
 {
@@ -24,9 +25,9 @@ namespace Zeltlager.Calendar
 			this.lager = lager;
 			Day = day;
 
-			UpdateUI();
+			//UpdateUI();
 			Padding = new Thickness(10);
-			NavigationPage.SetBackButtonTitle(this, "");
+			//NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnEditClicked(IListCalendarEvent ilce)
@@ -111,16 +112,16 @@ namespace Zeltlager.Calendar
 			}
 		}
 
-		public void removeNavButtons()
+		public void RemoveNavButtons()
 		{
 			// Make nav buttons invisible at ends of calendar
 			CarouselPage p = (CarouselPage)Parent;
-			if (p.Children.IndexOf(this) == 0)
+			if (p.Children.First() == this)
 			{
 				//leftArrow.IsVisible = false;
 				leftArrow.Opacity = 0;
 			}
-			else if (p.Children.IndexOf(this) == p.Children.Count - 1)
+			else if (p.Children.Last() == this)
 			{
 				//rightArrow.IsVisible = false;
 				rightArrow.Opacity = 0;
@@ -224,7 +225,7 @@ namespace Zeltlager.Calendar
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 
 			calendarList.ItemTemplate = dataTemplate;
-			calendarList.ItemsSource = Day.Events;
+			calendarList.ItemsSource = Day.Events.Where(x => x.IsShown);
 			calendarList.Header = headerWithDishwashers;
 			calendarList.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			// disable selection
@@ -235,6 +236,22 @@ namespace Zeltlager.Calendar
 
 			header.HorizontalOptions = LayoutOptions.FillAndExpand;
 			Content = calendarList;
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			UpdateUI();
+			RemoveNavButtons();
+		}
+
+		protected override void OnParentSet()
+		{
+			base.OnParentSet();
+			if (Parent != null)
+			{
+				OnAppearing();
+			}
 		}
 	}
 }

@@ -29,5 +29,14 @@ namespace Zeltlager.Competition
 		{
 			return new GroupParticipant(Id, name, competition);
 		}
+
+		public override bool Equals(Participant other)
+		{
+			if (other is GroupParticipant)
+			{
+				return name.Equals(((GroupParticipant)other).name);
+			}
+			return false;
+		}
 	}
 }
