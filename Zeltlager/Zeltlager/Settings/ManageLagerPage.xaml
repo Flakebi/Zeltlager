@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="Zeltlager.Settings.ManageLagerPage"
+			 Style="{StaticResource BaseStyle}">
+	<ContentPage.Content>
+		<StackLayout VerticalOptions="FillAndExpand"
+					 HorizontalOptions="FillAndExpand"
+					 Orientation="Vertical"
+					 Spacing="15"
+					 Padding="10,10,10,0">
+			<Button Text="Lager erstellen" Clicked="OnCreateLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
+			<Button Text="Lager herunterladen" Clicked="OnDownloadLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
+			<Button Text="Lager wechseln" Clicked="OnChangeLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
+			<Button Text="Lager hochladen" Clicked="OnUploadLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>

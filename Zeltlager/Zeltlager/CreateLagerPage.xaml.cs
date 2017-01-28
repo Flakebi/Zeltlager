@@ -3,21 +3,19 @@ using Xamarin.Forms;
 
 namespace Zeltlager
 {
-	public partial class CreateLager : ContentPage
+	public partial class CreateLagerPage : ContentPage
 	{
-		App app;
-
 		public string Name { get; set; }
 		public string Password { get; set; }
 
-		public CreateLager(App app)
+		public CreateLagerPage()
 		{
-			this.app = app;
 			Name = "";
 			Password = "";
 
 			InitializeComponent();
 			BindingContext = this;
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		async void OnCreateClicked(object sender, EventArgs e)
@@ -34,7 +32,7 @@ namespace Zeltlager
 				return;
 			}
 
-			await app.CreateLager(Name, Password);
+			await ((App)Application.Current).CreateLager(Name, Password);
 		}
 	}
 }

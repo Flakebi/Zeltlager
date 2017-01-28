@@ -90,7 +90,7 @@ namespace Zeltlager
 				// Create lager
 				loadingScreen.Status = "Lager erstellen";
 				//TODO Go to the settings screen here so the user can set the server and download a lager
-				MainPage = new NavigationPage(new CreateLager(this));
+				MainPage = new NavigationPage(new CreateLagerPage());
 			}
 		}
 

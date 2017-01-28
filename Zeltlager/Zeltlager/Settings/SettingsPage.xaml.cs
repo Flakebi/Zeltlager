@@ -8,8 +8,11 @@ namespace Zeltlager.Settings
 {
 	public partial class SettingsPage : ContentPage
 	{
-		public SettingsPage()
+		LagerClient lager;
+
+		public SettingsPage(LagerClient lager)
 		{
+			this.lager = lager;
 			InitializeComponent();
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
@@ -17,6 +20,11 @@ namespace Zeltlager.Settings
 		void OnLogClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new LogPage());
+		}
+
+		void OnManageLagerClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new ManageLagerPage(lager));
 		}
 	}
 }

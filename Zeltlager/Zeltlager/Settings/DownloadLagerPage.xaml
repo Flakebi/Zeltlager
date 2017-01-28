@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="Zeltlager.Settings.DownloadLagerPage"
+			 Style="{StaticResource BaseStyle}">
+	<ContentPage.Content>
+		<StackLayout VerticalOptions="FillAndExpand"
+					 HorizontalOptions="FillAndExpand"
+					 Orientation="Vertical"
+					 Spacing="15"
+					 Padding="10,10,10,0"
+					 x:Name="vsl">
+			<StackLayout HorizontalOptions="FillAndExpand"
+					 Orientation="Horizontal"
+					 Spacing="15">
+				<Label Text="Passwort:"/>
+				<Entry x:Name="PasswordEntry"/>
+			</StackLayout>
+			<Button Text="Lager anfragen" Clicked="OnRequestClicked" Style="{StaticResource DarkButtonStyle}"/>
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>

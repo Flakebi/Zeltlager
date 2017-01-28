@@ -41,7 +41,7 @@ namespace Zeltlager
 
 		void OnSettingsClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new Settings.SettingsPage());
+			Navigation.PushAsync(new Settings.SettingsPage(lager));
 		}
 	}
 }

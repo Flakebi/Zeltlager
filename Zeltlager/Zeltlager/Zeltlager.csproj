@@ -55,8 +55,8 @@
     <Compile Include="DataPackets\PacketId.cs" />
     <Compile Include="Erwischt\Erwischt.cs" />
     <Compile Include="IIoProvider.cs" />
-    <Compile Include="CreateLager.xaml.cs">
-      <DependentUpon>CreateLager.xaml</DependentUpon>
+    <Compile Include="CreateLagerPage.xaml.cs">
+      <DependentUpon>CreateLagerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="LagerBase.cs" />
     <Compile Include="LagerManager.cs" />
@@ -173,6 +173,15 @@
     <Compile Include="Calendar\CalendarEvents\ExRefCalendarEvent.cs" />
     <Compile Include="Calendar\CalendarPages\GeneralCalendarEventCell.cs" />
     <Compile Include="Calendar\CalendarEvents\ExPlCalendarEvent.cs" />
+    <Compile Include="Settings\ManageLagerPage.xaml.cs">
+      <DependentUpon>ManageLagerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\DownloadLagerPage.xaml.cs">
+      <DependentUpon>DownloadLagerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\ChangeLagerPage.xaml.cs">
+      <DependentUpon>ChangeLagerPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -186,7 +195,7 @@
     <EmbeddedResource Include="LoadingScreen.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="CreateLager.xaml">
+    <EmbeddedResource Include="CreateLagerPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="General\GeneralPage.xaml">
@@ -231,6 +240,15 @@
     <EmbeddedResource Include="Calendar\CalendarPages\StandardEventsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="Settings\ManageLagerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings\DownloadLagerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings\ChangeLagerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -257,13 +275,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Xamarin.Forms.Core">
-      <HintPath>..\..\packages\Xamarin.Forms.2.3.3.175\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Core.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.2.3.3.180\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Core.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Platform">
-      <HintPath>..\..\packages\Xamarin.Forms.2.3.3.175\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Platform.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.2.3.3.180\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Xaml">
-      <HintPath>..\..\packages\Xamarin.Forms.2.3.3.175\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Xaml.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.2.3.3.180\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />
@@ -275,5 +293,5 @@
     <Folder Include="Calendar\CalendarEvents\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <Import Project="..\..\packages\Xamarin.Forms.2.3.3.175\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.3.175\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
+  <Import Project="..\..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
 </Project>

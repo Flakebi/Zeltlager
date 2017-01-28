@@ -22,7 +22,7 @@ namespace Zeltlager.Client
 	/// the lager status of the server.
 	/// Reading with a LagerClientSerialisationContext will also create the collaborator list.
 	/// </summary>
-	public class LagerClient : LagerBase, ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>
+	public class LagerClient : LagerBase, ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>, ISearchable
 	{
 		public enum InitStatus
 		{
@@ -55,6 +55,10 @@ namespace Zeltlager.Client
 		/// The collaborator that we are.
 		/// </summary>
 		public Collaborator OwnCollaborator { get; private set; }
+
+		// Searchable implementation
+		public string SearchableText => Data.Name;
+		public string SearchableDetail => password;
 
 		/// <summary>
 		/// The password supplied by the user and used to generate the shared keys.
