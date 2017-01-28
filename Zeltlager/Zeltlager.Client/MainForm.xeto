@@ -12,6 +12,7 @@
 				<Button Click="CreateLager">Create lager</Button>
 				<Button Click="ListLagers">List lagers</Button>
 				<Button Click="AddMember">Add member</Button>
+				<Button Click="Upload">Upload</Button>
 				<Button Click="Synchronise">Synchronise</Button>
 				<Button Click="Quit">Beenden</Button>
 			</StackLayout>

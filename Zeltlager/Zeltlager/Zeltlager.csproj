@@ -173,6 +173,8 @@
     <Compile Include="Calendar\CalendarEvents\ExRefCalendarEvent.cs" />
     <Compile Include="Calendar\CalendarPages\GeneralCalendarEventCell.cs" />
     <Compile Include="Calendar\CalendarEvents\ExPlCalendarEvent.cs" />
+    <Compile Include="CommunicationPackets\Requests\AddLager.cs" />
+    <Compile Include="CommunicationPackets\Responses\AddLager.cs" />
     <Compile Include="Settings\ManageLagerPage.xaml.cs">
       <DependentUpon>ManageLagerPage.xaml</DependentUpon>
     </Compile>

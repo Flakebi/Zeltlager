@@ -94,6 +94,28 @@ namespace Zeltlager
 			return lager;
 		}
 
+		/// <summary>
+		/// Add a lager from lager data.
+		/// </summary>
+		/// <returns>The created lager.</returns>
+		/// <param name="data">The data for the new lager.</param>
+		public async Task<LagerBase> AddLager(LagerData data)
+		{
+			// Check if the same lager exists already
+			foreach (LagerBase l in lagers.Values)
+			{
+				if (data.Data.SequenceEqual(l.Data.Data))
+					return l;
+			}
+			int id = lagers.Any() ? lagers.Keys.Max() + 1 : 0;
+			IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
+			LagerBase lager = new LagerBase(this, io, id);
+			lager.Data = data;
+			await lager.Save();
+			lagers.Add(lager.Id, lager);
+			return lager;
+		}
+
 		async Task OnNetworkConnection(INetworkConnection connection)
 		{
 			try

@@ -17,12 +17,14 @@ namespace Zeltlager.CommunicationPackets
 		const int VERSION = 0;
 
 		static readonly Type[] packetTypes = {
+			typeof(Requests.AddLager),
 			typeof(Requests.Bundles),
 			typeof(Requests.CollaboratorData),
 			typeof(Requests.LagerStatus),
 			typeof(Requests.ListLagers),
 			typeof(Requests.Register),
 			typeof(Requests.UploadBundle),
+			typeof(Responses.AddLager),
 			typeof(Responses.Bundle),
 			typeof(Responses.CollaboratorData),
 			typeof(Responses.LagerStatus),

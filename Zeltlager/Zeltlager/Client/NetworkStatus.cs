@@ -10,6 +10,7 @@
 		BundlesRequest,
 		DownloadBundles,
 		UploadBundles,
+		AddLager,
 		Ready
 	}
 }

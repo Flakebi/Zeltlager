@@ -29,8 +29,7 @@ namespace Zeltlager
 
 		protected IIoProvider ioProvider;
 
-		protected LagerData data;
-		public LagerData Data => data;
+		public LagerData Data { get; set; }
 
 		public Serialiser<LagerSerialisationContext> Serialiser { get; private set; }
 
@@ -54,6 +53,7 @@ namespace Zeltlager
 			Serialiser = new Serialiser<LagerSerialisationContext>();
 			ioProvider = io;
 			Id = id;
+			Status = new LagerStatus();
 		}
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace Zeltlager
 
 		Task Verify()
 		{
-			return data.Verify();
+			return Data.Verify();
 		}
 
 		string GetBundlePath(PacketId id)
@@ -220,7 +220,7 @@ namespace Zeltlager
 		public virtual async Task Write(BinaryWriter output,
 			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			output.Write(data);
+			output.Write(Data);
 			// Write server related data only if this lager is connected to a server
 			output.Write(Remote != null);
 			if (Remote != null)
@@ -237,7 +237,7 @@ namespace Zeltlager
 		public virtual async Task Read(BinaryReader input,
 			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
-			data = input.ReadLagerData();
+			Data = input.ReadLagerData();
 			// Read server related data only if this lager is connected to a server
 			if (input.ReadBoolean())
 			{

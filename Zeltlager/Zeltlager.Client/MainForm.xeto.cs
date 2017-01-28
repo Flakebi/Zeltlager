@@ -249,11 +249,29 @@ namespace Zeltlager.Client
 			collaboratorDropDown.DataStore = lager.Collaborators.Values;
 		}
 
+		async void Upload(object sender, EventArgs args)
+		{
+			if (lager == null)
+			{
+				Status = "No lager loaded";
+				return;
+			}
+			try
+			{
+				await lager.Upload(status => Status = "Upload lager: " + status);
+			}
+			catch (Exception e)
+			{
+				await LagerManager.Log.Exception("Upload lager", e);
+				Status = "Error: " + e;
+			}
+		}
+
 		async void AddMember(object sender, EventArgs args)
 		{
-			if (!manager.Lagers.ContainsKey(0))
+			if (lager == null)
 			{
-				Status = "No lager 0 loaded";
+				Status = "No lager loaded";
 				return;
 			}
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(manager, lager);

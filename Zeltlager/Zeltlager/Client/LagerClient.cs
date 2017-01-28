@@ -91,16 +91,16 @@ namespace Zeltlager.Client
 		/// </summary>
 		public async Task InitLocal(string name, string password, Action<InitStatus> statusUpdate)
 		{
-			data = new LagerData();
-			data.Name = name;
+			Data = new LagerData();
+			Data.Name = name;
 			this.password = password;
 
 			// Create the keys for this instance
 			statusUpdate?.Invoke(InitStatus.CreateSymmetricKey);
-			data.Salt = await LagerManager.CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
-			data.SymmetricKey = await LagerManager.CryptoProvider.DeriveSymmetricKey(password, data.Salt);
+			Data.Salt = await LagerManager.CryptoProvider.GetRandom(CryptoConstants.SALT_LENGTH);
+			Data.SymmetricKey = await LagerManager.CryptoProvider.DeriveSymmetricKey(password, Data.Salt);
 			statusUpdate?.Invoke(InitStatus.CreateGameAsymmetricKey);
-			data.AsymmetricKey = await LagerManager.CryptoProvider.CreateAsymmetricKey();
+			Data.AsymmetricKey = await LagerManager.CryptoProvider.CreateAsymmetricKey();
 
 			await Init(statusUpdate);
 		}
@@ -108,7 +108,7 @@ namespace Zeltlager.Client
 		public async Task InitFromServer(int serverId, LagerData data, string password, Action<InitStatus> statusUpdate)
 		{
 			Remote = new LagerRemote(serverId);
-			this.data = data;
+			Data = data;
 			this.password = password;
 
 			await Init(statusUpdate);
@@ -266,12 +266,56 @@ namespace Zeltlager.Client
 				// Reload the history
 				Reset();
 				await ApplyHistory();
+				statusUpdate?.Invoke(NetworkStatus.Ready);
 			}
 			finally
 			{
 				if (connection != null)
 					await connection.Close();
 			}
+		}
+
+		/// <summary>
+		/// Upload this lager to the server that is set in the LagerManager.
+		/// </summary>
+		public async Task Upload(Action<NetworkStatus> statusUpdate)
+		{
+			// Open a connection
+			statusUpdate?.Invoke(NetworkStatus.Connecting);
+			INetworkConnection connection = null;
+			try
+			{
+				connection = await Manager.NetworkClient.OpenConnection(
+					ClientManager.Settings.ServerAddress, LagerManager.PORT);
+
+				// Create the lager
+				statusUpdate?.Invoke(NetworkStatus.AddLager);
+				await connection.WritePacket(new Requests.AddLager(this));
+				var addLagerResponse = await connection.ReadPacket() as Responses.AddLager;
+				if (addLagerResponse == null)
+					throw new LagerException("Got no lager id as response");
+				Remote = new LagerRemote(addLagerResponse.GetRemoteId());
+
+				// Register our own collaborator
+				statusUpdate?.Invoke(NetworkStatus.RegisterCollaborator);
+				await connection.WritePacket(await Requests.Register.Create(this));
+				var packet = await connection.ReadPacket() as Responses.Register;
+				await connection.Close();
+				if (packet == null)
+					throw new LagerException("Got no register packet as response");
+				int collaboratorId = packet.GetCollaboratorId();
+				// Temporarily add our own collaborator to the remote status with the id we obtained from the server
+				for (int i = 0; i < collaboratorId; i++)
+					Remote.Status.BundleCount.Add(null);
+				Remote.Status.BundleCount.Add(new Tuple<KeyPair, int>(OwnCollaborator.Key, 0));
+			}
+			finally
+			{
+				if (connection != null)
+					await connection.Close();
+			}
+			await Save();
+			await Synchronise(statusUpdate);
 		}
 
 		/// <summary>
@@ -437,7 +481,7 @@ namespace Zeltlager.Client
 			Serialiser<LagerSerialisationContext> serialiser,
 			LagerSerialisationContext context)
 		{
-			await data.Serialise();
+			await Data.Serialise();
 			await base.Write(output, serialiser, context);
 		}
 
@@ -446,7 +490,7 @@ namespace Zeltlager.Client
 			LagerSerialisationContext context)
 		{
 			await base.Read(input, serialiser, context);
-			await data.Decrypt(password);
+			await Data.Decrypt(password);
 		}
 
 		// Serialisation with a LagerClientSerialisationContext
