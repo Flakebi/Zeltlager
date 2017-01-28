@@ -225,7 +225,7 @@ namespace Zeltlager.Calendar
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 
 			calendarList.ItemTemplate = dataTemplate;
-			calendarList.ItemsSource = Day.Events.Where(x => x.IsShown);
+			//calendarList.ItemsSource = Day.Events.Take(1);//.Where(x => x.IsShown);
 			calendarList.Header = headerWithDishwashers;
 			calendarList.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			// disable selection
@@ -242,7 +242,7 @@ namespace Zeltlager.Calendar
 		{
 			base.OnAppearing();
 			UpdateUI();
-			RemoveNavButtons();
+			//RemoveNavButtons();
 		}
 
 		protected override void OnParentSet()
