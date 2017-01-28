@@ -6,6 +6,10 @@
               Title="Kalender"
               Style="{StaticResource BaseStyle}">
   <CarouselPage.ToolbarItems>
+    <ToolbarItem x:Name="PlannedButton" Icon="{x:Static local:Icons.PLAN}" Clicked="OnPlannedButtonClicked">
+    </ToolbarItem>
+    <ToolbarItem x:Name="RecurrentButton" Icon="{x:Static local:Icons.FOOD}" Clicked="OnRecurrentButtonClicked">
+    </ToolbarItem>
     <ToolbarItem x:Name="AddButton" Icon="{x:Static local:Icons.ADD}" Clicked="OnAddButtonClicked">
     </ToolbarItem>
   </CarouselPage.ToolbarItems>

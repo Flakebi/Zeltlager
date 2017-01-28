@@ -120,9 +120,15 @@ namespace Zeltlager.UAM
 					};
 					object text = type.GetRuntimeProperty(pi.Name).GetValue(Obj) ?? string.Empty;
 					entry.Text = text.ToString();
-					entry.TextChanged += (sender, e) => 
+					entry.TextChanged += (sender, e) =>
 					{
-						type.GetRuntimeProperty(pi.Name).SetValue(Obj, Helpers.ConvertParam(((Entry)sender).Text, vartype));
+						Type[] a = { typeof(string), vartype };
+						object[] parameters = { ((Entry)sender).Text, null };
+						if ((bool) vartype.GetTypeInfo().GetDeclaredMethods("TryParse").First(x => x.GetParameters().Length == 2).Invoke(null, parameters))
+						{
+							//type.GetRuntimeProperty(pi.Name).SetValue(Obj, Helpers.ConvertParam(((Entry)sender).Text, vartype));
+							type.GetRuntimeProperty(pi.Name).SetValue(Obj, parameters[1]);
+						}
 					};
 					manip = entry;
 				}
@@ -194,6 +200,7 @@ namespace Zeltlager.UAM
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			// make page not start directly at the top
 			Padding = new Thickness(10);
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnCancelClicked()
@@ -210,9 +217,11 @@ namespace Zeltlager.UAM
 			                   && string.IsNullOrEmpty((string)Obj.GetType().GetRuntimeProperty(pi.Name).GetValue(Obj)));
 			if (propInfo != null)
 			{
-				await DisplayAlert("Achtung!", propInfo.Name + " erforderlich :D", "Ok :)");
+				await DisplayAlert("Achtung!", propInfo.GetCustomAttribute<EditableAttribute>().Name + " erforderlich.", "Ok :D");
 				return;
 			}
+			// end of check
+
 			if (isAddPage)
 				oldObj = default(T);
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);

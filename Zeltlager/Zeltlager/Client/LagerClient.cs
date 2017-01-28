@@ -79,7 +79,7 @@ namespace Zeltlager.Client
 			
 			CompetitionHandler = new Competition.CompetitionHandler(this);
 			Erwischt = new Erwischt.Erwischt(this);
-			Calendar = new Calendar.Calendar();
+			Calendar = new Calendar.Calendar(this);
 		}
 
 		/// <summary>

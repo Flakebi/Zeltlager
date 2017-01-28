@@ -12,6 +12,7 @@ namespace Zeltlager.General
 		{
 			InitializeComponent();
 			this.lager = lager;
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnMemberClicked(object sender, EventArgs e)

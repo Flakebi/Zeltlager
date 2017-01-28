@@ -40,8 +40,8 @@ namespace Zeltlager.Competition
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Rankable Owner { get; set; }
 
-		public string PointsString => Points?.ToString() ?? "default";
-		public string PlaceString => Place?.ToString() ?? "default";
+		public string PointsString => Points?.ToString() ?? "-";
+		public string PlaceString => Place?.ToString() ?? "-";
 
 		public CompetitionResult() {}
 
@@ -66,7 +66,7 @@ namespace Zeltlager.Competition
 
 		public override CompetitionResult Clone()
 		{
-			return new CompetitionResult(Id, Owner, Participant, Points, Place);
+			return new CompetitionResult(Id?.Clone(), Owner, Participant, Points, Place);
 		}
 
 		public int CompareTo(CompetitionResult other)

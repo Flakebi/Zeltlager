@@ -2,19 +2,25 @@ using System;
 using System.Collections.Generic;
 using Zeltlager.DataPackets;
 using System.Linq;
+using System.Collections.ObjectModel;
+using Zeltlager.Client;
 
 namespace Zeltlager.Calendar
 {
 	public class Calendar
 	{
-		public List<Day> Days { get; }
+		LagerClient lager;
 
-		public Calendar()
+		public List<Day> Days { get; } = new List<Day>();
+
+		public ObservableCollection<StandardCalendarEvent> StandardEvents { get; } 
+			= new ObservableCollection<StandardCalendarEvent>();
+		public ObservableCollection<PlannedCalendarEvent> PlannedEvents { get; } 
+			= new ObservableCollection<PlannedCalendarEvent>();
+
+		public Calendar(LagerClient lager)
 		{
-			Days = new List<Day>();
-
-			//TODO For testing
-			InitCalendar(new DateTime(2016, 8, 2), new DateTime(2016, 8, 12));
+			this.lager = lager;
 		}
 
 		public void InitCalendar(DateTime startDate, DateTime endDate)
@@ -46,7 +52,25 @@ namespace Zeltlager.Calendar
 			return new DateTime(day.Year, day.Month, day.Day, newHour, newMin, 0);
 		}
 
-		public void InsertNewCalendarEvent(CalendarEvent calendarEvent)
+		public LagerClient GetLager()
+		{
+			return lager;
+		}
+
+		Day FindCorrectDay(IListCalendarEvent ce)
+		{
+			Day d = Days.Find(x => x.Date.Date == ce.Date.Date);
+			if (d == null)
+			{
+				d = new Day(ce.Date.Date);
+				Days.Add(d);
+				Days.Sort();
+			}
+			return d;
+		}
+
+		#region CalendarEvents
+		public void InsertNewCalendarEvent(IListCalendarEvent calendarEvent)
 		{
 			// Find correct day
 			Day d = FindCorrectDay(calendarEvent);
@@ -54,19 +78,71 @@ namespace Zeltlager.Calendar
 			d.Events.Sort();
 		}
 
-		public void RemoveCalendarEvent(CalendarEvent caldendarEvent)
+		public void RemoveCalendarEvent(IListCalendarEvent caldendarEvent)
 		{
 			FindCorrectDay(caldendarEvent).Events.Remove(caldendarEvent);
 		}
 
-		Day FindCorrectDay(CalendarEvent ce)
-		{
-			return Days.Find(x => x.Date.Date == ce.Date.Date);
-		}
-
-		public CalendarEvent GetEventFromPacketId(PacketId id)
+		public IListCalendarEvent GetEventFromPacketId(PacketId id)
 		{
 			return Days.SelectMany(day => day.Events).First(x => x.Id == id);
 		}
+		#endregion CalendarEvents
+
+		#region PlannedCEs
+		public void InsertNewPlannedCalendarEvent(PlannedCalendarEvent pce)
+		{
+			PlannedEvents.Add(pce);
+			PlannedEvents.Sort();
+		}
+
+		public void RemovePlannedCalendarEvent(PlannedCalendarEvent pce)
+		{
+			PlannedEvents.Remove(pce);
+		}
+
+		public PlannedCalendarEvent GetPlannedEventFromPacketId(PacketId id)
+		{
+			return PlannedEvents.First(x => x.Id == id);
+		}
+		#endregion
+
+		#region StandardCEs
+		public void InsertNewStandardCalendarEvent(StandardCalendarEvent sce)
+		{
+			StandardEvents.Add(sce);
+		}
+
+		public void RemoveStandardCalendarEvent(StandardCalendarEvent sce)
+		{
+			StandardEvents.Remove(sce);
+		}
+
+		public StandardCalendarEvent GetStandardEventFromPacketId(PacketId id)
+		{
+			return StandardEvents.First(x => x.Id == id);
+		}
+
+		public void IncludeStandardEvents()
+		{
+			foreach (Day d in Days)
+			{
+				foreach (StandardCalendarEvent sce in StandardEvents)
+				{
+					// check whether the event was added before that day+eventtime & ignore in that case
+					if (sce.Id.Bundle.Packets[sce.Id.PacketIndex.Value].Timestamp > d.Date.Add(sce.Time))
+					{
+						continue;
+					}
+					// check whether there already is a reference event for that sce on that day
+					if (d.Events.Where(ilce => ilce is ReferenceCalendarEvent).Cast<ReferenceCalendarEvent>().Any(rce => rce.Reference.Equals(sce)))
+					{
+						continue;
+					}
+					d.Events.Add(new ReferenceCalendarEvent(null, sce));
+				}
+			}
+		}
+		#endregion
 	}
 }

@@ -16,6 +16,7 @@ namespace Zeltlager.Competition
 			this.competition = competition;
 			this.lager = lager;
 
+			NavigationPage.SetBackButtonTitle(this, "");
 			CreateUI();
 		}
 

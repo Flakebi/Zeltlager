@@ -13,6 +13,7 @@ namespace Zeltlager
 		{
 			InitializeComponent();
 			this.lager = lager;
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnSynchronizeClicked(object sender, EventArgs e)

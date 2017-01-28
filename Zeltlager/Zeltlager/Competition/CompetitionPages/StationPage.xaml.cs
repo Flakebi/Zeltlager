@@ -14,6 +14,7 @@ namespace Zeltlager.Competition
 			this.station = station;
 
 			CreateUI();
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
