@@ -306,8 +306,8 @@ namespace Zeltlager.Client
 				int collaboratorId = packet.GetCollaboratorId();
 				// Temporarily add our own collaborator to the remote status with the id we obtained from the server
 				for (int i = 0; i < collaboratorId; i++)
-					Remote.Status.BundleCount.Add(null);
-				Remote.Status.BundleCount.Add(new Tuple<KeyPair, int>(OwnCollaborator.Key, 0));
+					Remote.Status.AddBundleCount(null);
+				Remote.Status.AddBundleCount(new Tuple<KeyPair, int>(OwnCollaborator.Key, 0));
 			}
 			finally
 			{
@@ -329,7 +329,7 @@ namespace Zeltlager.Client
 			return (await Task.WhenAll(collaborators.Values.Select(async col =>
 			{
 				context.PacketId = new PacketId(col);
-				return (await Task.WhenAll(col.Bundles.Values.Select(
+				return (await Task.WhenAll(col.Bundles.Select(
 					b => b.GetPackets(context)
 				))).SelectMany(p => p);
 			})))
@@ -376,7 +376,7 @@ namespace Zeltlager.Client
 			// Check if a usable bundle exists
 			// A bundle is usable if it was not already synchronised with the server
 			// and if it contains free space.
-			int maxBundleId = OwnCollaborator.Bundles.Any() ? OwnCollaborator.Bundles.Keys.Max() : -1;
+			int maxBundleId = OwnCollaborator.Bundles.Count - 1;
 			if (OwnCollaborator.Bundles.Any() &&
 			    (Remote == null || Remote.Status.BundleCount.First(c => c.Item1 == OwnCollaborator.Key).Item2 < maxBundleId) &&
 				OwnCollaborator.Bundles[maxBundleId].Size < DataPacketBundle.MAX_PACKET_SIZE)
@@ -384,8 +384,8 @@ namespace Zeltlager.Client
 			else
 			{
 				bundle = new DataPacketBundle();
-				bundle.Id = maxBundleId + 1;
 				OwnCollaborator.AddBundle(bundle);
+				Status.UpdateBundleCount(OwnCollaborator);
 			}
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
 			PacketId id = new PacketId(OwnCollaborator, bundle, bundle.Packets == null ? 0 : bundle.Packets.Count);

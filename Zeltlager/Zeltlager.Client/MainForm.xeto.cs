@@ -59,6 +59,7 @@ namespace Zeltlager.Client
 
 		// Disable the not assigned warning, the fields will be assigned from the xaml.
 #pragma warning disable 0649
+		StackLayout topBarLayout;
 		Label statusLabel;
 		DropDown lagerDropDown;
 		DropDown collaboratorDropDown;
@@ -80,6 +81,9 @@ namespace Zeltlager.Client
 		{
 			XamlReader.Load(this);
 			Icon = Icon.FromResource("Zeltlager.Client.icon.ico");
+			var size = MinimumSize;
+			size.Width = topBarLayout.Width;
+			MinimumSize = size;
 
 			LagerManager.IsClient = true;
 			manager = new LagerClientManager(io);

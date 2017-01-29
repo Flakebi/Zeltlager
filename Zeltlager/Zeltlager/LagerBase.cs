@@ -110,7 +110,7 @@ namespace Zeltlager
 					int bundleCount = 0;
 					while (files.Contains(new Tuple<string, FileType>(bundleCount.ToString(), FileType.File)))
 						bundleCount++;
-					Status.BundleCount.Add(new Tuple<KeyPair, int>(collaborator.Key, bundleCount));
+					Status.AddBundleCount(new Tuple<KeyPair, int>(collaborator.Key, bundleCount));
 					collaborators.Add(collaborator.Key, collaborator);
 				}
 			} catch (Exception e)
@@ -197,14 +197,13 @@ namespace Zeltlager
 		{
 			collaborator.AddBundle(bundle);
 			await SaveBundle(new PacketId(collaborator, bundle));
-			int index = Status.BundleCount.FindIndex(c => c.Item1 == collaborator.Key);
-			Status.BundleCount[index] = new Tuple<KeyPair, int>(collaborator.Key, collaborator.Bundles.Count);
+			Status.UpdateBundleCount(collaborator);
 		}
 
 		public async Task AddCollaborator(Collaborator collaborator)
 		{
 			collaborators.Add(collaborator.Key, collaborator);
-			Status.BundleCount.Add(new Tuple<KeyPair, int>(collaborator.Key, 0));
+			Status.AddBundleCount(new Tuple<KeyPair, int>(collaborator.Key, 0));
 
 			// Save the lager
 			await Save();

@@ -7,7 +7,7 @@
 	<TableLayout Padding="5">
 		<TableRow>
 			<!-- Button menu bar -->
-			<StackLayout Orientation="Horizontal" Spacing="5">
+			<StackLayout Orientation="Horizontal" Spacing="5" x:Name="topBarLayout">
 				<DropDown x:Name="lagerDropDown" SelectedKeyChanged="SelectedLagerChanged"/>
 				<Button Click="CreateLager">Create lager</Button>
 				<Button Click="ListLagers">List lagers</Button>

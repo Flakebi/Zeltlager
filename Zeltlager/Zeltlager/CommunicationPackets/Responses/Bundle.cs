@@ -49,7 +49,7 @@ namespace Zeltlager.CommunicationPackets.Responses
 				bundle.Id = bundleId;
 
 				// Check if the bundle does already exist
-				if (collaborator.Bundles.ContainsKey(bundleId))
+				if (bundleId < collaborator.Bundles.Count)
 					throw new LagerException("Received an already existing bundle");
 				await bundle.Verify(collaborator);
 				await lager.AddBundle(collaborator, bundle);

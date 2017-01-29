@@ -58,7 +58,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 							throw new LagerException("Unknown collaborator");
 						Collaborator collaborator = data.Lager.Collaborators[data.Lager.Status.BundleCount[collaboratorId].Item1];
 						int bundleId = input.ReadInt32();
-						if (!collaborator.Bundles.ContainsKey(bundleId))
+						if (bundleId >= collaborator.Bundles.Count)
 							throw new LagerException("Unknown bundle");
 						packets.Add(await Responses.Bundle.Create(data.Lager, collaborator, collaborator.Bundles[bundleId]));
 					}

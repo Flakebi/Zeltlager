@@ -88,8 +88,8 @@ namespace Zeltlager.Client
 				int collaboratorId = packet.GetCollaboratorId();
 				// Temporarily add our own collaborator to the remote status with the id we obtained from the server
 				for (int i = 0; i < collaboratorId; i++)
-					lager.Remote.Status.BundleCount.Add(null);
-				lager.Remote.Status.BundleCount.Add(new Tuple<KeyPair, int>(lager.OwnCollaborator.Key, 0));
+					lager.Remote.Status.AddBundleCount(null);
+				lager.Remote.Status.AddBundleCount(new Tuple<KeyPair, int>(lager.OwnCollaborator.Key, 0));
 			}
 			finally
 			{

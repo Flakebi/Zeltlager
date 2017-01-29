@@ -41,11 +41,11 @@ namespace Zeltlager
 		/// The list of collaborators (indexed by the id) as of this collaborators view point.
 		/// </summary>
 		public Dictionary<PacketId, Collaborator> Collaborators => collaborators;
-		Dictionary<int, DataPacketBundle> bundles = new Dictionary<int, DataPacketBundle>();
+		List<DataPacketBundle> bundles = new List<DataPacketBundle>();
 		/// <summary>
 		/// The list of bundles of a collaborator indexed by their id.
 		/// </summary>
-		public IReadOnlyDictionary<int, DataPacketBundle> Bundles => bundles;
+		public IReadOnlyList<DataPacketBundle> Bundles => bundles;
 
 		public Collaborator() { }
 
@@ -63,9 +63,8 @@ namespace Zeltlager
 
 		public void AddBundle(DataPacketBundle bundle)
 		{
-			if (bundles.ContainsKey(bundle.Id))
-				throw new LagerException("Can't add a packet bundle with an id that is already taken");
-			bundles.Add(bundle.Id, bundle);
+			bundle.Id = bundles.Count;
+			bundles.Add(bundle);
 		}
 
 		/// <summary>

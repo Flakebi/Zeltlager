@@ -13,12 +13,14 @@ namespace Zeltlager
 	/// </summary>
 	public class LagerStatus : ISerialisable<LagerSerialisationContext>
 	{
+		readonly List<Tuple<KeyPair, int>> bundleCount = new List<Tuple<KeyPair, int>>();
+		
 		/// <summary>
 		/// The collaborator list saves the bundle count for each collaborator.
 		/// This is the next bundle id that can be uploaded to the server.
 		/// The index in this list is the collaborator id as seen from the owner of this object.
 		/// </summary>
-		public List<Tuple<KeyPair, int>> BundleCount { get; private set; } = new List<Tuple<KeyPair, int>>();
+		public IReadOnlyList<Tuple<KeyPair, int>> BundleCount => bundleCount;
 
 		/// <summary>
 		/// Get the collaborator id from the view of the owner of this object.
@@ -27,7 +29,7 @@ namespace Zeltlager
 		/// <param name="c">The collaborator whos id will be returned.</param>
 		public int GetCollaboratorId(Collaborator c)
 		{
-			return BundleCount.FindIndex(t => t != null && t.Item1 == c.Key);
+			return bundleCount.FindIndex(t => t != null && t.Item1 == c.Key);
 		}
 
 		/// <summary>
@@ -37,7 +39,32 @@ namespace Zeltlager
 		/// <param name="c">The creator of the bundles.</param>
 		public int GetBundleCount(Collaborator c)
 		{
-			return BundleCount.Find(t => t.Item1 == c.Key).Item2;
+			return bundleCount.Find(t => t.Item1 == c.Key).Item2;
+		}
+
+		/// <summary>
+		/// Sets the bundle count of a collaborator.
+		/// </summary>
+		/// <param name="c">The collaborator of which the bundle count should be set.</param>
+		/// <param name="count">The new amount of bundles.</param>
+		public void SetBundleCount(Collaborator c, int count)
+		{
+			int index = bundleCount.FindIndex(t => t.Item1 == c.Key);
+			bundleCount[index] = new Tuple<KeyPair, int>(c.Key, count);
+		}
+
+		/// <summary>
+		/// Set the bundle count of a collaborator to the currently available amount of bundles.
+		/// </summary>
+		/// <param name="c">The collaborater of which the bundle count should be updated.</param>
+		public void UpdateBundleCount(Collaborator c)
+		{
+			SetBundleCount(c, c.Bundles.Count);
+		}
+
+		public void AddBundleCount(Tuple<KeyPair, int> count)
+		{
+			bundleCount.Add(count);
 		}
 
 		// Serialisation with a LagerSerialisationContext
@@ -61,12 +88,13 @@ namespace Zeltlager
 		public Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{
 			int count = input.ReadInt32();
-			BundleCount = new List<Tuple<KeyPair, int>>(count);
+			bundleCount.Clear();
+			bundleCount.Capacity = count;
 			for (int i = 0; i < count; i++)
 			{
 				KeyPair key = input.ReadPublicKey();
 				int packets = input.ReadInt32();
-				BundleCount.Add(new Tuple<KeyPair, int>(key, packets));
+				bundleCount.Add(new Tuple<KeyPair, int>(key, packets));
 			}
 			return Task.WhenAll();
 		}

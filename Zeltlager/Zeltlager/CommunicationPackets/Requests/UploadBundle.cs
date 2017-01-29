@@ -47,7 +47,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 				{
 					int bundleId = input.ReadInt32();
 					// Check if the requested bundle already exists
-					if (data.Collaborator.Bundles.ContainsKey(bundleId))
+					if (bundleId < data.Collaborator.Bundles.Count)
 						throw new LagerException("The bundle already exists");
 					// Add the bundle
 					DataPacketBundle bundle = new DataPacketBundle();
