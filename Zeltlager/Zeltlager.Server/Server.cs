@@ -34,10 +34,10 @@ namespace Zeltlager.Server
 			await lagerManager.Load();
 
 			// Load all bundles
-			foreach (var lager in lagerManager.Lagers)
+			foreach (var lager in lagerManager.Lagers.Values)
 			{
-				if (!await lager.Value.LoadBundles())
-					await LagerManager.Log.Error("Server", "Loading the bundles for lager " + lager.Value.Id + " failed");
+				if (!await lager.LoadBundles())
+					await LagerManager.Log.Error("Server", "Loading the bundles for lager " + lager.Id + " failed");
 			}
 
 			await LagerManager.Log.Info("Server", "Is running");

@@ -49,7 +49,7 @@ namespace Zeltlager.Client
         public async Task<LagerClient> CreateLager(string name, string password,
             Action<LagerClient.InitStatus> statusUpdate)
         {
-            int id = Lagers.Count;
+			int id = GetUnusedLagerId();
             IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
             LagerClient lager = new LagerClient(this, io, id);
             await lager.InitLocal(name, password, statusUpdate);
@@ -66,7 +66,7 @@ namespace Zeltlager.Client
 		public async Task<LagerClient> DownloadLager(int serverId, LagerData data, string password,
 			Action<LagerClient.InitStatus> initStatusUpdate, Action<NetworkStatus> networkStatusUpdate)
 		{
-			int id = Lagers.Count;
+			int id = GetUnusedLagerId();
 			IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
 			LagerClient lager = new LagerClient(this, io, id);
 			await lager.InitFromServer(serverId, data, password, initStatusUpdate);

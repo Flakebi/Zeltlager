@@ -72,16 +72,20 @@ namespace Zeltlager
 		{
 			// Search folders for lagers
 			var folders = await ioProvider.ListContents("");
-			for (int i = 0; folders.Contains(new Tuple<string, FileType>(i.ToString(), FileType.Folder)); i++)
+			foreach (var folder in folders.Where(f => f.Item2 == FileType.Folder).Select(f => f.Item1))
 			{
-				try
+				int i;
+				if (int.TryParse(folder, out i))
 				{
-					LagerBase lager = await LoadLager(i);
-					lagers.Add(i, lager);
-					await Log.Info("Loading lagers", "Added lager " + i);
-				} catch (Exception e)
-				{
-					await Log.Exception("Loading lagers", e);
+					try
+					{
+						LagerBase lager = await LoadLager(i);
+						lagers.Add(i, lager);
+						await Log.Info("Loading lagers", "Added lager " + i);
+					} catch (Exception e)
+					{
+						await Log.Exception("Loading lagers", e);
+					}
 				}
 			}
 		}
@@ -107,13 +111,29 @@ namespace Zeltlager
 				if (data.Data.SequenceEqual(l.Data.Data))
 					return l;
 			}
-			int id = lagers.Any() ? lagers.Keys.Max() + 1 : 0;
+			int id = GetUnusedLagerId();
 			IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
 			LagerBase lager = new LagerBase(this, io, id);
 			lager.Data = data;
 			await lager.Save();
 			lagers.Add(lager.Id, lager);
 			return lager;
+		}
+
+		/// <summary>
+		/// Get the lowest unused id for a lager.
+		/// </summary>
+		/// <returns>An unused lager id.</returns>
+		protected int GetUnusedLagerId()
+		{
+			// Search the first unused id
+			int id;
+			for (id = 0; id < lagers.Count; id++)
+			{
+				if (!lagers.ContainsKey(id))
+					break;
+			}
+			return id;
 		}
 
 		async Task OnNetworkConnection(INetworkConnection connection)
