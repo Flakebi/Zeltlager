@@ -1,0 +1,16 @@
+[Unit]
+Description=the Zeltlager server
+After=network.target
+After=local-fs.target
+
+[Service]
+Type=simple
+User=zeltlager
+Group=users
+ExecStart=/usr/bin/env mono /usr/bin/Zeltlager.Server.exe
+WorkingDirectory=/var/zeltlager
+KillSignal=SIGINT
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

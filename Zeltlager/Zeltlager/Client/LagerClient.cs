@@ -329,9 +329,19 @@ namespace Zeltlager.Client
 			return (await Task.WhenAll(collaborators.Values.Select(async col =>
 			{
 				context.PacketId = new PacketId(col);
-				return (await Task.WhenAll(col.Bundles.Select(
-					b => b.GetPackets(context)
-				))).SelectMany(p => p);
+				return (await Task.WhenAll(col.Bundles.Select(async b =>
+				{
+					try
+					{
+						return await b.GetPackets(context);
+					}
+					catch (Exception e)
+					{
+						// Log the exception
+						await LagerManager.Log.Exception("Load bundle", e);
+						return new List<DataPacket>();
+					}
+				}))).SelectMany(p => p);
 			})))
 				// Use OrderBy which is a stable sorting algorithm
 				.SelectMany(p => p)
@@ -360,7 +370,7 @@ namespace Zeltlager.Client
 				catch (Exception e)
 				{
 					// Log the exception
-					await LagerManager.Log.Exception("Lager", e);
+					await LagerManager.Log.Exception("Apply history", e);
 					success = false;
 				}
 			}

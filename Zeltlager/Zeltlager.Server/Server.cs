@@ -42,10 +42,13 @@ namespace Zeltlager.Server
 
 			await LagerManager.Log.Info("Server", "Is running");
 
-			// Let the server run for a while
-			//TODO Make this better
-			//Console.Read();
-			await Task.Delay(new TimeSpan(1, 0, 0));
+			// Let the server run
+			while (true)
+			{
+				// Maybe add something to kill the server gracefully here?
+				// Wait an hour and 10 seconds
+				await Task.Delay(new TimeSpan(1, 0, 10));
+			}
 		}
 	}
 }

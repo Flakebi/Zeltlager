@@ -14,7 +14,7 @@
 				<Button Click="AddMember">Add member</Button>
 				<Button Click="Upload">Upload</Button>
 				<Button Click="Synchronise">Synchronise</Button>
-				<Button Click="Quit">Beenden</Button>
+				<Button Click="Quit">Quit</Button>
 			</StackLayout>
 		</TableRow>
 		<TableRow ScaleHeight="True">
