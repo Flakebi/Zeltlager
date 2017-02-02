@@ -124,6 +124,17 @@ namespace Zeltlager
 			return Data.Verify();
 		}
 
+		/// <summary>
+		/// Unload all bundles and reset the lager.
+		/// The lager status will still be loaded (like after Load() was called)
+		/// but the bundles will not be in memory.
+		/// </summary>
+		public virtual void Unload()
+		{
+			foreach (var c in collaborators.Values)
+				c.Unload();
+		}
+
 		string GetBundlePath(PacketId id)
 		{
 			// Get the local collaborator id
@@ -147,6 +158,8 @@ namespace Zeltlager
 			foreach (var bundleCount in Status.BundleCount)
 			{
 				Collaborator collaborator = Collaborators[bundleCount.Item1];
+				// Be sure that no bundles are loaded for the collaborator
+				collaborator.Unload();
 				try
 				{
 					for (int i = 0; i < bundleCount.Item2; i++)

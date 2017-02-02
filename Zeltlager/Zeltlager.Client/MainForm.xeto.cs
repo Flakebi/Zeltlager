@@ -233,6 +233,8 @@ namespace Zeltlager.Client
 
 		async void SelectedLagerChanged(object sender, EventArgs args)
 		{
+			// Unload the previous lager
+			lager?.Unload();
 			// Get the currently selected lager
 			lager = (LagerClient)manager.Lagers[int.Parse(lagerDropDown.SelectedKey)];
 			// Load the newly selected lager

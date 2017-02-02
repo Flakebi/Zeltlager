@@ -151,6 +151,13 @@ namespace Zeltlager.Client
 			collaborators.Add(OwnCollaborator.Key, OwnCollaborator);
 		}
 
+		public override void Unload()
+		{
+			base.Unload();
+			// Unload all data
+			Reset();
+		}
+
 		public override async Task Save()
 		{
 			await base.Save();

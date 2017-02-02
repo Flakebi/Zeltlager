@@ -68,6 +68,15 @@ namespace Zeltlager
 		}
 
 		/// <summary>
+		/// Unload all bundles from this collaborator.
+		/// </summary>
+		public void Unload()
+		{
+			bundles.Clear();
+			collaborators.Clear();
+		}
+
+		/// <summary>
 		/// Verify the key signatures that are stored in the collaborator data.
 		/// Throws an exception if the verification failed.
 		/// </summary>
