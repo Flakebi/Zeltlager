@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
+import multiprocessing
 import os
 import re
 import subprocess
+import sys
+import threading
+from queue import Queue
 
 # If images should only be updated when they are newer
 update = True
@@ -15,6 +19,11 @@ svg_header = """<?xml version="1.0" encoding="UTF-8"?>
 	height="{1}">
 """
 svg_end = "</svg>\n"
+
+lock = threading.Lock()
+def print_locked(*objects, sep = ' ', end = '\n', file = sys.stdout, flush = False):
+	with lock:
+		print(*objects, sep = sep, end = end, file = file, flush = flush)
 
 class SourceImage:
 	regex = re.compile(r"""
@@ -31,7 +40,7 @@ class SourceImage:
 		match = self.regex.match(content)
 		# Parse the svg file partially to get the width and the height
 		if not match:
-			print("No match found for {} in {}".format(self.regex, content[:min(50, len(content))]))
+			print_locked("No match found for {} in {}".format(self.regex, content[:min(50, len(content))]))
 			raise ValueError("No match found")
 
 		self.filename = filename
@@ -91,13 +100,14 @@ class TargetImage:
 		if update and os.path.isfile(target_filename):
 			stat = os.stat(target_filename)
 			if stat.st_mtime > self.source.stat.st_mtime:
-				print("Skipping {} to {}".format(self.source.filename, target_filename))
+				print_locked("Skipping {} to {}".format(self.source.filename, target_filename))
 				return
 
-		print("Rendering {} to {}".format(self.source.filename, target_filename))
+		print_locked("Rendering {} to {}".format(self.source.filename, target_filename))
 		# Create the folder if it doesn't exist
-		if not os.path.isdir(self.path):
-			os.mkdir(self.path)
+		with lock:
+			if not os.path.isdir(self.path):
+				os.mkdir(self.path)
 		args = ["inkscape", "-z", "-e",
 			os.path.abspath(target_filename),
 			"-w", str(self.image_width),
@@ -114,12 +124,19 @@ class TargetImage:
 		if process.returncode != 0:
 			raise ValueError("inkscape exited with non zero status")
 
+""" Do work in multiple threads """
+def worker():
+	while True:
+		target = render_queue.get()
+		target.render()
+		render_queue.task_done()
+
 def render_icon(source, paths):
 	if type(source) is str:
 		source = SourceImage(source)
 	for path in paths:
 		target = TargetImage(source, **path)
-		target.render()
+		render_queue.put(target)
 
 def add_android_paths(source, paths, width = None, height = None, background = None):
 	root = "Zeltlager/Zeltlager.Droid/Resources/"
@@ -303,10 +320,19 @@ def add_ios_paths(source, paths, width = None, height = None, background = False
 	add([1, 2, 3], width, height)
 
 def main():
+	global render_queue
 	# Check if we are in the right folder
 	if not os.path.isfile("tools/Images.py"):
-		print("Please call this script from the root directory of the project")
+		print_locked("Please call this script from the root directory of the project")
 		return
+
+	# Create the render queue and worker threads
+	render_queue = Queue()
+	for i in range(multiprocessing.cpu_count()):
+		t = threading.Thread(target = worker)
+		# The thread will be killed if the main thread exits
+		t.daemon = True
+		t.start()
 
 	logo = SourceImage("Icons/icon.svg")
 	logo_paths = []
@@ -324,6 +350,7 @@ def main():
 	add_android_paths(None, icon_paths, 24, 24)
 	icon_dir = "Icons/UIsvg"
 	for icon in os.listdir(icon_dir):
+		# Ignore non-images
 		if icon == ".DS_Store":
 			continue
 		icon_path = os.path.join(icon_dir, icon)
@@ -332,6 +359,9 @@ def main():
 		paths = icon_paths[:]
 		add_ios_paths(icon, paths, 24, 24)
 		render_icon(icon, paths)
+
+	# Wait until all icons are rendered
+	render_queue.join()
 
 if __name__ == "__main__":
 	main()
