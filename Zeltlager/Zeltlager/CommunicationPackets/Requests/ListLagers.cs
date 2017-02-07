@@ -4,8 +4,8 @@ namespace Zeltlager.CommunicationPackets.Requests
 {
 	using Network;
 
-    public class ListLagers : CommunicationRequest
-    {
+	public class ListLagers : CommunicationRequest
+	{
 		public ListLagers()
 		{
 			Data = new byte[0];

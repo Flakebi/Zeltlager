@@ -25,7 +25,7 @@ namespace Zeltlager.DataPackets
 			var mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 				serialiser.Write(output, context, packet);
-            Data = mem.ToArray();
+			Data = mem.ToArray();
 		}
 
 		public override async Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
@@ -40,7 +40,7 @@ namespace Zeltlager.DataPackets
 					if (context.Packets[i].Id == packet)
 					{
 						context.Packets.RemoveAt(i);
-                        break;
+						break;
 					}
 				}
 			}

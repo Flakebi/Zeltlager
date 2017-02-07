@@ -80,7 +80,7 @@ namespace Zeltlager.Client
 		{
 			members = new List<Member>();
 			tents = new List<Tent>();
-			
+
 			CompetitionHandler = new Competition.CompetitionHandler(this);
 			Erwischt = new Erwischt.Erwischt(this);
 			Calendar = new Calendar.Calendar(this);
@@ -399,7 +399,7 @@ namespace Zeltlager.Client
 			// and if it contains free space.
 			int maxBundleId = OwnCollaborator.Bundles.Count - 1;
 			if (OwnCollaborator.Bundles.Any() &&
-			    (Remote == null || Remote.Status.BundleCount.First(c => c.Item1 == OwnCollaborator.Key).Item2 < maxBundleId) &&
+				(Remote == null || Remote.Status.BundleCount.First(c => c.Item1 == OwnCollaborator.Key).Item2 < maxBundleId) &&
 				OwnCollaborator.Bundles[maxBundleId].Size < DataPacketBundle.MAX_PACKET_SIZE)
 				bundle = OwnCollaborator.Bundles[maxBundleId];
 			else
@@ -417,14 +417,14 @@ namespace Zeltlager.Client
 			await SaveBundle(id);
 
 			// Then deserialise it to apply it
-            // We need to apply the whole history again if the packet has a higher priority
-            if (packet.Priority != 0)
-            {
-                Reset();
-                if (!await ApplyHistory())
-                    throw new LagerException("Error applying the packet");
-            }
-            else
+			// We need to apply the whole history again if the packet has a higher priority
+			if (packet.Priority != 0)
+			{
+				Reset();
+				if (!await ApplyHistory())
+					throw new LagerException("Error applying the packet");
+			}
+			else
 				await packet.Deserialise(ClientSerialiser, context);
 		}
 
@@ -483,7 +483,7 @@ namespace Zeltlager.Client
 			context.PacketId = new PacketId(OwnCollaborator);
 
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-			    new Tent(null, 0, "Tiger", false, new List<Member>(), context.LagerClient)));
+				new Tent(null, 0, "Tiger", false, new List<Member>(), context.LagerClient)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
 				new Tent(null, 1, "Giraffen", false, new List<Member>(), context.LagerClient)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,

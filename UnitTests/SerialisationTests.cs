@@ -9,7 +9,7 @@ using Zeltlager;
 namespace UnitTests
 {
 	[TestFixture]
-    public class SerialisationTests : LagerTest
+	public class SerialisationTests : LagerTest
 	{
 		[Test]
 		public void SerialiseTent()
@@ -20,12 +20,12 @@ namespace UnitTests
 		public async Task SerialiseTentAsync()
 		{
 			await Init();
-            Tent tent = lager.Tents.First();
-			
+			Tent tent = lager.Tents.First();
+
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 			{
-                await serialiser.Write(output, context, tent);
+				await serialiser.Write(output, context, tent);
 			}
 
 			mem = new MemoryStream(mem.ToArray());
@@ -46,7 +46,7 @@ namespace UnitTests
 		public async Task SerialiseMemberAsync()
 		{
 			await Init();
-            Member member = lager.Members.First();
+			Member member = lager.Members.First();
 
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))

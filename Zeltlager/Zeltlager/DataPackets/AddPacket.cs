@@ -16,7 +16,7 @@ namespace Zeltlager.DataPackets
 		/// The list of types that can be serialised.
 		/// Every type must have a constructor that takes
 		/// a LagerClientSerialisationContext.
-		/// 
+		///
 		/// The method is an optional member method that will
 		/// be called on the newly created object after it was read
 		/// and when it should be added to the lager. This method
@@ -28,15 +28,15 @@ namespace Zeltlager.DataPackets
 			new Tuple<Type, MethodInfo>(typeof(Tent),
 				typeof(Tent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(CalendarEvent),
-			    typeof(CalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+				typeof(CalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(Competition.Competition),
-			    typeof(Competition.Competition).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+				typeof(Competition.Competition).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(Station),
-			    typeof(Station).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+				typeof(Station).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(CompetitionResult),
-			    typeof(CompetitionResult).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+				typeof(CompetitionResult).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(GroupParticipant),
-			     typeof(GroupParticipant).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+				 typeof(GroupParticipant).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(MemberParticipant),
 				 typeof(MemberParticipant).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(TentParticipant),
@@ -46,14 +46,14 @@ namespace Zeltlager.DataPackets
 			new Tuple<Type, MethodInfo>(typeof(StandardCalendarEvent),
 				typeof(StandardCalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(ReferenceCalendarEvent),
-			    typeof(ReferenceCalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
+				typeof(ReferenceCalendarEvent).GetRuntimeMethod("Add", new Type[] { typeof(LagerClientSerialisationContext) })),
 		};
 
 		public static int GetIdCount() { return types.Length; }
 
 		protected AddPacket() { }
 
-        public static async Task<AddPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
+		public static async Task<AddPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, object obj)
 		{
 			var packet = new AddPacket();
@@ -107,7 +107,7 @@ namespace Zeltlager.DataPackets
 				{
 					object[] parameters;
 					if (type.Item2.GetParameters().Select(p => p.ParameterType)
-					    .SequenceEqual(new Type[] { typeof(LagerClientSerialisationContext) }))
+						.SequenceEqual(new Type[] { typeof(LagerClientSerialisationContext) }))
 						parameters = new object[] { context };
 					else
 						parameters = new object[0];

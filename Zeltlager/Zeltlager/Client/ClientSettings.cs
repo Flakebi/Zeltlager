@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Client
 {
-    using Serialisation;
-    
+	using Serialisation;
+
 	public class ClientSettings
 	{
 		const string SETTINGS_FILE = "settings.conf";
-        const int VERSION = 0;
+		const int VERSION = 0;
 
-        [Serialisation]
+		[Serialisation]
 		public int LastLager { get; set; }
 
 
@@ -20,7 +20,7 @@ namespace Zeltlager.Client
 		[Serialisation(Optional = true)]
 		public string ServerAddress { get; set; }
 
-        public async Task Load(IIoProvider io)
+		public async Task Load(IIoProvider io)
 		{
 			// Set default values
 			LastLager = 0;
@@ -29,8 +29,8 @@ namespace Zeltlager.Client
 			{
 				using (BinaryReader input = new BinaryReader(await io.ReadFile(SETTINGS_FILE)))
 				{
-                    if (input.ReadInt32() == VERSION)
-                        await new Serialiser<object>().Read(input, null, this);
+					if (input.ReadInt32() == VERSION)
+						await new Serialiser<object>().Read(input, null, this);
 				}
 			}
 		}
@@ -40,7 +40,7 @@ namespace Zeltlager.Client
 			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(SETTINGS_FILE)))
 			{
 				output.Write(VERSION);
-                await new Serialiser<object>().Write(output, null, this);
+				await new Serialiser<object>().Write(output, null, this);
 			}
 		}
 	}

@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.CommunicationPackets.Requests
 {
-    using Network;
-    
+	using Network;
+
 	public abstract class CommunicationRequest : CommunicationPacket
 	{
 		/// <summary>

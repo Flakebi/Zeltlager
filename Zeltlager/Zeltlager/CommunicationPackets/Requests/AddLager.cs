@@ -7,8 +7,8 @@ namespace Zeltlager.CommunicationPackets.Requests
 	using Client;
 	using Network;
 
-    public class AddLager : CommunicationRequest
-    {
+	public class AddLager : CommunicationRequest
+	{
 		AddLager() { }
 
 		public AddLager(LagerClient lager)

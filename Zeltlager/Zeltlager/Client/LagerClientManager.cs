@@ -10,16 +10,16 @@ namespace Zeltlager.Client
 	using Responses = CommunicationPackets.Responses;
 
 	public class LagerClientManager : LagerManager
-    {
-        public ClientSettings Settings { get; private set; }
-        
-        public LagerClientManager(IIoProvider io) : base(io)
-        {
-            Settings = new ClientSettings();
-        }
+	{
+		public ClientSettings Settings { get; private set; }
 
-        public override async Task Load()
-        {
+		public LagerClientManager(IIoProvider io) : base(io)
+		{
+			Settings = new ClientSettings();
+		}
+
+		public override async Task Load()
+		{
 			try
 			{
 				await Settings.Load(ioProvider);
@@ -28,16 +28,16 @@ namespace Zeltlager.Client
 			{
 				await Log.Exception("Loading settings", e);
 			}
-            await base.Load();
-        }
+			await base.Load();
+		}
 
-        protected override async Task<LagerBase> LoadLager(int id)
-        {
-            IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
-            LagerBase lager = new LagerClient(this, io, id);
-            await lager.Load();
-            return lager;
-        }
+		protected override async Task<LagerBase> LoadLager(int id)
+		{
+			IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
+			LagerBase lager = new LagerClient(this, io, id);
+			await lager.Load();
+			return lager;
+		}
 
 		/// <summary>
 		/// Create a new lager and save it.
@@ -46,22 +46,22 @@ namespace Zeltlager.Client
 		/// <param name="name">The name of the new lager.</param>
 		/// <param name="password">The password of the new lager.</param>
 		/// <param name="statusUpdate">A function that receivs status updates.</param>
-        public async Task<LagerClient> CreateLager(string name, string password,
-            Action<LagerClient.InitStatus> statusUpdate)
-        {
+		public async Task<LagerClient> CreateLager(string name, string password,
+			Action<LagerClient.InitStatus> statusUpdate)
+		{
 			int id = GetUnusedLagerId();
-            IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
-            LagerClient lager = new LagerClient(this, io, id);
-            await lager.InitLocal(name, password, statusUpdate);
-            // Save the lager
-            await lager.Save();
+			IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
+			LagerClient lager = new LagerClient(this, io, id);
+			await lager.InitLocal(name, password, statusUpdate);
+			// Save the lager
+			await lager.Save();
 
 			// Store lager as last used lager
 			lagers.Add(id, lager);
-            Settings.LastLager = id;
-            await Settings.Save(ioProvider);
-            return lager;
-        }
+			Settings.LastLager = id;
+			await Settings.Save(ioProvider);
+			return lager;
+		}
 
 		public async Task<LagerClient> DownloadLager(int serverId, LagerData data, string password,
 			Action<LagerClient.InitStatus> initStatusUpdate, Action<NetworkStatus> networkStatusUpdate)
@@ -132,5 +132,5 @@ namespace Zeltlager.Client
 					await connection.Close();
 			}
 		}
-    }
+	}
 }

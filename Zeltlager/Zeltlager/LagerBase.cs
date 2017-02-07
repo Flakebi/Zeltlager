@@ -69,15 +69,15 @@ namespace Zeltlager
 			await ReadLagerStatus();
 		}
 
-        public virtual async Task Save()
-        {
-            LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+		public virtual async Task Save()
+		{
+			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
 			// Create the folder if it doesn't exist
 			await ioProvider.CreateFolder("");
-            // Write the lager data
-            using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(LAGER_FILE)))
-                await Serialiser.Write(output, context, this);
-        }
+			// Write the lager data
+			using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(LAGER_FILE)))
+				await Serialiser.Write(output, context, this);
+		}
 
 		/// <summary>
 		/// Find out which bundles are currently saved on the disk and read a

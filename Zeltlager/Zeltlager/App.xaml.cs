@@ -20,15 +20,15 @@ namespace Zeltlager
 		};
 
 		LoadingScreen loadingScreen;
-        LagerClientManager manager;
+		LagerClientManager manager;
 
 		public App()
 		{
 			InitializeComponent();
 
-            LagerManager.IsClient = true;
+			LagerManager.IsClient = true;
 
-            manager = new LagerClientManager(new IoProvider());
+			manager = new LagerClientManager(new IoProvider());
 			manager.NetworkClient = new TcpNetworkClient();
 
 			loadingScreen = new LoadingScreen();
@@ -69,7 +69,7 @@ namespace Zeltlager
 				try
 				{
 					loadingScreen.Status = "Lager laden";
-                    lager = (LagerClient)manager.Lagers[lagerId];
+					lager = (LagerClient)manager.Lagers[lagerId];
 					if (!await lager.LoadBundles())
 						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden der Lagerdateien sind Fehler aufgetreten", "Ok");
 					if (!await lager.ApplyHistory())
@@ -111,7 +111,7 @@ namespace Zeltlager
 			MainPage = new NavigationPage(loadingScreen);
 			try
 			{
-                var lager = await manager.CreateLager(name, password, DisplayStatus);
+				var lager = await manager.CreateLager(name, password, DisplayStatus);
 				// fill with some test data
 				await lager.CreateTestData();
 
@@ -123,7 +123,7 @@ namespace Zeltlager
 			} catch (Exception e)
 			{
 				// Log the exception
-                await LagerManager.Log.Exception("Creating lager", e);
+				await LagerManager.Log.Exception("Creating lager", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 		}

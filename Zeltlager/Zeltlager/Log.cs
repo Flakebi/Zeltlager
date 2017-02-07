@@ -19,7 +19,7 @@ namespace Zeltlager
 		public class Message
 		{
 			const string TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-			
+
 			public DateTime Timestamp { get; }
 			public LogType Type { get; }
 			public string Section { get; }
@@ -53,18 +53,18 @@ namespace Zeltlager
 		public event OnMessageHandler OnMessage;
 
 		readonly List<Message> messages = new List<Message>();
-        readonly IIoProvider ioProvider;
+		readonly IIoProvider ioProvider;
 
 		public IReadOnlyCollection<Message> Messages => messages;
 
-        public Log(IIoProvider io)
-        {
-            ioProvider = io;
-        }
+		public Log(IIoProvider io)
+		{
+			ioProvider = io;
+		}
 
 		public async Task Load()
 		{
-            if (!await ioProvider.ExistsFile(FILENAME))
+			if (!await ioProvider.ExistsFile(FILENAME))
 				return;
 
 			using (var file = new StreamReader(await ioProvider.ReadFile(FILENAME)))

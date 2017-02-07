@@ -32,7 +32,7 @@ namespace Zeltlager
 		/// <summary>
 		/// The lagers with their respective ids.
 		/// </summary>
-        protected Dictionary<int, LagerBase> lagers = new Dictionary<int, LagerBase>();
+		protected Dictionary<int, LagerBase> lagers = new Dictionary<int, LagerBase>();
 		public IReadOnlyDictionary<int, LagerBase> Lagers => lagers;
 
 		/// <summary>
@@ -59,16 +59,16 @@ namespace Zeltlager
 			}
 		}
 
-        public LagerManager(IIoProvider io)
-        {
-            Log = new Log(io);
-            ioProvider = io;
-        }
+		public LagerManager(IIoProvider io)
+		{
+			Log = new Log(io);
+			ioProvider = io;
+		}
 
 		/// <summary>
 		/// Load all lagers.
 		/// </summary>
-        public virtual async Task Load()
+		public virtual async Task Load()
 		{
 			// Search folders for lagers
 			var folders = await ioProvider.ListContents("");
@@ -90,7 +90,7 @@ namespace Zeltlager
 			}
 		}
 
-        protected virtual async Task<LagerBase> LoadLager(int id)
+		protected virtual async Task<LagerBase> LoadLager(int id)
 		{
 			IIoProvider io = new RootedIoProvider(ioProvider, id.ToString());
 			LagerBase lager = new LagerBase(this, io, id);

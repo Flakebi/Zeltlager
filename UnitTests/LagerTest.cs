@@ -11,7 +11,7 @@ namespace UnitTests
 	public class LagerTest
 	{
 		bool inited;
-        Semaphore semaphore = new Semaphore(1, 1);
+		Semaphore semaphore = new Semaphore(1, 1);
 
 		protected LagerClientManager manager;
 		protected LagerClient lager;
@@ -27,7 +27,7 @@ namespace UnitTests
 			// Lock using semaphores because async is multi-threaded
 			try
 			{
-                semaphore.WaitOne();
+				semaphore.WaitOne();
 
 				if (inited)
 					return;
@@ -38,16 +38,16 @@ namespace UnitTests
 				await manager.CreateLager("Testlager", "secure passwörd", null);
 				lager = (LagerClient)manager.Lagers[0];
 				ownCollaborator = lager.OwnCollaborator;
-                serialiser = lager.ClientSerialiser;
+				serialiser = lager.ClientSerialiser;
 				context = new LagerClientSerialisationContext(manager, lager);
 				context.PacketId = new PacketId(ownCollaborator);
-                await lager.CreateTestData();
+				await lager.CreateTestData();
 
-                inited = true;
+				inited = true;
 			}
 			finally
 			{
-                semaphore.Release();
+				semaphore.Release();
 			}
 		}
 	}

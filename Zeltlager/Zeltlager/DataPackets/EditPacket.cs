@@ -14,7 +14,7 @@ namespace Zeltlager.DataPackets
 	{
 		/// <summary>
 		/// The list of types that can be serialised.
-		/// 
+		///
 		/// The method is an optional member method that will
 		/// be called on the edited object after it was read.
 		/// This method can also take a LagerClientSerialisationContext.
@@ -22,7 +22,7 @@ namespace Zeltlager.DataPackets
 		static readonly Tuple<Type, MethodInfo>[] types = {
 			new Tuple<Type, MethodInfo>(typeof(Member), null),
 			new Tuple<Type, MethodInfo>(typeof(Tent), null),
-			new Tuple<Type, MethodInfo>(typeof(CalendarEvent), 
+			new Tuple<Type, MethodInfo>(typeof(CalendarEvent),
 			   typeof(CalendarEvent).GetRuntimeMethod("Edit", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo>(typeof(Competition.Competition), null),
 			new Tuple<Type, MethodInfo>(typeof(Station), null),
@@ -39,7 +39,7 @@ namespace Zeltlager.DataPackets
 
 		protected EditPacket() { }
 
-        public static async Task<EditPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
+		public static async Task<EditPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, object obj)
 		{
 			var packet = new EditPacket();
@@ -91,7 +91,7 @@ namespace Zeltlager.DataPackets
 				{
 					object[] parameters;
 					if (type.Item2.GetParameters().Select(p => p.ParameterType)
-					    .SequenceEqual(new Type[] { typeof(LagerClientSerialisationContext) }))
+						.SequenceEqual(new Type[] { typeof(LagerClientSerialisationContext) }))
 						parameters = new object[] { context };
 					else
 						parameters = new object[0];
