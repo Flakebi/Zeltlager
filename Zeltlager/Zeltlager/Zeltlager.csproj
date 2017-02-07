@@ -55,9 +55,6 @@
     <Compile Include="DataPackets\PacketId.cs" />
     <Compile Include="Erwischt\Erwischt.cs" />
     <Compile Include="IIoProvider.cs" />
-    <Compile Include="CreateLagerPage.xaml.cs">
-      <DependentUpon>CreateLagerPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="LagerBase.cs" />
     <Compile Include="LagerManager.cs" />
     <Compile Include="LagerStatus.cs" />
@@ -185,6 +182,9 @@
       <DependentUpon>ChangeLagerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Client\LagerClientCommunication.cs" />
+    <Compile Include="Settings\CreateLagerPage.xaml.cs">
+      <DependentUpon>CreateLagerPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -196,9 +196,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="LoadingScreen.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CreateLagerPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="General\GeneralPage.xaml">
@@ -250,6 +247,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings\ChangeLagerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings\CreateLagerPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
