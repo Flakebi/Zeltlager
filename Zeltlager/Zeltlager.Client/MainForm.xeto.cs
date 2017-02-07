@@ -83,6 +83,8 @@ namespace Zeltlager.Client
 			Icon = Icon.FromResource("Zeltlager.Client.icon.ico");
 			var size = MinimumSize;
 			size.Width = topBarLayout.Width;
+			if (size.Width <= 0)
+				size.Width = 100;
 			MinimumSize = size;
 
 			LagerManager.IsClient = true;
