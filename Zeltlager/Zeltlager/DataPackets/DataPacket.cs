@@ -15,12 +15,13 @@ namespace Zeltlager.DataPackets
 	/// public static int GetIdCount()
 	/// All possible packet types have to be added to the packetTypes array.
 	/// </summary>
-	public abstract class DataPacket
+	public abstract class DataPacket : IComparable<DataPacket>
 	{
 		static readonly Type[] packetTypes = {
 			typeof(AddCollaborator),
 			typeof(AddPacket),
 			typeof(EditPacket),
+			typeof(RevertPacket)
 		};
 
 		/// <summary>
@@ -80,6 +81,18 @@ namespace Zeltlager.DataPackets
 		/// </summary>
 		protected int subId { get; set; }
 
+		/// <summary>
+		/// A string description of this packet used in ToString.
+		/// Packets should set this when they get deserialised.
+		/// </summary>
+		protected string contentString;
+
+		/// <summary>
+		/// The priority of a packet.
+		/// Packets with a lower priority will be applied first.
+		/// </summary>
+		public virtual int Priority => 0;
+
 		protected DataPacket()
 		{
 			Timestamp = DateTime.UtcNow;
@@ -121,5 +134,23 @@ namespace Zeltlager.DataPackets
 		/// </summary>
 		public abstract Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context);
+
+		public override string ToString()
+		{
+			return string.Format("{0} Id {1} {2}({3})", Timestamp.ToString("yyyy-MM-dd HH:mm:ss"), Id, GetType().Name, contentString ?? "null");
+		}
+
+		/// <summary>
+		/// A DataPacket is above another packet if the priority is lower or
+		/// (if the priority is equal) if the Timestamp is older.
+		/// </summary>
+		/// <returns>The result of the comparison.</returns>
+		/// <param name="other">The packet to compare to.</param>
+		public virtual int CompareTo(DataPacket other)
+		{
+			if (Priority == other.Priority)
+				return Timestamp.CompareTo(other.Timestamp);
+			return Priority.CompareTo(other.Priority);
+		}
 	}
 }

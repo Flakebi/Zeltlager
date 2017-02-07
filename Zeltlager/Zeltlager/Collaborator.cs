@@ -103,6 +103,12 @@ namespace Zeltlager
 			}
 		}
 
+		public override string ToString()
+		{
+			string mod = Key.Modulus.ToHexString();
+			return mod.Substring(mod.Length - 5);
+		}
+
 		// Serialisation with a LagerSerialisationContext
 		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
 		{

@@ -43,6 +43,8 @@
     <Compile Include="ImplementerTests.cs" />
     <Compile Include="HelperTests.cs" />
     <Compile Include="CommunicationPacketTests.cs" />
+    <Compile Include="RevertPacketTests.cs" />
+    <Compile Include="LagerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zeltlager\Zeltlager\Zeltlager.csproj">

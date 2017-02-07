@@ -328,6 +328,7 @@ namespace Zeltlager.Client
 		/// <summary>
 		/// Assemble the packet history from all collaborators.
 		/// This orders the packets in chronological order and removes packet bundles.
+		/// The packet that should be applied first, is the last packet in the list.
 		/// </summary>
 		/// <returns>The flat history of packets.</returns>
 		async Task<List<DataPacket>> GetHistory()
@@ -352,7 +353,7 @@ namespace Zeltlager.Client
 			})))
 				// Use OrderBy which is a stable sorting algorithm
 				.SelectMany(p => p)
-				.OrderBy(packet => packet.Timestamp).ToList();
+				.OrderBy(packet => packet).Reverse().ToList();
 		}
 
 		/// <summary>
@@ -366,9 +367,12 @@ namespace Zeltlager.Client
 		{
 			List<DataPacket> history = await GetHistory();
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			context.Packets = history;
 			bool success = true;
-			foreach (var packet in history)
+			while (history.Any())
 			{
+				var packet = history.Last();
+				history.RemoveAt(history.Count - 1);
 				try
 				{
 					context.PacketId = packet.Id;
@@ -413,7 +417,15 @@ namespace Zeltlager.Client
 			await SaveBundle(id);
 
 			// Then deserialise it to apply it
-			await packet.Deserialise(ClientSerialiser, context);
+            // We need to apply the whole history again if the packet has a higher priority
+            if (packet.Priority != 0)
+            {
+                Reset();
+                if (!await ApplyHistory())
+                    throw new LagerException("Error applying the packet");
+            }
+            else
+				await packet.Deserialise(ClientSerialiser, context);
 		}
 
 		public void AddMember(Member member)

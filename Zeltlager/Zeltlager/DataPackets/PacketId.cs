@@ -53,6 +53,11 @@ namespace Zeltlager.DataPackets
 			return new PacketId(Creator, Bundle, packetIndex);
 		}
 
+		public override string ToString()
+		{
+			return string.Format("Creator {0}, Bundle {1}, Packet {2}", Creator, Bundle.Id, PacketIndex);
+		}
+
 		public bool Equals(PacketId other)
 		{
 			if (other == null)

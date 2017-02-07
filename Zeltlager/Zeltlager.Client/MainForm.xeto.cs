@@ -101,11 +101,7 @@ namespace Zeltlager.Client
 
 			lagerDropDown.ItemTextBinding = new WrapTextBinding<Tuple<int, LagerClient>>(t => t.Item2.Data.Name);
 			lagerDropDown.ItemKeyBinding = new WrapTextBinding<Tuple<int, LagerClient>>(t => t.Item1.ToString());
-			collaboratorDropDown.ItemTextBinding = new WrapTextBinding<Collaborator>(c =>
-			{
-				string mod = c.Key.Modulus.ToHexString();
-				return mod.Substring(mod.Length - 5);
-			});
+			collaboratorDropDown.ItemTextBinding = new WrapTextBinding<Collaborator>(c => c.ToString());
 			collaboratorDropDown.ItemKeyBinding = new WrapTextBinding<Collaborator>(c => c.Key.Modulus.ToHexString());
 
 			ShowContent(null);
