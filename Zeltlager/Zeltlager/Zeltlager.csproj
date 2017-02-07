@@ -184,6 +184,7 @@
     <Compile Include="Settings\ChangeLagerPage.xaml.cs">
       <DependentUpon>ChangeLagerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Client\LagerClientCommunication.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
