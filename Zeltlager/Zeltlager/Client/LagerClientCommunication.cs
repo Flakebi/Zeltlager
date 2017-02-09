@@ -13,6 +13,26 @@ namespace Zeltlager.Client
 	using Responses = CommunicationPackets.Responses;
 	using Serialisation;
 
+	public static class InitStatusHelper
+	{
+		public static string GetMessage(this LagerClient.InitStatus status)
+		{
+			switch (status)
+			{
+				case LagerClient.InitStatus.CreateSymmetricKey:
+					return "Lagerschlüssel erstellen";
+				case LagerClient.InitStatus.CreateGameAsymmetricKey:
+					return "Lagerzertifikat erstellen";
+				case LagerClient.InitStatus.CreateCollaboratorAsymmetricKey:
+					return "Persönliches Zertifikat erstellen";
+				case LagerClient.InitStatus.Finished:
+					return "Fertig";
+				default:
+					throw new ArgumentException("LagerClient.InitStatus has an invalid value");
+			}
+		}
+	}
+
 	// This is the saving/network part of the LagerClient, the logic part can be
 	// found in LagerClient.cs.
 	public partial class LagerClient : LagerBase, ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>, ISearchable
@@ -22,7 +42,7 @@ namespace Zeltlager.Client
 			CreateSymmetricKey,
 			CreateGameAsymmetricKey,
 			CreateCollaboratorAsymmetricKey,
-			Ready
+			Finished
 		}
 
 		const string CLIENT_LAGER_FILE = "client.data";
@@ -84,7 +104,7 @@ namespace Zeltlager.Client
 			var packet = await DataPackets.AddCollaborator.Create(ClientSerialiser, context, OwnCollaborator);
 			await AddPacket(packet);
 
-			statusUpdate?.Invoke(InitStatus.Ready);
+			statusUpdate?.Invoke(InitStatus.Finished);
 		}
 
 		public override async Task Load()
