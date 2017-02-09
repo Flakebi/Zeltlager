@@ -11,14 +11,6 @@ namespace Zeltlager
 
 	public partial class App : Application
 	{
-		static readonly string[] INIT_STATUS =
-		{
-			"Lagerschlüssel erstellen",
-			"Lagerzertifikat erstellen",
-			"Persönliches Zertifikat erstellen",
-			"Lager speichern"
-		};
-
 		LoadingScreen loadingScreen;
 		LagerClientManager manager;
 
@@ -104,14 +96,12 @@ namespace Zeltlager
 			// Handle when your app resumes
 		}
 
-		void DisplayStatus(LagerClient.InitStatus status) => loadingScreen.Status = INIT_STATUS[(int)status];
-
 		public async Task CreateLager(string name, string password)
 		{
 			MainPage = new NavigationPage(loadingScreen);
 			try
 			{
-				var lager = await manager.CreateLager(name, password, DisplayStatus);
+				var lager = await manager.CreateLager(name, password, status => loadingScreen.Status = status.GetMessage());
 				// fill with some test data
 				await lager.CreateTestData();
 
