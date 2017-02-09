@@ -15,7 +15,6 @@ namespace Zeltlager
 
 			InitializeComponent();
 			BindingContext = this;
-			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		async void OnCreateClicked(object sender, EventArgs e)
