@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage
-	xmlns="http://xamarin.com/schemas/2014/forms"
-	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	x:Class="Zeltlager.Settings.ManageLagerPage"
-			 Style="{StaticResource BaseStyle}">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 x:Class="Zeltlager.Settings.ManageLagerPage"
+			 Style="{StaticResource BaseStyle}"
+			 Title="Lager verwalten">
 	<ContentPage.Content>
 		<StackLayout VerticalOptions="FillAndExpand"
 					 HorizontalOptions="FillAndExpand"

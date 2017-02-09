@@ -6,7 +6,7 @@ namespace Zeltlager
 {
 	using Cryptography;
 
-	public class LagerData
+	public class LagerData : ISearchable
 	{
 		/// <summary>
 		/// The data of this lager.
@@ -26,6 +26,10 @@ namespace Zeltlager
 		/// </summary>
 		public KeyPair AsymmetricKey { get; set; }
 		public string Name { get; set; }
+
+		public string SearchableText => Name;
+
+		public string SearchableDetail => "";
 
 		public LagerData() { }
 		

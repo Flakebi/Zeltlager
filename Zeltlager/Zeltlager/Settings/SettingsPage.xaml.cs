@@ -14,6 +14,11 @@ namespace Zeltlager.Settings
 			this.lager = lager;
 			InitializeComponent();
 			NavigationPage.SetBackButtonTitle(this, "");
+			string serverAddress = lager.ClientManager.Settings.ServerAddress;
+			if (!string.IsNullOrEmpty(serverAddress))
+			{
+				ServerEntry.Text = serverAddress;
+			}
 		}
 
 		void OnLogClicked(object sender, EventArgs e)

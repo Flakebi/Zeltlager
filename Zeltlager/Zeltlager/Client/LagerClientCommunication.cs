@@ -227,7 +227,7 @@ namespace Zeltlager.Client
 				// Reload the history
 				Reset();
 				await ApplyHistory();
-				statusUpdate?.Invoke(NetworkStatus.Ready);
+				statusUpdate?.Invoke(NetworkStatus.Finished);
 			}
 			finally
 			{

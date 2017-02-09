@@ -109,7 +109,7 @@ namespace Zeltlager.Client
 		/// <summary>
 		/// Get the list of lagers from the remote host.
 		/// </summary>
-		/// <returns>The lager list with server id and lager data.</returns>
+		/// <returns>The lager list with server lager id and lager data.</returns>
 		/// <param name="statusUpdate">An optional callback for status updates.</param>
 		public async Task<Dictionary<int, LagerData>> RemoteListLagers(Action<NetworkStatus> statusUpdate)
 		{
@@ -123,7 +123,7 @@ namespace Zeltlager.Client
 				var packet = (Responses.ListLagers)await connection.ReadPacket();
 				await connection.Close();
 				var result = packet.GetLagerData();
-				statusUpdate?.Invoke(NetworkStatus.Ready);
+				statusUpdate?.Invoke(NetworkStatus.Finished);
 				return result;
 			}
 			finally

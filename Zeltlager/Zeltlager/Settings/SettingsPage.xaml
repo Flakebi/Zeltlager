@@ -15,7 +15,7 @@
 					 Orientation="Horizontal"
 					 Spacing="15">
 				<Label Text="Server:"/>
-				<Entry x:Name="ServerEntry"/>
+				<Entry x:Name="ServerEntry" HorizontalOptions="FillAndExpand"/>
 			</StackLayout>
 		</StackLayout>
 	</ContentPage.Content>
