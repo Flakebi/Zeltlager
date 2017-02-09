@@ -114,8 +114,14 @@ namespace Zeltlager
 		{
 			messages.Add(message);
 			OnMessage?.Invoke(message);
-			using (StreamWriter writer = new StreamWriter(await ioProvider.AppendFile(FILENAME)))
-				writer.WriteLine(message);
+			try
+			{
+				using (StreamWriter writer = new StreamWriter(await ioProvider.AppendFile(FILENAME)))
+					writer.WriteLine(message);
+			}
+			catch
+			{
+			}
 		}
 
 		/// <summary>
