@@ -52,31 +52,13 @@ namespace Zeltlager
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 
-			bool loadedLager = false;
 			LagerClient lager = null;
 			int lagerId = manager.Settings.LastLager;
 			if (manager.Lagers.ContainsKey(lagerId))
 			{
-				// Load lager
-				try
-				{
-					loadingScreen.Status = "Lager laden";
-					lager = (LagerClient)manager.Lagers[lagerId];
-					if (!await lager.LoadBundles())
-						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden der Lagerdateien sind Fehler aufgetreten", "Ok");
-					if (!await lager.ApplyHistory())
-						await MainPage.DisplayAlert(loadingScreen.Status, "Beim Laden des Lagers sind Fehler aufgetreten", "Ok");
-					loadedLager = true;
-				} catch (Exception e)
-				{
-					// Log the exception
-					await LagerManager.Log.Exception("Load lager", e);
-					await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
-				}
+				lager = (LagerClient)manager.Lagers[lagerId];
+				ChangeLager(null, lager);
 			}
-			if (loadedLager)
-				// Go to the main page
-				MainPage = new NavigationPage(new MainPage(lager));
 			else
 			{
 				// Create lager
@@ -102,20 +84,36 @@ namespace Zeltlager
 			try
 			{
 				var lager = await manager.CreateLager(name, password, status => loadingScreen.Status = status.GetMessage());
-				// fill with some test data
+				// fill with some test data TODO remove at some time
 				await lager.CreateTestData();
-
-
-
 
 				// Go to the main page
 				MainPage = new NavigationPage(new MainPage(lager));
-			} catch (Exception e)
+			}
+			catch (Exception e)
 			{
 				// Log the exception
 				await LagerManager.Log.Exception("Creating lager", e);
 				await MainPage.DisplayAlert(loadingScreen.Status, e.ToString(), "Ok");
 			}
 		}
+
+		// call this if you want to change the current lager
+		async public void ChangeLager(LagerClient oldLager, LagerClient newlager)
+		{
+			// unloads lager if it is not null
+			oldLager?.Unload();
+			
+			if (!await newlager.LoadBundles())
+			{
+				await MainPage.DisplayAlert("Achtung!", "Beim Laden der Datenblöcke ist ein Fehler aufgetreten.", "Ok");
+			}
+			if (!await newlager.ApplyHistory())
+			{
+				await MainPage.DisplayAlert("Achtung!", "Beim Anwenden der Datenpakete ist ein Fehler aufgetreten.", "Ok");
+			}
+			MainPage = new NavigationPage(new MainPage(newlager));
+		}
+		
 	}
 }

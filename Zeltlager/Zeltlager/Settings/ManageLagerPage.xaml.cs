@@ -24,7 +24,7 @@ namespace Zeltlager.Settings
 
 		void OnDownloadLagerClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new DownloadLagerPage(lager.ClientManager), true);
+			Navigation.PushAsync(new DownloadLagerPage(lager), true);
 		}
 
 		void OnChangeLagerClicked(object sender, EventArgs e)

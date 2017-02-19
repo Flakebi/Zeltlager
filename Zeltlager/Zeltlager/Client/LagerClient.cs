@@ -52,6 +52,11 @@ namespace Zeltlager.Client
 		/// </summary>
 		public void Reset()
 		{
+			// Reset collaborators
+			foreach (var col in Collaborators.Values)
+				col.Collaborators.Clear();
+			
+			// Reset content
 			members = new List<Member>();
 			tents = new List<Tent>();
 
@@ -100,7 +105,8 @@ namespace Zeltlager.Client
 		/// </returns>
 		public async Task<bool> ApplyHistory()
 		{
-			List<DataPacket> history = await GetHistory();
+			List<DataPacket> wholeHistory = await GetHistory();
+			List<DataPacket> history = wholeHistory.ToList();
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
 			context.Packets = history;
 			bool success = true;

@@ -15,7 +15,7 @@ namespace Zeltlager
 		/// <summary>
 		/// 5, 7, 9
 		/// </summary>
-		public const ushort PORT = 57911;
+		public const ushort PORT = 57914;
 
 		public static bool IsClient { get; set; }
 		public static ICryptoProvider CryptoProvider { get; set; }

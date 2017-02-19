@@ -124,6 +124,15 @@ namespace Zeltlager.UAM
 					{
 						Type[] a = { typeof(string), vartype };
 						object[] parameters = { ((Entry)sender).Text, null };
+						if (vartype.IsConstructedGenericType && vartype.GetGenericTypeDefinition() == typeof(Nullable<>))
+						{
+							if (string.IsNullOrEmpty(((Entry)sender).Text))
+							{
+								type.GetRuntimeProperty(pi.Name).SetValue(Obj, null);
+								return;
+							}
+							vartype = vartype.GenericTypeArguments[0];
+						}
 						if ((bool) vartype.GetTypeInfo().GetDeclaredMethods("TryParse").First(x => x.GetParameters().Length == 2).Invoke(null, parameters))
 						{
 							//type.GetRuntimeProperty(pi.Name).SetValue(Obj, Helpers.ConvertParam(((Entry)sender).Text, vartype));
