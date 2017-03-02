@@ -107,16 +107,6 @@ namespace Zeltlager
 
 		#region Interface implementation
 
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void NotifyPropertyChanged(string propertyName)
-		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-
 		#endregion
 	}
 }
