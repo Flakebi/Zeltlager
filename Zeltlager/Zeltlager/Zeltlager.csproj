@@ -185,6 +185,9 @@
     <Compile Include="Settings\CreateLagerPage.xaml.cs">
       <DependentUpon>CreateLagerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\UploadLagerPage.xaml.cs">
+      <DependentUpon>UploadLagerPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -250,6 +253,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings\CreateLagerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings\UploadLagerPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

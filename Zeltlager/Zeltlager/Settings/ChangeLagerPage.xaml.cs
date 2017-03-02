@@ -9,20 +9,21 @@ namespace Zeltlager.Settings
 {
 	public partial class ChangeLagerPage : ContentPage
 	{
-		LagerClientManager manager;
+		// current (old) lager
+		LagerClient lager;
 
-		public ChangeLagerPage(LagerClientManager manager)
+		public ChangeLagerPage(LagerClient lager)
 		{
 			InitializeComponent();
-			this.manager = manager;
+			this.lager = lager;
 			NavigationPage.SetBackButtonTitle(this, "");
-			//Content = new SearchableListView<LagerClient>(manager.Lagers.Values.Cast<LagerClient>().ToList(),
-			                                              //null, null, OnLagerClicked);
+			Content = new SearchableListView<LagerClient>(lager.Manager.Lagers.Values.Cast<LagerClient>().ToList(),
+			                                              null, null, OnLagerClicked);
 		}
 
-		void OnLagerClicked(LagerClient lager)
+		void OnLagerClicked(LagerClient newlager)
 		{
-			
+			((App)Application.Current).ChangeLager(lager, newlager);
 		}
 	}
 }

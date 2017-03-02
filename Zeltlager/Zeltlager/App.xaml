@@ -40,6 +40,7 @@
 			<Color x:Key="separatorColor">#4b358d</Color>
 			<Color x:Key="whiteColor">#dddddd</Color>
 			<Color x:Key="textColorSecondary">#2f82da</Color>
+			<Color x:Key="detailColor">#98C5D4</Color>
 
 			<Style x:Key="BaseStyle" TargetType="VisualElement">
 				<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}" />

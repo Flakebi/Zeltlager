@@ -29,12 +29,12 @@ namespace Zeltlager.Settings
 
 		void OnChangeLagerClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new ChangeLagerPage(lager.ClientManager), true);
+			Navigation.PushAsync(new ChangeLagerPage(lager), true);
 		}
 
 		void OnUploadLagerClicked(object sender, EventArgs e)
 		{
-			// upload lager & show matching loading screen
+			Navigation.PushAsync(new UploadLagerPage(lager), true);
 		}
 	}
 }

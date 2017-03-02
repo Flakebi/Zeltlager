@@ -85,6 +85,7 @@ namespace Zeltlager
 			ContextActions.Add(deleteAction);
 
 			TextColor = (Color)Application.Current.Resources["textColorStandard"];
+			DetailColor = (Color)Application.Current.Resources["detailColor"];
 		}
 	}
 }

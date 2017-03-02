@@ -24,11 +24,10 @@ namespace Zeltlager.Settings
 		async void OnRequestClicked(object sender, EventArgs e)
 		{
 			password = PasswordEntry.Text ?? "";
-			// TODO request matching lagers from Server
-			//IReadOnlyList<Lager> lagers = 
-			//vsl.Children.Add(new SearchableListView)
+
 			LoadingScreen ls = new LoadingScreen();
 			await Navigation.PushModalAsync(new NavigationPage(ls), false);
+
 			if (lagerDataList == null)
 			{
 				lagerDataList = await lager.ClientManager.RemoteListLagers(status => ls.Status = status.GetMessage());
@@ -42,9 +41,11 @@ namespace Zeltlager.Settings
 					decryptedLagers.Add(d.Value);
 				}
 			}
+
 			if (vsl.Children.Last() is SearchableListView<LagerData>)
 				vsl.Children.RemoveAt(vsl.Children.Count - 1);
 			vsl.Children.Add(new SearchableListView<LagerData>(decryptedLagers, null, null, OnLagerClicked));
+
 			await Navigation.PopModalAsync(false);
 		}
 
@@ -55,7 +56,7 @@ namespace Zeltlager.Settings
 
 			int serverId = lagerDataList.First(kv => kv.Value == lagerData).Key;
 			LagerClient newLager = (LagerClient)lager.ClientManager.Lagers.FirstOrDefault(kv => kv.Value.Data.Data.SequenceEqual(lagerData.Data)).Value;
-			if (!lager.ClientManager.Lagers.Any())
+			if (newLager == null)
 			{
 				newLager = await lager.ClientManager.DownloadLager(serverId, lagerData, password, status => ls.Status = status.GetMessage(), status => ls.Status = status.GetMessage());
 			}
