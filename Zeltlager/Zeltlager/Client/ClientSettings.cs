@@ -13,6 +13,14 @@ namespace Zeltlager.Client
 		[Serialisation]
 		public int LastLager { get; set; }
 
+		[Serialisation]
+		public bool ShowInfoInLog { get; set; }
+		[Serialisation]
+		public bool ShowWarningInLog { get; set; }
+		[Serialisation]
+		public bool ShowErrorInLog { get; set; }
+		[Serialisation]
+		public bool ShowExceptionInLog { get; set; }
 
 		/// <summary>
 		/// The address of the server for remote games.
@@ -24,6 +32,10 @@ namespace Zeltlager.Client
 		{
 			// Set default values
 			LastLager = 0;
+			ShowInfoInLog = false;
+			ShowWarningInLog = false;
+			ShowErrorInLog = true;
+			ShowExceptionInLog = true;
 
 			if (await io.ExistsFile(SETTINGS_FILE))
 			{

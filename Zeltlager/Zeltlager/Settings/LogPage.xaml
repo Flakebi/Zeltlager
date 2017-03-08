@@ -15,19 +15,19 @@
 						 Spacing="15">
 				<StackLayout Orientation="Vertical" Spacing="15">
 					<Label Text="Info"/>
-					<Switch IsToggled="{Binding Info}" Toggled="UpdateUI"/>
+					<Switch IsToggled="{Binding ShowInfoInLog}" Toggled="UpdateUI"/>
 				</StackLayout>
 				<StackLayout Orientation="Vertical" Spacing="15">
 					<Label Text="Warning"/>
-					<Switch IsToggled="{Binding Warning}" Toggled="UpdateUI"/>
+					<Switch IsToggled="{Binding ShowWarningInLog}" Toggled="UpdateUI"/>
 				</StackLayout>
 				<StackLayout Orientation="Vertical" Spacing="15">
 					<Label Text="Error"/>
-					<Switch IsToggled="{Binding Error}" Toggled="UpdateUI"/>
+					<Switch IsToggled="{Binding ShowErrorInLog}" Toggled="UpdateUI"/>
 				</StackLayout>
 				<StackLayout Orientation="Vertical" Spacing="15">
 					<Label Text="Exception"/>
-					<Switch IsToggled="{Binding Exception}" Toggled="UpdateUI"/>
+					<Switch IsToggled="{Binding ShowExceptionInLog}" Toggled="UpdateUI"/>
 				</StackLayout>
 			</StackLayout>
 			<ScrollView>

@@ -1,33 +1,29 @@
 using System;
 
 using Xamarin.Forms;
+using Zeltlager.Client;
 
 namespace Zeltlager
 {
 	public partial class LogPage : ContentPage
 	{
-		public bool Info { get; set; }
-		public bool Warning { get; set; }
-		public bool Error { get; set; }
-		public bool Exception { get; set; }
-		public LogPage()
+		public LagerClient Lager { get; set; }
+
+		public LogPage(LagerClient lager)
 		{
 			InitializeComponent();
-
-			// Only display errors and exceptions by default
-			Info = false;
-			Warning = false;
-			Error = true;
-			Exception = true;
-
-			BindingContext = this;
+			this.Lager = lager;
+			BindingContext = lager.ClientManager.Settings;
 			UpdateUI(null, null);
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void UpdateUI(object sender, EventArgs e)
 		{
-			logLabel.Text = LagerManager.Log.Print(Info, Warning, Error, Exception);
+			logLabel.Text = LagerManager.Log.Print(Lager.ClientManager.Settings.ShowInfoInLog, 
+			                                       Lager.ClientManager.Settings.ShowWarningInLog, 
+			                                       Lager.ClientManager.Settings.ShowErrorInLog, 
+			                                       Lager.ClientManager.Settings.ShowExceptionInLog);
 		}
 
 		async void OnDeleteClicked(object sender, EventArgs e)

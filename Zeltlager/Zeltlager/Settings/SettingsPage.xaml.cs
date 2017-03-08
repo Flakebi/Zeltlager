@@ -23,7 +23,7 @@ namespace Zeltlager.Settings
 
 		void OnLogClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new LogPage());
+			Navigation.PushAsync(new LogPage(lager));
 		}
 
 		void OnManageLagerClicked(object sender, EventArgs e)
