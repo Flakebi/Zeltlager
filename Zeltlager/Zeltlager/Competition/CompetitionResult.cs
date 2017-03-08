@@ -1,13 +1,13 @@
 using System;
-using Zeltlager.Serialisation;
-using Zeltlager.DataPackets;
-using Zeltlager.UAM;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
 
 namespace Zeltlager.Competition
 {
+	using DataPackets;
+	using Serialisation;
+	using UAM;
+
 	[Editable("Ergebnis")]
 	public class CompetitionResult : Editable<CompetitionResult>, IComparable<CompetitionResult>
 	{
@@ -72,14 +72,9 @@ namespace Zeltlager.Competition
 		public int CompareTo(CompetitionResult other)
 		{
 			int placeCompare = Place.CompareTo(other.Place);
-			if (placeCompare == 0)
-			{
-				return Points.CompareTo(other.Points);
-			}
-			else
-			{
+			if (placeCompare != 0)
 				return placeCompare;
-			}
+			return Points.CompareTo(other.Points);
 		}
 
 		#endregion

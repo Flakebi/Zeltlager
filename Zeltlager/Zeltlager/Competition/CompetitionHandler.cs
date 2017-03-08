@@ -4,7 +4,7 @@ using System.Linq;
 namespace Zeltlager.Competition
 {
 	using Client;
-	using Zeltlager.DataPackets;
+	using DataPackets;
 
 	/// <summary>
 	/// collects all the competitions of one lager
@@ -12,12 +12,11 @@ namespace Zeltlager.Competition
 	public class CompetitionHandler
 	{
 		LagerClient lager;
-		public List<Competition> Competitions;
+		public List<Competition> Competitions = new List<Competition>();
 
 		public CompetitionHandler(LagerClient lager)
 		{
 			this.lager = lager;
-			this.Competitions = new List<Competition>();
 		}
 
 		public void AddCompetition(Competition comp)
@@ -32,16 +31,7 @@ namespace Zeltlager.Competition
 
 		public void AddCompetitionResult(CompetitionResult cr)
 		{
-			Competition comp = cr.Owner as Competition;
-			if (comp != null)
-			{
-				comp.AddResult(cr);
-			} 
-			else 
-			{
-				Station stat = (Station) cr.Owner;
-				stat.AddResult(cr);
-			}
+			cr.Owner.AddResult(cr);
 		}
 
 		public Competition GetCompetitionFromPacketId(PacketId id)

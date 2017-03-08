@@ -45,6 +45,7 @@
     <Compile Include="CommunicationPacketTests.cs" />
     <Compile Include="PacketTests.cs" />
     <Compile Include="LagerTest.cs" />
+    <Compile Include="BigLagerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zeltlager\Zeltlager\Zeltlager.csproj">
