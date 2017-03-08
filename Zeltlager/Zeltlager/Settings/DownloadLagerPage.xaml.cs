@@ -28,23 +28,31 @@ namespace Zeltlager.Settings
 			LoadingScreen ls = new LoadingScreen();
 			await Navigation.PushModalAsync(new NavigationPage(ls), false);
 
-			if (lagerDataList == null)
+			try
 			{
-				lagerDataList = await lager.ClientManager.RemoteListLagers(status => ls.Status = status.GetMessage());
-			}
-			List<LagerData> decryptedLagers = new List<LagerData>();
-			foreach (var d in lagerDataList)
-			{
-				if (await d.Value.Decrypt(password))
+				if (lagerDataList == null)
 				{
-					ls.Status = "Lager " + d.Key + " erfolgreich entschlüsselt";
-					decryptedLagers.Add(d.Value);
+					lagerDataList = await lager.ClientManager.RemoteListLagers(status => ls.Status = status.GetMessage());
 				}
-			}
+				List<LagerData> decryptedLagers = new List<LagerData>();
+				foreach (var d in lagerDataList)
+				{
+					if (await d.Value.Decrypt(password))
+					{
+						ls.Status = "Lager " + d.Key + " erfolgreich entschlüsselt";
+						decryptedLagers.Add(d.Value);
+					}
+				}
 
-			if (vsl.Children.Last() is SearchableListView<LagerData>)
-				vsl.Children.RemoveAt(vsl.Children.Count - 1);
-			vsl.Children.Add(new SearchableListView<LagerData>(decryptedLagers, null, null, OnLagerClicked));
+				if (vsl.Children.Last() is SearchableListView<LagerData>)
+					vsl.Children.RemoveAt(vsl.Children.Count - 1);
+				vsl.Children.Add(new SearchableListView<LagerData>(decryptedLagers, null, null, OnLagerClicked));
+			}
+			catch (Exception ex)
+			{
+				await LagerManager.Log.Exception("Request Lagers from Password", ex);
+				await DisplayAlert("Fehler", "Das Anfragen der Lager vom Server ist fehlgeschlagen", "Ok");
+			}
 
 			await Navigation.PopModalAsync(false);
 		}
@@ -56,12 +64,20 @@ namespace Zeltlager.Settings
 
 			int serverId = lagerDataList.First(kv => kv.Value == lagerData).Key;
 			LagerClient newLager = (LagerClient)lager.ClientManager.Lagers.FirstOrDefault(kv => kv.Value.Data.Data.SequenceEqual(lagerData.Data)).Value;
-			if (newLager == null)
+			try
 			{
-				newLager = await lager.ClientManager.DownloadLager(serverId, lagerData, password, status => ls.Status = status.GetMessage(), status => ls.Status = status.GetMessage());
+				if (newLager == null)
+				{
+					newLager = await lager.ClientManager.DownloadLager(serverId, lagerData, password, status => ls.Status = status.GetMessage(), status => ls.Status = status.GetMessage());
+				}
+				// Change the lager displayed in the app
+				((App)Application.Current).ChangeLager(lager, newLager);
 			}
-			// Change the lager displayed in the app
-			((App)Application.Current).ChangeLager(lager, newLager);
+			catch (Exception ex)
+			{
+				await LagerManager.Log.Exception("Change Lager after downloading", ex);
+				await DisplayAlert("Fehler", "Das Wechseln des Lagers nach dem Herunterladen ist fehlgeschlagen", "OK");
+			}
 
 			await Navigation.PopModalAsync(false);
 		}

@@ -19,8 +19,22 @@ namespace Zeltlager
 
 		public string LagerName => lager.Data.Name;
 
-		void OnSynchronizeClicked(object sender, EventArgs e)
+		async void OnSynchronizeClicked(object sender, EventArgs e)
 		{
+			LoadingScreen ls = new LoadingScreen();
+			await Navigation.PushModalAsync(new NavigationPage(ls), false);
+
+			try
+			{
+				await lager.Synchronise(status => ls.Status = status.GetMessage());
+			}
+			catch (Exception ex)
+			{
+				await LagerManager.Log.Exception("Synchronize lager", ex);
+				await DisplayAlert("Fehler", "Beim Synchronisieren des Lagers ist ein Fehler aufgetreten.", "Ok");
+			}
+
+			await Navigation.PopModalAsync(false);
 		}
 
 		void OnCompetitionClicked(object sender, EventArgs e)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Text;
+using System.Linq;
 
 namespace Zeltlager
 {
@@ -89,7 +90,7 @@ namespace Zeltlager
 		public Task Info(string section, string message) => AddMessage(new Message(LogType.Info, section, message));
 		public Task Warning(string section, string message) => AddMessage(new Message(LogType.Warning, section, message));
 		public Task Error(string section, string message) => AddMessage(new Message(LogType.Error, section, message));
-		public Task Exception(string section, Exception e) => AddMessage(new Message(LogType.Exception, section, e.ToString()));
+		public Task Exception(string section, Exception e) => AddMessage(new Message(LogType.Exception, section, string.Join(" ", e.ToString().Split('\n').Take(2))));
 
 		/// <summary>
 		/// Clear all messages from the log.
