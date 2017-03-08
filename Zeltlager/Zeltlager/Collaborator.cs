@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Zeltlager
 {
@@ -36,11 +36,6 @@ namespace Zeltlager
 
 		public KeyPair Key { get; set; }
 
-		Dictionary<PacketId, Collaborator> collaborators = new Dictionary<PacketId, Collaborator>();
-		/// <summary>
-		/// The list of collaborators (indexed by the id) as of this collaborators view point.
-		/// </summary>
-		public Dictionary<PacketId, Collaborator> Collaborators => collaborators;
 		List<DataPacketBundle> bundles = new List<DataPacketBundle>();
 		/// <summary>
 		/// The list of bundles of a collaborator indexed by their id.
@@ -73,7 +68,6 @@ namespace Zeltlager
 		public void Unload()
 		{
 			bundles.Clear();
-			collaborators.Clear();
 		}
 
 		/// <summary>
@@ -167,9 +161,8 @@ namespace Zeltlager
 
 		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			// Get our collaborator id as seen from the collaborator that writes our id
-			return serialiser.WriteId(output, context, context.PacketId.Creator.Collaborators
-				.First(c => c.Value == this).Key);
+			output.WritePublicKey(Key);
+			return Task.WhenAll();
 		}
 
 		public Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
@@ -178,10 +171,11 @@ namespace Zeltlager
 			return Task.WhenAll();
 		}
 
-		public static async Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
+		public static Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
-			PacketId id = await serialiser.ReadFromId<PacketId>(input, context);
-			return context.PacketId.Creator.Collaborators[id];
+			KeyPair key = input.ReadPublicKey();
+			var coll = context.Lager.Collaborators.First();
+			return Task.FromResult(context.Lager.Collaborators[key]);
 		}
 	}
 }
