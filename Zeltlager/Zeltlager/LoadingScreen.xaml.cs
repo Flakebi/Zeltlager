@@ -12,7 +12,7 @@ namespace Zeltlager
 			set
 			{
 				status = value;
-				OnPropertyChanged(nameof(Status));
+				OnPropertyChanged();
 			}
 		}
 

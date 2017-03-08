@@ -122,7 +122,6 @@ namespace Zeltlager.UAM
 					entry.Text = text.ToString();
 					entry.TextChanged += (sender, e) =>
 					{
-						Type[] a = { typeof(string), vartype };
 						object[] parameters = { ((Entry)sender).Text, null };
 						if (vartype.IsConstructedGenericType && vartype.GetGenericTypeDefinition() == typeof(Nullable<>))
 						{

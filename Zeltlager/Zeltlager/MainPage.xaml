@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Zeltlager"
              x:Class="Zeltlager.MainPage"
-             Title="Zeltlager"
+             Title="{Binding LagerName}"
 		 	 Style="{StaticResource BaseStyle}">
 	<ContentPage.ToolbarItems>
 		<ToolbarItem x:Name="settingsButton" Icon="{x:Static local:Icons.SETTINGS}" Clicked="OnSettingsClicked">

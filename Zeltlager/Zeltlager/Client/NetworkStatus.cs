@@ -21,7 +21,7 @@
 			switch (status)
 			{
 				case NetworkStatus.Connecting:
-					return "Verbindnug wird aufgebaut";
+					return "Verbindung wird aufgebaut";
 				case NetworkStatus.ListLagers:
 					return "Lager werden gesammelt";
 				case NetworkStatus.RegisterCollaborator:

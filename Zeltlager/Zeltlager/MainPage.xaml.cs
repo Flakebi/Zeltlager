@@ -14,7 +14,10 @@ namespace Zeltlager
 			InitializeComponent();
 			this.lager = lager;
 			NavigationPage.SetBackButtonTitle(this, "");
+			BindingContext = this;
 		}
+
+		public string LagerName => lager.Data.Name;
 
 		void OnSynchronizeClicked(object sender, EventArgs e)
 		{
