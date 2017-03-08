@@ -122,6 +122,8 @@ namespace Zeltlager
 			}
 			catch
 			{
+				messages.Add(new Message(LogType.Error, "Log", "Can't write log"));
+				OnMessage?.Invoke(message);
 			}
 		}
 

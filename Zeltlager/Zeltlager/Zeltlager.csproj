@@ -47,7 +47,6 @@
     <Compile Include="CommunicationPackets\Responses\CommunicationResponse.cs" />
     <Compile Include="CommunicationPackets\Responses\ListLagers.cs" />
     <Compile Include="Competition\Competition.cs" />
-    <Compile Include="DataPackets\AddCollaborator.cs" />
     <Compile Include="DataPackets\AddPacket.cs" />
     <Compile Include="DataPackets\DataPacketBundle.cs" />
     <Compile Include="DataPackets\DataPacket.cs" />

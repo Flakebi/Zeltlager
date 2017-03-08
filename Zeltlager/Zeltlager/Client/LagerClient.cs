@@ -52,10 +52,6 @@ namespace Zeltlager.Client
 		/// </summary>
 		public void Reset()
 		{
-			// Reset collaborators
-			foreach (var col in Collaborators.Values)
-				col.Collaborators.Clear();
-			
 			// Reset content
 			members = new List<Member>();
 			tents = new List<Tent>();

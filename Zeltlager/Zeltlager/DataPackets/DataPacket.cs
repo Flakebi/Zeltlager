@@ -18,7 +18,6 @@ namespace Zeltlager.DataPackets
 	public abstract class DataPacket : IComparable<DataPacket>
 	{
 		static readonly Type[] packetTypes = {
-			typeof(AddCollaborator),
 			typeof(AddPacket),
 			typeof(EditPacket),
 			typeof(RevertPacket)

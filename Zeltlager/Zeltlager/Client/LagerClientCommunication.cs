@@ -98,12 +98,6 @@ namespace Zeltlager.Client
 			OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);
 			await AddCollaborator(OwnCollaborator);
 
-			// Add the collaborator to his own list
-			var context = new LagerClientSerialisationContext(Manager, this);
-			context.PacketId = new PacketId(OwnCollaborator);
-			var packet = await DataPackets.AddCollaborator.Create(ClientSerialiser, context, OwnCollaborator);
-			await AddPacket(packet);
-
 			statusUpdate?.Invoke(InitStatus.Finished);
 		}
 
