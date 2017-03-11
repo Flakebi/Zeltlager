@@ -63,7 +63,8 @@ namespace UnitTests
 		{
 			var parts = IoProvider.GetParts(path);
 			var folder = GetFolder(parts.Take(parts.Length - 1));
-			folder.folders[parts.Last()] = new Folder();
+			if (!folder.folders.ContainsKey(parts.Last()))
+				folder.folders[parts.Last()] = new Folder();
 			return nop;
 		}
 
@@ -103,9 +104,13 @@ namespace UnitTests
 			byte[] content = new byte[0];
 			if (folder.files.ContainsKey(parts.Last()))
 				content = folder.files[parts.Last()];
-			return Task.FromResult<Stream>(new CallbackMemoryStream(
-				mem => folder.files[parts.Last()] = mem.ToArray(),
-				content));
+			return Task.FromResult<Stream>(new CallbackMemoryStream(mem =>
+			{
+				if (!folder.files.ContainsKey(parts.Last()))
+					folder.files[parts.Last()] = mem.ToArray();
+				else
+					folder.files[parts.Last()] = folder.files[parts.Last()].Concat(mem.ToArray()).ToArray();
+			}));
 		}
 	}
 }
