@@ -17,10 +17,10 @@ namespace Zeltlager.Competition
 			this.lager = lager;
 
 			NavigationPage.SetBackButtonTitle(this, "");
-			CreateUI();
+			UpdateUI();
 		}
 
-		void CreateUI()
+		void UpdateUI()
 		{
 			StackLayout vsl = new StackLayout
 			{
@@ -44,7 +44,7 @@ namespace Zeltlager.Competition
 			addStation.Clicked += OnAddStationClicked;
 			stationHeader.Children.Add(addStation);
 
-			var stationList = new SearchableListView<Station>(competition.Stations, OnEditStation, OnDeleteStation, OnClickStation);
+			var stationList = new SearchableListView<Station>(competition.Stations, OnEditClickedStation, OnDeleteClickedStation, OnStationClicked);
 
 			StackLayout participantHeader = new StackLayout
 			{
@@ -60,7 +60,7 @@ namespace Zeltlager.Competition
 			addParticipant.Clicked += OnAddParticipantClicked;
 			participantHeader.Children.Add(addParticipant);
 
-			var participantList = new SearchableListView<Participant>(competition.Participants, OnEditParticipant, OnDeleteParticipant, OnClickParticipant);
+			var participantList = new SearchableListView<Participant>(competition.Participants, OnEditClickedParticipant, OnDeleteClickedParticipant, OnParticipantClicked);
 
 			vsl.Children.Add(stationHeader);
 			vsl.Children.Add(stationList);
@@ -91,39 +91,39 @@ namespace Zeltlager.Competition
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			CreateUI();
+			UpdateUI();
 		}
 
 		#region Searchable implementaition
 
-		void OnClickStation(Station station)
+		void OnStationClicked(Station station)
 		{
 			Navigation.PushAsync(new StationPage(station));
 		}
 
-		void OnEditStation(Station station)
+		void OnEditClickedStation(Station station)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Station, Rankable>(station, false, lager)), true);
 		}
 
-		void OnDeleteStation(Station station)
+		void OnDeleteClickedStation(Station station)
 		{
-			// TODO packets
+			station.IsVisible = false;
 		}
 
-		void OnClickParticipant(Participant participant)
+		void OnParticipantClicked(Participant participant)
 		{
 			// TODO Packet Detail Page?
 		}
 
-		void OnEditParticipant(Participant participant)
+		void OnEditClickedParticipant(Participant participant)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new AddEditParticipantPage(participant, false)), true);
 		}
 
-		void OnDeleteParticipant(Participant participant)
+		void OnDeleteClickedParticipant(Participant participant)
 		{
-			// TODO packets
+			participant.IsVisible = false;
 		}
 		#endregion
 	}

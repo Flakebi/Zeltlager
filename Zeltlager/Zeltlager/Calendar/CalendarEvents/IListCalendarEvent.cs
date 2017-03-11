@@ -15,6 +15,6 @@ namespace Zeltlager.Calendar
 		string Title { get; }
 		string Detail { get; }
 
-		bool IsShown { get; }
+		bool IsVisible { get; set; }
 	}
 }

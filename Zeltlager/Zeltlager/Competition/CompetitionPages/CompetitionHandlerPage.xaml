@@ -8,7 +8,7 @@
 	<ContentPage.ToolbarItems>
 		<ToolbarItem x:Name="AddButton" 
 				Icon="{x:Static local:Icons.ADD}" 
-				Clicked="OnAddButtonClicked">
+				Clicked="OnAddClicked">
 		</ToolbarItem>
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>

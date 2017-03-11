@@ -11,7 +11,7 @@ namespace Zeltlager
 	using UAM;
 
 	[Editable("Teilnehmer")]
-	public class Member : Editable<Member>, IComparable<Member>, ISearchable
+	public class Member : Editable<Member>, IComparable<Member>, ISearchable, IDeletable
 	{
 		LagerClient lager;
 
@@ -83,6 +83,8 @@ namespace Zeltlager
 		public string SearchableText => Display;
 
 		public string SearchableDetail => Tent.Display;
+
+		public bool IsVisible { get; set; } = true;
 
 		#endregion
 

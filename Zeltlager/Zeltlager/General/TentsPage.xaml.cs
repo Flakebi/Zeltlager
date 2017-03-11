@@ -19,7 +19,7 @@ namespace Zeltlager.General
 			InitializeComponent();
 			Padding = new Thickness(10);
 			this.lager = lager;
-			Content = new SearchableListView<Tent>(lager.Tents, OnContextActionEdit, OnContextActionDelete, OnTentClick);
+			Content = new SearchableListView<Tent>(lager.Tents, OnEditClicked, OnDeleteClicked, OnTentClick);
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
@@ -32,15 +32,14 @@ namespace Zeltlager.General
 				new Tent(null, tentNumber, "", true, new List<Member>(), lager), true, lager)), true);
 		}
 
-		void OnContextActionEdit(Tent tent)
+		void OnEditClicked(Tent tent)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent, Tent>(tent, false, lager)), true);
 		}
 
-		async void OnContextActionDelete(Tent tent)
+		void OnDeleteClicked(Tent tent)
 		{
-			//TODO Revert packets
-			//await lager.AddPacket(new DeleteTent(tent));
+			tent.IsVisible = false;
 		}
 
 		public void OnTentClick(Tent tent)
@@ -51,7 +50,7 @@ namespace Zeltlager.General
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			Content = new SearchableListView<Tent>(lager.Tents, OnContextActionEdit, OnContextActionDelete, OnTentClick);
+			Content = new SearchableListView<Tent>(lager.Tents, OnEditClicked, OnDeleteClicked, OnTentClick);
 		}
 	}
 }

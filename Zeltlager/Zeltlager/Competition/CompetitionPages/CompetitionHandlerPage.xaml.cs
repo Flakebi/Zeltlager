@@ -15,26 +15,26 @@ namespace Zeltlager.Competition
 		{
 			InitializeComponent();
 			this.lager = lager;
-			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEdit, OnDelete, OnClick);
+			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEditClicked, OnDeleteClicked, OnCompetitionClick);
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
-		void OnAddButtonClicked(object sender, EventArgs e)
+		void OnAddClicked(object sender, EventArgs e)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Competition, Rankable>(new Competition(null, "", lager), true, lager)),true);
 		}
 
-		void OnEdit(Competition comp)
+		void OnEditClicked(Competition comp)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Competition, Rankable>(comp,false, lager)));
 		}
 
-		void OnDelete(Competition comp)
+		void OnDeleteClicked(Competition comp)
 		{
-			// TODO delete competetions, packets
+			comp.IsVisible = false;
 		}
 
-		void OnClick(Competition comp)
+		void OnCompetitionClick(Competition comp)
 		{
 			Navigation.PushAsync(new CompetitionPage(comp, lager));
 		}
@@ -42,7 +42,7 @@ namespace Zeltlager.Competition
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEdit, OnDelete, OnClick);
+			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEditClicked, OnDeleteClicked, OnCompetitionClick);
 		}
 	}
 }

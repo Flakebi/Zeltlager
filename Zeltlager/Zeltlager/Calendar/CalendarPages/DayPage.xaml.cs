@@ -45,10 +45,7 @@ namespace Zeltlager.Calendar
 
 		void OnDeleteClicked(IListCalendarEvent ilce)
 		{
-			//TODO revert packages
-			if (ilce is ReferenceCalendarEvent)
-			{
-			}
+			ilce.IsVisible = false;
 		}
 
 		public void OnEditDishwasherClicked(object sender, EventArgs e)

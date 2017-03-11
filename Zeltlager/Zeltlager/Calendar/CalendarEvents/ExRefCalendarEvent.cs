@@ -22,7 +22,7 @@ namespace Zeltlager.Calendar
 			Serialiser<LagerClientSerialisationContext> serialiser,
 			LagerClientSerialisationContext context, CalendarEvent oldObject)
 		{
-			Reference.MakeInvisible();
+			Reference.IsVisible = false;
 			DataPacket packet;
 			if (oldObject != null)
 			{

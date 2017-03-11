@@ -29,7 +29,7 @@ namespace Zeltlager.Calendar
 		public string Title => Reference.Title;
 		public string Detail => Reference.Detail;
 
-		public bool IsShown { get; private set; }  = true;
+		public bool IsVisible { get; set; }  = true;
 
 		static Task<ReferenceCalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
@@ -45,11 +45,6 @@ namespace Zeltlager.Calendar
 		public CalendarEvent GetEditableCalendarEvent()
 		{
 			return new ExRefCalendarEvent(this);
-		}
-
-		public void MakeInvisible()
-		{
-			IsShown = false;
 		}
 
 		public int CompareTo(IListCalendarEvent other)

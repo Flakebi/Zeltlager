@@ -9,7 +9,7 @@ namespace Zeltlager.Calendar
 {
 	// events that occour on multiple days at the same time
 	[Editable("Regelmäßigen Termin")]
-	public class StandardCalendarEvent : PlannedCalendarEvent, IComparable<StandardCalendarEvent>, IEquatable<StandardCalendarEvent>
+	public class StandardCalendarEvent : PlannedCalendarEvent, IComparable<StandardCalendarEvent>, IEquatable<StandardCalendarEvent>, IDeletable
 	{
 		/// <summary>
 		/// The time of this event, used to edit only the time.

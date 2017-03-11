@@ -11,7 +11,7 @@ namespace Zeltlager.Competition
 	/// <summary>
 	/// represents a participant in a comptetion, could be a tent, a mixed group or a single person
 	/// </summary>
-	public abstract class Participant : Editable<Participant>, ISearchable, IEquatable<Participant>
+	public abstract class Participant : Editable<Participant>, ISearchable, IEquatable<Participant>, IDeletable
 	{
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
@@ -67,6 +67,8 @@ namespace Zeltlager.Competition
 		public string SearchableText => Name;
 
 		public string SearchableDetail => "";
+
+		public bool IsVisible { get; set; } = true;
 
 		public override abstract Participant Clone();
 

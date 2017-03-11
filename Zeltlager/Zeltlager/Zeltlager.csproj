@@ -187,6 +187,7 @@
     <Compile Include="Settings\UploadLagerPage.xaml.cs">
       <DependentUpon>UploadLagerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IDeletable.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

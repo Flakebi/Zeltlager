@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Zeltlager.Competition
 {
+	using System;
 	using Serialisation;
 	using UAM;
 	using Zeltlager.Client;
@@ -12,7 +13,7 @@ namespace Zeltlager.Competition
 	/// represents one station in the competition and the results achieved there
 	/// </summary>
 	[Editable("Station")]
-	public class Station : Rankable, ISearchable
+	public class Station : Rankable, ISearchable, IDeletable
 	{
 		[Serialisation(Type = SerialisationType.Reference)]
 		Competition competition;
@@ -87,6 +88,8 @@ namespace Zeltlager.Competition
 		public string SearchableText => Name;
 
 		public string SearchableDetail => "";
+
+		public bool IsVisible { get; set; } = true;
 
 		public override Rankable Clone()
 		{

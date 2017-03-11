@@ -7,9 +7,10 @@ namespace Zeltlager.Competition
 	using UAM;
 	using Serialisation;
 	using DataPackets;
+	using System;
 
 	[Editable("Wettkampf")]
-	public class Competition : Rankable, ISearchable
+	public class Competition : Rankable, ISearchable, IDeletable
 	{
 		LagerClient lager;
 
@@ -95,6 +96,8 @@ namespace Zeltlager.Competition
 		public string SearchableText { get { return Name; } }
 
 		public string SearchableDetail { get { return ""; } }
+
+		public bool IsVisible { get; set; } = true;
 
 		#endregion
 	}

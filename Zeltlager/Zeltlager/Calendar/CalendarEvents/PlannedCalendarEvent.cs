@@ -9,7 +9,7 @@ namespace Zeltlager.Calendar
 {
 	// events that do not yet have a day or time assignedt
 	[Editable("Geplanten Termin")]
-	public class PlannedCalendarEvent : Editable<PlannedCalendarEvent>, IComparable<PlannedCalendarEvent>
+	public class PlannedCalendarEvent : Editable<PlannedCalendarEvent>, IComparable<PlannedCalendarEvent>, IDeletable
 	{
 		protected LagerClient lager;
 
@@ -24,7 +24,7 @@ namespace Zeltlager.Calendar
 		[Serialisation]
 		public string Detail { get; set; }
 
-		public bool IsShown { get; private set; } = true;
+		public bool IsVisible { get; set; } = true;
 
 		public PlannedCalendarEvent() {}
 
@@ -71,11 +71,6 @@ namespace Zeltlager.Calendar
 		public LagerClient GetLager()
 		{
 			return lager;
-		}
-
-		public void MakeInvisible()
-		{
-			IsShown = false;
 		}
 	}
 }

@@ -26,8 +26,7 @@ namespace Zeltlager.Calendar
 
 		void UpdateUI()
 		{
-			
-		var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
+			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
 			OnEdit = new Command(sender => OnEditClicked((PlannedCalendarEvent)sender));
 			OnDelete = new Command(sender => OnDeleteClicked((PlannedCalendarEvent)sender));
 
@@ -38,7 +37,7 @@ namespace Zeltlager.Calendar
 
 			ListView calendarEventList = new ListView
 			{
-				ItemsSource = calendar.PlannedEvents.Where(x => x.IsShown),
+				ItemsSource = calendar.PlannedEvents.Where(x => x.IsVisible),
 				ItemTemplate = dataTemplate,
 				BindingContext = calendar.PlannedEvents,
 			};
@@ -51,12 +50,13 @@ namespace Zeltlager.Calendar
 				}
 			});
 
-			Content = calendarEventList;}
+			Content = calendarEventList;
+		}
 
 		void OnAddClicked(object sender, EventArgs e)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<PlannedCalendarEvent, PlannedCalendarEvent>
-			           (new PlannedCalendarEvent(null, "", "", calendar.GetLager()), true, calendar.GetLager())), true);
+					   (new PlannedCalendarEvent(null, "", "", calendar.GetLager()), true, calendar.GetLager())), true);
 		}
 
 		void OnEditClicked(PlannedCalendarEvent pce)
@@ -67,13 +67,13 @@ namespace Zeltlager.Calendar
 
 		void OnDeleteClicked(PlannedCalendarEvent pce)
 		{
-			//TODO revert packages
+			pce.IsVisible = false;
 		}
 
 		void OnPlannedEventClicked(PlannedCalendarEvent pce)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-			           (new ExPlCalendarEvent(pce), true, pce.GetLager())), true);
+					   (new ExPlCalendarEvent(pce), true, pce.GetLager())), true);
 		}
 
 		protected override void OnAppearing()

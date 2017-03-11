@@ -55,7 +55,7 @@ namespace Zeltlager.Calendar
 
 		void OnDeleteClicked(StandardCalendarEvent sce)
 		{
-			//TODO revert packages
+			sce.IsVisible = false;
 		}
 	}
 }

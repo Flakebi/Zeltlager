@@ -18,7 +18,7 @@ namespace Zeltlager.General
 			Padding = new Thickness(10);
 			this.lager = lager;
 			// TODO: think about what should happen if member is clicked
-			Content = new SearchableListView<Member>(lager.Members, OnContextActionEdit, OnContextActionDelete, null);
+			Content = new SearchableListView<Member>(lager.Members, OnEditClicked, OnDeleteClicked, null);
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
@@ -32,21 +32,20 @@ namespace Zeltlager.General
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member, Member>(new Member(lager), true, lager)), true);
 		}
 
-		void OnContextActionEdit(Member member)
+		void OnEditClicked(Member member)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member, Member>(member, false, lager)), true);
 		}
 
-		async void OnContextActionDelete(Member member)
+		void OnDeleteClicked(Member member)
 		{
-			//TODO Revert packets
-			//await lager.AddPacket(new DeleteMember(member));
+			member.IsVisible = false;
 		}
 
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			Content = new SearchableListView<Member>(lager.Members, OnContextActionEdit, OnContextActionDelete, null);
+			Content = new SearchableListView<Member>(lager.Members.Where(m => m.IsVisible).ToList(), OnEditClicked, OnDeleteClicked, null);
 		}
 	}
 }

@@ -18,7 +18,14 @@ namespace Zeltlager
 
 		public SearchableListView(IReadOnlyList<T> items, Action<T> onEdit, Action<T> onDelete, Action<T> onClick)
 		{
-			totalItems = items;
+			if (typeof(T) is IDeletable)
+			{
+				totalItems = items.Cast<IDeletable>().Where(id => id.IsVisible).Cast<T>().ToList();
+			}
+			else
+			{
+				totalItems = items;
+			}
 			// Display everything at the beginning
 			currentItems = totalItems;
 

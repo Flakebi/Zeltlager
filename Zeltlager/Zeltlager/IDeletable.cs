@@ -1,7 +1,8 @@
 ﻿using System;
 namespace Zeltlager
 {
-	public interface Deletable
+	public interface IDeletable
 	{
+		bool IsVisible { get; set; }
 	}
 }

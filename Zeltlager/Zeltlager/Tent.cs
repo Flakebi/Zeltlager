@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using System;
 	using Client;
 	using DataPackets;
 	using Serialisation;
 	using UAM;
 
 	[Editable("Zelt")]
-	public class Tent : Editable<Tent>, ISearchable
+	public class Tent : Editable<Tent>, ISearchable, IDeletable
 	{
 		LagerClient lager;
 
@@ -114,6 +115,8 @@ namespace Zeltlager
 		public string SearchableText => Display;
 
 		public string SearchableDetail => DisplayDetail;
+
+		public bool IsVisible { get; set; } = true;
 
 		#endregion
 
