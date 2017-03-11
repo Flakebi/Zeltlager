@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Xamarin.Forms;
 using Zeltlager.UAM;
+using System.Linq;
 
 namespace Zeltlager.Calendar
 {
@@ -18,9 +19,16 @@ namespace Zeltlager.Calendar
 			calendar = c;
 			BindingContext = calendar;
 
+			Style = (Style)Application.Current.Resources["BaseStyle"];
+			NavigationPage.SetBackButtonTitle(this, "");
+			UpdateUI();
+		}
+
+		void UpdateUI()
+		{
 			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
-			OnEdit = new Command(sender => OnEditClicked((StandardCalendarEvent) sender));
-			OnDelete = new Command(sender => OnDeleteClicked((StandardCalendarEvent) sender));
+			OnEdit = new Command(sender => OnEditClicked((StandardCalendarEvent)sender));
+			OnDelete = new Command(sender => OnDeleteClicked((StandardCalendarEvent)sender));
 
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandParameterProperty, new Binding("."));
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
@@ -29,22 +37,25 @@ namespace Zeltlager.Calendar
 
 			ListView calendarEventList = new ListView
 			{
-				ItemsSource = calendar.StandardEvents,
+				ItemsSource = calendar.StandardEvents.Where(se => se.IsVisible),
 				ItemTemplate = dataTemplate,
 				BindingContext = calendar.StandardEvents,
 			};
 			calendarEventList.ItemSelected +=
 				((sender, e) => calendarEventList.SelectedItem = null);
-
 			Content = calendarEventList;
-			Style = (Style)Application.Current.Resources["BaseStyle"];
-			NavigationPage.SetBackButtonTitle(this, "");
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			UpdateUI();
 		}
 
 		void OnAddClicked(object sender, EventArgs e)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<StandardCalendarEvent, PlannedCalendarEvent>
-			           (new StandardCalendarEvent(null, new TimeSpan(), "", "", calendar.GetLager()), true, calendar.GetLager())), true);
+					   (new StandardCalendarEvent(null, new TimeSpan(), "", "", calendar.GetLager()), true, calendar.GetLager())), true);
 		}
 
 		void OnEditClicked(StandardCalendarEvent sce)

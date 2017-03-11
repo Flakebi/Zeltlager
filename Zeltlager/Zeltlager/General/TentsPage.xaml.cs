@@ -19,7 +19,7 @@ namespace Zeltlager.General
 			InitializeComponent();
 			Padding = new Thickness(10);
 			this.lager = lager;
-			Content = new SearchableListView<Tent>(lager.Tents, OnEditClicked, OnDeleteClicked, OnTentClick);
+			Content = new SearchableListView<Tent>(lager.Tents.Where(t => t.IsVisible).ToList(), OnEditClicked, OnDeleteClicked, OnTentClick);
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
@@ -50,7 +50,7 @@ namespace Zeltlager.General
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			Content = new SearchableListView<Tent>(lager.Tents, OnEditClicked, OnDeleteClicked, OnTentClick);
+			Content = new SearchableListView<Tent>(lager.Tents.Where(t => t.IsVisible).ToList(), OnEditClicked, OnDeleteClicked, OnTentClick);
 		}
 	}
 }

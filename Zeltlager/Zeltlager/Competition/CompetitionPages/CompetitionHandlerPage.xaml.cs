@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Zeltlager.UAM;
 using Zeltlager.Client;
+using System.Linq;
 
 namespace Zeltlager.Competition
 {
@@ -15,13 +16,15 @@ namespace Zeltlager.Competition
 		{
 			InitializeComponent();
 			this.lager = lager;
-			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEditClicked, OnDeleteClicked, OnCompetitionClick);
+			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions.Where(c => c.IsVisible).ToList(),
+			                                              OnEditClicked, OnDeleteClicked, OnCompetitionClick);
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		void OnAddClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Competition, Rankable>(new Competition(null, "", lager), true, lager)),true);
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Competition, Rankable>
+			                                             (new Competition(null, "", lager), true, lager)),true);
 		}
 
 		void OnEditClicked(Competition comp)
@@ -42,7 +45,8 @@ namespace Zeltlager.Competition
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions, OnEditClicked, OnDeleteClicked, OnCompetitionClick);
+			Content = new SearchableListView<Competition>(lager.CompetitionHandler.Competitions.Where(c => c.IsVisible).ToList(),
+			                                              OnEditClicked, OnDeleteClicked, OnCompetitionClick);
 		}
 	}
 }

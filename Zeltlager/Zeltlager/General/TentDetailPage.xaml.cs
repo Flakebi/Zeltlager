@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Xamarin.Forms;
 using Zeltlager.Client;
+using System.Linq;
 namespace Zeltlager.General
 {
 	public partial class TentDetailPage : ContentPage
@@ -57,7 +58,7 @@ namespace Zeltlager.General
 			}, 0, 2, 3, 4);
 
 			grid.RowDefinitions.Add(rdlist);
-			grid.Children.Add(new SearchableListView<Member>(tent.Supervisors, null, null, null), 0, 2, 4, 5);
+			grid.Children.Add(new SearchableListView<Member>(tent.Supervisors.Where(m => m.IsVisible).ToList(), null, null, null), 0, 2, 4, 5);
 
 
 			grid.RowDefinitions.Add(rd);
@@ -68,7 +69,7 @@ namespace Zeltlager.General
 			}, 0, 2, 5, 6);
 
 			grid.RowDefinitions.Add(rdfill);
-			grid.Children.Add(new SearchableListView<Member>(tent.GetMembers(), null, null, null), 0, 2, 6, 7);
+			grid.Children.Add(new SearchableListView<Member>(tent.GetMembers().Where(m => m.IsVisible).ToList(), null, null, null), 0, 2, 6, 7);
 
 			var scrollView = new ScrollView();
 			scrollView.Content = grid;

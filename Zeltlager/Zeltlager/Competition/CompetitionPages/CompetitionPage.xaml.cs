@@ -2,6 +2,7 @@ using System;
 using Xamarin.Forms;
 using Zeltlager.UAM;
 using Zeltlager.Client;
+using System.Linq;
 
 namespace Zeltlager.Competition
 {
@@ -44,7 +45,8 @@ namespace Zeltlager.Competition
 			addStation.Clicked += OnAddStationClicked;
 			stationHeader.Children.Add(addStation);
 
-			var stationList = new SearchableListView<Station>(competition.Stations, OnEditClickedStation, OnDeleteClickedStation, OnStationClicked);
+			var stationList = new SearchableListView<Station>(competition.Stations.Where(s => s.IsVisible).ToList(),
+			                                                  OnEditClickedStation, OnDeleteClickedStation, OnStationClicked);
 
 			StackLayout participantHeader = new StackLayout
 			{
@@ -60,7 +62,8 @@ namespace Zeltlager.Competition
 			addParticipant.Clicked += OnAddParticipantClicked;
 			participantHeader.Children.Add(addParticipant);
 
-			var participantList = new SearchableListView<Participant>(competition.Participants, OnEditClickedParticipant, OnDeleteClickedParticipant, OnParticipantClicked);
+			var participantList = new SearchableListView<Participant>(competition.Participants.Where(p => p.IsVisible).ToList(),
+			                                                          OnEditClickedParticipant, OnDeleteClickedParticipant, OnParticipantClicked);
 
 			vsl.Children.Add(stationHeader);
 			vsl.Children.Add(stationList);

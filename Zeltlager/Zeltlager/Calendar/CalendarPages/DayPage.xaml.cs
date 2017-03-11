@@ -177,6 +177,7 @@ namespace Zeltlager.Calendar
 				Children = { leftArrow, dayNameLabel, rightArrow }
 			};
 
+			#region Dishwashers
 			editDishwasherButton = new Button { Image = Icons.EDIT };
 			editDishwasherButton.Clicked += OnEditDishwasherClicked;
 			editDishwasherButton.HorizontalOptions = LayoutOptions.End;
@@ -209,6 +210,7 @@ namespace Zeltlager.Calendar
 				Orientation = StackOrientation.Vertical,
 				Children = { header, dishwashers }
 			};
+			#endregion 
 
 			var calendarList = new ListView();
 
@@ -222,7 +224,7 @@ namespace Zeltlager.Calendar
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 
 			calendarList.ItemTemplate = dataTemplate;
-			calendarList.ItemsSource = Day.Events;//.Where(x => x.IsShown);
+			calendarList.ItemsSource = Day.Events.Where(ce => ce.IsVisible);
 			calendarList.Header = headerWithDishwashers;
 			calendarList.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			// disable selection
