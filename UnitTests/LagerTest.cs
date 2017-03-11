@@ -11,7 +11,7 @@ namespace UnitTests
 	public class LagerTest
 	{
 		bool inited;
-		Semaphore semaphore = new Semaphore(1, 1);
+		readonly Semaphore semaphore = new Semaphore(1, 1);
 
 		protected LagerClientManager manager;
 		protected LagerClient lager;
@@ -34,7 +34,7 @@ namespace UnitTests
 
 				LagerManager.IsClient = true;
 
-				manager = new LagerClientManager(new DiscardIoProvider());
+				manager = new LagerClientManager(new MemoryIoProvider());
 				await manager.CreateLager("Testlager", "secure passwörd", null);
 				lager = (LagerClient)manager.Lagers[0];
 				ownCollaborator = lager.OwnCollaborator;

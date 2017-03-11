@@ -8,9 +8,9 @@ using PCLStorage;
 
 namespace Zeltlager.Client
 {
-	class IoProvider : IIoProvider
+	public class IoProvider : IIoProvider
 	{
-		private static string[] GetParts(string path)
+		public static string[] GetParts(string path)
 		{
 			List<string> parts = new List<string>();
 			string s = path;
