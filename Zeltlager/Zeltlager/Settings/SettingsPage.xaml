@@ -11,12 +11,6 @@
 					 Padding="10,10,10,0">
 			<Button Text="Log" Clicked="OnLogClicked" Style="{StaticResource DarkButtonStyle}"/>
 			<Button Text="Lagerverwaltung" Clicked="OnManageLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
-			<StackLayout HorizontalOptions="FillAndExpand"
-					 Orientation="Horizontal"
-					 Spacing="15">
-				<Label Text="Server:"/>
-				<Entry x:Name="ServerEntry" HorizontalOptions="FillAndExpand"/>
-			</StackLayout>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Linq;
 
 using Xamarin.Forms;
+using Zeltlager.Settings;
 
 namespace Zeltlager
 {
@@ -63,8 +64,7 @@ namespace Zeltlager
 			{
 				// Create lager
 				loadingScreen.Status = "Lager erstellen";
-				//TODO Go to the settings screen here so the user can set the server and download a lager
-				MainPage = new NavigationPage(new CreateLagerPage());
+				MainPage = new NavigationPage(new ManageLagerPage(null, manager));
 			}
 		}
 
