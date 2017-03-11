@@ -1,39 +1,140 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="X5k-f2-b5h">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
-        <scene sceneID="gAE-YM-kbH">
+        <scene sceneID="EHf-IW-A2E">
             <objects>
-                <viewController id="X5k-f2-b5h" sceneMemberID="viewController">
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Y8P-hJ-Z43"/>
-                        <viewControllerLayoutGuide type="bottom" id="9ZL-r4-8FZ"/>
+                        <viewControllerLayoutGuide type="top" id="Llm-lL-Icb"/>
+                        <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="yd7-JS-zBw">
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" heightSizable="YES" widthSizable="YES"/>
+                        <color key="backgroundColor" customColorSpace="sRGB" colorSpace="calibratedRGB" red="0.058823529411764705" green="0.72549019607843135" blue="0.87058823529411766" alpha="1"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" image="Icon-60.png" translatesAutoresizingMaskIntoConstraints="NO" id="23">
-                                <rect key="frame" x="270" y="270" width="60" height="60"/>
-                                <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="3" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" image="icon.png">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <autoresizingMask key="autoresizingMask" heightSizable="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinX="YES" flexibleMaxY="YES" flexibleMinY="YES"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.20392156862745098" green="0.59607843137254901" blue="0.85882352941176465" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="23" firstAttribute="centerY" secondItem="yd7-JS-zBw" secondAttribute="centerY" priority="1" id="39"/>
-                            <constraint firstItem="23" firstAttribute="centerX" secondItem="yd7-JS-zBw" secondAttribute="centerX" priority="1" id="41"/>
-                        </constraints>
                     </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="600"/>
+                    <connections/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="XAI-xm-WK6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="349" y="339"/>
+            <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Icon-60.png" width="180" height="180"/>
+        <image name="add.png" width="24" height="24"/>
+        <image name="bag.png" width="24" height="24"/>
+        <image name="battery.png" width="24" height="24"/>
+        <image name="bell.png" width="24" height="24"/>
+        <image name="bluetooth.png" width="24" height="24"/>
+        <image name="bookmark.png" width="24" height="24"/>
+        <image name="briefcase.png" width="24" height="24"/>
+        <image name="calendar.png" width="24" height="24"/>
+        <image name="cancel.png" width="24" height="24"/>
+        <image name="cancel1.png" width="24" height="24"/>
+        <image name="clip.png" width="24" height="24"/>
+        <image name="clock.png" width="24" height="24"/>
+        <image name="clock1.png" width="24" height="24"/>
+        <image name="cloud.png" width="24" height="24"/>
+        <image name="correct.png" width="24" height="24"/>
+        <image name="creditcard.png" width="24" height="24"/>
+        <image name="cursor.png" width="24" height="24"/>
+        <image name="cursor1.png" width="24" height="24"/>
+        <image name="cut.png" width="24" height="24"/>
+        <image name="cutlery.png" width="24" height="24"/>
+        <image name="downarrow.png" width="24" height="24"/>
+        <image name="download.png" width="24" height="24"/>
+        <image name="edit.png" width="24" height="24"/>
+        <image name="envelope.png" width="24" height="24"/>
+        <image name="export.png" width="24" height="24"/>
+        <image name="favorite.png" width="24" height="24"/>
+        <image name="file.png" width="24" height="24"/>
+        <image name="folder.png" width="24" height="24"/>
+        <image name="forward.png" width="24" height="24"/>
+        <image name="gallery.png" width="24" height="24"/>
+        <image name="gamepad.png" width="24" height="24"/>
+        <image name="garbage.png" width="24" height="24"/>
+        <image name="headphones.png" width="24" height="24"/>
+        <image name="heart.png" width="24" height="24"/>
+        <image name="help.png" width="24" height="24"/>
+        <image name="home.png" width="24" height="24"/>
+        <image name="hourglass.png" width="24" height="24"/>
+        <image name="info.png" width="24" height="24"/>
+        <image name="layer.png" width="24" height="24"/>
+        <image name="layout.png" width="24" height="24"/>
+        <image name="leftarrow.png" width="24" height="24"/>
+        <image name="leftarrow1.png" width="24" height="24"/>
+        <image name="lightning.png" width="24" height="24"/>
+        <image name="link.png" width="24" height="24"/>
+        <image name="logout.png" width="24" height="24"/>
+        <image name="magnet.png" width="24" height="24"/>
+        <image name="map.png" width="24" height="24"/>
+        <image name="menu.png" width="24" height="24"/>
+        <image name="monitor.png" width="24" height="24"/>
+        <image name="moon.png" width="24" height="24"/>
+        <image name="padnote.png" width="24" height="24"/>
+        <image name="paint.png" width="24" height="24"/>
+        <image name="pause.png" width="24" height="24"/>
+        <image name="photocamera.png" width="24" height="24"/>
+        <image name="placeholder.png" width="24" height="24"/>
+        <image name="playbutton.png" width="24" height="24"/>
+        <image name="power.png" width="24" height="24"/>
+        <image name="presentation.png" width="24" height="24"/>
+        <image name="printer.png" width="24" height="24"/>
+        <image name="profile.png" width="24" height="24"/>
+        <image name="prohibition.png" width="24" height="24"/>
+        <image name="pushpin.png" width="24" height="24"/>
+        <image name="puzzle.png" width="24" height="24"/>
+        <image name="refresh.png" width="24" height="24"/>
+        <image name="remove.png" width="24" height="24"/>
+        <image name="rewind.png" width="24" height="24"/>
+        <image name="rightarrow.png" width="24" height="24"/>
+        <image name="rightarrow1.png" width="24" height="24"/>
+        <image name="rocketlaunch.png" width="24" height="24"/>
+        <image name="screen.png" width="24" height="24"/>
+        <image name="search.png" width="24" height="24"/>
+        <image name="settings.png" width="24" height="24"/>
+        <image name="settings1.png" width="24" height="24"/>
+        <image name="settings2.png" width="24" height="24"/>
+        <image name="share.png" width="24" height="24"/>
+        <image name="shield.png" width="24" height="24"/>
+        <image name="shoppingcart.png" width="24" height="24"/>
+        <image name="shutter.png" width="24" height="24"/>
+        <image name="smartphone.png" width="24" height="24"/>
+        <image name="speechbubble.png" width="24" height="24"/>
+        <image name="speedometer.png" width="24" height="24"/>
+        <image name="stats.png" width="24" height="24"/>
+        <image name="store.png" width="24" height="24"/>
+        <image name="sun.png" width="24" height="24"/>
+        <image name="switch1.png" width="24" height="24"/>
+        <image name="tag.png" width="24" height="24"/>
+        <image name="target.png" width="24" height="24"/>
+        <image name="timer.png" width="24" height="24"/>
+        <image name="unlock.png" width="24" height="24"/>
+        <image name="uparrow.png" width="24" height="24"/>
+        <image name="upload.png" width="24" height="24"/>
+        <image name="video.png" width="24" height="24"/>
+        <image name="videocamera.png" width="24" height="24"/>
+        <image name="visible.png" width="24" height="24"/>
+        <image name="voicerecorder.png" width="24" height="24"/>
+        <image name="volume.png" width="24" height="24"/>
+        <image name="waiting.png" width="24" height="24"/>
+        <image name="wifi.png" width="24" height="24"/>
+        <image name="zoom.png" width="24" height="24"/>
+        <image name="zoomout.png" width="24" height="24"/>
+        <image name="podium.png" width="24" height="24"/>
+        <image name="icon.png" width="48" height="48"/>
     </resources>
 </document>

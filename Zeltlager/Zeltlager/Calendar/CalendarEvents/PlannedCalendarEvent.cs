@@ -20,7 +20,7 @@ namespace Zeltlager.Calendar
 		[Serialisation]
 		public string Title { get; set; }
 
-		[Editable("Beschreibung")]
+		[Editable("Beschreibung",true)]
 		[Serialisation]
 		public string Detail { get; set; }
 

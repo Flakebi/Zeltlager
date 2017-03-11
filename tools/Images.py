@@ -359,6 +359,11 @@ def main():
 		paths = icon_paths[:]
 		add_ios_paths(icon, paths, 24, 24)
 		render_icon(icon, paths)
+	# Render tent icon
+	icon = SourceImage("Icons/icon.svg")
+	paths = icon_paths[:]
+	add_ios_paths(icon, paths, 48, 48)
+	render_icon(icon, paths)
 
 	# Wait until all icons are rendered
 	render_queue.join()

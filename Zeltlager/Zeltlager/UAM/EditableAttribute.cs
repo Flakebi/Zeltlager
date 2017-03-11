@@ -11,9 +11,21 @@ namespace Zeltlager.UAM
 		/// </summary>
 		public string Name { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether an attribute can also be left empty.
+		/// </summary>
+		/// <value><c>true</c> if value of the attribute can be empty; otherwise, <c>false</c>.</value>
+		public bool CanBeEmpty { get; set; }
+
 		public EditableAttribute(string name)
 		{
 			Name = name;
+		}
+
+		public EditableAttribute(string name, bool canBeEmpty)
+		{
+			Name = name;
+			CanBeEmpty = canBeEmpty;
 		}
 	}
 }

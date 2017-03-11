@@ -19,7 +19,15 @@ namespace Zeltlager.Calendar
 			calendar = c;
 			BindingContext = calendar;
 
-			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
+			Style = (Style)Application.Current.Resources["BaseStyle"];
+			NavigationPage.SetBackButtonTitle(this, "");
+			UpdateUI();
+		}
+
+		void UpdateUI()
+		{
+			
+		var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
 			OnEdit = new Command(sender => OnEditClicked((PlannedCalendarEvent)sender));
 			OnDelete = new Command(sender => OnDeleteClicked((PlannedCalendarEvent)sender));
 
@@ -43,10 +51,7 @@ namespace Zeltlager.Calendar
 				}
 			});
 
-			Content = calendarEventList;
-			Style = (Style)Application.Current.Resources["BaseStyle"];
-			NavigationPage.SetBackButtonTitle(this, "");
-		}
+			Content = calendarEventList;}
 
 		void OnAddClicked(object sender, EventArgs e)
 		{
@@ -69,6 +74,12 @@ namespace Zeltlager.Calendar
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
 			           (new ExPlCalendarEvent(pce), true, pce.GetLager())), true);
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			UpdateUI();
 		}
 	}
 }
