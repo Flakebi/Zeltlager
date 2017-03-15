@@ -8,14 +8,6 @@ namespace Zeltlager.Server
 
 	class Server
 	{
-		public static byte[] StringToByteArray(string hex)
-		{
-			byte[] bytes = new byte[hex.Length / 2];
-			for (int i = 0; i < hex.Length; i += 2)
-				bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-			return bytes;
-		}
-
 		static void Main(string[] args)
 		{
 			Task.WaitAll(AsyncMain(args));

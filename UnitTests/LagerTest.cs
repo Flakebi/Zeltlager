@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,6 +36,7 @@ namespace UnitTests
 				LagerManager.IsClient = true;
 
 				manager = new LagerClientManager(new MemoryIoProvider());
+				LagerManager.Log.OnMessage += Console.WriteLine;
 				await manager.CreateLager("Testlager", "secure passwörd", null);
 				lager = (LagerClient)manager.Lagers[0];
 				ownCollaborator = lager.OwnCollaborator;

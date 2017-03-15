@@ -23,8 +23,13 @@ namespace Zeltlager.Cryptography
 	public class BCCryptoProvider : ICryptoProvider
 	{
 		SecureRandom random = new SecureRandom();
-		PaddedBufferedBlockCipher symmetricCipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesFastEngine()), new Pkcs7Padding());
-		readonly RsaEngine asymmetricCipher = new RsaEngine();
+
+		PaddedBufferedBlockCipher GetSymmetricCipher()
+		{
+			return new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesFastEngine()), new Pkcs7Padding());
+		}
+
+		RsaEngine GetAsymmetricCipher() => new RsaEngine();
 
 		public Task<byte[]> GetRandom(int length)
 		{
@@ -83,6 +88,7 @@ namespace Zeltlager.Cryptography
 		{
 			return Task.Run(() =>
 			{
+				var symmetricCipher = GetSymmetricCipher();
 				symmetricCipher.Init(true, new ParametersWithIV(new KeyParameter(key), iv));
 				byte[] result = new byte[symmetricCipher.GetOutputSize(data.Length)];
 				symmetricCipher.DoFinal(data, result, 0);
@@ -94,9 +100,11 @@ namespace Zeltlager.Cryptography
 		{
 			return Task.Run(() =>
 			{
+				var symmetricCipher = GetSymmetricCipher();
 				symmetricCipher.Init(false, new ParametersWithIV(new KeyParameter(key), iv));
 				byte[] result = new byte[symmetricCipher.GetOutputSize(data.Length)];
-				symmetricCipher.DoFinal(data, result, 0);
+				int length = symmetricCipher.DoFinal(data, result, 0);
+				result = result.Take(length).ToArray();
 				return result;
 			});
 		}
@@ -124,7 +132,8 @@ namespace Zeltlager.Cryptography
 			{
 				// Hash data
 				var hash = await Hash(data);
-				// Encrypt hash
+				// Encrypt/Sign hash
+				var asymmetricCipher = GetAsymmetricCipher();
 				asymmetricCipher.Init(true, new RsaKeyParameters(true, new BigInteger(key.Modulus), new BigInteger(key.PrivateKey)));
 				return asymmetricCipher.ProcessBlock(hash, 0, hash.Length);
 			});
@@ -136,7 +145,8 @@ namespace Zeltlager.Cryptography
 			{
 				// Hash data
 				var hash = await Hash(data);
-				// Decrypt hash
+				// Decrypt/Verify hash
+				var asymmetricCipher = GetAsymmetricCipher();
 				asymmetricCipher.Init(false, new RsaKeyParameters(true, new BigInteger(key.Modulus), new BigInteger(key.PublicKey)));
 				var result = asymmetricCipher.ProcessBlock(signature, 0, signature.Length);
 				return Enumerable.SequenceEqual(hash, result);

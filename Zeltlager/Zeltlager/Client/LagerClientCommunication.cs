@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -119,6 +119,9 @@ namespace Zeltlager.Client
 			collaborators.Add(OwnCollaborator.Key, OwnCollaborator);
 		}
 
+		/// <summary>
+		/// The counterpart to unload is LoadBundles() and ApplyHistory().
+		/// </summary>
 		public override void Unload()
 		{
 			base.Unload();

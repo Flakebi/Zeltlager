@@ -205,6 +205,8 @@ namespace Zeltlager.Client
 				new Member(null, "Emily", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
 				new Member(null, "Franz", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
+
+			// TODO Add a competition
 		}
 	}
 }
