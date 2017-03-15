@@ -2,6 +2,7 @@ using System;
 using Xamarin.Forms;
 using Zeltlager.General;
 using Zeltlager.Client;
+using Zeltlager.Erwischt;
 
 namespace Zeltlager
 {
@@ -51,6 +52,8 @@ namespace Zeltlager
 
 		void OnErwischtClicked(object sender, EventArgs e)
 		{
+			// TODO check if you have a current game, if not show add page for game
+			Navigation.PushAsync(new ErwischtPage(lager.ErwischtHandler.GetCurrentGame(), lager));
 		}
 
 		void OnCalendarClicked(object sender, EventArgs e)

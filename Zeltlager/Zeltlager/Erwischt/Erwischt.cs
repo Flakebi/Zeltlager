@@ -5,29 +5,19 @@ namespace Zeltlager.Erwischt
 	using Client;
 
 	/// <summary>
-	/// Data associated to each member for the Erwischt game.
+	/// One instance of an Erwischt game.
 	/// </summary>
-	class MemberData
-	{
-		/// <summary>
-		/// If this member is still alive.
-		/// </summary>
-		public bool Alive;
-		/// <summary>
-		/// The next target of this member.
-		/// </summary>
-		public Member Target;
-	}
-
 	public class Erwischt
 	{
-		LagerClient lager;
-		Dictionary<Member, MemberData> memberData;
+		public string Name { get; set; }
+		public List<ErwischtMember> Participants { get; set; }
 
-		public Erwischt(LagerClient lager)
+		//TODO make editable, lagerclient?, pass Members to constructor & initialize list
+
+		public Erwischt(string name)
 		{
-			this.lager = lager;
-			memberData = new Dictionary<Member, MemberData>();
+			Name = name;
+			Participants = new List<ErwischtMember>();
 		}
 	}
 }

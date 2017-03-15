@@ -34,7 +34,7 @@ namespace Zeltlager.Client
 
 		// Subspaces
 		public Competition.CompetitionHandler CompetitionHandler { get; private set; }
-		public Erwischt.Erwischt Erwischt { get; private set; }
+		public Erwischt.ErwischtHandler ErwischtHandler { get; private set; }
 		public Calendar.Calendar Calendar { get; private set; }
 
 		List<Member> members;
@@ -62,7 +62,7 @@ namespace Zeltlager.Client
 			tents = new List<Tent>();
 
 			CompetitionHandler = new Competition.CompetitionHandler(this);
-			Erwischt = new Erwischt.Erwischt(this);
+			ErwischtHandler = new Erwischt.ErwischtHandler(this);
 			Calendar = new Calendar.Calendar(this);
 		}
 
