@@ -68,6 +68,7 @@ namespace Zeltlager.Competition
 
 		public string SearchableDetail => "";
 
+		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		public override abstract Participant Clone();

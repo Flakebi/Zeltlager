@@ -29,6 +29,7 @@ namespace Zeltlager.Calendar
 		public string Title => Reference.Title;
 		public string Detail => Reference.Detail;
 
+		[Serialisation]
 		public bool IsVisible { get; set; }  = true;
 
 		static Task<ReferenceCalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)

@@ -146,6 +146,11 @@ namespace Zeltlager.Client
 		/// <param name="statusUpdate">Status update.</param>
 		public async Task Synchronise(Action<NetworkStatus> statusUpdate)
 		{
+			// Check if lager is already uploaded
+			if (Remote == null)
+			{
+				await Upload(statusUpdate);
+			}
 			// Open a connection
 			statusUpdate?.Invoke(NetworkStatus.Connecting);
 			INetworkConnection connection = null;

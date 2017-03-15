@@ -152,23 +152,25 @@ namespace Zeltlager
 			StringBuilder sb = new StringBuilder();
 			foreach (var message in messages)
 			{
+				string m = message.ToString();
+				m = m.Substring(0, Math.Min(m.Length, 200));
 				switch (message.Type)
 				{
 					case LogType.Info:
 						if (printInfo)
-							sb.AppendLine(message.ToString());
+							sb.AppendLine(m);
 						break;
 					case LogType.Warning:
 						if (printWarning)
-							sb.AppendLine(message.ToString());
+							sb.AppendLine(m);
 						break;
 					case LogType.Error:
 						if (printError)
-							sb.AppendLine(message.ToString());
+							sb.AppendLine(m);
 						break;
 					case LogType.Exception:
 						if (printException)
-							sb.AppendLine(message.ToString());
+							sb.AppendLine(m);
 						break;
 				}
 			}

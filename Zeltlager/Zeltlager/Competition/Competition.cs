@@ -97,6 +97,7 @@ namespace Zeltlager.Competition
 
 		public string SearchableDetail { get { return ""; } }
 
+		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		#endregion

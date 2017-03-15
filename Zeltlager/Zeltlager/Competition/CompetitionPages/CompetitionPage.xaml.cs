@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using Zeltlager.UAM;
 using Zeltlager.Client;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
@@ -109,9 +110,10 @@ namespace Zeltlager.Competition
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Station, Rankable>(station, false, lager)), true);
 		}
 
-		void OnDeleteClickedStation(Station station)
+		async Task OnDeleteClickedStation(Station station)
 		{
-			station.IsVisible = false;
+			await station.Delete(lager);
+			OnAppearing();
 		}
 
 		void OnParticipantClicked(Participant participant)
@@ -124,9 +126,10 @@ namespace Zeltlager.Competition
 			Navigation.PushModalAsync(new NavigationPage(new AddEditParticipantPage(participant, false)), true);
 		}
 
-		void OnDeleteClickedParticipant(Participant participant)
+		async Task OnDeleteClickedParticipant(Participant participant)
 		{
-			participant.IsVisible = false;
+			await participant.Delete(lager);
+			OnAppearing();
 		}
 		#endregion
 	}

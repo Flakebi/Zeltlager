@@ -27,7 +27,7 @@ namespace Zeltlager
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Tent Tent { get; set; }
 
-		public IReadOnlyList<Tent> TentList => lager.Tents;
+		public IReadOnlyList<Tent> TentList => lager.VisibleTents;
 
 		[Editable("Betreuer")]
 		[Serialisation]
@@ -84,6 +84,7 @@ namespace Zeltlager
 
 		public string SearchableDetail => Tent.Display;
 
+		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		#endregion

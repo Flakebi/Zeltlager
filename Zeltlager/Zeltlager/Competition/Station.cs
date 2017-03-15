@@ -89,6 +89,7 @@ namespace Zeltlager.Competition
 
 		public string SearchableDetail => "";
 
+		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		public override Rankable Clone()

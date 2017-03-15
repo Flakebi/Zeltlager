@@ -91,7 +91,7 @@ namespace Zeltlager.Client
 			manager = new LagerClientManager(io);
 			manager.NetworkClient = new TcpNetworkClient();
 			if (manager.Settings.ServerAddress == null)
-				manager.Settings.ServerAddress = "localhost";
+				manager.Settings.ServerAddress = "flakebi.de";
 
 			contents.Add(downloadContent);
 			statusTimer.Interval = 5;

@@ -3,6 +3,7 @@ using System;
 using Xamarin.Forms;
 using Zeltlager.UAM;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Calendar
 {
@@ -43,9 +44,10 @@ namespace Zeltlager.Calendar
 			}
 		}
 
-		void OnDeleteClicked(IListCalendarEvent ilce)
+		async Task OnDeleteClicked(IListCalendarEvent ilce)
 		{
-			ilce.IsVisible = false;
+			await ilce.Delete(lager);
+			OnAppearing();
 		}
 
 		public void OnEditDishwasherClicked(object sender, EventArgs e)
@@ -58,7 +60,7 @@ namespace Zeltlager.Calendar
 				{
 					Title = "Spüldienst wählen"
 				};
-				foreach (Tent tent in lager.Tents)
+				foreach (Tent tent in lager.VisibleTents)
 				{
 					picker.Items.Add(tent.ToString());
 				}
@@ -115,12 +117,10 @@ namespace Zeltlager.Calendar
 			CarouselPage p = (CarouselPage)Parent;
 			if (p.Children.First() == this)
 			{
-				//leftArrow.IsVisible = false;
 				leftArrow.Opacity = 0;
 			}
 			if (p.Children.Last() == this)
 			{
-				//rightArrow.IsVisible = false;
 				rightArrow.Opacity = 0;
 			}
 		}
@@ -216,7 +216,7 @@ namespace Zeltlager.Calendar
 
 			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
 			OnEdit = new Command(sender => OnEditClicked((IListCalendarEvent)sender));
-			OnDelete = new Command(sender => OnDeleteClicked((IListCalendarEvent)sender));
+			OnDelete = new Command(async sender => await OnDeleteClicked((IListCalendarEvent)sender));
 
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandParameterProperty, new Binding("."));
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));

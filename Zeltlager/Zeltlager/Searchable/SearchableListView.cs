@@ -4,6 +4,7 @@ using System.Linq;
 
 using Xamarin.Forms;
 using Zeltlager.Client;
+using System.Threading.Tasks;
 
 namespace Zeltlager
 {
@@ -16,7 +17,7 @@ namespace Zeltlager
 		public Command OnEdit { get; set; }
 		public Command OnDelete { get; set; }
 
-		public SearchableListView(IReadOnlyList<T> items, Action<T> onEdit, Action<T> onDelete, Action<T> onClick)
+		public SearchableListView(IReadOnlyList<T> items, Action<T> onEdit, Func<T, Task> onDelete, Action<T> onClick)
 		{
 			if (typeof(T) is IDeletable)
 			{

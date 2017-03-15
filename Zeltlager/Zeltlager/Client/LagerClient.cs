@@ -25,6 +25,11 @@ namespace Zeltlager.Client
 		public IReadOnlyList<Tent> Tents => tents;
 		public IReadOnlyList<Member> Supervisors { get { return new List<Member>(Members.Where(x => x.Supervisor == true)); } }
 
+		// For the GUI, deleted items not included
+		public IReadOnlyList<Member> VisibleMembers => members.Where(m => m.IsVisible).ToList();
+		public IReadOnlyList<Tent> VisibleTents => tents.Where(t => t.IsVisible).ToList();
+		public IReadOnlyList<Member> VisibleSupervisors { get { return new List<Member>(Members.Where(x => x.Supervisor == true && x.IsVisible)); } }
+
 		public LagerClientManager ClientManager { get; private set; }
 
 		// Subspaces

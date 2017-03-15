@@ -4,20 +4,22 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Zeltlager.UAM;
 using System.Linq;
+using System.Threading.Tasks;
+using Zeltlager.Client;
 
 namespace Zeltlager.Calendar
 {
 	public partial class PlannedEventsPage : ContentPage
 	{
-		Calendar calendar;
+		LagerClient lager;
 		public Command OnEdit { get; set; }
 		public Command OnDelete { get; set; }
 
-		public PlannedEventsPage(Calendar c)
+		public PlannedEventsPage(LagerClient lager)
 		{
 			InitializeComponent();
-			calendar = c;
-			BindingContext = calendar;
+			this.lager = lager;
+			BindingContext = lager.Calendar;
 
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			NavigationPage.SetBackButtonTitle(this, "");
@@ -28,7 +30,7 @@ namespace Zeltlager.Calendar
 		{
 			var dataTemplate = new DataTemplate(typeof(GeneralCalendarEventCell));
 			OnEdit = new Command(sender => OnEditClicked((PlannedCalendarEvent)sender));
-			OnDelete = new Command(sender => OnDeleteClicked((PlannedCalendarEvent)sender));
+			OnDelete = new Command(async sender => await OnDeleteClicked((PlannedCalendarEvent)sender));
 
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandParameterProperty, new Binding("."));
 			dataTemplate.SetBinding(GeneralCalendarEventCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
@@ -37,9 +39,9 @@ namespace Zeltlager.Calendar
 
 			ListView calendarEventList = new ListView
 			{
-				ItemsSource = calendar.PlannedEvents.Where(x => x.IsVisible),
+				ItemsSource = lager.Calendar.PlannedEvents.Where(x => x.IsVisible),
 				ItemTemplate = dataTemplate,
-				BindingContext = calendar.PlannedEvents,
+				BindingContext = lager.Calendar.PlannedEvents,
 			};
 			calendarEventList.ItemSelected += ((sender, e) =>
 			{
@@ -56,24 +58,25 @@ namespace Zeltlager.Calendar
 		void OnAddClicked(object sender, EventArgs e)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<PlannedCalendarEvent, PlannedCalendarEvent>
-					   (new PlannedCalendarEvent(null, "", "", calendar.GetLager()), true, calendar.GetLager())), true);
+					   (new PlannedCalendarEvent(null, "", "", lager), true, lager)), true);
 		}
 
 		void OnEditClicked(PlannedCalendarEvent pce)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<PlannedCalendarEvent, PlannedCalendarEvent>
-					   (pce, false, calendar.GetLager())), true);
+					   (pce, false, lager)), true);
 		}
 
-		void OnDeleteClicked(PlannedCalendarEvent pce)
+		async Task OnDeleteClicked(PlannedCalendarEvent pce)
 		{
-			pce.IsVisible = false;
+			await pce.Delete(lager);
+			OnAppearing();
 		}
 
 		void OnPlannedEventClicked(PlannedCalendarEvent pce)
 		{
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-					   (new ExPlCalendarEvent(pce), true, pce.GetLager())), true);
+					   (new ExPlCalendarEvent(pce), true, lager)), true);
 		}
 
 		protected override void OnAppearing()

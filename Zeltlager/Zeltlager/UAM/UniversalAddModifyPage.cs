@@ -232,9 +232,7 @@ namespace Zeltlager.UAM
 
 			if (isAddPage)
 				oldObj = default(T);
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);
-			context.PacketId = new PacketId(lager.OwnCollaborator);
-			await Obj.OnSaveEditing(lager.ClientSerialiser, context, oldObj);
+			await Obj.OnSaveEditing(lager, oldObj);
 			await Navigation.PopModalAsync(true);
 		}
 	}

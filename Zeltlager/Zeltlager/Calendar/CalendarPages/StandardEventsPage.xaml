@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -6,7 +6,7 @@
 	x:Class="Zeltlager.Calendar.StandardEventsPage"
 	Title="Regelmäßige Termine">
 	<ContentPage.ToolbarItems>
-		<ToolbarItem x:Name="AddButton" Icon="{x:Static local:Icons.ADD}" Clicked="OnAddClicked">
+		<ToolbarItem Icon="{x:Static local:Icons.ADD}" Clicked="OnAddClicked">
     </ToolbarItem>
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>

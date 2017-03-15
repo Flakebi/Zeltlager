@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Xamarin.Forms;
+using System.Threading.Tasks;
 
 namespace Zeltlager.General
 {
@@ -19,7 +20,7 @@ namespace Zeltlager.General
 			InitializeComponent();
 			Padding = new Thickness(10);
 			this.lager = lager;
-			Content = new SearchableListView<Tent>(lager.Tents.Where(t => t.IsVisible).ToList(), OnEditClicked, OnDeleteClicked, OnTentClick);
+			Content = new SearchableListView<Tent>(lager.VisibleTents, OnEditClicked, OnDeleteClicked, OnTentClick);
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
@@ -37,9 +38,10 @@ namespace Zeltlager.General
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Tent, Tent>(tent, false, lager)), true);
 		}
 
-		void OnDeleteClicked(Tent tent)
+		async Task OnDeleteClicked(Tent tent)
 		{
-			tent.IsVisible = false;
+			await tent.Delete(lager);
+			OnAppearing();
 		}
 
 		public void OnTentClick(Tent tent)
@@ -50,7 +52,7 @@ namespace Zeltlager.General
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			Content = new SearchableListView<Tent>(lager.Tents.Where(t => t.IsVisible).ToList(), OnEditClicked, OnDeleteClicked, OnTentClick);
+			Content = new SearchableListView<Tent>(lager.VisibleTents, OnEditClicked, OnDeleteClicked, OnTentClick);
 		}
 	}
 }

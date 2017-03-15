@@ -93,7 +93,7 @@ namespace Zeltlager
 
 		public List<Member> GetMembers()
 		{
-			return new List<Member>(lager.Members.Where((arg) => arg.Tent.Equals(this)));
+			return new List<Member>(lager.VisibleMembers.Where((arg) => arg.Tent.Equals(this)));
 		}
 
 		// Add the member to a lager after deserialising it
@@ -116,6 +116,7 @@ namespace Zeltlager
 
 		public string SearchableDetail => DisplayDetail;
 
+		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		#endregion

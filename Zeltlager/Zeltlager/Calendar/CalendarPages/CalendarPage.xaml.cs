@@ -57,12 +57,12 @@ namespace Zeltlager.Calendar
 
 		void OnRecurrentButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new StandardEventsPage(lager.Calendar));
+			Navigation.PushAsync(new StandardEventsPage(lager));
 		}
 
 		void OnPlannedButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new PlannedEventsPage(lager.Calendar));
+			Navigation.PushAsync(new PlannedEventsPage(lager));
 		}
 
 		protected override void OnAppearing()

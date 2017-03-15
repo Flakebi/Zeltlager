@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Zeltlager.DataPackets;
 using Zeltlager.Serialisation;
+using System.Linq;
 
 namespace Zeltlager.Competition
 {
@@ -88,7 +89,7 @@ namespace Zeltlager.Competition
 				case TENT:
 					label.Text = "Zelt wählen: ";
 					Picker picker = new Picker();
-					IReadOnlyList<Tent> list = participant.GetLagerClient().Tents;
+					IReadOnlyList<Tent> list = participant.GetLagerClient().VisibleTents;
 					foreach (Tent tent in list)
 					{
 						picker.Items.Add(tent.ToString());
@@ -104,7 +105,7 @@ namespace Zeltlager.Competition
 				case MEMBER:
 					label.Text = "Teilnehmer wählen: ";
 					Picker memberpicker = new Picker();
-					IReadOnlyList<Member> memberlist = participant.GetLagerClient().Members;
+					IReadOnlyList<Member> memberlist = participant.GetLagerClient().VisibleMembers;
 					foreach (Member mem in memberlist)
 					{
 						memberpicker.Items.Add(mem.ToString());
@@ -144,7 +145,7 @@ namespace Zeltlager.Competition
 			}
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(participant.GetLagerClient().Manager, participant.GetLagerClient());
 			context.PacketId = new PacketId(participant.GetLagerClient().OwnCollaborator);
-			await participant.OnSaveEditing(participant.GetLagerClient().ClientSerialiser, context, oldParticipant);
+			await participant.OnSaveEditing(participant.GetLagerClient(), oldParticipant);
 			await Navigation.PopModalAsync(true);
 		}
 
@@ -152,10 +153,10 @@ namespace Zeltlager.Competition
 		{
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(participant.GetLagerClient().Manager, participant.GetLagerClient());
 			context.PacketId = new PacketId(participant.GetLagerClient().OwnCollaborator);
-			foreach (Tent t in participant.GetLagerClient().Tents)
+			foreach (Tent t in participant.GetLagerClient().VisibleTents)
 			{
 				TentParticipant par = new TentParticipant(null, t, participant.GetCompetition());
-				await par.OnSaveEditing(participant.GetLagerClient().ClientSerialiser, context, null);
+				await par.OnSaveEditing(participant.GetLagerClient(), null);
 			}
 			await Navigation.PopModalAsync(true);
 		}
@@ -164,10 +165,10 @@ namespace Zeltlager.Competition
 		{
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(participant.GetLagerClient().Manager, participant.GetLagerClient());
 			context.PacketId = new PacketId(participant.GetLagerClient().OwnCollaborator);
-			foreach (Member m in participant.GetLagerClient().Members)
+			foreach (Member m in participant.GetLagerClient().VisibleMembers)
 			{
 				MemberParticipant par = new MemberParticipant(null, m, participant.GetCompetition());
-				await par.OnSaveEditing(participant.GetLagerClient().ClientSerialiser, context, null);
+				await par.OnSaveEditing(participant.GetLagerClient(), null);
 			}
 			await Navigation.PopModalAsync(true);
 		}

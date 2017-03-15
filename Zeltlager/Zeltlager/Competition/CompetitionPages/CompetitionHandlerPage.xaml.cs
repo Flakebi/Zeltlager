@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Zeltlager.UAM;
 using Zeltlager.Client;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
@@ -32,9 +33,10 @@ namespace Zeltlager.Competition
 			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Competition, Rankable>(comp,false, lager)));
 		}
 
-		void OnDeleteClicked(Competition comp)
+		async Task OnDeleteClicked(Competition comp)
 		{
-			comp.IsVisible = false;
+			await comp.Delete(lager);
+			OnAppearing();
 		}
 
 		void OnCompetitionClick(Competition comp)

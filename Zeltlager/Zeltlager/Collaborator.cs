@@ -174,7 +174,6 @@ namespace Zeltlager
 		public static Task<Collaborator> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
 		{
 			KeyPair key = input.ReadPublicKey();
-			var coll = context.Lager.Collaborators.First();
 			return Task.FromResult(context.Lager.Collaborators[key]);
 		}
 	}

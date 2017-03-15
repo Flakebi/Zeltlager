@@ -24,14 +24,21 @@ namespace Zeltlager
 			LoadingScreen ls = new LoadingScreen();
 			await Navigation.PushModalAsync(new NavigationPage(ls), false);
 
-			try
+			if (string.IsNullOrEmpty(lager.ClientManager.Settings.ServerAddress))
 			{
-				await lager.Synchronise(status => ls.Status = status.GetMessage());
+				await DisplayAlert("Achtung!", "Bitte eine Serveradresse angeben.", "Ok");
 			}
-			catch (Exception ex)
+			else 
 			{
-				await LagerManager.Log.Exception("Synchronize lager", ex);
-				await DisplayAlert("Fehler", "Beim Synchronisieren des Lagers ist ein Fehler aufgetreten.", "Ok");
+				try
+				{
+					await lager.Synchronise(status => ls.Status = status.GetMessage());
+				}
+				catch (Exception ex)
+				{
+					await LagerManager.Log.Exception("Synchronize lager", ex);
+					await DisplayAlert("Fehler", "Beim Synchronisieren des Lagers ist ein Fehler aufgetreten.", "Ok");
+				}
 			}
 
 			await Navigation.PopModalAsync(false);

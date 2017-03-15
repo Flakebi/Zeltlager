@@ -10,8 +10,7 @@
 					 HorizontalOptions="FillAndExpand"
 					 Orientation="Vertical"
 					 Spacing="15"
-					 Padding="10,10,10,0"
-					 x:Name="vsl">
+					 Padding="10,10,10,0">
 			<Button Text="aktuelles Lager hochladen" Clicked="OnUploadClicked" Style="{StaticResource DarkButtonStyle}"/>
 		</StackLayout>
 	</ContentPage.Content>

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 
 using Xamarin.Forms;
+using System.Threading.Tasks;
 
 namespace Zeltlager.General
 {
@@ -17,15 +18,20 @@ namespace Zeltlager.General
 			InitializeComponent();
 			Padding = new Thickness(10);
 			this.lager = lager;
-			// TODO: think about what should happen if member is clicked
-			Content = new SearchableListView<Member>(lager.Members.Where(m => m.IsVisible).ToList(),
-			                                         OnEditClicked, OnDeleteClicked, null);
 			NavigationPage.SetBackButtonTitle(this, "");
+			UpdateUI();
+		}
+
+		void UpdateUI()
+		{
+			// TODO: think about what should happen if member is clicked
+			Content = new SearchableListView<Member>(lager.VisibleMembers.Where(m => m.IsVisible).ToList(),
+													 OnEditClicked, OnDeleteClicked, null);
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			if (!lager.Tents.Any())
+			if (!lager.VisibleTents.Any())
 			{
 				DisplayAlert("Keine Zelte vorhanden", "Bitte füge ein Zelt hinzu. Jeder Teilnehmer muss ein Zelt haben.", "Ok");
 				return;
@@ -40,16 +46,16 @@ namespace Zeltlager.General
 			                                             (member, false, lager)), true);
 		}
 
-		void OnDeleteClicked(Member member)
+		async Task OnDeleteClicked(Member member)
 		{
-			member.IsVisible = false;
+			await member.Delete(lager);
+			OnAppearing();
 		}
 
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			Content = new SearchableListView<Member>(lager.Members.Where(m => m.IsVisible).ToList(),
-			                                         OnEditClicked, OnDeleteClicked, null);
+			UpdateUI();
 		}
 	}
 }

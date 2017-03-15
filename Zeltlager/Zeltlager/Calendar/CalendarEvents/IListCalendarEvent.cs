@@ -4,7 +4,7 @@ using Zeltlager.DataPackets;
 namespace Zeltlager.Calendar
 {
 	// for those shown in the Day-Event Lists
-	public interface IListCalendarEvent : IComparable<IListCalendarEvent>
+	public interface IListCalendarEvent : IComparable<IListCalendarEvent>, IDeletable
 	{
 		CalendarEvent GetEditableCalendarEvent();
 		DateTime Date { get; set; }
@@ -14,7 +14,5 @@ namespace Zeltlager.Calendar
 		string TimeString { get; }
 		string Title { get; }
 		string Detail { get; }
-
-		bool IsVisible { get; set; }
 	}
 }

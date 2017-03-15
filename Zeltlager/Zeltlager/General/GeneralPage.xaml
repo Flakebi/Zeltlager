@@ -9,8 +9,8 @@
 					 Orientation="Vertical"
 					 Spacing="15"
 					 Padding="10,10,10,0">
-			<Button x:Name="memberButton" Text="Teilnehmer" Clicked="OnMemberClicked" Style="{StaticResource DarkButtonStyle}" Image="profile.png"/>
-			<Button x:Name="tentButton" Text="Zelte" Clicked="OnTentClicked" Style="{StaticResource DarkButtonStyle}" Image="home.png"/>
+			<Button Text="Teilnehmer" Clicked="OnMemberClicked" Style="{StaticResource DarkButtonStyle}" Image="profile.png"/>
+			<Button Text="Zelte" Clicked="OnTentClicked" Style="{StaticResource DarkButtonStyle}" Image="home.png"/>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>
