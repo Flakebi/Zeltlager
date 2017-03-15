@@ -1,4 +1,4 @@
-﻿namespace Zeltlager.Client
+namespace Zeltlager.Client
 {
 	public enum NetworkStatus
 	{

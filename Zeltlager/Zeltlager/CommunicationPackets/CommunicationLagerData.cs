@@ -1,4 +1,4 @@
-﻿namespace Zeltlager.CommunicationPackets
+namespace Zeltlager.CommunicationPackets
 {
 	using Client;
 	

@@ -1,4 +1,4 @@
-﻿namespace Zeltlager
+namespace Zeltlager
 {
 	using Serialisation;
 

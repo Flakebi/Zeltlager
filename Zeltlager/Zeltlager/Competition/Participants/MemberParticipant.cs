@@ -1,4 +1,4 @@
-﻿using Zeltlager.Serialisation;
+using Zeltlager.Serialisation;
 namespace Zeltlager.Competition
 {
 	public class MemberParticipant : Participant

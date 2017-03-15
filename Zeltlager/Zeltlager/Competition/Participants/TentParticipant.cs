@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Zeltlager.Serialisation;
 namespace Zeltlager.Competition
 {

@@ -1,11 +1,11 @@
-﻿using System;
 using System.Threading.Tasks;
-using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
-using Zeltlager.UAM;
 
 namespace Zeltlager
 {
+	using DataPackets;
+	using Serialisation;
+	using UAM;
+	
 	public abstract class Editable<T> : IEditable<T> where T : class
 	{
 		public async Task OnSaveEditing(

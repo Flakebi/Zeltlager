@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using System.Linq;
 
 using Xamarin.Forms;
 using Zeltlager.Settings;

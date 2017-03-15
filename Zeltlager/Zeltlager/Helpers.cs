@@ -166,6 +166,20 @@ namespace Zeltlager
 			return sb.ToString();
 		}
 
+		public static string ShortHex(this byte[] bytes)
+		{
+			string hex = bytes.ToHexString();
+			if (hex.Length < 12)
+				return hex;
+			StringBuilder sb = new StringBuilder();
+			sb.Append(bytes.Length);
+			sb.Append(' ');
+			sb.Append(hex.Substring(0, 6));
+			sb.Append('…');
+			sb.Append(hex.Substring(hex.Length - 6));
+			return sb.ToString();
+		}
+
 		public static byte[] FromHexString(this string s)
 		{
 			byte[] result = new byte[s.Length / 2];

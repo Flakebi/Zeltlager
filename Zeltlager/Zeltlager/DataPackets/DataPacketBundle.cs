@@ -54,7 +54,7 @@ namespace Zeltlager.DataPackets
 		/// Packs and compresses all packets into an unencrypted byte array.
 		/// </summary>
 		/// <returns>The packed packets.</returns>
-		byte[] Pack()
+		public byte[] Pack()
 		{
 			MemoryStream mem = new MemoryStream();
 			// Compress the data using gzip
@@ -99,7 +99,7 @@ namespace Zeltlager.DataPackets
 		/// <summary>
 		/// Encrypts and writes all packets into the data array.
 		/// </summary>
-		async Task Serialise(LagerClientSerialisationContext context)
+		public async Task Serialise(LagerClientSerialisationContext context)
 		{
 			// Get the unencrypted data
 			byte[] packed = Pack();
