@@ -65,7 +65,7 @@ namespace Zeltlager
 		public void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
-			this.lager = context.LagerClient;
+			lager = context.LagerClient;
 			context.LagerClient.AddMember(this);
 		}
 

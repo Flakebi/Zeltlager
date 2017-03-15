@@ -80,7 +80,8 @@ namespace Zeltlager.DataPackets
 		/// <param name="unencryptedData">The byte array that contains the packets.</param>
 		void Unpack(LagerClientSerialisationContext context, byte[] unencryptedData)
 		{
-			context.PacketId = context.PacketId.Clone(this);
+			PacketId id = context.PacketId.Clone(this);
+			context.PacketId = id.Clone();
 			MemoryStream mem = new MemoryStream(unencryptedData);
 			using (BinaryReader input = new BinaryReader(new GZipStream(mem, CompressionMode.Decompress)))
 			{
@@ -90,7 +91,7 @@ namespace Zeltlager.DataPackets
 				{
 					int length = input.ReadInt32();
 					byte[] bs = input.ReadBytes(length);
-					PacketId id = context.PacketId.Clone(i);
+					id = id.Clone(i);
 					packets.Add(DataPacket.ReadPacket(id, bs));
 				}
 			}
@@ -189,11 +190,6 @@ namespace Zeltlager.DataPackets
 		{
 			if (packets == null)
 				await Deserialise(context);
-
-			// Make sure that the id of the packets are set
-			context.PacketId = context.PacketId.Clone(this);
-			for (int i = 0; i < packets.Count; i++)
-				packets[i].Id = context.PacketId.Clone(i);
 			return packets;
 		}
 
@@ -203,6 +199,9 @@ namespace Zeltlager.DataPackets
 				packets = new List<DataPacket>();
 			if (packets.Count != 0 && Size >= MAX_PACKET_SIZE)
 				throw new InvalidOperationException("The bundle can't contain more packets");
+			// Make sure that the id of the packets are set
+			PacketId id = context.PacketId.Clone(this);
+			packet.Id = id.Clone(packets.Count);
 			packets.Add(packet);
 			await Serialise(context);
 		}
