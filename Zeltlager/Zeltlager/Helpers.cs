@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Zeltlager
@@ -218,17 +219,34 @@ namespace Zeltlager
 				if (!other.HasValue)
 				{
 					if (!number.HasValue)
-					{
-						return 0;	
-					} 
-					else
-					{
-						return 1;
-					}
+						return 0;
+					return 1;
 				}
 				return -1;
 			}
 			return number.Value.CompareTo(other.Value);
+		}
+
+		public static async Task<T> TimeoutAfter<T>(this Task<T> task, TimeSpan timeout, CancellationTokenSource cancellationTokenSource = null)
+		{
+			if (task == await Task.WhenAny(task, Task.Delay(timeout)))
+				return await task;
+
+			if (cancellationTokenSource != null)
+				cancellationTokenSource.Cancel();
+
+			throw new TimeoutException();
+		}
+
+		public static async Task TimeoutAfter(this Task task, TimeSpan timeout, CancellationTokenSource cancellationTokenSource = null)
+		{
+			if (task == await Task.WhenAny(task, Task.Delay(timeout)))
+				return;
+
+			if (cancellationTokenSource != null)
+				cancellationTokenSource.Cancel();
+
+			throw new TimeoutException();
 		}
 	}
 }

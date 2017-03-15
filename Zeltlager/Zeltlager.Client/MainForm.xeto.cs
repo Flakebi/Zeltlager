@@ -91,7 +91,7 @@ namespace Zeltlager.Client
 			manager = new LagerClientManager(io);
 			manager.NetworkClient = new TcpNetworkClient();
 			if (manager.Settings.ServerAddress == null)
-				manager.Settings.ServerAddress = "flakebi.de";
+				manager.Settings.ServerAddress = "localhost";
 
 			contents.Add(downloadContent);
 			statusTimer.Interval = 5;
@@ -156,7 +156,15 @@ namespace Zeltlager.Client
 
 		async void ListLagers(object sender, EventArgs args)
 		{
-			serverLagers = await manager.RemoteListLagers(status => Status = "Network: " + status);
+			try
+			{
+				serverLagers = await manager.RemoteListLagers(status => Status = "Network: " + status);
+			}
+			catch (Exception e)
+			{
+				await LagerManager.Log.Exception("List lagers", e);
+				Status = "Error: " + e;
+			}
 
 			Status = "Got " + serverLagers.Count + " lagers";
 
