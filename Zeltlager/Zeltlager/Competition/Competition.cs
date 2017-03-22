@@ -7,7 +7,6 @@ namespace Zeltlager.Competition
 	using UAM;
 	using Serialisation;
 	using DataPackets;
-	using System;
 
 	[Editable("Wettkampf")]
 	public class Competition : Rankable, ISearchable, IDeletable

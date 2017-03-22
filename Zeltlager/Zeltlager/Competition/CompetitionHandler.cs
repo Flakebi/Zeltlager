@@ -39,9 +39,16 @@ namespace Zeltlager.Competition
 			return Competitions.SelectMany(c => c.Stations).FirstOrDefault(x => x.Id == id);
 		}
 
-		public Rankable GetRankableFromId(PacketId id)
+		public Rankable GetRankableFromPacketId(PacketId id)
 		{
 			return (Rankable)GetStationFromPacketId(id) ?? GetCompetitionFromPacketId(id);
+		}
+
+		public CompetitionResult GetCompetitionResultFromPacketId(PacketId id)
+		{
+			return Competitions.SelectMany(c => c.Ranking.Results)
+				.Concat(Competitions.SelectMany(c => c.Stations).SelectMany(s => s.Ranking.Results))
+				.First(r => r.Id == id);
 		}
 
 		public Participant GetParticipantFromId(PacketId id)

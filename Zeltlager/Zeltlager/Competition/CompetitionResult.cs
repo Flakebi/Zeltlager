@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
@@ -42,6 +43,11 @@ namespace Zeltlager.Competition
 
 		public string PointsString => Points?.ToString() ?? "-";
 		public string PlaceString => Place?.ToString() ?? "-";
+
+		protected static Task<CompetitionResult> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		{
+			return Task.FromResult(context.LagerClient.CompetitionHandler.GetCompetitionResultFromPacketId(id));
+		}
 
 		public CompetitionResult() {}
 
