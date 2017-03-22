@@ -9,17 +9,17 @@ namespace Zeltlager.Erwischt
 		/// <summary>
 		/// The game this ErwischtMember belongs to.
 		/// </summary>
-		private Erwischt game;
+		Erwischt game;
 
 		/// <summary>
 		/// The member this ErwischtMember is representing.
 		/// </summary>
-		public Member Member { get; set; }
+		public Member Member { get; private set; }
 
 		/// <summary>
 		/// The first target of the ErwischtMember. Should not be changed if it gets catched!
 		/// </summary>
-		private ErwischtMember target;
+		ErwischtMember target;
 
 		public ErwischtMember Target
 		{
@@ -27,19 +27,18 @@ namespace Zeltlager.Erwischt
 			{
 				if (target.IsAlive)
 					return target;
-				else
-					return target.Target;
+				return target.Target;
 			}
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="T:Zeltlager.Erwischt.ErwischtMember"/> is still in the game.
+		/// Indicating whether this <see cref="T:Zeltlager.Erwischt.ErwischtMember"/> is still in the game.
 		/// </summary>
 		/// <value><c>true</c> if it is alive; if it was catched, <c>false</c>.</value>
 		public bool IsAlive { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="T:Zeltlager.Erwischt.ErwischtMember"/> is visible or was deleted.
+		/// Indicating whether this <see cref="T:Zeltlager.Erwischt.ErwischtMember"/> is visible or was deleted.
 		/// </summary>
 		/// <value><c>true</c> if still there; if deleted, <c>false</c>.</value>
 		public bool IsVisible { get; set; }
@@ -50,7 +49,7 @@ namespace Zeltlager.Erwischt
 		public ErwischtMember(Member member, ErwischtMember target, Erwischt game)
 		{
 			this.game = game;
-			this.Member = member;
+			Member = member;
 			this.target = target;
 		}
 

@@ -18,8 +18,13 @@ namespace Zeltlager.Erwischt
 			InitializeComponent();
 			this.game = game;
 			this.lager = lager;
+			UpdateUI();
+		}
 
-			Content = new SearchableListView<ErwischtMember>(game.Participants.Where(p => p.IsVisible).ToList(), OnEditClicked, OnDeleteClicked, OnErwischtMemberClicked);
+		void UpdateUI()
+		{
+			Content = new SearchableListView<ErwischtMember>(game.VisibleParticipants,
+															 OnEditClicked, OnDeleteClicked, OnErwischtMemberClicked);
 		}
 
 		void OnErwischtMemberClicked(ErwischtMember member)
@@ -27,19 +32,28 @@ namespace Zeltlager.Erwischt
 			Navigation.PushModalAsync(new ErwischtMemberDetailPage(member), true);
 		}
 
-		void OnEditClicked(ErwischtMember member)
-		{
-			
-		}
+		void OnEditClicked(ErwischtMember member) { }
 
 		async Task OnDeleteClicked(ErwischtMember member)
 		{
 			member.IsVisible = false;
+			// TODO Packages
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			// TODO UAM for erwischt game, update current game in erwischt handler
+			// TODO UAM for erwischt game, update current game in erwischt handler -> add package!!
+		}
+
+		void OnChangeGameButtonClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new ChangeErwischtGamePage(lager.ErwischtHandler), true);
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			UpdateUI();
 		}
 	}
 }

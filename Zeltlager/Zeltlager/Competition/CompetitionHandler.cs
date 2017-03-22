@@ -24,11 +24,6 @@ namespace Zeltlager.Competition
 			Competitions.Add(comp);
 		}
 
-		public void RemoveCompetition(Competition comp)
-		{
-			// Competitions.Remove(comp);
-		}
-
 		public void AddCompetitionResult(CompetitionResult cr)
 		{
 			cr.Owner.AddResult(cr);

@@ -31,6 +31,7 @@ namespace Zeltlager
 		public const string TIMER = "timer.png";
 		public const string FOOD = "cutlery.png";
 		public const string PLAN = "waiting.png";
+		public const string CHANGE = "switch.png";
 
 		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
 		{
@@ -247,6 +248,21 @@ namespace Zeltlager
 				cancellationTokenSource.Cancel();
 
 			throw new TimeoutException();
+		}
+
+		static readonly Random rng = new Random();
+
+		public static void Shuffle<T>(this IList<T> list)
+		{
+			int n = list.Count;
+			while (n > 1)
+			{
+				n--;
+				int k = rng.Next(n + 1);
+				T value = list[k];
+				list[k] = list[n];
+				list[n] = value;
+			}
 		}
 	}
 }

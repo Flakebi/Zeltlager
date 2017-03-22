@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Zeltlager.Client;
+using System.Linq;
 namespace Zeltlager.Erwischt
 {
 	/// <summary>
@@ -10,19 +11,14 @@ namespace Zeltlager.Erwischt
 	{
 		LagerClient lager;
 		public List<Erwischt> Games { get; private set; }
-		int currentGameIndex;
+		public List<Erwischt> VisibleGames => Games.Where(g => g.IsVisible).ToList();
+		public Erwischt CurrentGame { get; set; }
 
 		public ErwischtHandler(LagerClient lager)
 		{
 			this.lager = lager;
 			Games = new List<Erwischt>();
-			currentGameIndex = -1;
-		}
-
-		public Erwischt GetCurrentGame()
-		{
-			// TODO
-			return null;
+			CurrentGame = null;
 		}
 	}
 }

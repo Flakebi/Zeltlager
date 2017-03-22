@@ -19,6 +19,7 @@ namespace Zeltlager.Erwischt
 		public void OnCatchTargetClicked(object sender, EventArgs e)
 		{
 			Member.Target.IsAlive = false;
+			// TODO packages
 		}
 	}
 }

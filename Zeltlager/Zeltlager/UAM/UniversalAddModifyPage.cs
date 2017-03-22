@@ -5,13 +5,11 @@ using System.Reflection;
 
 using Xamarin.Forms;
 using Zeltlager.Competition;
+using Zeltlager.Erwischt;
 
 namespace Zeltlager.UAM
 {
-	using System.Collections;
 	using Client;
-	using DataPackets;
-	using Serialisation;
 
 	/// <summary>
 	/// A page to manipulate annotated properties from any given type.
@@ -233,6 +231,14 @@ namespace Zeltlager.UAM
 			if (isAddPage)
 				oldObj = default(T);
 			await Obj.OnSaveEditing(lager, oldObj);
+
+			Erwischt.Erwischt game = Obj as Erwischt.Erwischt;
+			if (game != null)
+			{
+				lager.ErwischtHandler.CurrentGame = game;
+				Navigation.InsertPageBefore(new ErwischtPage(lager.ErwischtHandler.CurrentGame, lager), this);
+			}
+
 			await Navigation.PopModalAsync(true);
 		}
 	}
