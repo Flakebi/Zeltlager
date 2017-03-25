@@ -36,14 +36,12 @@ namespace Zeltlager.General
 				DisplayAlert("Keine Zelte vorhanden", "Bitte füge ein Zelt hinzu. Jeder Teilnehmer muss ein Zelt haben.", "Ok");
 				return;
 			}
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member, Member>
-			                                             (new Member(lager), true, lager)), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<Member, Member>(new Member(lager), true, lager));
 		}
 
 		void OnEditClicked(Member member)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Member, Member>
-			                                             (member, false, lager)), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<Member, Member>(member, false, lager));
 		}
 
 		async Task OnDeleteClicked(Member member)

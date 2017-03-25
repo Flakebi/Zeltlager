@@ -31,7 +31,7 @@ namespace Zeltlager.Erwischt
 
 		void OnErwischtMemberClicked(ErwischtParticipant member)
 		{
-			Navigation.PushModalAsync(new ErwischtParticipantDetailPage(member), true);
+			Navigation.PushAsync(new ErwischtParticipantDetailPage(member));
 		}
 
 		void OnEditClicked(ErwischtParticipant member) { }
@@ -40,12 +40,12 @@ namespace Zeltlager.Erwischt
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<ErwischtGame, ErwischtGame>(new ErwischtGame("", lager), true, lager)));
+			Navigation.PushAsync(new UniversalAddModifyPage<ErwischtGame, ErwischtGame>(new ErwischtGame("", lager), true, lager));
 		}
 
 		void OnChangeGameButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new ChangeErwischtGamePage(lager), true);
+			Navigation.PushAsync(new ChangeErwischtGamePage(lager));
 		}
 
 		protected override void OnAppearing()

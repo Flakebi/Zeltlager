@@ -57,12 +57,11 @@ namespace Zeltlager
 			if (currentGame == null)
 			{
 				UniversalAddModifyPage<ErwischtGame, ErwischtGame> uamPage = new UniversalAddModifyPage<ErwischtGame, ErwischtGame>(new ErwischtGame("", lager), true, lager);
-				NavigationPage navPage = new NavigationPage(uamPage);
-				Navigation.PushModalAsync(navPage, true);
+				Navigation.PushAsync(uamPage, true);
 				uamPage.AfterComp += (eg, before) =>
 				{
 					lager.ErwischtHandler.CurrentGame = eg;
-					Navigation.InsertPageBefore(new ErwischtPage(eg, lager), navPage);
+					Navigation.InsertPageBefore(new ErwischtPage(eg, lager), uamPage);
 				};
 			}
 			else

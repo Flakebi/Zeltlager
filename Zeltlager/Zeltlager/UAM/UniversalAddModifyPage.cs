@@ -240,7 +240,7 @@ namespace Zeltlager.UAM
 				AfterComp(Obj, this);
 			}
 
-			await Navigation.PopModalAsync(true);
+			await Navigation.PopAsync(true);
 		}
 	}
 }

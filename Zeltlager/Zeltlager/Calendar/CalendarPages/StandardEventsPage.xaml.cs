@@ -56,14 +56,14 @@ namespace Zeltlager.Calendar
 
 		void OnAddClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<StandardCalendarEvent, PlannedCalendarEvent>
-					   (new StandardCalendarEvent(null, new TimeSpan(), "", "", lager), true, lager)), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<StandardCalendarEvent, PlannedCalendarEvent>
+					   (new StandardCalendarEvent(null, new TimeSpan(), "", "", lager), true, lager));
 		}
 
 		void OnEditClicked(StandardCalendarEvent sce)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<StandardCalendarEvent, PlannedCalendarEvent>
-			           (sce, false, lager)), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<StandardCalendarEvent, PlannedCalendarEvent>
+			           (sce, false, lager));
 		}
 
 		async Task OnDeleteClicked(StandardCalendarEvent sce)

@@ -38,15 +38,15 @@ namespace Zeltlager.Competition
 		{
 			CompetitionResult item = (CompetitionResult)participantResults.SelectedItem;
 			if (item != null)
-				Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CompetitionResult, CompetitionResult>(
-					item, false, station.GetLagerClient())), true);
+				Navigation.PushAsync(new UniversalAddModifyPage<CompetitionResult, CompetitionResult>(
+					item, false, station.GetLagerClient()));
 			participantResults.SelectedItem = null;
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CompetitionResult, CompetitionResult>(
-				new CompetitionResult(null, station, null), true, station.GetLagerClient())), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<CompetitionResult, CompetitionResult>(
+				new CompetitionResult(null, station, null), true, station.GetLagerClient()));
 		}
 
 		void OnIncreasingButtonClicked(object sender, EventArgs e)

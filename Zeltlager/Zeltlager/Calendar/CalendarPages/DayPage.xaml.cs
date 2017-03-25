@@ -35,12 +35,12 @@ namespace Zeltlager.Calendar
 		{
 			if (ilce is ReferenceCalendarEvent)
 			{
-				Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<ExRefCalendarEvent, PlannedCalendarEvent>
-				           (new ExRefCalendarEvent((ReferenceCalendarEvent)ilce), true, lager)),true);
+				Navigation.PushAsync(new UniversalAddModifyPage<ExRefCalendarEvent, PlannedCalendarEvent>
+						   (new ExRefCalendarEvent((ReferenceCalendarEvent)ilce), false, lager));
 			} else if (ilce is CalendarEvent)
 			{
-				Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-						   ((CalendarEvent) ilce, true, lager)), true);
+				Navigation.PushAsync(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+						   ((CalendarEvent)ilce, false, lager));
 			}
 		}
 

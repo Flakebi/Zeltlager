@@ -33,5 +33,10 @@ namespace Zeltlager.Calendar
 				packet = await AddPacket.Create(serialiser, context, new CalendarEvent(Id, Date, Title, Detail, lager));
 			await context.LagerClient.AddPacket(packet);
 		}
+
+		public new ExRefCalendarEvent Clone()
+		{
+			return new ExRefCalendarEvent(this.Reference);
+		}
 	}
 }
