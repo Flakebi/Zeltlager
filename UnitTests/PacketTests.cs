@@ -20,8 +20,8 @@ namespace UnitTests
 		public async Task RevertPacketAsync()
 		{
 			await Init();
-			// Create a RevertPacket for the first member
-			Member member = lager.Members.First();
+            // Create a RevertPacket for the first member
+            Member member = lager.Members[5];
 			await lager.AddPacket(new RevertPacket(serialiser, context, member.Id));
 			// Check that the member doesn't exist no more
 			Assert.AreEqual(false, lager.Members.Any(m => m.Id == member.Id));

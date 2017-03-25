@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
-
-using Xamarin.Forms;
-using Zeltlager.UAM;
-using Zeltlager.Client;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Xamarin.Forms;
+
 namespace Zeltlager.Competition
 {
+    using Client;
+    using UAM;
+
 	public partial class CompetitionHandlerPage : ContentPage
 	{
 		LagerClient lager;

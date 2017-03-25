@@ -1,13 +1,12 @@
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
-	using System;
+	using Client;
+	using DataPackets;
 	using Serialisation;
 	using UAM;
-	using Zeltlager.Client;
-	using Zeltlager.DataPackets;
 
 	/// <summary>
 	/// represents one station in the competition and the results achieved there
@@ -26,7 +25,14 @@ namespace Zeltlager.Competition
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Member Supervisor { get; set; }
 
+		[Serialisation]
+		public bool IsVisible { get; set; } = true;
+
 		public IReadOnlyList<Member> SupervisorList => competition.GetLagerClient().Supervisors;
+
+		public string SearchableText => Name;
+
+		public string SearchableDetail => "Betreuer: " + Supervisor.Name;
 
 		protected static Task<Station> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
@@ -40,15 +46,17 @@ namespace Zeltlager.Competition
 
 		public Station(LagerClientSerialisationContext context) : this() {}
 
-		public Station(PacketId id, string name, Competition competition)
-		{
-			Id = id;
-			Name = name;
-			this.competition = competition;
-			Ranking = new Ranking();
-		}
+		public Station(PacketId id, string name, Competition competition) :
+            this(id, name, competition, new Ranking())
+        { }
 
-		Station(PacketId id, string name, Competition competition, Ranking ranking)
+        public Station(PacketId id, string name, Competition competition, Member supervisor) :
+            this(id, name, competition, new Ranking())
+        {
+            Supervisor = supervisor;
+        }
+
+        Station(PacketId id, string name, Competition competition, Ranking ranking)
 		{
 			Id = id;
 			Name = name;
@@ -83,19 +91,9 @@ namespace Zeltlager.Competition
 			return competition.GetLagerClient();
 		}
 
-		#region Interface implementation
-
-		public string SearchableText => Name;
-
-		public string SearchableDetail => "";
-
-		[Serialisation]
-		public bool IsVisible { get; set; } = true;
-
 		public override Rankable Clone()
 		{
 			return new Station(Id, Name, competition, Ranking);
 		}
-		#endregion
 	}
 }

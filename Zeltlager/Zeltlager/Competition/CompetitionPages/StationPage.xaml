@@ -3,17 +3,17 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 		xmlns:local="clr-namespace:Zeltlager;assembly=Zeltlager"
 		x:Class="Zeltlager.Competition.StationPage"
-		Style="{StaticResource BaseStyle}">
+		Style="{StaticResource BaseStyle}"
+		Title="{Binding Name}">
 	<ContentPage.Content>
 		<StackLayout VerticalOptions="StartAndExpand" Padding="10">
 			<Button
 				HorizontalOptions="FillAndExpand"
 				VerticalOptions="CenterAndExpand"
 				Style="{StaticResource DarkButtonStyle}"
-				Clicked="OnAddButtonClicked">
-				Ergebnis hinzufügen
-			</Button>
-			<ListView x:Name="participantResults">
+				Clicked="OnAddButtonClicked"
+				Text="Ergebnis hinzufügen"/>
+			<ListView x:Name="participantResults" ItemSelected="OnParticipantSelected">
 				<ListView.Header>
 					<StackLayout Orientation="Horizontal">
 						<!-- So icons get moved to the right -->
@@ -28,16 +28,14 @@
 					Style="{StaticResource DarkButtonStyle}"
 					HorizontalOptions="StartAndExpand"
 					x:Name="increasingButton"
-					Clicked="OnIncreasingButtonClicked">
-					Aufsteigend platzieren
-				</Button>
+					Clicked="OnIncreasingButtonClicked"
+					Text="Aufsteigend platzieren"/>
 				<Button
 					Style="{StaticResource DarkButtonStyle}"
 					HorizontalOptions="EndAndExpand"
 					x:Name="decreasingButton"
-					Clicked="OnDecreasingButtonClicked">
-					Absteigend platzieren
-				</Button>
+					Clicked="OnDecreasingButtonClicked"
+					Text="Absteigend platzieren"/>
 			</StackLayout>
 		</StackLayout>
 	</ContentPage.Content>

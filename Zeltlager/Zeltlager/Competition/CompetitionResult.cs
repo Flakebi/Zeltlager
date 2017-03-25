@@ -32,9 +32,9 @@ namespace Zeltlager.Competition
 			get 
 			{
 				return Owner.GetParticipants()
-					        .Except(Owner.Ranking.Results
-					                .Where(cr => cr.Points.HasValue || cr.Place.HasValue)
-					                .Select(cr => cr.Participant)).ToList();
+					.Except(Owner.Ranking.Results
+						.Where(cr => cr.Points.HasValue || cr.Place.HasValue)
+						.Select(cr => cr.Participant)).ToList();
 			}
 		}
 

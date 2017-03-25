@@ -201,11 +201,14 @@ namespace Zeltlager.Serialisation
 		}
 
 		public async Task WriteId(BinaryWriter output, C context, object obj, Type type)
-		{
-			// Check if the object implements ISerialisable
-			ISerialisable<C> serialisable = obj as ISerialisable<C>;
-			if (serialisable != null)
-				await serialisable.WriteId(output, this, context);
+        {
+            TypeInfo typeInfo = type.GetTypeInfo();
+            // Check if the object implements ISerialisable
+            if (typeof(ISerialisable<C>).GetTypeInfo().IsAssignableFrom(typeInfo))
+            {
+                ISerialisable<C> serialisable = (ISerialisable<C>)obj;
+                await serialisable.WriteId(output, this, context);
+            }
 			else
 			{
 				// Find the id of the type
@@ -213,7 +216,6 @@ namespace Zeltlager.Serialisation
 				if (attributes.Length == 0)
 				{
 					// Check if it's a list of ids
-					TypeInfo typeInfo = type.GetTypeInfo();
 					if (typeof(IList).GetTypeInfo().IsAssignableFrom(typeInfo))
 					{
 						// Check for lists and arrays
@@ -243,16 +245,16 @@ namespace Zeltlager.Serialisation
 
 		async Task WriteField(BinaryWriter output, C context, FieldData attribute)
 		{
-			// Check if the attribute is optional
-			if (attribute.Attribute.Optional)
-			{
-				if (attribute.Value == null)
-				{
-					output.Write(false);
-					return;
-				}
-				output.Write(true);
-			}
+            // Check if the attribute is optional
+            if (attribute.Attribute.Optional)
+            {
+                if (attribute.Value == null)
+                {
+                    output.Write(false);
+                    return;
+                }
+                output.Write(true);
+            }
 			// Check if we should only save a reference
 			if (attribute.Attribute.Type == SerialisationType.Reference)
 				await WriteId(output, context, attribute.Value, attribute.Type);

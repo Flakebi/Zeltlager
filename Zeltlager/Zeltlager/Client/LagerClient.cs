@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Client
 {
+	using Competition;
 	using DataPackets;
 	using Serialisation;
 
@@ -33,7 +34,7 @@ namespace Zeltlager.Client
 		public LagerClientManager ClientManager { get; private set; }
 
 		// Subspaces
-		public Competition.CompetitionHandler CompetitionHandler { get; private set; }
+		public CompetitionHandler CompetitionHandler { get; private set; }
 		public Erwischt.ErwischtHandler ErwischtHandler { get; private set; }
 		public Calendar.Calendar Calendar { get; private set; }
 
@@ -61,7 +62,7 @@ namespace Zeltlager.Client
 			members = new List<Member>();
 			tents = new List<Tent>();
 
-			CompetitionHandler = new Competition.CompetitionHandler(this);
+			CompetitionHandler = new CompetitionHandler(this);
 			ErwischtHandler = new Erwischt.ErwischtHandler(this);
 			Calendar = new Calendar.Calendar(this);
 		}
@@ -176,11 +177,16 @@ namespace Zeltlager.Client
 			return Members.First(x => x.ToString() == memberstring);
 		}
 
+		public Tent GetRandomTent(Random rand) => Tents[rand.Next(0, Tents.Count)];
+		public Member GetRandomMember(Random rand) => Members[rand.Next(0, Members.Count)];
+
 		/// <summary>
 		/// Create some test data if a new lager is created
 		/// </summary>
 		public async Task CreateTestData()
 		{
+			Random rand = new Random();
+
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
 			context.PacketId = new PacketId(OwnCollaborator);
 
@@ -194,19 +200,44 @@ namespace Zeltlager.Client
 				new Tent(null, 3, "Pinguine", false, new List<Member>(), context.LagerClient)));
 
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Anna", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true, this)));
+				new Member(null, "Anna", GetRandomTent(rand), true, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Bernd", Tents.Skip(new Random().Next(0, Tents.Count)).First(), true, this)));
+				new Member(null, "Bernd", GetRandomTent(rand), true, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Claudius", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
+				new Member(null, "Claudius", GetRandomTent(rand), false, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Don", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
+				new Member(null, "Don", GetRandomTent(rand), false, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Emily", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
+				new Member(null, "Emily", GetRandomTent(rand), false, this)));
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new Member(null, "Franz", Tents.Skip(new Random().Next(0, Tents.Count)).First(), false, this)));
+				new Member(null, "Franz", GetRandomTent(rand), false, this)));
 
-			// TODO Add a competition
+			// Add a competition
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Competition(null, "Ostfriesenwettkampf", this)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Station(null, "Kartenweitwurf", CompetitionHandler.Competitions.First(), GetRandomMember(rand))));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new Station(null, "Teebeutellasso", CompetitionHandler.Competitions.First(), GetRandomMember(rand))));
+
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new TentParticipant(null, Tents[0], CompetitionHandler.Competitions.First())));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new TentParticipant(null, Tents[1], CompetitionHandler.Competitions.First())));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new MemberParticipant(null, Members[0], CompetitionHandler.Competitions.First())));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new MemberParticipant(null, Members[1], CompetitionHandler.Competitions.First())));
+
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new CompetitionResult(null, CompetitionHandler.Competitions.First().Stations[0],
+				CompetitionHandler.Competitions.First().Participants[0], 1)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new CompetitionResult(null, CompetitionHandler.Competitions.First().Stations[1],
+				CompetitionHandler.Competitions.First().Participants[2], 2)));
+			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
+				new CompetitionResult(null, CompetitionHandler.Competitions.First(),
+				CompetitionHandler.Competitions.First().Participants[0], 5)));
 		}
 	}
 }
