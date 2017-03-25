@@ -17,9 +17,16 @@ namespace Zeltlager.Competition
 		[Serialisation]
 		public string Name { get; set; }
 
+		[Serialisation]
+		public bool IsVisible { get; set; } = true;
+
 		public List<Participant> Participants { get; set; }
 
 		public List<Station> Stations { get; set; }
+
+		public string SearchableText => Name;
+
+		public string SearchableDetail => "";
 
 		protected static Task<Competition> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
@@ -85,20 +92,9 @@ namespace Zeltlager.Competition
 			return lager;
 		}
 
-		#region Interface implementation
-
 		public override Rankable Clone()
 		{
 			return new Competition(lager, Id, Name, Participants, Stations, Ranking);
 		}
-
-		public string SearchableText { get { return Name; } }
-
-		public string SearchableDetail { get { return ""; } }
-
-		[Serialisation]
-		public bool IsVisible { get; set; } = true;
-
-		#endregion
 	}
 }

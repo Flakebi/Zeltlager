@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 
 using Xamarin.Forms;
-using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
-using System.Linq;
 
 namespace Zeltlager.Competition
 {
+	using DataPackets;
+	using Serialisation;
+
 	public partial class AddEditParticipantPage : ContentPage
 	{
 		Participant participant;
@@ -132,7 +132,7 @@ namespace Zeltlager.Competition
 
 		void OnCancelClicked()
 		{
-			Navigation.PopModalAsync(true);
+			Navigation.PopAsync(true);
 		}
 
 		async void OnSaveClicked()
@@ -146,7 +146,7 @@ namespace Zeltlager.Competition
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(participant.GetLagerClient().Manager, participant.GetLagerClient());
 			context.PacketId = new PacketId(participant.GetLagerClient().OwnCollaborator);
 			await participant.OnSaveEditing(participant.GetLagerClient(), oldParticipant);
-			await Navigation.PopModalAsync(true);
+			await Navigation.PopAsync(true);
 		}
 
 		async void AddAllTents(object sender, EventArgs e)
@@ -158,7 +158,7 @@ namespace Zeltlager.Competition
 				TentParticipant par = new TentParticipant(null, t, participant.GetCompetition());
 				await par.OnSaveEditing(participant.GetLagerClient(), null);
 			}
-			await Navigation.PopModalAsync(true);
+			await Navigation.PopAsync(true);
 		}
 
 		async void AddAllMembers(object sender, EventArgs e)
@@ -170,7 +170,7 @@ namespace Zeltlager.Competition
 				MemberParticipant par = new MemberParticipant(null, m, participant.GetCompetition());
 				await par.OnSaveEditing(participant.GetLagerClient(), null);
 			}
-			await Navigation.PopModalAsync(true);
+			await Navigation.PopAsync(true);
 		}
 	}
 }

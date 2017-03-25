@@ -1,4 +1,3 @@
-using System;
 using Xamarin.Forms;
 
 namespace Zeltlager.Competition
@@ -35,4 +34,3 @@ namespace Zeltlager.Competition
 		}
 	}
 }
-

@@ -13,6 +13,7 @@ namespace Zeltlager.Competition
 	{
 		Competition competition;
 		LagerClient lager;
+		RankingView rankingView;
 
 		public CompetitionPage(Competition competition, LagerClient lager)
 		{
@@ -22,6 +23,7 @@ namespace Zeltlager.Competition
 
 			BindingContext = competition;
 			NavigationPage.SetBackButtonTitle(this, "");
+			rankingView = new RankingView(lager, competition.Ranking, true);
 			UpdateUI();
 		}
 
@@ -31,12 +33,10 @@ namespace Zeltlager.Competition
 				competition.Stations.Where(s => s.IsVisible).ToList(),
 				OnEditClickedStation, OnDeleteClickedStation, OnStationClicked);
 
-			var participantList = new SearchableListView<Participant>(
-				competition.Participants.Where(p => p.IsVisible).ToList(),
-				OnEditClickedParticipant, OnDeleteClickedParticipant, OnParticipantClicked);
+			rankingView.UpdateUI();
 
 			stationPage.Content = stationList;
-			participantPage.Content = participantList;
+			participantPage.Content = rankingView;
 		}
 
 		void OnAddButtonClicked(object sender, EventArgs e)
@@ -68,22 +68,6 @@ namespace Zeltlager.Competition
 		async Task OnDeleteClickedStation(Station station)
 		{
 			await station.Delete(lager);
-			OnAppearing();
-		}
-
-		void OnParticipantClicked(Participant participant)
-		{
-			// TODO Packet Detail Page?
-		}
-
-		void OnEditClickedParticipant(Participant participant)
-		{
-			Navigation.PushModalAsync(new NavigationPage(new AddEditParticipantPage(participant, false)), true);
-		}
-
-		async Task OnDeleteClickedParticipant(Participant participant)
-		{
-			await participant.Delete(lager);
 			OnAppearing();
 		}
 	}

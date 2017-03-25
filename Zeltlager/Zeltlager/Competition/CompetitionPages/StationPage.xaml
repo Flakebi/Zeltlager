@@ -5,38 +5,4 @@
 		x:Class="Zeltlager.Competition.StationPage"
 		Style="{StaticResource BaseStyle}"
 		Title="{Binding Name}">
-	<ContentPage.Content>
-		<StackLayout VerticalOptions="StartAndExpand" Padding="10">
-			<Button
-				HorizontalOptions="FillAndExpand"
-				VerticalOptions="CenterAndExpand"
-				Style="{StaticResource DarkButtonStyle}"
-				Clicked="OnAddButtonClicked"
-				Text="Ergebnis hinzufügen"/>
-			<ListView x:Name="participantResults" ItemSelected="OnParticipantSelected">
-				<ListView.Header>
-					<StackLayout Orientation="Horizontal">
-						<!-- So icons get moved to the right -->
-						<ContentView HorizontalOptions="StartAndExpand"/>
-						<Button Image="{x:Static local:Icons.TIMER}" HorizontalOptions="Center"/>
-						<Button Image="{x:Static local:Icons.PODIUM}" HorizontalOptions="End"/>
-					</StackLayout>
-				</ListView.Header>
-			</ListView>
-			<StackLayout Orientation="Horizontal" VerticalOptions="End">
-				<Button
-					Style="{StaticResource DarkButtonStyle}"
-					HorizontalOptions="StartAndExpand"
-					x:Name="increasingButton"
-					Clicked="OnIncreasingButtonClicked"
-					Text="Aufsteigend platzieren"/>
-				<Button
-					Style="{StaticResource DarkButtonStyle}"
-					HorizontalOptions="EndAndExpand"
-					x:Name="decreasingButton"
-					Clicked="OnDecreasingButtonClicked"
-					Text="Absteigend platzieren"/>
-			</StackLayout>
-		</StackLayout>
-	</ContentPage.Content>
 </ContentPage>
