@@ -2,7 +2,7 @@
 <ContentPage
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	x:Class="Zeltlager.Erwischt.ErwischtMemberDetailPage">
+	x:Class="Zeltlager.Erwischt.ErwischtParticipantDetailPage">
 	<ContentPage.Content>
 		<StackLayout VerticalOptions="FillAndExpand"
 					 HorizontalOptions="FillAndExpand"
@@ -12,6 +12,7 @@
 			<Label Text="{Binding Member.Name}" HorizontalOptions="CenterAndExpand"/>
 			<Label Text="{Binding Target.Member.Name}" HorizontalOptions="CenterAndExpand"/>
 			<Button Text="Ziel erwischen" Clicked="OnCatchTargetClicked" HorizontalOptions="CenterAndExpand"/>
+			<Button Text="Teilnehmer wiederbeleben" Clicked="OnReviveClicked" HorizontalOptions="CenterAndExpand" IsVisible="{Binding !IsAlive}"/>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

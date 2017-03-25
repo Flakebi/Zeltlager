@@ -43,6 +43,12 @@ namespace Zeltlager.Calendar
 			Id = id;
 		}
 
+		public void Add(LagerClientSerialisationContext context)
+		{
+			Id = context.PacketId;
+			context.LagerClient.Calendar.InsertNewCalendarEvent(this);
+		}
+
 		public CalendarEvent GetEditableCalendarEvent()
 		{
 			return new ExRefCalendarEvent(this);

@@ -5,49 +5,47 @@ using Xamarin.Forms;
 using Zeltlager.Client;
 using System.Linq;
 using System.Threading.Tasks;
+using Zeltlager.UAM;
 
 namespace Zeltlager.Erwischt
 {
 	public partial class ErwischtPage : ContentPage
 	{
-		Erwischt game;
+		ErwischtGame game;
 		LagerClient lager;
 
-		public ErwischtPage(Erwischt game, LagerClient lager)
+		public ErwischtPage(ErwischtGame game, LagerClient lager)
 		{
 			InitializeComponent();
 			this.game = game;
 			this.lager = lager;
+			Title = game.Name;
 			UpdateUI();
 		}
 
 		void UpdateUI()
 		{
-			Content = new SearchableListView<ErwischtMember>(game.VisibleParticipants,
+			Content = new SearchableListView<ErwischtParticipant>(game.ErwischtParticipants,
 															 OnEditClicked, OnDeleteClicked, OnErwischtMemberClicked);
 		}
 
-		void OnErwischtMemberClicked(ErwischtMember member)
+		void OnErwischtMemberClicked(ErwischtParticipant member)
 		{
-			Navigation.PushModalAsync(new ErwischtMemberDetailPage(member), true);
+			Navigation.PushModalAsync(new ErwischtParticipantDetailPage(member), true);
 		}
 
-		void OnEditClicked(ErwischtMember member) { }
+		void OnEditClicked(ErwischtParticipant member) { }
 
-		async Task OnDeleteClicked(ErwischtMember member)
-		{
-			member.IsVisible = false;
-			// TODO Packages
-		}
+		Task OnDeleteClicked(ErwischtParticipant member) { return Task.WhenAll(); }
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
-			// TODO UAM for erwischt game, update current game in erwischt handler -> add package!!
+			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<ErwischtGame, ErwischtGame>(new ErwischtGame("", lager), true, lager)));
 		}
 
 		void OnChangeGameButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new ChangeErwischtGamePage(lager.ErwischtHandler), true);
+			Navigation.PushAsync(new ChangeErwischtGamePage(lager), true);
 		}
 
 		protected override void OnAppearing()
