@@ -2,7 +2,60 @@
 <ContentPage
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	x:Class="Zeltlager.Competition.AddEditParticipantPage">
+	xmlns:local="clr-namespace:Zeltlager"
+	x:Class="Zeltlager.Competition.AddEditParticipantPage"
+	Title="Wettbewerbsteilnehmer"
+	Padding="10"
+	Style="{StaticResource BaseStyle}">
+	<ContentPage.ToolbarItems>
+		<ToolbarItem Icon="{x:Static local:Icons.CANCEL}" Clicked="OnCancelClicked" Priority="0">
+		</ToolbarItem>
+		<ToolbarItem Icon="{x:Static local:Icons.SAVE}" Clicked="OnSaveClicked" Priority="1">
+		</ToolbarItem>
+	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition x:Name="tentRow" />
+				<RowDefinition x:Name="memberRow" />
+				<RowDefinition x:Name="groupRow" />
+				<RowDefinition x:Name="automaticRow" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Label Text="Typ:" TextColor="{StaticResource textColorSecondary}" Grid.Row="0" Grid.Column="0"/>
+			<Picker x:Name="typePicker" Grid.Row="0" Grid.Column="1" SelectedIndexChanged="OnTypeChanged">
+				<Picker.Items>
+					<x:String x:Name="TENT">Zelt</x:String>
+					<x:String x:Name="MEMBER">Teilnehmer</x:String>
+					<x:String x:Name="GROUP">gemischte Gruppe</x:String>
+					<x:String x:Name="AUTOMATIC">automatisch hinzufügen</x:String>
+				</Picker.Items>
+			</Picker>
+			
+			<Label x:Name="tentLabel" Text="Zelt wählen:" TextColor="{StaticResource textColorSecondary}"
+				Grid.Row="1" Grid.Column="0" VerticalOptions="Center"/>
+			<Picker x:Name="tentPicker" Grid.Row="1" Grid.Column="1"/>
+
+			<Label x:Name="memberLabel" Text="Teilnehmer wählen:" TextColor="{StaticResource textColorSecondary}"
+				Grid.Row="2" Grid.Column="0" VerticalOptions="Center"/>
+			<Picker x:Name="memberPicker" Grid.Row="2" Grid.Column="1"/>
+
+			<Label x:Name="groupLabel" Text="Gruppenname:" TextColor="{StaticResource textColorSecondary}"
+				Grid.Row="3" Grid.Column="0" VerticalOptions="Center"/>
+			<Entry x:Name="groupEntry" Grid.Row="3" Grid.Column="1"/>
+
+			<StackLayout x:Name="automaticView" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+				<Button Text="Alle Teilnehmer hinzufügen" Clicked="AddAllMembers"
+					Style="{StaticResource DarkButtonStyle}"/>
+				<Button Text="Alle Zelte hinzufügen" Clicked="AddAllTents"
+					Style="{StaticResource DarkButtonStyle}"/>
+			</StackLayout>
+		</Grid>
 	</ContentPage.Content>
 </ContentPage>

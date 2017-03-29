@@ -11,8 +11,8 @@
 					<StackLayout Orientation="Horizontal">
 						<!-- So icons get moved to the right -->
 						<ContentView HorizontalOptions="StartAndExpand"/>
-						<Image Source="{x:Static local:Icons.TIMER}" HorizontalOptions="Center"/>
-						<Image Source="{x:Static local:Icons.PODIUM}" HorizontalOptions="End"/>
+						<Image x:Name="pointsImage" Source="{x:Static local:Icons.TIMER}" HorizontalOptions="Center"/>
+						<Image x:Name="placeImage" Source="{x:Static local:Icons.PODIUM}" HorizontalOptions="End"/>
 					</StackLayout>
 				</ListView.Header>
 			</ListView>

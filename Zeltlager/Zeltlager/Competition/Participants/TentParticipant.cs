@@ -6,11 +6,11 @@ namespace Zeltlager.Competition
 	{
 		public override string Name
 		{
-			get { return tent.Display; }
+			get { return Tent.Display; }
 		}
 
 		[Serialisation(Type = SerialisationType.Reference)]
-		Tent tent;
+		public Tent Tent { get; private set; }
 
 		public TentParticipant() { }
 
@@ -18,19 +18,19 @@ namespace Zeltlager.Competition
 
 		public TentParticipant(DataPackets.PacketId id, Tent tent, Competition competition) : base(id, competition)
 		{
-			this.tent = tent;
+			this.Tent = tent;
 		}
 
 		public override Participant Clone()
 		{
-			return new TentParticipant(Id, tent, competition);
+			return new TentParticipant(Id, Tent, competition);
 		}
 
 		public override bool Equals(Participant other)
 		{
 			if (other is TentParticipant)
 			{
-				return tent.Equals(((TentParticipant)other).tent);
+				return Tent.Equals(((TentParticipant)other).Tent);
 			}
 			return false;
 		}

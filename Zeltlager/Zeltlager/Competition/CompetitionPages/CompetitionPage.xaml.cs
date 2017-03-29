@@ -23,7 +23,7 @@ namespace Zeltlager.Competition
 
 			BindingContext = competition;
 			NavigationPage.SetBackButtonTitle(this, "");
-			rankingView = new RankingView(lager, competition.Ranking, true);
+			rankingView = new RankingView(lager, competition, competition.Ranking, true);
 			UpdateUI();
 		}
 

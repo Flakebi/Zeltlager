@@ -15,7 +15,7 @@ namespace Zeltlager.Competition
 			// One time UI setup
 			BindingContext = station;
 
-			rankingView = new RankingView(station.GetLagerClient(), station.Ranking);
+			rankingView = new RankingView(station.GetLagerClient(), station, station.Ranking);
 			Content = rankingView;
 			
 			NavigationPage.SetBackButtonTitle(this, "");
