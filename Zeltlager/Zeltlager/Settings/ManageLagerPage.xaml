@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Zeltlager;assembly=Zeltlager"
 			 x:Class="Zeltlager.Settings.ManageLagerPage"
 			 Style="{StaticResource BaseStyle}"
 			 Title="Lager verwalten">
@@ -10,10 +11,24 @@
 					 Orientation="Vertical"
 					 Spacing="15"
 					 Padding="10,10,10,0">
-			<Button Text="Lager erstellen" Clicked="OnCreateLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
-			<Button Text="Lager herunterladen" Clicked="OnDownloadLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
-			<Button x:Name="ChangeLagerButton" Text="Lager wechseln" Clicked="OnChangeLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
-			<Button x:Name="UploadLagerButton" Text="Lager hochladen" Clicked="OnUploadLagerClicked" Style="{StaticResource DarkButtonStyle}"/>
+			<Button Text="Lager erstellen"
+					Clicked="OnCreateLagerClicked"
+					Style="{StaticResource DarkButtonStyle}"
+					Image="{x:Static local:Icons.ADD}"/>
+			<Button Text="Lager herunterladen"
+					Clicked="OnDownloadLagerClicked"
+					Style="{StaticResource DarkButtonStyle}"
+					Image="{x:Static local:Icons.DOWNLOAD}"/>
+			<Button x:Name="ChangeLagerButton"
+					Text="Lager wechseln"
+					Clicked="OnChangeLagerClicked"
+					Style="{StaticResource DarkButtonStyle}"
+					Image="{x:Static local:Icons.CHANGE}"/>
+			<Button x:Name="UploadLagerButton"
+					Text="Lager hochladen"
+					Clicked="OnUploadLagerClicked"
+					Style="{StaticResource DarkButtonStyle}"
+					Image="{x:Static local:Icons.UPLOAD}"/>
 			<StackLayout HorizontalOptions="FillAndExpand"
 					 Orientation="Horizontal"
 					 Spacing="15">

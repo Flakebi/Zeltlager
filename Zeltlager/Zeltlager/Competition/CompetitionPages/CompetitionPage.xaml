@@ -9,6 +9,8 @@
 		<ToolbarItem Icon="{x:Static local:Icons.ADD}" Clicked="OnAddButtonClicked">
 		</ToolbarItem>
 	</TabbedPage.ToolbarItems>
-	<ContentPage Title="Stationen" x:Name="stationPage"/>
-	<ContentPage Title="Teilnehmer" x:Name="participantPage"/>
+	<ContentPage Title="Stationen" x:Name="stationPage" 
+				 Icon="{x:Static local:Icons.GAMEPAD}"/>
+	<ContentPage Title="Teilnehmer" x:Name="participantPage"
+				 Icon="{x:Static local:Icons.PERSON}"/>
 </TabbedPage>

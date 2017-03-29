@@ -32,6 +32,13 @@ namespace Zeltlager
 		public const string FOOD = "cutlery.png";
 		public const string PLAN = "waiting.png";
 		public const string CHANGE = "switch.png";
+		public const string UPLOAD = "upload.png";
+		public const string DOWNLOAD = "download.png";
+		public const string PERSON = "profile.png";
+		public const string GAMEPAD = "gamepad.png";
+		public const string ROCKET = "rocketlaunch.png";
+		public const string NOTEPAD = "padnote.png";
+		public const string LOG = "printer.png";
 
 		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
 		{
