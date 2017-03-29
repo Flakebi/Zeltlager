@@ -45,6 +45,9 @@ namespace Zeltlager.iOS
 			var field = t.GetField("DestructiveBackground", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 			field.SetValue(null, backgroundImage);
 
+			// Light Status Bar
+			UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
+
             return base.FinishedLaunching(app, options);
         }
     }
