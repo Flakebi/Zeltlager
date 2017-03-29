@@ -57,7 +57,7 @@ namespace Zeltlager
 			if (currentGame == null)
 			{
 				Navigation.PushAsync(new UniversalAddModifyPage<ErwischtGame, ErwischtGame>
-				                     										(new ErwischtGame("", lager), true, lager));
+																			(new ErwischtGame("", lager), true, lager));
 			}
 			else
 			{
