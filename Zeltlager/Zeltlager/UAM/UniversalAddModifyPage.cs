@@ -24,9 +24,6 @@ namespace Zeltlager.UAM
 		readonly bool isAddPage;
 		readonly LagerClient lager;
 
-		public delegate void AfterCompletion(T o, Page before);
-		public event AfterCompletion AfterComp;
-
 		static readonly Type[] NUM_TYPES = {
 			typeof(byte),
 			typeof(sbyte),
@@ -67,7 +64,8 @@ namespace Zeltlager.UAM
 			BindingContext = Obj;
 
 			Type type = Obj.GetType();
-			IEnumerable<PropertyInfo> propInfo = type.GetRuntimeProperties().Where(pi => pi.GetCustomAttribute<EditableAttribute>() != null);
+			IEnumerable<PropertyInfo> propInfo = type.GetRuntimeProperties()
+			                                         .Where(pi => pi.GetCustomAttribute<EditableAttribute>() != null);
 
 			// Counting in which attribute we are
 			int attributeNumber = 0;
@@ -133,7 +131,8 @@ namespace Zeltlager.UAM
 							}
 							vartype = vartype.GenericTypeArguments[0];
 						}
-						if ((bool) vartype.GetTypeInfo().GetDeclaredMethods("TryParse").First(x => x.GetParameters().Length == 2).Invoke(null, parameters))
+						if ((bool) vartype.GetTypeInfo().GetDeclaredMethods("TryParse").First
+															(x => x.GetParameters().Length == 2).Invoke(null, parameters))
 						{
 							//type.GetRuntimeProperty(pi.Name).SetValue(Obj, Helpers.ConvertParam(((Entry)sender).Text, vartype));
 							type.GetRuntimeProperty(pi.Name).SetValue(Obj, parameters[1]);
@@ -154,7 +153,8 @@ namespace Zeltlager.UAM
 					}
 					picker.SelectedIndexChanged += (sender, args) =>
 					{
-						object o = vartype.GetTypeInfo().GetDeclaredMethod("GetFromString").Invoke(null, new object[] { lager, picker.Items[picker.SelectedIndex] });
+						object o = vartype.GetTypeInfo().GetDeclaredMethod("GetFromString").Invoke
+													(null, new object[] { lager, picker.Items[picker.SelectedIndex] });
 						type.GetRuntimeProperty(pi.Name).SetValue(Obj, o);
 					};
 					picker.SelectedIndex = 0;
@@ -214,7 +214,7 @@ namespace Zeltlager.UAM
 
 		void OnCancelClicked()
 		{
-			Navigation.PopModalAsync(true);
+			Navigation.PopAsync(true);
 		}
 
 		async void OnSaveClicked()
@@ -235,12 +235,14 @@ namespace Zeltlager.UAM
 				oldObj = default(T);
 			await Obj.OnSaveEditing(lager, oldObj);
 
-			if (AfterComp != null)
+			ErwischtGame game = Obj as ErwischtGame;
+			if (game != null)
 			{
-				AfterComp(Obj, this);
+				lager.ErwischtHandler.CurrentGame = game;
+				Navigation.InsertPageBefore(new ErwischtPage(game, lager), this);
 			}
 
-			await Navigation.PopAsync(true);
+			await Navigation.PopAsync();
 		}
 	}
 }

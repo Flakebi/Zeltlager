@@ -8,23 +8,23 @@ namespace Zeltlager.Erwischt
 {
 	public partial class ErwischtParticipantDetailPage : ContentPage
 	{
-		public ErwischtParticipant Member { get; set; }
+		public ErwischtParticipant ErwischtParticipant { get; set; }
 
 		public ErwischtParticipantDetailPage(ErwischtParticipant member)
 		{
 			InitializeComponent();
-			Member = member;
-			BindingContext = Member;
+			ErwischtParticipant = member;
+			BindingContext = ErwischtParticipant;
 		}
 
 		async Task OnCatchTargetClicked(object sender, EventArgs e)
 		{
-			await Member.Target.Catch();
+			await ErwischtParticipant.Target.Catch();
 		}
 
 		async Task OnReviveClicked(object sender, EventArgs e)
 		{
-			await Member.Revive();
+			await ErwischtParticipant.Revive();
 		}
 	}
 }

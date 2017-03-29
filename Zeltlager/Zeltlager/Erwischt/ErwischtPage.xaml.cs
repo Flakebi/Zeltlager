@@ -20,23 +20,22 @@ namespace Zeltlager.Erwischt
 			this.game = game;
 			this.lager = lager;
 			Title = game.Name;
-			UpdateUI();
 		}
 
 		void UpdateUI()
 		{
 			Content = new SearchableListView<ErwischtParticipant>(game.ErwischtParticipants,
-															 OnEditClicked, OnDeleteClicked, OnErwischtMemberClicked);
+															 OnEditClicked, OnDeleteClicked, OnErwischtParticipantClicked);
 		}
 
-		void OnErwischtMemberClicked(ErwischtParticipant member)
+		void OnErwischtParticipantClicked(ErwischtParticipant member)
 		{
 			Navigation.PushAsync(new ErwischtParticipantDetailPage(member));
 		}
 
 		void OnEditClicked(ErwischtParticipant member) { }
 
-		Task OnDeleteClicked(ErwischtParticipant member) { return Task.WhenAll(); }
+		async Task OnDeleteClicked(ErwischtParticipant member) { await Task.WhenAll(); }
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
