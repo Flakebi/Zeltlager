@@ -6,8 +6,10 @@
 	x:Class="Zeltlager.Erwischt.ErwischtPage"
     Style="{StaticResource BaseStyle}">
 	<ContentPage.ToolbarItems>
-		<ToolbarItem Icon="{x:Static local:Icons.ADD}" Clicked="OnAddButtonClicked"> </ToolbarItem>
-		<ToolbarItem Icon="{x:Static local:Icons.CHANGE}" Clicked="OnChangeGameButtonClicked"> </ToolbarItem>
+		<ToolbarItem Icon="{x:Static local:Icons.CHANGE}" Clicked="OnChangeGameButtonClicked">
+		</ToolbarItem>
+		<ToolbarItem Icon="{x:Static local:Icons.ADD}" Clicked="OnAddButtonClicked">
+		</ToolbarItem>
   	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
 	</ContentPage.Content>

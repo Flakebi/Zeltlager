@@ -23,6 +23,7 @@ namespace Zeltlager.DataPackets
 		[Serialisation(Type = SerialisationType.Reference)]
 		public DataPacketBundle Bundle { get; private set; }
 		public int? PacketIndex { get; private set; }
+		public DataPacket Packet => Bundle.Packets[PacketIndex.Value];
 
 		protected PacketId() { }
 

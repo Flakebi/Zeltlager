@@ -130,7 +130,7 @@ namespace Zeltlager.Calendar
 				foreach (StandardCalendarEvent sce in StandardEvents)
 				{
 					// check whether the event was added before that day+eventtime & ignore in that case
-					if (sce.Id.Bundle.Packets[sce.Id.PacketIndex.Value].Timestamp > d.Date.Add(sce.Time))
+					if (sce.Id.Packet.Timestamp > d.Date.Add(sce.Time))
 					{
 						continue;
 					}

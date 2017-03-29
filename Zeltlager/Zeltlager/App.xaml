@@ -82,7 +82,7 @@
 			<Style TargetType="Picker" BasedOn="{StaticResource BaseStyle}">
 				<Setter Property="TextColor" Value="{DynamicResource textColorStandard}" />  
 			</Style>
-			<Style TargetType="TabbedPage" BasedOn="{StaticResource BaseStyle}">
+			<Style x:Key="TabbedPageStyle" TargetType="TabbedPage" BasedOn="{StaticResource BaseStyle}">
 				<Setter Property="BarBackgroundColor" Value="{DynamicResource backgroundColor}" />
 				<Setter Property="BarTextColor" Value="{DynamicResource textColorButton}" />
  			</Style>

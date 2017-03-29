@@ -76,13 +76,13 @@ namespace Zeltlager
 			editAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnEditCommand)));
 			editAction.BindingContext = this;
 
-			//deleteAction = new MenuItem { Icon = Icons.DELETE, Text = Icons.DELETE_TEXT, IsDestructive = true };
-			//deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnDeleteCommandParameter)));
-			//deleteAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnDeleteCommand)));
-			//deleteAction.BindingContext = this;
+			deleteAction = new MenuItem { Icon = Icons.DELETE, Text = Icons.DELETE_TEXT, IsDestructive = true };
+			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnDeleteCommandParameter)));
+			deleteAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnDeleteCommand)));
+			deleteAction.BindingContext = this;
 
 			ContextActions.Add(editAction);
-			//ContextActions.Add(deleteAction);
+			ContextActions.Add(deleteAction);
 
 			TextColor = (Color)Application.Current.Resources["textColorStandard"];
 			DetailColor = (Color)Application.Current.Resources["detailColor"];

@@ -33,7 +33,7 @@ namespace Zeltlager.Erwischt
 				ErwischtParticipant target = this.target;
 				while(!target.IsAlive && target != this)
 				{
-					target = target.Target;
+					target = target.target;
 				}
 				return target;
 			}
@@ -47,7 +47,7 @@ namespace Zeltlager.Erwischt
 		public bool IsAlive { get; set; }
 
 		public string SearchableText => Member.Name;
-		public string SearchableDetail => "→" + Target.Member.Name;
+		public string SearchableDetail => "→ " + Target.Member.Name;
 
 		public ErwischtParticipant() { }
 

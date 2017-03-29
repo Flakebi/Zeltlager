@@ -20,7 +20,8 @@ namespace Zeltlager.DataPackets
 		static readonly Type[] packetTypes = {
 			typeof(AddPacket),
 			typeof(EditPacket),
-			typeof(RevertPacket)
+			typeof(RevertPacket),
+			typeof(ErwischtPacket),
 		};
 
 		/// <summary>

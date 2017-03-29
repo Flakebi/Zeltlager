@@ -28,5 +28,11 @@ namespace Zeltlager.Erwischt
 		{
 			return Games.First(g => g.Id == gameId).ErwischtParticipants.First(ep => ep.Member.Id == memberId);
 		}
+
+		public ErwischtGame GetNewestGame()
+		{
+			VisibleGames.Sort((x, y) => x.Id.Packet.Timestamp.CompareTo(y.Id.Packet.Timestamp));
+			return VisibleGames.First();
+		}
 	}
 }

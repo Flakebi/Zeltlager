@@ -11,7 +11,9 @@
 					 Orientation="Vertical"
 					 Spacing="15"
 					 Padding="10,10,10,0">
+			<Label Text="Teilnehmer: " HorizontalOptions="StartAndExpand"/>
 			<Label Text="{Binding Member.Name}" HorizontalOptions="CenterAndExpand"/>
+			<Label Text="Ziel: " HorizontalOptions="StartAndExpand"/>
 			<Label Text="{Binding Target.Member.Name}" HorizontalOptions="CenterAndExpand"/>
 			<Button Text="Ziel erwischen" Clicked="OnCatchTargetClicked" HorizontalOptions="CenterAndExpand"/>
 			<Button Text="Teilnehmer wiederbeleben" Clicked="OnReviveClicked" HorizontalOptions="CenterAndExpand" IsVisible="{Binding !IsAlive}"/>

@@ -146,6 +146,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\podium.png" />
     <AndroidResource Include="Resources\drawable-ldpi\podium.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\podium.png" />
+    <AndroidResource Include="Resources\drawable\switch.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zeltlager\Zeltlager.csproj">
@@ -745,6 +746,9 @@
     <AndroidResource Include="Resources\drawable-hdpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\switch.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\tag.png" />
   </ItemGroup>
   <ItemGroup>
@@ -1040,6 +1044,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\switch1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-ldpi\switch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\tag.png" />
@@ -1339,6 +1346,9 @@
     <AndroidResource Include="Resources\drawable-mdpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\switch.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\tag.png" />
   </ItemGroup>
   <ItemGroup>
@@ -1634,6 +1644,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\switch1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\switch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\tag.png" />
@@ -1933,6 +1946,9 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxhdpi\switch.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\tag.png" />
   </ItemGroup>
   <ItemGroup>
@@ -2228,6 +2244,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\switch1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxxhdpi\switch.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\tag.png" />

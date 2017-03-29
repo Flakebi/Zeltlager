@@ -20,6 +20,8 @@ namespace Zeltlager.Erwischt
 			this.game = game;
 			this.lager = lager;
 			Title = game.Name;
+			NavigationPage.SetBackButtonTitle(this, "");
+			UpdateUI();
 		}
 
 		void UpdateUI()
@@ -35,7 +37,7 @@ namespace Zeltlager.Erwischt
 
 		void OnEditClicked(ErwischtParticipant member) { }
 
-		async Task OnDeleteClicked(ErwischtParticipant member) { await Task.WhenAll(); }
+		Task OnDeleteClicked(ErwischtParticipant member) { return Task.WhenAll(); }
 
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{

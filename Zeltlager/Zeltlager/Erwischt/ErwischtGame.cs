@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Zeltlager.Client;
-using Zeltlager.Competition;
 using System.Linq;
 using Zeltlager.DataPackets;
 
@@ -33,7 +32,7 @@ namespace Zeltlager.Erwischt
 
 		public string SearchableDetail => ErwischtParticipants.Where(em => em.IsAlive).Count() + " verbleibende Teilnehmer";
 
-		public bool IsVisible { get; set; }
+		public bool IsVisible { get; set; } = true;
 
 		// For deserialisation
 		protected static Task<ErwischtGame> GetFromId(LagerClientSerialisationContext context, PacketId id)

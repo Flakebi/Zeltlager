@@ -4,6 +4,7 @@ using Zeltlager.General;
 using Zeltlager.Client;
 using Zeltlager.Erwischt;
 using Zeltlager.UAM;
+using System.Linq;
 
 namespace Zeltlager
 {
@@ -53,15 +54,14 @@ namespace Zeltlager
 
 		void OnErwischtClicked(object sender, EventArgs e)
 		{
-			ErwischtGame currentGame = lager.ErwischtHandler.CurrentGame;
-			if (currentGame == null)
+			if (lager.ErwischtHandler.VisibleGames.Any())
 			{
-				Navigation.PushAsync(new UniversalAddModifyPage<ErwischtGame, ErwischtGame>
-																			(new ErwischtGame("", lager), true, lager));
+				Navigation.PushAsync(new ErwischtPage(lager.ErwischtHandler.GetNewestGame(), lager));
 			}
 			else
 			{
-				Navigation.PushAsync(new ErwischtPage(currentGame, lager));
+				Navigation.PushAsync(new UniversalAddModifyPage<ErwischtGame, ErwischtGame>
+																			(new ErwischtGame("", lager), true, lager));
 			}
 		}
 

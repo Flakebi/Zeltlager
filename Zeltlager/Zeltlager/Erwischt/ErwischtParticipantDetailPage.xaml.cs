@@ -15,16 +15,19 @@ namespace Zeltlager.Erwischt
 			InitializeComponent();
 			ErwischtParticipant = member;
 			BindingContext = ErwischtParticipant;
+			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
-		async Task OnCatchTargetClicked(object sender, EventArgs e)
+		async void OnCatchTargetClicked(object sender, EventArgs e)
 		{
 			await ErwischtParticipant.Target.Catch();
+			OnPropertyChanged(nameof(ErwischtParticipant));
 		}
 
-		async Task OnReviveClicked(object sender, EventArgs e)
+		async void OnReviveClicked(object sender, EventArgs e)
 		{
 			await ErwischtParticipant.Revive();
+			OnPropertyChanged(nameof(ErwischtParticipant));
 		}
 	}
 }

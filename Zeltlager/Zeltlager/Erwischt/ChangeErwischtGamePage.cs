@@ -13,12 +13,12 @@ namespace Zeltlager.Erwischt
 		public ChangeErwischtGamePage(LagerClient lager)
 		{
 			this.lager = lager;
+			NavigationPage.SetBackButtonTitle(this, "");
 			Content = new SearchableListView<ErwischtGame>(lager.ErwischtHandler.VisibleGames,
 			                                           OnEditClicked, OnDeleteClicked, OnErwischtGameClicked);
 			Title = "Spiel wechseln";
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			Padding = new Thickness(10);
-			NavigationPage.SetBackButtonTitle(this, "");
 		}
 
 		async Task OnDeleteClicked(ErwischtGame game)
@@ -32,7 +32,7 @@ namespace Zeltlager.Erwischt
 		void OnErwischtGameClicked(ErwischtGame game)
 		{
 			lager.ErwischtHandler.CurrentGame = game;
-			Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
+			Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
 			Navigation.InsertPageBefore(new ErwischtPage(game, lager), this);
 			Navigation.PopAsync(true);
 		}
