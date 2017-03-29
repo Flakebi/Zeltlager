@@ -14,9 +14,9 @@ namespace Zeltlager.Calendar
 		/// <summary>
 		/// The date of this event.
 		/// </summary>
+		[Serialisation]
 		protected DateTime date;
 		[Editable("Tag")]
-		[Serialisation]
 		public DateTime Date
 		{
 			get { return date; }
@@ -32,8 +32,11 @@ namespace Zeltlager.Calendar
 		[Editable("Uhrzeit")]
 		public new TimeSpan Time
 		{
-			get { return Date.TimeOfDay; }
-			set { Date = Date.Date.Add(value); }
+			get { return date.TimeOfDay; }
+			set 
+			{ 
+				date = date.Date.Add(value);
+			}
 		}
 
 		public new string TimeString
@@ -53,7 +56,7 @@ namespace Zeltlager.Calendar
 		public CalendarEvent(PacketId id, DateTime date, string title, string detail, LagerClient lager)
 			: base (id, date.TimeOfDay, title, detail, lager)
 		{
-			Date = date;
+			this.date = date;
 		}
 
 		public new void Add(LagerClientSerialisationContext context)

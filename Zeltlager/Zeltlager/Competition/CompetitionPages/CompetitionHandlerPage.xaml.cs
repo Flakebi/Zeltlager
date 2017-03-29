@@ -24,13 +24,13 @@ namespace Zeltlager.Competition
 
 		void OnAddClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Competition, Rankable>
-			                                             (new Competition(null, "", lager), true, lager)),true);
+			Navigation.PushAsync(new UniversalAddModifyPage<Competition, Rankable>
+			                                             (new Competition(null, "", lager), true, lager));
 		}
 
 		void OnEditClicked(Competition comp)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Competition, Rankable>(comp,false, lager)));
+			Navigation.PushAsync(new UniversalAddModifyPage<Competition, Rankable>(comp,false, lager));
 		}
 
 		async Task OnDeleteClicked(Competition comp)

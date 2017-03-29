@@ -46,7 +46,7 @@ namespace Zeltlager.Competition
 				addPage = new UniversalAddModifyPage<Station, Rankable>(new Station(null, "", competition), true, lager);
 			else
 				addPage = new AddEditParticipantPage(new GroupParticipant(null, "", competition), true);
-			Navigation.PushModalAsync(new NavigationPage(addPage), true);
+			Navigation.PushAsync(addPage);
 		}
 
 		protected override void OnAppearing()
@@ -62,7 +62,7 @@ namespace Zeltlager.Competition
 
 		void OnEditClickedStation(Station station)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<Station, Rankable>(station, false, lager)), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<Station, Rankable>(station, false, lager));
 		}
 
 		async Task OnDeleteClickedStation(Station station)

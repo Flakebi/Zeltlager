@@ -23,6 +23,9 @@ namespace Zeltlager.UAM
 		readonly bool isAddPage;
 		readonly LagerClient lager;
 
+		public delegate void AfterCompletion(T o, Page before);
+		public event AfterCompletion AfterComp;
+
 		static readonly Type[] NUM_TYPES = {
 			typeof(byte),
 			typeof(sbyte),
@@ -236,14 +239,12 @@ namespace Zeltlager.UAM
 				oldObj = default(T);
 			await Obj.OnSaveEditing(lager, oldObj);
 
-			Erwischt.Erwischt game = Obj as Erwischt.Erwischt;
-			if (game != null)
+			if (AfterComp != null)
 			{
-				lager.ErwischtHandler.CurrentGame = game;
-				Navigation.InsertPageBefore(new ErwischtPage(lager.ErwischtHandler.CurrentGame, lager), this);
+				AfterComp(Obj, this);
 			}
 
-			await Navigation.PopModalAsync(true);
+			await Navigation.PopAsync(true);
 		}
 	}
 }

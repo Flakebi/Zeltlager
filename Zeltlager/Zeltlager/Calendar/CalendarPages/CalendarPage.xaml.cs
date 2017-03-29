@@ -45,13 +45,13 @@ namespace Zeltlager.Calendar
 		{
 			if (CurrentPage != null)
 			{
-				Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-						   (new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date, "", "", lager), true, lager)), true);
+				Navigation.PushAsync(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+						   (new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date, "", "", lager), true, lager));
 			}
 			else
 			{
-				Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-						   (new CalendarEvent(null, DateTime.Now, "", "", lager), true, lager)), true);
+				Navigation.PushAsync(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+						   (new CalendarEvent(null, DateTime.Now, "", "", lager), true, lager));
 			}
 		}
 

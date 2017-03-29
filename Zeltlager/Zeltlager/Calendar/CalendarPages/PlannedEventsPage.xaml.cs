@@ -57,14 +57,13 @@ namespace Zeltlager.Calendar
 
 		void OnAddClicked(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<PlannedCalendarEvent, PlannedCalendarEvent>
-					   (new PlannedCalendarEvent(null, "", "", lager), true, lager)), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<PlannedCalendarEvent, PlannedCalendarEvent>
+					   (new PlannedCalendarEvent(null, "", "", lager), true, lager));
 		}
 
 		void OnEditClicked(PlannedCalendarEvent pce)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<PlannedCalendarEvent, PlannedCalendarEvent>
-					   (pce, false, lager)), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<PlannedCalendarEvent, PlannedCalendarEvent>(pce, false, lager));
 		}
 
 		async Task OnDeleteClicked(PlannedCalendarEvent pce)
@@ -75,8 +74,8 @@ namespace Zeltlager.Calendar
 
 		void OnPlannedEventClicked(PlannedCalendarEvent pce)
 		{
-			Navigation.PushModalAsync(new NavigationPage(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-					   (new ExPlCalendarEvent(pce), true, lager)), true);
+			Navigation.PushAsync(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+					   (new ExPlCalendarEvent(pce), true, lager));
 		}
 
 		protected override void OnAppearing()

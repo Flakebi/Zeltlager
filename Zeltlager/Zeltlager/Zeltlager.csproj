@@ -55,7 +55,7 @@
     <Compile Include="DataPackets\DataPacket.cs" />
     <Compile Include="DataPackets\InvalidDataPacket.cs" />
     <Compile Include="DataPackets\PacketId.cs" />
-    <Compile Include="Erwischt\Erwischt.cs" />
+    <Compile Include="Erwischt\ErwischtGame.cs" />
     <Compile Include="IIoProvider.cs" />
     <Compile Include="LagerBase.cs" />
     <Compile Include="LagerManager.cs" />
@@ -192,14 +192,15 @@
     </Compile>
     <Compile Include="IDeletable.cs" />
     <Compile Include="Erwischt\ErwischtHandler.cs" />
-    <Compile Include="Erwischt\ErwischtMember.cs" />
+    <Compile Include="Erwischt\ErwischtParticipant.cs" />
     <Compile Include="Erwischt\ErwischtPage.xaml.cs">
       <DependentUpon>ErwischtPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Erwischt\ErwischtMemberDetailPage.xaml.cs">
-      <DependentUpon>ErwischtMemberDetailPage.xaml</DependentUpon>
+    <Compile Include="Erwischt\ErwischtParticipantDetailPage.xaml.cs">
+      <DependentUpon>ErwischtParticipantDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Erwischt\ChangeErwischtGamePage.cs" />
+    <Compile Include="DataPackets\ErwischtPacket.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -273,7 +274,7 @@
     <EmbeddedResource Include="Erwischt\ErwischtPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="Erwischt\ErwischtMemberDetailPage.xaml">
+    <EmbeddedResource Include="Erwischt\ErwischtParticipantDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

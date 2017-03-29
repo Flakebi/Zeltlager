@@ -89,8 +89,8 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <CodesignProvision>Automatic:AppStore</CodesignProvision>
-    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignProvision></CodesignProvision>
+    <CodesignKey>iPhone Developer: caro-diabolus@web.de (VYX5A499BN)</CodesignKey>
     <CodesignEntitlements>
     </CodesignEntitlements>
   </PropertyGroup>
