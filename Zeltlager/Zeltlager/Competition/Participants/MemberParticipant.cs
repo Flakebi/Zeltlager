@@ -5,11 +5,11 @@ namespace Zeltlager.Competition
 	{
 		public override string Name
 		{
-			get { return member.Display; }
+			get { return Member.Display; }
 		}
 
 		[Serialisation(Type = SerialisationType.Reference)]
-		Member member;
+		public Member Member { get; private set; }
 
 		public MemberParticipant() { }
 
@@ -17,19 +17,19 @@ namespace Zeltlager.Competition
 
 		public MemberParticipant(DataPackets.PacketId id, Member mem, Competition competition) : base(id, competition)
 		{
-			member = mem;
+			Member = mem;
 		}
 
 		public override Participant Clone()
 		{
-			return new MemberParticipant(Id, member, competition);
+			return new MemberParticipant(Id, Member, competition);
 		}
 
 		public override bool Equals(Participant other)
 		{
 			if (other is MemberParticipant)
 			{
-				return member.Equals(((MemberParticipant)other).member);
+				return Member.Equals(((MemberParticipant)other).Member);
 			}
 			return false;
 		}

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 using Xamarin.Forms;
-using Zeltlager.Client;
-using System.Threading.Tasks;
 
 namespace Zeltlager
 {
@@ -75,16 +75,27 @@ namespace Zeltlager
 
 			Content = stackLayout;
 			Style = (Style)Application.Current.Resources["BaseStyle"];
+
+			UpdateSearch("");
 		}
 
 		void OnSearch(object sender, TextChangedEventArgs e)
 		{
+			UpdateSearch(e.NewTextValue);
+		}
+
+		void UpdateSearch(string searchText)
+		{
 			// Set current items to only show ones matching to the search text
 			List<T> newTotalItems = new List<T>(totalItems);
-			newTotalItems.Sort();
+			// Sort by SearchableText if the items don't implement IComparable
+			if (typeof(IComparable<T>).GetTypeInfo().IsAssignableFrom(typeof(T).GetTypeInfo()))
+				newTotalItems.Sort();
+			else
+				newTotalItems.Sort(new SearchableComparator<T>());
 			List<T> newCurrentItems = new List<T>();
 			// Get the words to filter for
-			var filters = e.NewTextValue.Split(' ');
+			var filters = searchText.Split(' ');
 
 			// Go through totalItems and remove everything not conforming to all search tags
 			// Reverse list, so most result is sorted for most important tag last

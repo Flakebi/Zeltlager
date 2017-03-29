@@ -16,7 +16,6 @@ namespace Zeltlager.UAM
 	/// Supports these types of properties:
 	/// string, DateTime, TimeSpan, any Number, Tent, Member, Partipant, bool, List
 	/// </summary>
-
 	public class UniversalAddModifyPage<T, U> : ContentPage where T : IEditable<U>, U
 	{
 		public T Obj { get; }
@@ -45,10 +44,16 @@ namespace Zeltlager.UAM
 		public UniversalAddModifyPage(T obj, bool isAddPage, LagerClient lager)
 		{
 			this.lager = lager;
-			// Set title of page
 			this.isAddPage = isAddPage;
-			Title = obj.GetType().GetTypeInfo().GetCustomAttribute<EditableAttribute>().Name +
+			Type type = typeof(T);
+
+			// Set title of page
+			EditableAttribute classAttribute = type.GetTypeInfo().GetCustomAttribute<EditableAttribute>();
+			Title = classAttribute.Name +
 				(isAddPage ? " hinzufügen" : " bearbeiten");
+			// Add a dynamic title if one is give
+			if (classAttribute.NameProperty != null)
+				Title += " - " + type.GetRuntimeProperty(classAttribute.NameProperty).GetValue(obj);
 
 			var grid = new Grid();
 			// Add two columns to grid (labeling the input elements and the elements themselves)
@@ -62,8 +67,7 @@ namespace Zeltlager.UAM
 
 			// Set the binding context so the binding of variables work
 			BindingContext = Obj;
-
-			Type type = Obj.GetType();
+			
 			IEnumerable<PropertyInfo> propInfo = type.GetRuntimeProperties()
 			                                         .Where(pi => pi.GetCustomAttribute<EditableAttribute>() != null);
 
@@ -220,10 +224,10 @@ namespace Zeltlager.UAM
 		async void OnSaveClicked()
 		{
 			// check if any string properties are empty
-			PropertyInfo propInfo = Obj.GetType().GetRuntimeProperties()
+			PropertyInfo propInfo = typeof(T).GetRuntimeProperties()
 			   .FirstOrDefault(pi => pi.GetCustomAttribute<EditableAttribute>() != null 
 			                   && pi.PropertyType == typeof(string) 
-			                   && string.IsNullOrEmpty((string)Obj.GetType().GetRuntimeProperty(pi.Name).GetValue(Obj)));
+			                   && string.IsNullOrEmpty((string)typeof(T).GetRuntimeProperty(pi.Name).GetValue(Obj)));
 			if (propInfo != null && !propInfo.GetCustomAttribute<EditableAttribute>().CanBeEmpty)
 			{
 				await DisplayAlert("Achtung!", propInfo.GetCustomAttribute<EditableAttribute>().Name + " erforderlich.", "Ok :D");

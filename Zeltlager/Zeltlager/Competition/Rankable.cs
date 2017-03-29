@@ -1,12 +1,12 @@
-using System;
-using System.Threading.Tasks;
-using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
-using Zeltlager.Client;
-using Zeltlager.Competition;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace Zeltlager
 {
+	using Competition;
+	using DataPackets;
+	using Serialisation;
+
 	public abstract class Rankable : Editable<Rankable>
 	{
 		[Serialisation(Type = SerialisationType.Id)]

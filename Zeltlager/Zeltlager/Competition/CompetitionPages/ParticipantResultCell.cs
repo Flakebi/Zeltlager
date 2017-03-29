@@ -1,10 +1,12 @@
-using System;
 using Xamarin.Forms;
 
 namespace Zeltlager.Competition
 {
 	public class ParticipantResultCell : ViewCell
 	{
+		public Label Points { get; private set; }
+		public Label Place { get; private set; }
+
 		public ParticipantResultCell()
 		{
 			StackLayout hsl = new StackLayout { Orientation = StackOrientation.Horizontal };
@@ -13,26 +15,26 @@ namespace Zeltlager.Competition
 			{
 				HorizontalOptions = LayoutOptions.StartAndExpand,
 			};
-			Label points = new Label
+			Points = new Label
 			{
 				HorizontalOptions = LayoutOptions.Center,
+				WidthRequest = 48,
 			};
-			Label place = new Label
+			Place = new Label
 			{
 				HorizontalOptions = LayoutOptions.End,
-				WidthRequest = 35,
+				WidthRequest = 48,
 			};
 
 			hsl.Children.Add(participant);
-			hsl.Children.Add(points);
-			hsl.Children.Add(place);
+			hsl.Children.Add(Points);
+			hsl.Children.Add(Place);
 
 			participant.SetBinding(Label.TextProperty, "Participant.Name");
-			points.SetBinding(Label.TextProperty, "PointsString");
-			place.SetBinding(Label.TextProperty, "PlaceString");
+			Points.SetBinding(Label.TextProperty, "PointsString");
+			Place.SetBinding(Label.TextProperty, "PlaceString");
 
 			View = hsl;
 		}
 	}
 }
-

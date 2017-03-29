@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
@@ -9,7 +7,7 @@ namespace Zeltlager.Competition
 	using Serialisation;
 	using UAM;
 
-	[Editable("Ergebnis")]
+	[Editable("Ergebnis", NameProperty = nameof(ParticipantName))]
 	public class CompetitionResult : Editable<CompetitionResult>, IComparable<CompetitionResult>
 	{
 		[Serialisation(Type = SerialisationType.Id)]
@@ -22,27 +20,16 @@ namespace Zeltlager.Competition
 		[Editable("Platzierung")]
 		[Serialisation]
 		public int? Place { get; set; }
-
-		[Editable("Teilnehmer")]
+		
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Participant Participant { get; set; }
-
-		public IReadOnlyList<Participant> ParticipantList 
-		{ 
-			get 
-			{
-				return Owner.GetParticipants()
-					.Except(Owner.Ranking.Results
-						.Where(cr => cr.Points.HasValue || cr.Place.HasValue)
-						.Select(cr => cr.Participant)).ToList();
-			}
-		}
 
 		[Serialisation(Type = SerialisationType.Reference)]
 		public Rankable Owner { get; set; }
 
 		public string PointsString => Points?.ToString() ?? "-";
 		public string PlaceString => Place?.ToString() ?? "-";
+		public string ParticipantName => Participant.Name;
 
 		protected static Task<CompetitionResult> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
@@ -68,8 +55,6 @@ namespace Zeltlager.Competition
 			context.LagerClient.CompetitionHandler.AddCompetitionResult(this);
 		}
 
-		#region Interface implementation
-
 		public override CompetitionResult Clone()
 		{
 			return new CompetitionResult(Id?.Clone(), Owner, Participant, Points, Place);
@@ -82,7 +67,5 @@ namespace Zeltlager.Competition
 				return placeCompare;
 			return Points.CompareTo(other.Points);
 		}
-
-		#endregion
 	}
 }
