@@ -18,17 +18,21 @@ namespace Zeltlager.Competition
 
 		EventHandler updateWidth;
 
+		public bool Editable { get; set; }
+
 		/// <summary>
 		/// The ranking results including all not-ranked participants.
 		/// </summary>
 		List<CompetitionResult> totalRanking = new List<CompetitionResult>();
 
-		public RankingView(LagerClient lager, Rankable rankable, Ranking ranking, bool editable = false)
+		public RankingView(LagerClient lager, Rankable rankable, Ranking ranking, bool editable = true)
 		{
-			InitializeComponent();
 			this.lager = lager;
 			this.rankable = rankable;
 			this.ranking = ranking;
+			Editable = editable;
+			InitializeComponent();
+			BindingContext = this;
 
 			participantResults.ItemTemplate = new DataTemplate(typeof(ParticipantResultCell));
 
@@ -52,6 +56,7 @@ namespace Zeltlager.Competition
 			totalRanking.AddRange(rankable.GetParticipants()
 				.Except(ranking.Results.Select(r => r.Participant))
 				.Select(p => new CompetitionResult(null, rankable, p)));
+			totalRanking.Sort();
 
 			// Set it to null first to refresh the list
 			participantResults.ItemsSource = null;
@@ -60,6 +65,9 @@ namespace Zeltlager.Competition
 
 		void OnParticipantSelected(object sender, EventArgs e)
 		{
+			if (!Editable)
+				return;
+
 			CompetitionResult item = (CompetitionResult)participantResults.SelectedItem;
 			if (item != null)
 			{
@@ -71,26 +79,15 @@ namespace Zeltlager.Competition
 			participantResults.SelectedItem = null;
 		}
 
-		void OnEditClickedParticipant(Participant participant)
+		async void OnIncreasingButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new NavigationPage(new AddEditParticipantPage(participant, false)));
-		}
-
-		async Task OnDeleteClickedParticipant(Participant participant)
-		{
-			await participant.Delete(lager);
+			await ranking.Rank(true);
 			UpdateUI();
 		}
 
-		void OnIncreasingButtonClicked(object sender, EventArgs e)
+		async void OnDecreasingButtonClicked(object sender, EventArgs e)
 		{
-			ranking.Rank(true);
-			UpdateUI();
-		}
-
-		void OnDecreasingButtonClicked(object sender, EventArgs e)
-		{
-			ranking.Rank(false);
+			await ranking.Rank(false);
 			UpdateUI();
 		}
 	}

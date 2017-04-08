@@ -62,10 +62,23 @@ namespace Zeltlager.Competition
 
 		public int CompareTo(CompetitionResult other)
 		{
-			int placeCompare = Place.CompareTo(other.Place);
-			if (placeCompare != 0)
-				return placeCompare;
-			return Points.CompareTo(other.Points);
+			if (Place.HasValue)
+			{
+				if (!other.Place.HasValue)
+					return -1;
+				return Place.CompareTo(other.Place);
+			}
+			if (other.Place.HasValue)
+				return 1;
+			if (Points.HasValue)
+			{
+				if (!other.Points.HasValue)
+					return -1;
+				return Points.CompareTo(other.Points);
+			}
+			if (other.Points.HasValue)
+				return 1;
+			return 0;
 		}
 	}
 }
