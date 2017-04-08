@@ -239,11 +239,10 @@ namespace Zeltlager.UAM
 				oldObj = default(T);
 			await Obj.OnSaveEditing(lager, oldObj);
 
-			ErwischtGame game = Obj as ErwischtGame;
-			if (game != null)
+			if (Obj is ErwischtGame)
 			{
-				lager.ErwischtHandler.CurrentGame = game;
-				Navigation.InsertPageBefore(new ErwischtPage(game, lager), this);
+				Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count-2]);
+				Navigation.InsertPageBefore(new ErwischtPage(lager.ErwischtHandler.GetNewestGame(), lager), this);
 			}
 
 			await Navigation.PopAsync();

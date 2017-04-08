@@ -31,5 +31,19 @@ namespace Zeltlager
 			await LagerManager.Log.Clear();
 			UpdateUI(null, null);
 		}
+
+		protected override async void OnDisappearing()
+		{
+			base.OnDisappearing();
+			try
+			{
+				await Lager.ClientManager.Settings.Save(Lager.ClientManager.IoProvider);
+			}
+			catch (Exception e)
+			{
+				await LagerManager.Log.Exception("Settings", e);
+				await DisplayAlert("Fehler!", "Das Speichern der Einstellungen schlug fehl.", "Ok");
+			}
+		}
 	}
 }

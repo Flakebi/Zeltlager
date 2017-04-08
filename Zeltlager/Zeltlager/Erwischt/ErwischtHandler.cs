@@ -31,8 +31,8 @@ namespace Zeltlager.Erwischt
 
 		public ErwischtGame GetNewestGame()
 		{
-			VisibleGames.Sort((x, y) => x.Id.Packet.Timestamp.CompareTo(y.Id.Packet.Timestamp));
-			return VisibleGames.First();
+			VisibleGames.Sort((x, y) => y.Id.Packet.Timestamp.CompareTo(x.Id.Packet.Timestamp));
+			return VisibleGames.Last();
 		}
 	}
 }

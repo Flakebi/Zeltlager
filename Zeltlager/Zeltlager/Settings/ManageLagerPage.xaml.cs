@@ -66,7 +66,15 @@ namespace Zeltlager.Settings
 			{
 				// Update the server address
 				settings.ServerAddress = ServerEntry.Text;
-				await settings.Save(manager.IoProvider);
+				try
+				{
+					await settings.Save(manager.IoProvider);
+				}
+				catch (Exception e)
+				{
+					await LagerManager.Log.Exception("Settings", e);
+					await DisplayAlert("Fehler!", "Das Speichern der Einstellungen schlug fehl.", "Ok");
+				}
 			}
 		}
 	}

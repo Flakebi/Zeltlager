@@ -22,6 +22,9 @@ namespace Zeltlager.Client
 		[Serialisation]
 		public bool ShowExceptionInLog { get; set; }
 
+		[Serialisation]
+		public bool HideDeadParticipants { get; set; }
+
 		/// <summary>
 		/// The address of the server for remote games.
 		/// </summary>
@@ -36,6 +39,7 @@ namespace Zeltlager.Client
 			ShowWarningInLog = false;
 			ShowErrorInLog = true;
 			ShowExceptionInLog = true;
+			HideDeadParticipants = false;
 
 			if (await io.ExistsFile(SETTINGS_FILE))
 			{

@@ -4,19 +4,29 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	x:Class="Zeltlager.Erwischt.ErwischtParticipantDetailPage"
     Style="{StaticResource BaseStyle}"
+	Padding="10"
 	Title="{Binding Game.Name}">
 	<ContentPage.Content>
-		<StackLayout VerticalOptions="FillAndExpand"
-					 HorizontalOptions="FillAndExpand"
-					 Orientation="Vertical"
-					 Spacing="15"
-					 Padding="10,10,10,0">
-			<Label Text="Teilnehmer: " HorizontalOptions="StartAndExpand"/>
-			<Label Text="{Binding Member.Name}" HorizontalOptions="CenterAndExpand"/>
-			<Label Text="Ziel: " HorizontalOptions="StartAndExpand"/>
-			<Label Text="{Binding Target.Member.Name}" HorizontalOptions="CenterAndExpand"/>
-			<Button Text="Ziel erwischen" Clicked="OnCatchTargetClicked" HorizontalOptions="CenterAndExpand"/>
-			<Button Text="Teilnehmer wiederbeleben" Clicked="OnReviveClicked" HorizontalOptions="CenterAndExpand" IsVisible="{Binding !IsAlive}"/>
-		</StackLayout>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="50*"/>
+				<ColumnDefinition Width="50*"/>
+			</Grid.ColumnDefinitions>
+
+			<Label Text="Teilnehmer: " HorizontalOptions="StartAndExpand" Grid.Row="0" Grid.Column="0"/>
+			<Label Text="{Binding Member.Name}" HorizontalOptions="StartAndExpand" Grid.Row="0" Grid.Column="1"/>
+			<Label Text="Ziel: " HorizontalOptions="StartAndExpand" Grid.Row="1" Grid.Column="0"/>
+			<Label x:Name="targetName" HorizontalOptions="StartAndExpand" Grid.Row="1" Grid.Column="1"/>
+			<Button Text="Ziel erwischen" Clicked="OnCatchTargetClicked" HorizontalOptions="CenterAndExpand" 
+					IsVisible="{Binding IsAlive}" Style="{StaticResource DarkButtonStyle}" Grid.Row="2" Grid.Column="1"/>
+			<Button Text="Wiederbeleben" Clicked="OnReviveClicked" HorizontalOptions="CenterAndExpand" 
+					x:Name="reviveButton" Style="{StaticResource DarkButtonStyle}" Grid.Row="2" Grid.Column="0"/>
+		</Grid>
 	</ContentPage.Content>
 </ContentPage>

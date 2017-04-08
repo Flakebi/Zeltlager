@@ -8,7 +8,7 @@ namespace Zeltlager.Erwischt
 	/// <summary>
 	/// A participant for the Erwischt game.
 	/// </summary>
-	public class ErwischtParticipant : ISearchable
+	public class ErwischtParticipant : ISearchable, IComparable<ErwischtParticipant>
 	{
 		/// <summary>
 		/// The game this ErwischtMember belongs to.
@@ -31,7 +31,7 @@ namespace Zeltlager.Erwischt
 			get
 			{
 				ErwischtParticipant target = this.target;
-				while(!target.IsAlive && target != this)
+				while (!target.IsAlive && target != this)
 				{
 					target = target.target;
 				}
@@ -47,7 +47,21 @@ namespace Zeltlager.Erwischt
 		public bool IsAlive { get; set; }
 
 		public string SearchableText => Member.Name;
-		public string SearchableDetail => "→ " + Target.Member.Name;
+		public string SearchableDetail
+		{
+			get 
+			{
+				if (!IsAlive)
+				{
+					return "erwischt!";
+				}
+				if (this == Target)
+				{
+					return "Gewinner \ud83c\udf89";
+				}
+				return "→ " + Target.Member.Name;
+			}
+		}
 
 		public ErwischtParticipant() { }
 
@@ -80,6 +94,19 @@ namespace Zeltlager.Erwischt
 			Serialiser<LagerClientSerialisationContext> serialiser = Game.GetLager().ClientSerialiser;
 			DataPacket packet = await ErwischtPacket.Create(serialiser, context, this, isAlive);
 			await context.LagerClient.AddPacket(packet);
+		}
+
+		public int CompareTo(ErwischtParticipant other)
+		{
+			if (other.IsAlive && !this.IsAlive)
+			{
+				return 1;
+			}
+			if (!other.IsAlive && this.IsAlive)
+			{
+				return -1;
+			}
+			return this.Member.CompareTo(other.Member);
 		}
 	}
 }

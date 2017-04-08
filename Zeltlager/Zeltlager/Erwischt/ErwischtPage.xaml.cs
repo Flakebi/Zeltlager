@@ -26,8 +26,16 @@ namespace Zeltlager.Erwischt
 
 		void UpdateUI()
 		{
-			Content = new SearchableListView<ErwischtParticipant>(game.ErwischtParticipants,
-															 OnEditClicked, OnDeleteClicked, OnErwischtParticipantClicked);
+			if (lager.ClientManager.Settings.HideDeadParticipants)
+			{
+				Content = new SearchableListView<ErwischtParticipant>(game.ErwischtParticipants.Where(ep => ep.IsAlive).ToList(),
+																 OnEditClicked, OnDeleteClicked, OnErwischtParticipantClicked);
+			}
+			else
+			{
+				Content = new SearchableListView<ErwischtParticipant>(game.ErwischtParticipants,
+																 OnEditClicked, OnDeleteClicked, OnErwischtParticipantClicked);
+			}
 		}
 
 		void OnErwischtParticipantClicked(ErwischtParticipant member)
