@@ -12,7 +12,7 @@ namespace Zeltlager
 		[Serialisation(Type = SerialisationType.Id)]
 		public PacketId Id { get; set; }
 
-		public Ranking Ranking { get; set; }
+		public virtual Ranking Ranking { get; set; }
 
 		static Task<Rankable> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
