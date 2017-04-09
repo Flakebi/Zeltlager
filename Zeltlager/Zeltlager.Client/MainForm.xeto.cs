@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 using Eto.Drawing;
 using Eto.Forms;
@@ -57,6 +58,8 @@ namespace Zeltlager.Client
 			set { statusLabel.Text = value; statusTimer.Start(); }
 		}
 
+		IIoProvider globalIoProvider;
+
 		// Disable the not assigned warning, the fields will be assigned from the xaml.
 #pragma warning disable 0649
 		StackLayout topBarLayout;
@@ -77,7 +80,7 @@ namespace Zeltlager.Client
 
 		List<Control> contents = new List<Control>();
 
-		public MainForm(IIoProvider io)
+		public MainForm(IIoProvider io, IIoProvider globalIo)
 		{
 			XamlReader.Load(this);
 			Icon = Icon.FromResource("Zeltlager.Client.icon.ico");
@@ -91,7 +94,9 @@ namespace Zeltlager.Client
 			manager = new LagerClientManager(io);
 			manager.NetworkClient = new TcpNetworkClient();
 			if (manager.Settings.ServerAddress == null)
-				manager.Settings.ServerAddress = "localhost";
+				manager.Settings.ServerAddress = "flakebi.de";
+
+			globalIoProvider = globalIo;
 
 			contents.Add(downloadContent);
 			statusTimer.Interval = 5;
@@ -221,7 +226,6 @@ namespace Zeltlager.Client
 		async void CreateLager(object sender, EventArgs args)
 		{
 			lager = await manager.CreateLager("test", "pass", status => Status = "Create lager: " + status);
-			await lager.CreateTestData();
 		}
 
 		async void Synchronise(object sender, EventArgs args)
@@ -286,7 +290,7 @@ namespace Zeltlager.Client
 				Status = "No lager loaded";
 				return;
 			}
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(manager, lager);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			context.PacketId = new PacketId(lager.OwnCollaborator);
 			await lager.AddPacket(await AddPacket.Create(lager.ClientSerialiser, context,
 				new Member(null, "Anna", lager.Tents.Skip(new Random().Next(0, lager.Tents.Count)).First(), true, lager)));
@@ -302,6 +306,43 @@ namespace Zeltlager.Client
 		void Quit(object sender, EventArgs args)
 		{
 			Application.Instance.Quit();
+		}
+
+		async void CreateLagerFromFile(object sender, EventArgs args)
+		{
+			if (lager == null)
+			{
+				Status = "There is no Lager at the moment!";
+				return;
+			}
+			OpenFileDialog dialog = new OpenFileDialog()
+			{
+				Title = "Choose File with Names",
+				MultiSelect = false,
+			};
+			DialogResult dr = dialog.ShowDialog(Parent);
+			if (dr == DialogResult.Yes || dr == DialogResult.Ok)
+			{
+				Status = "File selected";
+				string path = dialog.FileName;
+				if (await globalIoProvider.ExistsFile(path))
+				{
+					Status = "File exists";
+					Stream s = await globalIoProvider.ReadFile(path);
+					using (StreamReader sr = new StreamReader(s))
+					{
+						await lager.AddPacket(await AddPacket.Create(lager.ClientSerialiser, new LagerClientSerialisationContext(lager), new Tent(null, 0, "Standardzelt", true, null, lager)));
+						while (!sr.EndOfStream)
+						{
+							string name = sr.ReadLine();
+							Status = "Add " + name;
+							await lager.AddPacket(await AddPacket.Create(lager.ClientSerialiser,
+								new LagerClientSerialisationContext(lager), new Member(null, name, lager.Tents.First(), false, lager)));
+						}
+					}
+				}
+			}
+			Status = "Creating from File finished :)";
 		}
 	}
 }

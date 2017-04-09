@@ -83,8 +83,6 @@ namespace Zeltlager
 			try
 			{
 				var lager = await manager.CreateLager(name, password, status => loadingScreen.Status = status.GetMessage());
-				// fill with some test data TODO remove at some time
-				await lager.CreateTestData();
 
 				// Go to the main page
 				MainPage = new NavigationPage(new MainPage(lager));

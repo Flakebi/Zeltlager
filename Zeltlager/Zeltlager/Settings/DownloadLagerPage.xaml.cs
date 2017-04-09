@@ -92,9 +92,8 @@ namespace Zeltlager.Settings
 			{
 				await LagerManager.Log.Exception("Change Lager after downloading", ex);
 				await DisplayAlert("Fehler", "Das Wechseln des Lagers nach dem Herunterladen ist fehlgeschlagen", "OK");
+				await Navigation.PopModalAsync(false);
 			}
-
-			await Navigation.PopModalAsync(false);
 		}
 	}
 }

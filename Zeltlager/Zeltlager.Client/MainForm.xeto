@@ -10,6 +10,7 @@
 			<StackLayout Orientation="Horizontal" Spacing="5" x:Name="topBarLayout">
 				<DropDown x:Name="lagerDropDown" SelectedKeyChanged="SelectedLagerChanged"/>
 				<Button Click="CreateLager">Create lager</Button>
+				<Button Click="CreateLagerFromFile">Lager aus Datei erstellen</Button>
 				<Button Click="ListLagers">List lagers</Button>
 				<Button Click="AddMember">Add member</Button>
 				<Button Click="Upload">Upload</Button>

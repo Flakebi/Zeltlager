@@ -75,7 +75,12 @@ namespace Zeltlager
 			Number = number;
 			Name = name;
 			Girls = girls;
-			this.supervisors = supervisors;
+
+			if (supervisors == null)
+				this.supervisors = new List<Member>();
+			else
+				this.supervisors = supervisors;
+			
 			this.lager = lager;
 		}
 
