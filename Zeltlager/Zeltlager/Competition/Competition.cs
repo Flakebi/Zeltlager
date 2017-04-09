@@ -30,27 +30,13 @@ namespace Zeltlager.Competition
 
 		public string SearchableDetail => "";
 
+		Ranking ranking = new Ranking();
 		public override Ranking Ranking
 		{
 			get
 			{
-				// Create a sumed up ranking
-				Ranking r = new Ranking();
-				foreach (var p in Participants)
-				{
-					int placePoints = 0;
-					foreach (var s in Stations)
-					{
-						var result = s.Ranking.Results.First(res => res.Participant == p);
-						placePoints += result.Place ?? 0;
-					}
-					r.AddResult(new CompetitionResult(null, this, p, null, placePoints));
-				}
-				// Sort and change the place to a better number
-				r.Results.Sort();
-				for (int i = 0; i < r.Results.Count; i++)
-					r.Results[i].Place = i + 1;
-				return r;
+				UpdateRanking();
+				return ranking;
 			}
 
 			set
@@ -90,6 +76,37 @@ namespace Zeltlager.Competition
 			Stations = stations;
 		}
 
+		public void UpdateRanking()
+		{
+			// Create a sumed up ranking
+			ranking.Results.Clear();
+			foreach (var p in Participants)
+			{
+				int? placePoints = 0;
+				bool hasPoints = false;
+				foreach (var s in Stations)
+				{
+					var result = s.Ranking.Results.FirstOrDefault(res => res.Participant == p);
+					if (result != null && result.Place.HasValue)
+					{
+						placePoints += result.Place;
+						hasPoints = true;
+					}
+				}
+				if (!hasPoints)
+					placePoints = null;
+				ranking.AddResult(new CompetitionResult(null, this, p, null, placePoints));
+			}
+			// Sort and change the place to a better number
+			ranking.Results.Sort();
+			for (int i = 0; i < ranking.Results.Count; i++)
+			{
+				if (!ranking.Results[i].Place.HasValue)
+					break;
+				ranking.Results[i].Place = i + 1;
+			}
+		}
+
 		public override void Add(LagerClientSerialisationContext context)
 		{
 			Id = context.PacketId;
@@ -99,7 +116,7 @@ namespace Zeltlager.Competition
 
 		public override void AddResult(CompetitionResult cr)
 		{
-			throw new NotSupportedException("Modifying the ranking of a competition is not supported");
+			LagerManager.Log.Error("Competition", "Modifying the ranking of a competition is not supported");
 		}
 
 		public void AddStation(Station station) => Stations.Add(station);

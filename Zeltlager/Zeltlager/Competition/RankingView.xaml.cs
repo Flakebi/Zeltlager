@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
@@ -25,11 +24,11 @@ namespace Zeltlager.Competition
 		/// </summary>
 		List<CompetitionResult> totalRanking = new List<CompetitionResult>();
 
-		public RankingView(LagerClient lager, Rankable rankable, Ranking ranking, bool editable = true)
+		public RankingView(LagerClient lager, Rankable rankable, bool editable = true)
 		{
 			this.lager = lager;
 			this.rankable = rankable;
-			this.ranking = ranking;
+			ranking = rankable.Ranking;
 			Editable = editable;
 			InitializeComponent();
 			BindingContext = this;
