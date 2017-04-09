@@ -22,13 +22,15 @@
 					HorizontalOptions="StartAndExpand"
 					x:Name="increasingButton"
 					Clicked="OnIncreasingButtonClicked"
-					Text="Aufsteigend platzieren"/>
+					Text="Aufsteigend platzieren"
+					IsVisible="{Binding NotGlobal}"/>
 				<Button
 					Style="{StaticResource DarkButtonStyle}"
 					HorizontalOptions="EndAndExpand"
 					x:Name="decreasingButton"
 					Clicked="OnDecreasingButtonClicked"
-					Text="Absteigend platzieren"/>
+					Text="Absteigend platzieren"
+					IsVisible="{Binding NotGlobal}"/>
 			</StackLayout>
 		</StackLayout>
 	</ContentView.Content>

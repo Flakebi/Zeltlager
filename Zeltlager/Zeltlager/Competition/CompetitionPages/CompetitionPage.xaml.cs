@@ -23,7 +23,7 @@ namespace Zeltlager.Competition
 
 			BindingContext = competition;
 			NavigationPage.SetBackButtonTitle(this, "");
-			rankingView = new RankingView(lager, competition, competition.Ranking, true);
+			rankingView = new RankingView(lager, competition, true, OnEditClickedParticipant, OnDeleteClickedParticipant);
 			UpdateUI();
 		}
 
@@ -33,6 +33,7 @@ namespace Zeltlager.Competition
 				competition.Stations.Where(s => s.IsVisible).ToList(),
 				OnEditClickedStation, OnDeleteClickedStation, OnStationClicked);
 
+			competition.UpdateRanking();
 			rankingView.UpdateUI();
 
 			stationPage.Content = stationList;
@@ -68,7 +69,18 @@ namespace Zeltlager.Competition
 		async Task OnDeleteClickedStation(Station station)
 		{
 			await station.Delete(lager);
-			OnAppearing();
+			UpdateUI();
+		}
+
+		void OnEditClickedParticipant(CompetitionResult result)
+		{
+			Navigation.PushAsync(new AddEditParticipantPage(result.Participant, false));
+		}
+
+		async Task OnDeleteClickedParticipant(CompetitionResult result)
+		{
+			await result.Participant.Delete(lager);
+			UpdateUI();
 		}
 	}
 }

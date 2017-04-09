@@ -18,19 +18,38 @@ namespace Zeltlager.Competition
 
 		EventHandler updateWidth;
 
+		public bool Global { get; set; }
+		public bool NotGlobal => !Global;
+
 		/// <summary>
 		/// The ranking results including all not-ranked participants.
 		/// </summary>
 		List<CompetitionResult> totalRanking = new List<CompetitionResult>();
 
-		public RankingView(LagerClient lager, Rankable rankable, Ranking ranking, bool editable = false)
+		public Command OnEdit { get; set; }
+		public Command OnDelete { get; set; }
+
+		public RankingView(LagerClient lager, Rankable rankable, bool global = false,
+			Action<CompetitionResult> onEdit = null, Func<CompetitionResult, Task> onDelete = null)
 		{
-			InitializeComponent();
 			this.lager = lager;
 			this.rankable = rankable;
-			this.ranking = ranking;
+			ranking = rankable.Ranking;
+			Global = global;
+			InitializeComponent();
+			BindingContext = this;
 
-			participantResults.ItemTemplate = new DataTemplate(typeof(ParticipantResultCell));
+			DataTemplate template = new DataTemplate(typeof(ParticipantResultCell));
+			if (global)
+			{
+				OnEdit = new Command(sender => onEdit((CompetitionResult)sender));
+				OnDelete = new Command(sender => onDelete((CompetitionResult)sender));
+				template.SetBinding(ParticipantResultCell.OnEditCommandParameterProperty, new Binding("."));
+				template.SetBinding(ParticipantResultCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
+				template.SetBinding(ParticipantResultCell.OnDeleteCommandParameterProperty, new Binding("."));
+				template.SetBinding(ParticipantResultCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
+			}
+			participantResults.ItemTemplate = template;
 
 			updateWidth = (sender, e) =>
 			{
@@ -52,6 +71,7 @@ namespace Zeltlager.Competition
 			totalRanking.AddRange(rankable.GetParticipants()
 				.Except(ranking.Results.Select(r => r.Participant))
 				.Select(p => new CompetitionResult(null, rankable, p)));
+			totalRanking.Sort();
 
 			// Set it to null first to refresh the list
 			participantResults.ItemsSource = null;
@@ -60,6 +80,9 @@ namespace Zeltlager.Competition
 
 		void OnParticipantSelected(object sender, EventArgs e)
 		{
+			if (Global)
+				return;
+
 			CompetitionResult item = (CompetitionResult)participantResults.SelectedItem;
 			if (item != null)
 			{
@@ -71,26 +94,15 @@ namespace Zeltlager.Competition
 			participantResults.SelectedItem = null;
 		}
 
-		void OnEditClickedParticipant(Participant participant)
+		async void OnIncreasingButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new NavigationPage(new AddEditParticipantPage(participant, false)));
-		}
-
-		async Task OnDeleteClickedParticipant(Participant participant)
-		{
-			await participant.Delete(lager);
+			await ranking.Rank(true);
 			UpdateUI();
 		}
 
-		void OnIncreasingButtonClicked(object sender, EventArgs e)
+		async void OnDecreasingButtonClicked(object sender, EventArgs e)
 		{
-			ranking.Rank(true);
-			UpdateUI();
-		}
-
-		void OnDecreasingButtonClicked(object sender, EventArgs e)
-		{
-			ranking.Rank(false);
+			await ranking.Rank(false);
 			UpdateUI();
 		}
 	}

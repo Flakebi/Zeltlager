@@ -77,7 +77,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 				// Timestamp
 				var timestamp = DateTime.FromBinary(input.ReadInt64());
 				var diff = DateTime.UtcNow - timestamp;
-				if (diff.TotalMinutes < 0 || diff.TotalMinutes > 1)
+				if (Math.Abs(diff.TotalMinutes) > 1)
 					throw new LagerException("Message too old");
 				// Data
 				int length = input.ReadInt32();

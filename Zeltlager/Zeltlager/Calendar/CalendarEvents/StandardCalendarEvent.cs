@@ -47,7 +47,7 @@ namespace Zeltlager.Calendar
 
 		public override PlannedCalendarEvent Clone()
 		{
-			return new StandardCalendarEvent(Id, Time, Title, Detail, lager);
+			return new StandardCalendarEvent(Id?.Clone(), Time, Title, Detail, lager);
 		}
 
 		public int CompareTo(StandardCalendarEvent other)

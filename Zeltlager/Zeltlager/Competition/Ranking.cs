@@ -1,10 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Zeltlager.Serialisation;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
+	using Client;
+	using Serialisation;
+
 	public class Ranking
 	{
 		[Serialisation]
@@ -25,14 +27,28 @@ namespace Zeltlager.Competition
 			// TODO wie tun wir das?
 		}
 
-		public void Rank(bool increasing)
+		public async Task Rank(bool increasing)
 		{
+			var results = Results.Where(r => r.Points.HasValue);
 			IEnumerable<CompetitionResult> x;
 			if (!increasing)
-				x = Results.OrderByDescending(r => r.Points);
+				x = results.OrderByDescending(r => r.Points);
 			else
-				x = Results.OrderBy(r => r.Points);
-			x.Select((cr, i) => cr.Place = i);
+				x = results.OrderBy(r => r.Points);
+
+			CompetitionResult[] crs = x.ToArray();
+			for (int i = 0; i < crs.Length; i++)
+			{
+				var cr = crs[i];
+				if (cr.Place != i + 1)
+				{
+					cr.Place = i + 1;
+					LagerClient lager = cr.Participant.GetLagerClient();
+					LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);
+					context.PacketId = cr.Id;
+					await lager.AddPacket(await DataPackets.EditPacket.Create(lager.ClientSerialiser, context, cr));
+				}
+			}
 		}
 	}
 }

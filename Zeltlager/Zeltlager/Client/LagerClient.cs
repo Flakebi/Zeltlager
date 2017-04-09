@@ -235,9 +235,6 @@ namespace Zeltlager.Client
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
 				new CompetitionResult(null, CompetitionHandler.Competitions.First().Stations[1],
 				CompetitionHandler.Competitions.First().Participants[2], 2)));
-			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,
-				new CompetitionResult(null, CompetitionHandler.Competitions.First(),
-				CompetitionHandler.Competitions.First().Participants[0], 5)));
 		}
 	}
 }

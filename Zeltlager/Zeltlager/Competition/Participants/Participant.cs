@@ -1,12 +1,11 @@
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
 
 namespace Zeltlager.Competition
 {
+	using Client;
+	using DataPackets;
 	using Serialisation;
-	using UAM;
-	using Zeltlager.Client;
-	using Zeltlager.DataPackets;
 
 	/// <summary>
 	/// represents a participant in a comptetion, could be a tent, a mixed group or a single person
@@ -20,6 +19,18 @@ namespace Zeltlager.Competition
 		protected Competition competition;
 
 		public virtual string Name { get; set; }
+
+		public string SearchableText => Name;
+
+		public string SearchableDetail => "";
+
+		[Serialisation]
+		public bool IsVisible { get; set; } = true;
+
+		static Task<Participant> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		{
+			return Task.FromResult(context.LagerClient.CompetitionHandler.GetParticipantFromId(id));
+		}
 
 		public Participant() {}
 
@@ -35,11 +46,6 @@ namespace Zeltlager.Competition
 		{
 			Id = context.PacketId;
 			competition.AddParticipant(this);
-		}
-
-		static Task<Participant> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult(context.LagerClient.CompetitionHandler.GetParticipantFromId(id));
 		}
 
 		public LagerClient GetLagerClient()
@@ -62,19 +68,8 @@ namespace Zeltlager.Competition
 			return Name;
 		}
 
-		#region Interface implementation
-
-		public string SearchableText => Name;
-
-		public string SearchableDetail => "";
-
-		[Serialisation]
-		public bool IsVisible { get; set; } = true;
-
 		public override abstract Participant Clone();
 
 		public abstract bool Equals(Participant other);
-
-		#endregion
 	}
 }

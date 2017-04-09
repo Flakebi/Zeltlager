@@ -46,7 +46,7 @@ namespace Zeltlager
 			get { return GetValue(OnDeleteCommandParameterProperty); }
 			set
 			{
-				SetValue(OnEditCommandParameterProperty, value);
+				SetValue(OnDeleteCommandParameterProperty, value);
 				OnPropertyChanged();
 			}
 		}
