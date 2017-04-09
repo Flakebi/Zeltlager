@@ -23,6 +23,7 @@
 					x:Name="increasingButton"
 					Clicked="OnIncreasingButtonClicked"
 					Text="Aufsteigend platzieren"
+					Image="{x:Static local:Icons.SORT_ASC}"
 					IsVisible="{Binding NotGlobal}"/>
 				<Button
 					Style="{StaticResource DarkButtonStyle}"
@@ -30,6 +31,7 @@
 					x:Name="decreasingButton"
 					Clicked="OnDecreasingButtonClicked"
 					Text="Absteigend platzieren"
+					Image="{x:Static local:Icons.SORT_DESC}"
 					IsVisible="{Binding NotGlobal}"/>
 			</StackLayout>
 		</StackLayout>

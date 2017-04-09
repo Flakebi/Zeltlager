@@ -31,7 +31,7 @@ namespace Zeltlager
 		public const string TIMER = "timer.png";
 		public const string FOOD = "cutlery.png";
 		public const string PLAN = "waiting.png";
-		public const string CHANGE = "switch.png";
+		public const string CHANGE = "switch2.png";
 		public const string UPLOAD = "upload.png";
 		public const string DOWNLOAD = "download.png";
 		public const string PERSON = "profile.png";
@@ -39,6 +39,8 @@ namespace Zeltlager
 		public const string ROCKET = "rocketlaunch.png";
 		public const string NOTEPAD = "padnote.png";
 		public const string LOG = "printer.png";
+		public const string SORT_ASC = "downarrow.png";
+		public const string SORT_DESC = "uparrow1.png";
 
 		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
 		{

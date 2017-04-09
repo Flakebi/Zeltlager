@@ -146,7 +146,8 @@
     <AndroidResource Include="Resources\drawable-mdpi\podium.png" />
     <AndroidResource Include="Resources\drawable-ldpi\podium.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\podium.png" />
-    <AndroidResource Include="Resources\drawable\switch.png" />
+    <AndroidResource Include="Resources\drawable\switch2.png" />
+    <AndroidResource Include="Resources\drawable\uparrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zeltlager\Zeltlager.csproj">
@@ -746,7 +747,10 @@
     <AndroidResource Include="Resources\drawable-hdpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\switch.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\switch2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\uparrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\tag.png" />
@@ -1046,7 +1050,10 @@
     <AndroidResource Include="Resources\drawable-ldpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-ldpi\switch.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\switch2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-ldpi\uparrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\tag.png" />
@@ -1346,7 +1353,10 @@
     <AndroidResource Include="Resources\drawable-mdpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-mdpi\switch.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\switch2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\uparrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\tag.png" />
@@ -1646,7 +1656,10 @@
     <AndroidResource Include="Resources\drawable-xhdpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\switch.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\switch2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\uparrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\tag.png" />
@@ -1946,7 +1959,10 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\switch.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\switch2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxhdpi\uparrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi\tag.png" />
@@ -2246,7 +2262,10 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\switch1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxxhdpi\switch.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\switch2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxxhdpi\uparrow1.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\tag.png" />
