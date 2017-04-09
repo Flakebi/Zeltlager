@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Zeltlager.Client;
 
 namespace Zeltlager
 {
+	using Client;
 	using DataPackets;
 	using Serialisation;
 	using UAM;

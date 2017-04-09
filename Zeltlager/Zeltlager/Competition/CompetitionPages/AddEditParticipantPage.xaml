@@ -28,7 +28,7 @@
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 
-			<Label Text="Typ:" TextColor="{StaticResource textColorSecondary}" Grid.Row="0" Grid.Column="0"/>
+			<Label x:Name="typeLabel" Text="Typ:" TextColor="{StaticResource textColorSecondary}" Grid.Row="0" Grid.Column="0"/>
 			<Picker x:Name="typePicker" Grid.Row="0" Grid.Column="1" SelectedIndexChanged="OnTypeChanged">
 				<Picker.Items>
 					<x:String x:Name="TENT">Zelt</x:String>

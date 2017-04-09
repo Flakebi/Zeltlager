@@ -93,7 +93,7 @@ namespace Zeltlager.Competition
 
 		public override Rankable Clone()
 		{
-			return new Station(Id, Name, competition, Ranking);
+			return new Station(Id?.Clone(), Name, competition, Ranking);
 		}
 	}
 }

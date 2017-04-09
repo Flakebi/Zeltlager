@@ -139,7 +139,7 @@ namespace Zeltlager.Competition
 
 		public override Rankable Clone()
 		{
-			return new Competition(lager, Id, Name, Participants, Stations);
+			return new Competition(lager, Id?.Clone(), Name, Participants, Stations);
 		}
 	}
 }

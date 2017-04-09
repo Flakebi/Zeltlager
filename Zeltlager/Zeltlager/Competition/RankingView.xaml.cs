@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
@@ -17,23 +18,38 @@ namespace Zeltlager.Competition
 
 		EventHandler updateWidth;
 
-		public bool Editable { get; set; }
+		public bool Global { get; set; }
+		public bool NotGlobal => !Global;
 
 		/// <summary>
 		/// The ranking results including all not-ranked participants.
 		/// </summary>
 		List<CompetitionResult> totalRanking = new List<CompetitionResult>();
 
-		public RankingView(LagerClient lager, Rankable rankable, bool editable = true)
+		public Command OnEdit { get; set; }
+		public Command OnDelete { get; set; }
+
+		public RankingView(LagerClient lager, Rankable rankable, bool global = false,
+			Action<CompetitionResult> onEdit = null, Func<CompetitionResult, Task> onDelete = null)
 		{
 			this.lager = lager;
 			this.rankable = rankable;
 			ranking = rankable.Ranking;
-			Editable = editable;
+			Global = global;
 			InitializeComponent();
 			BindingContext = this;
 
-			participantResults.ItemTemplate = new DataTemplate(typeof(ParticipantResultCell));
+			DataTemplate template = new DataTemplate(typeof(ParticipantResultCell));
+			if (global)
+			{
+				OnEdit = new Command(sender => onEdit((CompetitionResult)sender));
+				OnDelete = new Command(sender => onDelete((CompetitionResult)sender));
+				template.SetBinding(ParticipantResultCell.OnEditCommandParameterProperty, new Binding("."));
+				template.SetBinding(ParticipantResultCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
+				template.SetBinding(ParticipantResultCell.OnDeleteCommandParameterProperty, new Binding("."));
+				template.SetBinding(ParticipantResultCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
+			}
+			participantResults.ItemTemplate = template;
 
 			updateWidth = (sender, e) =>
 			{
@@ -64,7 +80,7 @@ namespace Zeltlager.Competition
 
 		void OnParticipantSelected(object sender, EventArgs e)
 		{
-			if (!Editable)
+			if (Global)
 				return;
 
 			CompetitionResult item = (CompetitionResult)participantResults.SelectedItem;

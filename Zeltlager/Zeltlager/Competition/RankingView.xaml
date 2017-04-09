@@ -23,14 +23,14 @@
 					x:Name="increasingButton"
 					Clicked="OnIncreasingButtonClicked"
 					Text="Aufsteigend platzieren"
-					IsVisible="{Binding Editable}"/>
+					IsVisible="{Binding NotGlobal}"/>
 				<Button
 					Style="{StaticResource DarkButtonStyle}"
 					HorizontalOptions="EndAndExpand"
 					x:Name="decreasingButton"
 					Clicked="OnDecreasingButtonClicked"
 					Text="Absteigend platzieren"
-					IsVisible="{Binding Editable}"/>
+					IsVisible="{Binding NotGlobal}"/>
 			</StackLayout>
 		</StackLayout>
 	</ContentView.Content>

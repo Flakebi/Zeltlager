@@ -54,7 +54,33 @@ namespace Zeltlager.Competition
 			rows[AUTOMATIC] = automaticRow;
 			rowsContent[AUTOMATIC] = new View[] { automaticView };
 
-			typePicker.SelectedIndex = 0;
+			if (isAddPage)
+				typePicker.SelectedIndex = 0;
+			else
+			{
+				if (participant is TentParticipant)
+				{
+					TentParticipant tp = (TentParticipant)participant;
+					tentPicker.Items.Add(tp.Tent.ToString());
+					tentPicker.SelectedIndex = tentPicker.Items.Count - 1;
+					typePicker.SelectedIndex = 0;
+				}
+				else if (participant is MemberParticipant)
+				{
+					MemberParticipant mp = (MemberParticipant)participant;
+					memberPicker.Items.Add(mp.Member.ToString());
+					memberPicker.SelectedIndex = memberPicker.Items.Count - 1;
+					typePicker.SelectedIndex = 1;
+				}
+				else if (participant is GroupParticipant)
+				{
+					GroupParticipant gp = (GroupParticipant)participant;
+					groupEntry.Text = gp.Name;
+					typePicker.SelectedIndex = 2;
+				}
+				typeLabel.IsVisible = false;
+				typePicker.IsVisible = false;
+			}
 
 			NavigationPage.SetBackButtonTitle(this, "");
 		}
@@ -92,7 +118,10 @@ namespace Zeltlager.Competition
 					return;
 				}
 				Tent t = lager.GetTentFromDisplay(tentPicker.Items[tentPicker.SelectedIndex]);
-				participant = new TentParticipant(null, t, participant.GetCompetition());
+				if (oldParticipant == null)
+					participant = new TentParticipant(null, t, participant.GetCompetition());
+				else
+					((TentParticipant)participant).Tent = t;
 			}
 			else if (selection == MEMBER)
 			{
@@ -102,7 +131,10 @@ namespace Zeltlager.Competition
 					return;
 				}
 				Member m = lager.GetMemberFromString(memberPicker.Items[memberPicker.SelectedIndex]);
-				participant = new MemberParticipant(null, m, participant.GetCompetition());
+				if (oldParticipant == null)
+					participant = new MemberParticipant(null, m, participant.GetCompetition());
+				else
+					((MemberParticipant)participant).Member = m;
 			}
 			else if (selection == GROUP)
 			{
@@ -111,7 +143,10 @@ namespace Zeltlager.Competition
 					await DisplayAlert("Achtung!", "Bitte gib einen Gruppennamen ein.", "Ok");
 					return;
 				}
-				participant = new GroupParticipant(null, groupEntry.Text, participant.GetCompetition());
+				if (oldParticipant == null)
+					participant = new GroupParticipant(null, groupEntry.Text, participant.GetCompetition());
+				else
+					((GroupParticipant)participant).Name = groupEntry.Text;
 			}
 
 			// Check if this participant already exists

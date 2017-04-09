@@ -1,7 +1,10 @@
-using System;
-using Zeltlager.Serialisation;
+using System.Threading.Tasks;
+
 namespace Zeltlager.Competition
 {
+	using DataPackets;
+	using Serialisation;
+
 	/// <summary>
 	/// a participant in a competition that respresents a mixed group with an individual name
 	/// </summary>
@@ -16,18 +19,23 @@ namespace Zeltlager.Competition
 		[Serialisation]
 		string name;
 
+		static Task<GroupParticipant> GetFromId(LagerClientSerialisationContext context, PacketId id)
+		{
+			return Task.FromResult((GroupParticipant)context.LagerClient.CompetitionHandler.GetParticipantFromId(id));
+		}
+
 		public GroupParticipant() {}
 
 		public GroupParticipant(LagerClientSerialisationContext context) : base(context) {}
 
-		public GroupParticipant(DataPackets.PacketId id, string name, Competition competition) : base(id, competition)
+		public GroupParticipant(PacketId id, string name, Competition competition) : base(id, competition)
 		{
 			this.name = name;
 		}
 
 		public override Participant Clone()
 		{
-			return new GroupParticipant(Id, name, competition);
+			return new GroupParticipant(Id?.Clone(), name, competition);
 		}
 
 		public override bool Equals(Participant other)
