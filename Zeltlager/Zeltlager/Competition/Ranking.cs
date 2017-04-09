@@ -44,7 +44,7 @@ namespace Zeltlager.Competition
 				{
 					cr.Place = i + 1;
 					LagerClient lager = cr.Participant.GetLagerClient();
-					LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);
+					LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 					context.PacketId = cr.Id;
 					await lager.AddPacket(await DataPackets.EditPacket.Create(lager.ClientSerialiser, context, cr));
 				}

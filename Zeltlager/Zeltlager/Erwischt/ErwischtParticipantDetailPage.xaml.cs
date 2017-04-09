@@ -33,16 +33,9 @@ namespace Zeltlager.Erwischt
 
 		void UpdateUI()
 		{
-			if (ErwischtParticipant.IsAlive)
-			{
-				targetName.Text = ErwischtParticipant.Target.Member.Name;
-				reviveButton.IsVisible = false;
-			}
-			else
-			{
-				targetName.Text = "Erwischt!";
-				reviveButton.IsVisible = true;
-			}
+			targetName.Text = ErwischtParticipant.SearchableDetail;
+			reviveButton.IsVisible = !ErwischtParticipant.IsAlive;
+
 			BindingContext = null;
 			BindingContext = ErwischtParticipant;
 		}

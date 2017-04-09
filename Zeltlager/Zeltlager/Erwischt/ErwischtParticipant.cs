@@ -59,7 +59,7 @@ namespace Zeltlager.Erwischt
 				{
 					return "Gewinner \ud83c\udf89";
 				}
-				return "→ " + Target.Member.Name;
+				return "→ " + Target.Member.Display;
 			}
 		}
 
