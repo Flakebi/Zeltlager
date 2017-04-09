@@ -120,8 +120,7 @@ namespace Zeltlager.Competition
 				await DisplayAlert("Achtung!", "Es gibt diesen Teilnehmer bereits.", "Ok");
 				return;
 			}
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(
-				lager.Manager, lager);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			context.PacketId = new PacketId(lager.OwnCollaborator);
 			await participant.OnSaveEditing(lager, oldParticipant);
 			await Navigation.PopAsync(true);
@@ -136,8 +135,7 @@ namespace Zeltlager.Competition
 				.Cast<TentParticipant>()
 				.Select(p => p.Tent);
 
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(
-				lager.Manager, lager);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			context.PacketId = new PacketId(lager.OwnCollaborator);
 			foreach (Tent t in lager.VisibleTents.Except(participatingTents))
 			{
@@ -156,8 +154,7 @@ namespace Zeltlager.Competition
 				.Cast<MemberParticipant>()
 				.Select(p => p.Member);
 
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(
-				lager.Manager, lager);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			context.PacketId = new PacketId(lager.OwnCollaborator);
 			foreach (Member m in lager.VisibleMembers.Except(participatingMembers))
 			{

@@ -61,7 +61,7 @@ namespace Zeltlager
 		/// </summary>
 		public virtual async Task Load()
 		{
-			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+			LagerSerialisationContext context = new LagerSerialisationContext(this);
 			// Load the lager data
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(LAGER_FILE)))
 				await Serialiser.Read(input, context, this);
@@ -71,7 +71,7 @@ namespace Zeltlager
 
 		public virtual async Task Save()
 		{
-			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+			LagerSerialisationContext context = new LagerSerialisationContext(this);
 			// Create the folder if it doesn't exist
 			await ioProvider.CreateFolder("");
 			// Write the lager data
@@ -99,7 +99,7 @@ namespace Zeltlager
 					// Read the collaborator if possible
 					IIoProvider rootedIo = new RootedIoProvider(ioProvider, collaboratorId.ToString());
 					Collaborator collaborator = new Collaborator();
-					LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+					LagerSerialisationContext context = new LagerSerialisationContext(this);
 					context.PacketId = new PacketId(collaborator);
 
 					using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(COLLABORATOR_FILE)))
@@ -181,7 +181,7 @@ namespace Zeltlager
 			DataPacketBundle bundle = new DataPacketBundle();
 			bundle.Id = bundleId;
 			PacketId id = new PacketId(creator, bundle);
-			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+			LagerSerialisationContext context = new LagerSerialisationContext(this);
 			context.PacketId = id;
 
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(GetBundlePath(id))))
@@ -196,7 +196,7 @@ namespace Zeltlager
 
 		protected virtual async Task SerialiseBundle(BinaryWriter output, PacketId id)
 		{
-			LagerSerialisationContext context = new LagerSerialisationContext(Manager, this);
+			LagerSerialisationContext context = new LagerSerialisationContext(this);
 			context.PacketId = id;
 			await Serialiser.Write(output, context, id.Bundle);
 		}
@@ -225,7 +225,7 @@ namespace Zeltlager
 			IIoProvider io = new RootedIoProvider(ioProvider, Status.GetCollaboratorId(collaborator).ToString());
 			await io.CreateFolder("");
 			using (BinaryWriter output = new BinaryWriter(await io.WriteFile(COLLABORATOR_FILE)))
-				await Serialiser.Write(output, new LagerSerialisationContext(Manager, this), collaborator);
+				await Serialiser.Write(output, new LagerSerialisationContext(this), collaborator);
 		}
 
 		// Serialisation with a LagerSerialisationContext

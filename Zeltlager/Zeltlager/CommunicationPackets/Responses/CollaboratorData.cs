@@ -21,7 +21,7 @@ namespace Zeltlager.CommunicationPackets.Responses
 			MemoryStream mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
 				await lager.Serialiser.Write(output,
-					new LagerSerialisationContext(lager.Manager, lager),
+					new LagerSerialisationContext(lager),
 					collaborator);
 			Data = mem.ToArray();
 		}
@@ -32,7 +32,7 @@ namespace Zeltlager.CommunicationPackets.Responses
 			MemoryStream mem = new MemoryStream(Data);
 			using (BinaryReader input = new BinaryReader(mem))
 				await lager.Serialiser.Read(input,
-					new LagerSerialisationContext(lager.Manager, lager),
+					new LagerSerialisationContext(lager),
 					result);
 			return result;
 		}

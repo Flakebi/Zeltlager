@@ -21,11 +21,7 @@ namespace Zeltlager.Erwischt
 			Padding = new Thickness(10);
 		}
 
-		async Task OnDeleteClicked(ErwischtGame game)
-		{
-			game.IsVisible = false;
-			// TODO packages
-		}
+		Task OnDeleteClicked(ErwischtGame game) => Task.WhenAll();
 
 		void OnEditClicked(ErwischtGame game) { }
 

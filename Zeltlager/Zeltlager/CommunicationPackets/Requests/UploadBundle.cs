@@ -30,7 +30,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 			{
 				output.Write(bundle.Id);
 				await lager.Serialiser.Write(output,
-					new LagerSerialisationContext(lager.Manager, lager),
+					new LagerSerialisationContext(lager),
 					bundle);
 			}
 			await CreateData(new CommunicationLagerData(lager, mem.ToArray(), new byte[0]));
@@ -52,7 +52,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 					// Add the bundle
 					DataPacketBundle bundle = new DataPacketBundle();
 					await data.Lager.Serialiser.Read(input,
-						new LagerSerialisationContext(manager, data.Lager),
+						new LagerSerialisationContext(data.Lager),
 						bundle);
 					await data.Lager.AddBundle(data.Collaborator, bundle);
 				}

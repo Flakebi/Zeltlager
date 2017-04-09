@@ -46,7 +46,7 @@ namespace Zeltlager.Erwischt
 		[Serialisation]
 		public bool IsAlive { get; set; }
 
-		public string SearchableText => Member.Name;
+		public string SearchableText => Member.Display;
 		public string SearchableDetail
 		{
 			get 
@@ -90,7 +90,7 @@ namespace Zeltlager.Erwischt
 
 		async Task CreateErwischtPackage(bool isAlive)
 		{
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Game.GetLager().Manager, Game.GetLager());
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Game.GetLager());
 			Serialiser<LagerClientSerialisationContext> serialiser = Game.GetLager().ClientSerialiser;
 			DataPacket packet = await ErwischtPacket.Create(serialiser, context, this, isAlive);
 			await context.LagerClient.AddPacket(packet);

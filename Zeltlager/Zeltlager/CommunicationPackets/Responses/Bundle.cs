@@ -26,7 +26,7 @@ namespace Zeltlager.CommunicationPackets.Responses
 				output.Write(lager.Status.GetCollaboratorId(collaborator));
 				output.Write(bundle.Id);
 				await lager.Serialiser.Write(output,
-					new LagerSerialisationContext(lager.Manager, lager),
+					new LagerSerialisationContext(lager),
 					bundle);
 			}
 			Data = mem.ToArray();
@@ -44,7 +44,7 @@ namespace Zeltlager.CommunicationPackets.Responses
 				int bundleId = input.ReadInt32();
 				DataPacketBundle bundle = new DataPacketBundle();
 				await lager.Serialiser.Read(input,
-					new LagerSerialisationContext(lager.Manager, lager),
+					new LagerSerialisationContext(lager),
 					bundle);
 				bundle.Id = bundleId;
 

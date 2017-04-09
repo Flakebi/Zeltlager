@@ -11,7 +11,7 @@ namespace Zeltlager
 	{
 		public async Task OnSaveEditing(LagerClient lager, T oldObject)
 		{
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
 			DataPacket packet;
 			if (oldObject != null)

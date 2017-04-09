@@ -17,7 +17,7 @@ namespace Zeltlager
 		public static async Task Delete(this IDeletable t, LagerClient lager)
 		{
 			t.IsVisible = false;
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager.Manager, lager);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
 			await context.LagerClient.AddPacket(await EditPacket.Create(serialiser, context, t));
 		}

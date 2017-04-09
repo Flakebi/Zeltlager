@@ -25,7 +25,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 			using (BinaryWriter output = new BinaryWriter(mem))
 			{
 				output.Write(lager.Remote.Id);
-				var context = new LagerSerialisationContext(lager.Manager, lager);
+				var context = new LagerSerialisationContext(lager);
 				await lager.Serialiser.Write(output, context, lager.OwnCollaborator);
 			}
 			Data = mem.ToArray();
@@ -43,7 +43,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 				{
 					LagerBase lager = manager.Lagers[lagerId];
 
-					var context = new LagerSerialisationContext(manager, lager);
+					var context = new LagerSerialisationContext(lager);
 					Collaborator collaborator = new Collaborator();
 					try
 					{

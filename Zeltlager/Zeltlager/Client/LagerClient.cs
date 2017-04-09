@@ -75,7 +75,7 @@ namespace Zeltlager.Client
 		/// <returns>The flat history of packets.</returns>
 		async Task<List<DataPacket>> GetHistory()
 		{
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
 			return (await Task.WhenAll(collaborators.Values.Select(async col =>
 			{
 				context.PacketId = new PacketId(col);
@@ -109,7 +109,7 @@ namespace Zeltlager.Client
 		{
 			List<DataPacket> wholeHistory = await GetHistory();
 			List<DataPacket> history = wholeHistory.ToList();
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
 			context.Packets = history;
 			bool success = true;
 			while (history.Any())
@@ -187,7 +187,7 @@ namespace Zeltlager.Client
 		{
 			Random rand = new Random();
 
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
 			context.PacketId = new PacketId(OwnCollaborator);
 
 			await AddPacket(await DataPackets.AddPacket.Create(ClientSerialiser, context,

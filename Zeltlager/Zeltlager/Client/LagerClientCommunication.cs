@@ -103,7 +103,7 @@ namespace Zeltlager.Client
 
 		public override async Task Load()
 		{
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
 			// Load the lager client data
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(CLIENT_LAGER_FILE)))
 				await ClientSerialiser.Read(input, context, this);
@@ -133,7 +133,7 @@ namespace Zeltlager.Client
 		{
 			await base.Save();
 
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
 			// Load the lager client data
 			using (BinaryWriter output = new BinaryWriter(await ioProvider.WriteFile(CLIENT_LAGER_FILE)))
 				await ClientSerialiser.Write(output, context, this);
@@ -321,7 +321,7 @@ namespace Zeltlager.Client
 				OwnCollaborator.AddBundle(bundle);
 				Status.UpdateBundleCount(OwnCollaborator);
 			}
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(Manager, this);
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
 			PacketId id = new PacketId(OwnCollaborator, bundle, bundle.Packets == null ? 0 : bundle.Packets.Count);
 			context.PacketId = id;
 			await bundle.AddPacket(context, packet);

@@ -20,12 +20,12 @@
 			</Grid.ColumnDefinitions>
 
 			<Label Text="Teilnehmer: " HorizontalOptions="StartAndExpand" Grid.Row="0" Grid.Column="0"/>
-			<Label Text="{Binding Member.Name}" HorizontalOptions="StartAndExpand" Grid.Row="0" Grid.Column="1"/>
+			<Label Text="{Binding Member.Display}" HorizontalOptions="StartAndExpand" Grid.Row="0" Grid.Column="1"/>
 			<Label Text="Ziel: " HorizontalOptions="StartAndExpand" Grid.Row="1" Grid.Column="0"/>
 			<Label x:Name="targetName" HorizontalOptions="StartAndExpand" Grid.Row="1" Grid.Column="1"/>
-			<Button Text="Ziel erwischen" Clicked="OnCatchTargetClicked" HorizontalOptions="CenterAndExpand" 
+			<Button Text="Ziel erwischen" Clicked="OnCatchTargetClicked" HorizontalOptions="FillAndExpand" 
 					IsVisible="{Binding IsAlive}" Style="{StaticResource DarkButtonStyle}" Grid.Row="2" Grid.Column="1"/>
-			<Button Text="Wiederbeleben" Clicked="OnReviveClicked" HorizontalOptions="CenterAndExpand" 
+			<Button Text="Wiederbeleben" Clicked="OnReviveClicked" HorizontalOptions="FillAndExpand" 
 					x:Name="reviveButton" Style="{StaticResource DarkButtonStyle}" Grid.Row="2" Grid.Column="0"/>
 		</Grid>
 	</ContentPage.Content>
