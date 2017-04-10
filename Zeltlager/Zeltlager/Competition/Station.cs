@@ -9,7 +9,7 @@ namespace Zeltlager.Competition
 	using UAM;
 
 	/// <summary>
-	/// represents one station in the competition and the results achieved there
+	/// Represents one station in the competition and the results achieved there.
 	/// </summary>
 	[Editable("Station")]
 	public class Station : Rankable, ISearchable, IDeletable
@@ -28,7 +28,7 @@ namespace Zeltlager.Competition
 		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
-		public IReadOnlyList<Member> SupervisorList => competition.GetLagerClient().Supervisors;
+		public IReadOnlyList<Member> SupervisorList => competition.GetLagerClient().VisibleSupervisors;
 
 		public string SearchableText => Name;
 

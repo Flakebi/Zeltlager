@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
+using System.Linq;
 
 using Xamarin.Forms;
-using Zeltlager.Client;
-using System.Linq;
 
 namespace Zeltlager.Settings
 {
+	using Client;
+
 	public partial class ChangeLagerPage : ContentPage
 	{
 		// current (old) lager

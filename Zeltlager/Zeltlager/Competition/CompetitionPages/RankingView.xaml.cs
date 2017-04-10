@@ -16,8 +16,6 @@ namespace Zeltlager.Competition
 		Rankable rankable;
 		Ranking ranking;
 
-		EventHandler updateWidth;
-
 		public bool Global { get; set; }
 		public bool NotGlobal => !Global;
 
@@ -38,6 +36,10 @@ namespace Zeltlager.Competition
 			Global = global;
 			InitializeComponent();
 			BindingContext = this;
+			View paddingView = new ContentView();
+			if (Device.OS == TargetPlatform.Android)
+				paddingView.WidthRequest = 15;
+			headerStack.Children.Add(paddingView);
 
 			DataTemplate template = new DataTemplate(typeof(ParticipantResultCell));
 			if (global)
@@ -50,16 +52,7 @@ namespace Zeltlager.Competition
 				template.SetBinding(ParticipantResultCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 			}
 			participantResults.ItemTemplate = template;
-
-			updateWidth = (sender, e) =>
-			{
-				increasingButton.WidthRequest = Width * 0.45;
-				decreasingButton.WidthRequest = Width * 0.45;
-			};
-
-			updateWidth(null, null);
-			SizeChanged += updateWidth;
-
+			
 			UpdateUI();
 		}
 

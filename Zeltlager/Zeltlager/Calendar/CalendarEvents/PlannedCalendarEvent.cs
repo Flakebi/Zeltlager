@@ -1,13 +1,16 @@
 using System;
 using System.Threading.Tasks;
-using Zeltlager.Client;
-using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
-using Zeltlager.UAM;
 
 namespace Zeltlager.Calendar
 {
-	// events that do not yet have a day or time assignedt
+	using Client;
+	using DataPackets;
+	using Serialisation;
+	using UAM;
+
+	/// <summary>
+	/// Events that do not yet have a day or time assigned.
+	/// </summary>
 	[Editable("Geplanten Termin")]
 	public class PlannedCalendarEvent : Editable<PlannedCalendarEvent>, IComparable<PlannedCalendarEvent>, IDeletable
 	{
@@ -20,7 +23,7 @@ namespace Zeltlager.Calendar
 		[Serialisation]
 		public string Title { get; set; }
 
-		[Editable("Beschreibung",true)]
+		[Editable("Beschreibung", true)]
 		[Serialisation]
 		public string Detail { get; set; }
 

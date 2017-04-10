@@ -1,10 +1,10 @@
 using System;
-
 using Xamarin.Forms;
-using Zeltlager.Client;
 
 namespace Zeltlager.Settings
 {
+	using Client;
+
 	public partial class SettingsPage : ContentPage
 	{
 		LagerClient lager;

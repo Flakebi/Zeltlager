@@ -47,7 +47,7 @@
     <Compile Include="CommunicationPackets\Responses\CommunicationResponse.cs" />
     <Compile Include="CommunicationPackets\Responses\ListLagers.cs" />
     <Compile Include="Competition\Competition.cs" />
-    <Compile Include="Competition\RankingView.xaml.cs">
+    <Compile Include="Competition\CompetitionPages\RankingView.xaml.cs">
       <DependentUpon>RankingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataPackets\AddPacket.cs" />
@@ -313,7 +313,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Competition\RankingView.xaml">
+    <EmbeddedResource Include="Competition\CompetitionPages\RankingView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

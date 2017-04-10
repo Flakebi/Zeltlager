@@ -230,7 +230,7 @@ namespace Zeltlager.UAM
 			                   && string.IsNullOrEmpty((string)typeof(T).GetRuntimeProperty(pi.Name).GetValue(Obj)));
 			if (propInfo != null && !propInfo.GetCustomAttribute<EditableAttribute>().CanBeEmpty)
 			{
-				await DisplayAlert("Achtung!", propInfo.GetCustomAttribute<EditableAttribute>().Name + " erforderlich.", "Ok :D");
+				await DisplayAlert("Achtung!", propInfo.GetCustomAttribute<EditableAttribute>().Name + " erforderlich.", "Ok");
 				return;
 			}
 			// end of check

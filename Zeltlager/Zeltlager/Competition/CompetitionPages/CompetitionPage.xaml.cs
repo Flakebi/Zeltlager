@@ -44,7 +44,14 @@ namespace Zeltlager.Competition
 		{
 			Page addPage;
 			if (CurrentPage == stationPage)
+			{
+				if (!lager.VisibleSupervisors.Any())
+				{
+					DisplayAlert("Achtung!", "Mindestens ein Betreuer erforderlich.", "Ok");
+					return;
+				}
 				addPage = new UniversalAddModifyPage<Station, Rankable>(new Station(null, "", competition), true, lager);
+			}
 			else
 				addPage = new AddEditParticipantPage(new GroupParticipant(null, "", competition), true);
 			Navigation.PushAsync(addPage);

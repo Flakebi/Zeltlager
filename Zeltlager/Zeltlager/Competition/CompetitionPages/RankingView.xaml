@@ -8,18 +8,18 @@
 		<StackLayout VerticalOptions="StartAndExpand" Padding="10">
 			<ListView x:Name="participantResults" ItemSelected="OnParticipantSelected" VerticalOptions="StartAndExpand">
 				<ListView.Header>
-					<StackLayout Orientation="Horizontal">
+					<StackLayout x:Name="headerStack" Orientation="Horizontal">
 						<!-- So icons get moved to the right -->
 						<ContentView HorizontalOptions="StartAndExpand"/>
-						<Image x:Name="pointsImage" Source="{x:Static local:Icons.TIMER}" HorizontalOptions="Center"/>
-						<Image x:Name="placeImage" Source="{x:Static local:Icons.PODIUM}" HorizontalOptions="End"/>
+						<Image x:Name="pointsImage" Source="{x:Static local:Icons.TIMER}" HorizontalOptions="Center" WidthRequest="48"/>
+						<Image x:Name="placeImage" Source="{x:Static local:Icons.PODIUM}" HorizontalOptions="End" WidthRequest="48"/>
 					</StackLayout>
 				</ListView.Header>
 			</ListView>
 			<StackLayout Orientation="Horizontal" VerticalOptions="End">
 				<Button
 					Style="{StaticResource DarkButtonStyle}"
-					HorizontalOptions="StartAndExpand"
+					HorizontalOptions="FillAndExpand"
 					x:Name="increasingButton"
 					Clicked="OnIncreasingButtonClicked"
 					Text="Aufsteigend platzieren"
@@ -27,7 +27,7 @@
 					IsVisible="{Binding NotGlobal}"/>
 				<Button
 					Style="{StaticResource DarkButtonStyle}"
-					HorizontalOptions="EndAndExpand"
+					HorizontalOptions="FillAndExpand"
 					x:Name="decreasingButton"
 					Clicked="OnDecreasingButtonClicked"
 					Text="Absteigend platzieren"

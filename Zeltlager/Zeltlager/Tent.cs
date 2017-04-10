@@ -36,7 +36,7 @@ namespace Zeltlager
 		[Editable("Zeltbetreuer")]
 		public List<Member> Supervisors => supervisors;
 
-		public IReadOnlyList<Member> SupervisorsList => lager.Supervisors;
+		public IReadOnlyList<Member> SupervisorsList => lager.VisibleSupervisors;
 		public string Display => Number + " " + Name + " " + (Girls ? "♀" : "♂");
 
 		public string DisplayDetail 
