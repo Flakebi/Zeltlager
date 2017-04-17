@@ -5,6 +5,7 @@ using Zeltlager.DataPackets;
 using Zeltlager.Serialisation;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Zeltlager.Settings
 {
@@ -35,7 +36,14 @@ namespace Zeltlager.Settings
 			bool revert = await DisplayAlert("Paket reverten?", "Möchten sie das Paket '" + packet + "' reverten?", "Ja", "Nein");
 			if (revert)
 			{
-				await lager.AddPacket(new RevertPacket(lager.ClientSerialiser, new LagerClientSerialisationContext(lager), packet.Id));
+				try
+				{
+					await lager.AddPacket(new RevertPacket(lager.ClientSerialiser, new LagerClientSerialisationContext(lager), packet.Id));
+				} catch (LagerException e)
+				{
+					await DisplayAlert("Achtung!", "Beim Anwenden der Datenpakete ist ein Fehler aufgetreten. " +
+					                   "Du möchtest ihr neu erstelltes Revert-Package eventuell wieder reverten.\n" + e.Message, "Ok");
+				}
 			}
 		}
 	}
