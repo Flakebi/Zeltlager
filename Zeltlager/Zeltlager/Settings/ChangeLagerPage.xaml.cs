@@ -11,12 +11,12 @@ namespace Zeltlager.Settings
 		// current (old) lager
 		LagerClient lager;
 
-		public ChangeLagerPage(LagerClient lager)
+		public ChangeLagerPage(LagerClient lager, LagerClientManager manager)
 		{
 			InitializeComponent();
 			this.lager = lager;
 			NavigationPage.SetBackButtonTitle(this, "");
-			Content = new SearchableListView<LagerClient>(lager.Manager.Lagers.Values.Cast<LagerClient>().ToList(),
+			Content = new SearchableListView<LagerClient>(manager.Lagers.Values.Cast<LagerClient>().ToList(),
 			                                              null, null, OnLagerClicked);
 		}
 
