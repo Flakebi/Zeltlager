@@ -174,7 +174,8 @@ namespace Zeltlager
 						break;
 				}
 			}
-			return sb.ToString();
+			int length = Math.Min(sb.Length, 1000);
+			return sb.ToString().Substring(sb.Length - length, length);
 		}
 	}
 }
