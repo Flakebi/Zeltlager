@@ -76,26 +76,25 @@ namespace Zeltlager.Client
 		public async Task<List<DataPacket>> GetHistory()
 		{
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
-			return (await Task.WhenAll(collaborators.Values.Select(async col =>
+			List<DataPacket> packets = new List<DataPacket>();
+			foreach (var col in collaborators.Values)
 			{
 				context.PacketId = new PacketId(col);
-				return (await Task.WhenAll(col.Bundles.Select(async b =>
+				foreach (var b in col.Bundles)
 				{
 					try
 					{
-						return await b.GetPackets(context);
+						packets.AddRange(await b.GetPackets(context));
 					}
 					catch (Exception e)
 					{
 						// Log the exception
 						await LagerManager.Log.Exception("Load bundle", e);
-						return new List<DataPacket>();
 					}
-				}))).SelectMany(p => p);
-			})))
-				// Use OrderBy which is a stable sorting algorithm
-				.SelectMany(p => p)
-				.OrderBy(packet => packet).Reverse().ToList();
+				}
+			}
+			// Use OrderBy which is a stable sorting algorithm
+			return packets.OrderBy(packet => packet).Reverse().ToList();
 		}
 
 		/// <summary>

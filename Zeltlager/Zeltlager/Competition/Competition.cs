@@ -141,5 +141,10 @@ namespace Zeltlager.Competition
 		{
 			return new Competition(lager, Id?.Clone(), Name, Participants, Stations);
 		}
+
+		public override string ToString()
+		{
+			return string.Format("Competition {0}", Name);
+		}
 	}
 }

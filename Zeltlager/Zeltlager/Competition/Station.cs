@@ -95,5 +95,10 @@ namespace Zeltlager.Competition
 		{
 			return new Station(Id?.Clone(), Name, competition, Ranking);
 		}
+
+		public override string ToString()
+		{
+			return string.Format("Station {0}", Name);
+		}
 	}
 }
