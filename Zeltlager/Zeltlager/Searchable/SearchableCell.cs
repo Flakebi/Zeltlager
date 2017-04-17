@@ -2,90 +2,57 @@ using Xamarin.Forms;
 
 namespace Zeltlager
 {
-	public class SearchableCell : TextCell
+	public class SearchableCell : ActionCell
 	{
-		/// <summary>
-		/// The bindable property implementation
-		/// </summary>
-		public static readonly BindableProperty OnEditCommandParameterProperty = BindableProperty.Create(nameof(OnEditCommandParameter), typeof(object), typeof(SearchableCell), null);
-		/// <summary>
-		/// The edit command parameter
-		/// </summary>
-		public object OnEditCommandParameter
+		public static readonly BindableProperty TextProperty = BindableProperty.Create(nameof(Text), typeof(string), typeof(SearchableCell), null);
+		public string Text
 		{
-			get { return GetValue(OnEditCommandParameterProperty); }
+			get { return (string)GetValue(TextProperty); }
 			set
 			{
-				SetValue(OnEditCommandParameterProperty, value);
+				SetValue(TextProperty, value);
 				OnPropertyChanged();
 			}
 		}
-		/// <summary>
-		/// The bindable property implementation
-		/// </summary>
-		public static readonly BindableProperty OnEditCommandProperty = BindableProperty.Create(nameof(OnEditCommand), typeof(Command), typeof(SearchableCell), null);
-		/// <summary>
-		/// The command which gets executed on selecting edit on the cell
-		/// </summary>
-		public Command OnEditCommand
+		public static readonly BindableProperty DetailProperty = BindableProperty.Create(nameof(Detail), typeof(string), typeof(SearchableCell), null);
+		public string Detail
 		{
-			get { return (Command)GetValue(OnEditCommandProperty); }
+			get { return (string)GetValue(DetailProperty); }
 			set
 			{
-				SetValue(OnEditCommandProperty, value);
+				SetValue(DetailProperty, value);
 				OnPropertyChanged();
 			}
 		}
 
-		public static readonly BindableProperty OnDeleteCommandParameterProperty = BindableProperty.Create(nameof(OnDeleteCommandParameter), typeof(object), typeof(SearchableCell), null);
-		/// <summary>
-		/// The delete command parameter
-		/// </summary>
-		public object OnDeleteCommandParameter
-		{
-			get { return GetValue(OnDeleteCommandParameterProperty); }
-			set
-			{
-				SetValue(OnDeleteCommandParameterProperty, value);
-				OnPropertyChanged();
-			}
-		}
-		/// <summary>
-		/// The bindable property implementation
-		/// </summary>
-		public static readonly BindableProperty OnDeleteCommandProperty = BindableProperty.Create(nameof(OnDeleteCommand), typeof(Command), typeof(SearchableCell), null);
-		/// <summary>
-		/// The command which gets executed on selecting delete onthe cell
-		/// </summary>
-		public Command OnDeleteCommand
-		{
-			get { return (Command)GetValue(OnDeleteCommandProperty); }
-			set
-			{
-				SetValue(OnDeleteCommandProperty, value);
-				OnPropertyChanged();
-			}
-		}
-
-		MenuItem editAction, deleteAction;
+		Label TextLabel;
+		Label DetailLabel;
 
 		public SearchableCell()
 		{
-			editAction = new MenuItem { Icon = Icons.EDIT, Text = Icons.EDIT_TEXT };
-			editAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnEditCommandParameter)));
-			editAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnEditCommand)));
-			editAction.BindingContext = this;
+			StackLayout hsl = new StackLayout
+			{
+				Spacing = 2,
+				Margin = 5,
+			};
 
-			deleteAction = new MenuItem { Icon = Icons.DELETE, Text = Icons.DELETE_TEXT, IsDestructive = true };
-			deleteAction.SetBinding(MenuItem.CommandParameterProperty, new Binding(nameof(OnDeleteCommandParameter)));
-			deleteAction.SetBinding(MenuItem.CommandProperty, new Binding(nameof(OnDeleteCommand)));
-			deleteAction.BindingContext = this;
+			TextLabel = new Label
+			{
+				TextColor = (Color)Application.Current.Resources["textColorStandard"],
+			};
+			DetailLabel = new Label
+			{
+				FontSize = TextLabel.FontSize - 3,
+				TextColor = (Color) Application.Current.Resources["detailColor"],
+			};
 
-			ContextActions.Add(editAction);
-			ContextActions.Add(deleteAction);
+			hsl.Children.Add(TextLabel);
+			hsl.Children.Add(DetailLabel);
 
-			TextColor = (Color)Application.Current.Resources["textColorStandard"];
-			DetailColor = (Color)Application.Current.Resources["detailColor"];
+			TextLabel.SetBinding(Label.TextProperty, new Binding(nameof(Text), source: this));
+			DetailLabel.SetBinding(Label.TextProperty, new Binding(nameof(Detail), source: this));
+
+			View = hsl;
 		}
 	}
 }

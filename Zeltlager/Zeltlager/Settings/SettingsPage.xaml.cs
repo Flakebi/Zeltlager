@@ -22,6 +22,11 @@ namespace Zeltlager.Settings
 			Navigation.PushAsync(new LogPage(lager));
 		}
 
+		async void OnTestDataClicked(object sender, EventArgs e)
+		{
+			await lager.CreateTestData();
+		}
+
 		void OnPacketsClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new InspectPackagesPage(lager));

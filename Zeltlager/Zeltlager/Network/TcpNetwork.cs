@@ -56,8 +56,14 @@ namespace Zeltlager.Network
 		public TcpSocketNetworkConnection(ITcpSocketClient socketClient)
 		{
 			this.socketClient = socketClient;
-			socketClient.ReadStream.ReadTimeout = TIMEOUT;
-			socketClient.WriteStream.WriteTimeout = TIMEOUT;
+			try
+			{
+				socketClient.ReadStream.ReadTimeout = TIMEOUT;
+				socketClient.WriteStream.WriteTimeout = TIMEOUT;
+			}
+			catch(Exception)
+			{
+			}
 		}
 
 		public void Dispose()

@@ -38,25 +38,16 @@ namespace Zeltlager
 
 			listView = new ListView();
 			var dataTemplate = new DataTemplate(typeof(SearchableCell));
-			dataTemplate.SetBinding(TextCell.TextProperty, new Binding("SearchableText"));
-			dataTemplate.SetBinding(TextCell.DetailProperty, new Binding("SearchableDetail"));
+			dataTemplate.SetBinding(SearchableCell.TextProperty, new Binding("SearchableText"));
+			dataTemplate.SetBinding(SearchableCell.DetailProperty, new Binding("SearchableDetail"));
 
+			OnEdit = new Command(sender => onEdit((T)sender));
+			OnDelete = new Command(sender => onDelete((T)sender));
 
-			// Bind commands for context actions
-			//if (OnEdit != null)
-				OnEdit = new Command(sender => onEdit((T)sender));
-			//else
-				//((SearchableCell)dataTemplate.CreateContent()).RemoveEditAction();
-
-			//if (OnDelete != null)
-				OnDelete = new Command(sender => onDelete((T)sender));
-			//else
-				//((SearchableCell)dataTemplate.CreateContent()).RemoveDeleteAction();
-
-			dataTemplate.SetBinding(SearchableCell.OnEditCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(SearchableCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
-			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandParameterProperty, new Binding("."));
-			dataTemplate.SetBinding(SearchableCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
+			dataTemplate.SetBinding(ActionCell.OnEditCommandParameterProperty, new Binding("."));
+			dataTemplate.SetBinding(ActionCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
+			dataTemplate.SetBinding(ActionCell.OnDeleteCommandParameterProperty, new Binding("."));
+			dataTemplate.SetBinding(ActionCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 
 			// define what happens, if cell is selected
 			listView.ItemSelected += (sender, e) =>
