@@ -15,7 +15,7 @@ namespace Zeltlager.DataPackets
 	/// public static int GetIdCount()
 	/// All possible packet types have to be added to the packetTypes array.
 	/// </summary>
-	public abstract class DataPacket : IComparable<DataPacket>
+	public abstract class DataPacket : IComparable<DataPacket>, ISearchable
 	{
 		static readonly Type[] packetTypes = {
 			typeof(AddPacket),
@@ -92,6 +92,10 @@ namespace Zeltlager.DataPackets
 		/// Packets with a lower priority will be applied first.
 		/// </summary>
 		public virtual int Priority => 0;
+
+		public string SearchableText => ToString();
+
+		public string SearchableDetail => Id.Creator.ToString();
 
 		protected DataPacket()
 		{

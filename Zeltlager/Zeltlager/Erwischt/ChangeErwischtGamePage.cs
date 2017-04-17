@@ -1,8 +1,8 @@
 ﻿using System;
-
-using Xamarin.Forms;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 using Zeltlager.Client;
+using System.Linq;
 
 namespace Zeltlager.Erwischt
 {
@@ -15,7 +15,7 @@ namespace Zeltlager.Erwischt
 			this.lager = lager;
 			NavigationPage.SetBackButtonTitle(this, "");
 			Content = new SearchableListView<ErwischtGame>(lager.ErwischtHandler.VisibleGames,
-			                                           OnEditClicked, OnDeleteClicked, OnErwischtGameClicked);
+													   OnEditClicked, OnDeleteClicked, OnErwischtGameClicked);
 			Title = "Spiel wechseln";
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			Padding = new Thickness(10);
@@ -27,10 +27,7 @@ namespace Zeltlager.Erwischt
 
 		void OnErwischtGameClicked(ErwischtGame game)
 		{
-			lager.ErwischtHandler.CurrentGame = game;
-			Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
-			Navigation.InsertPageBefore(new ErwischtPage(game, lager), this);
-			Navigation.PopAsync(true);
+
 		}
 	}
 }

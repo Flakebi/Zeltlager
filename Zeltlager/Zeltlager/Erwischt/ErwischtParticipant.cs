@@ -108,5 +108,10 @@ namespace Zeltlager.Erwischt
 			}
 			return this.Member.CompareTo(other.Member);
 		}
+
+		public override string ToString()
+		{
+			return "ErwischtParticipant " + Member.Name + " " + (IsAlive ? "alive" : "catched") + " -> " + SearchableDetail;
+		}
 	}
 }

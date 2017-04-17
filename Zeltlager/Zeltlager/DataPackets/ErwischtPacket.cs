@@ -41,6 +41,8 @@ namespace Zeltlager.DataPackets
 				ErwischtParticipant p = context.LagerClient.ErwischtHandler.GetFromIds(game.Id, member.Id);
 				bool isAlive = input.ReadBoolean();
 				p.IsAlive = isAlive;
+
+				contentString = p.ToString();
 			}
 		}
 	}

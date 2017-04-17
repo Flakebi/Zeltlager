@@ -201,6 +201,7 @@
     </Compile>
     <Compile Include="Erwischt\ChangeErwischtGamePage.cs" />
     <Compile Include="DataPackets\ErwischtPacket.cs" />
+    <Compile Include="Settings\InspectPackagesPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

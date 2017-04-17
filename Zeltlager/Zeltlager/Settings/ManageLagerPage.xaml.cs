@@ -50,7 +50,7 @@ namespace Zeltlager.Settings
 
 		void OnChangeLagerClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new ChangeLagerPage(lager), true);
+			Navigation.PushAsync(new ChangeLagerPage(lager, manager), true);
 		}
 
 		void OnUploadLagerClicked(object sender, EventArgs e)

@@ -119,6 +119,8 @@ namespace Zeltlager.DataPackets
 					if (type.Item2.ReturnType == typeof(Task))
 						await (Task)result;
 				}
+
+				contentString = obj.ToString();
 			}
 		}
 	}

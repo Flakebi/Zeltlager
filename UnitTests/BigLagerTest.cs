@@ -45,7 +45,7 @@ namespace UnitTests
 			lager = (LagerClient)manager.Lagers[0];
 			ownCollaborator = lager.OwnCollaborator;
 			serialiser = lager.ClientSerialiser;
-			context = new LagerClientSerialisationContext(manager, lager);
+			context = new LagerClientSerialisationContext(lager);
 			context.PacketId = new PacketId(ownCollaborator);
 			Assert.True(await lager.LoadBundles());
 

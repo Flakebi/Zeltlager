@@ -22,6 +22,11 @@ namespace Zeltlager.Settings
 			Navigation.PushAsync(new LogPage(lager));
 		}
 
+		void OnPacketsClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new InspectPackagesPage(lager));
+		}
+
 		void OnManageLagerClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new ManageLagerPage(lager, lager.ClientManager));

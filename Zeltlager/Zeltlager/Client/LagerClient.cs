@@ -73,7 +73,7 @@ namespace Zeltlager.Client
 		/// The packet that should be applied first, is the last packet in the list.
 		/// </summary>
 		/// <returns>The flat history of packets.</returns>
-		async Task<List<DataPacket>> GetHistory()
+		public async Task<List<DataPacket>> GetHistory()
 		{
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(this);
 			return (await Task.WhenAll(collaborators.Values.Select(async col =>
