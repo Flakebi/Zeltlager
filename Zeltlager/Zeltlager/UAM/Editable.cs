@@ -9,7 +9,7 @@ namespace Zeltlager
 	
 	public abstract class Editable<T> : IEditable<T> where T : class
 	{
-		public async Task OnSaveEditing(LagerClient lager, T oldObject)
+		public virtual async Task OnSaveEditing(LagerClient lager, T oldObject)
 		{
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;

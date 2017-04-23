@@ -78,9 +78,14 @@ namespace Zeltlager.Calendar
 			d.Events.Sort();
 		}
 
-		public void RemoveCalendarEvent(IListCalendarEvent caldendarEvent)
+		public void RemoveCalendarEvent(IListCalendarEvent calendarEvent)
 		{
-			FindCorrectDay(caldendarEvent).Events.Remove(caldendarEvent);
+			Day d = FindCorrectDay(calendarEvent);
+			d.Events.Remove(calendarEvent);
+			if (!d.Events.Any())
+			{
+				Days.Remove(d);
+			}
 		}
 
 		public IListCalendarEvent GetEventFromPacketId(PacketId id)

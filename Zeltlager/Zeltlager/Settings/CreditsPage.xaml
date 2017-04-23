@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="Zeltlager.Settings.CreditsPage"
+	Title="Über"
+	Style="{StaticResource BaseStyle}"
+	xmlns:local="clr-namespace:Zeltlager"
+	Padding="10">
+	<ContentPage.Content>
+		<Label>
+			<Label.Text>
+Entwickler: 
+Sebastian Neubauer und Carolin Brandt
+
+Lizenz:
+AGPL
+
+Icons:
+http://www.flaticon.com/packs/free-basic-ui-elements
+under CC 3.0 BY by http://www.flaticon.com/authors/lucy-g
+https://thenounproject.com/changhoon.baek.50/uploads/?i=147113
+under CC 3.0 BY by https://thenounproject.com/changhoon.baek.50/
+http://www.flaticon.com/free-icon/switch_320306
+under Flaticon Basic License by http://www.flaticon.com/authors/madebyoliver
+			</Label.Text>
+		</Label>
+	</ContentPage.Content>
+</ContentPage>

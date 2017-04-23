@@ -4,9 +4,12 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Zeltlager;assembly=Zeltlager"
 	x:Class="Zeltlager.Erwischt.ErwischtPage"
-    Style="{StaticResource BaseStyle}">
+    Style="{StaticResource BaseStyle}"
+	Padding="10">
 	<ContentPage.ToolbarItems>
 		<ToolbarItem Icon="{x:Static local:Icons.CHANGE}" Clicked="OnChangeGameButtonClicked">
+		</ToolbarItem>
+		<ToolbarItem Icon="{x:Static local:Icons.PODIUM}" Clicked="OnStatisticsButtonClicked">
 		</ToolbarItem>
 		<ToolbarItem Icon="{x:Static local:Icons.ADD}" Clicked="OnAddButtonClicked">
 		</ToolbarItem>

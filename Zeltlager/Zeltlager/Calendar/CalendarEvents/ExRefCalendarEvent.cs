@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Zeltlager.Client;
 using Zeltlager.DataPackets;
 using Zeltlager.Serialisation;
 using Zeltlager.UAM;
@@ -18,13 +19,13 @@ namespace Zeltlager.Calendar
 			Reference = reference;
 		}
 		
-		public async Task OnSaveEditing(
-			Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, CalendarEvent oldObject)
+		public override async Task OnSaveEditing(LagerClient lager, PlannedCalendarEvent oldObject)
 		{
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
+			Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
 			Reference.IsVisible = false;
 			DataPacket packet;
-			if (oldObject != null)
+			if (oldObject == null)
 			{
 				throw new Exception("a ReferenceCalendarEvent can not be added!!! Serialization will probably break from it..");
 				//packet = await EditPacket.Create(serialiser, context, new CalendarEvent(Id, Date, Title, Detail, lager));
@@ -34,7 +35,7 @@ namespace Zeltlager.Calendar
 			await context.LagerClient.AddPacket(packet);
 		}
 
-		public new ExRefCalendarEvent Clone()
+		public override PlannedCalendarEvent Clone()
 		{
 			return new ExRefCalendarEvent(this.Reference);
 		}

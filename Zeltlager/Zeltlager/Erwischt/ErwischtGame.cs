@@ -30,7 +30,7 @@ namespace Zeltlager.Erwischt
 
 		public string SearchableText => Name;
 
-		public string SearchableDetail => ErwischtParticipants.Where(em => em.IsAlive).Count() + " verbleibende Teilnehmer";
+		public string SearchableDetail => ErwischtParticipants.Where(em => em.IsAlive).Count() + "/" + ErwischtParticipants.Count + " verbleibende Teilnehmer";
 
 		public bool IsVisible { get; set; } = true;
 

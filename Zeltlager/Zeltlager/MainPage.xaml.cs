@@ -5,6 +5,7 @@ using Zeltlager.Client;
 using Zeltlager.Erwischt;
 using Zeltlager.UAM;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Zeltlager
 {
@@ -27,6 +28,8 @@ namespace Zeltlager
 			LoadingScreen ls = new LoadingScreen();
 			await Navigation.PushModalAsync(new NavigationPage(ls), false);
 
+			//Task rotation = ViewExtensions.RelRotateTo(syncButton, 360*2, 4000*2, Easing.CubicInOut);
+
 			if (string.IsNullOrEmpty(lager.ClientManager.Settings.ServerAddress))
 			{
 				await DisplayAlert("Achtung!", "Bitte eine Serveradresse angeben.", "Ok");
@@ -35,6 +38,7 @@ namespace Zeltlager
 			{
 				try
 				{
+					//await lager.Synchronise(status => syncButton.Text = status.GetMessage());
 					await lager.Synchronise(status => ls.Status = status.GetMessage());
 				}
 				catch (Exception ex)
@@ -43,7 +47,7 @@ namespace Zeltlager
 					await DisplayAlert("Fehler", "Beim Synchronisieren des Lagers ist ein Fehler aufgetreten.", "Ok");
 				}
 			}
-
+			//ViewExtensions.CancelAnimations(syncButton);
 			await Navigation.PopModalAsync(false);
 		}
 
@@ -56,6 +60,7 @@ namespace Zeltlager
 		{
 			if (lager.ErwischtHandler.VisibleGames.Any())
 			{
+				lager.ErwischtHandler.CurrentGame = lager.ErwischtHandler.GetNewestGame();
 				Navigation.PushAsync(new ErwischtPage(lager.ErwischtHandler.GetNewestGame(), lager));
 			}
 			else

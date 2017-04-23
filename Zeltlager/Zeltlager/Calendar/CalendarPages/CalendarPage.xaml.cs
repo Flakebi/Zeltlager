@@ -46,12 +46,12 @@ namespace Zeltlager.Calendar
 			if (CurrentPage != null)
 			{
 				Navigation.PushAsync(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-						   (new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date, "", "", lager), true, lager));
+					(new CalendarEvent(null, ((DayPage)CurrentPage).Day.Date.Add(DateTime.Now.TimeOfDay), "", "", lager), true, lager));
 			}
 			else
 			{
 				Navigation.PushAsync(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
-						   (new CalendarEvent(null, DateTime.Now, "", "", lager), true, lager));
+					(new CalendarEvent(null, DateTime.Now, "", "", lager), true, lager));
 			}
 		}
 

@@ -57,6 +57,11 @@ namespace Zeltlager.Erwischt
 			Navigation.PushAsync(new ChangeErwischtGamePage(lager));
 		}
 
+		void OnStatisticsButtonClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new ErwischtStatisticsPage(lager));
+		}
+
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();

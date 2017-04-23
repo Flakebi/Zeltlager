@@ -203,6 +203,10 @@
     <Compile Include="Erwischt\ChangeErwischtGamePage.cs" />
     <Compile Include="DataPackets\ErwischtPacket.cs" />
     <Compile Include="Settings\InspectPackagesPage.cs" />
+    <Compile Include="Settings\CreditsPage.xaml.cs">
+      <DependentUpon>CreditsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Erwischt\ErwischtStatisticsPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">
@@ -277,6 +281,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Erwischt\ErwischtParticipantDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings\CreditsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

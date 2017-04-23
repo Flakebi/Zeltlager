@@ -46,6 +46,8 @@ namespace Zeltlager.Erwischt
 		[Serialisation]
 		public bool IsAlive { get; set; }
 
+		public int Catches { get; set; } = 5;
+
 		public string SearchableText => Member.Display;
 		public string SearchableDetail
 		{

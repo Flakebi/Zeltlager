@@ -41,6 +41,8 @@ namespace Zeltlager
 		public const string LOG = "printer.png";
 		public const string SORT_ASC = "uparrow1.png";
 		public const string SORT_DESC = "downarrow.png";
+		public const string BRIEFCASE = "briefcase.png";
+		public const string HEART = "heart.png";
 
 		public static readonly Dictionary<DayOfWeek, string> WEEKDAYS = new Dictionary<DayOfWeek, string>
 		{

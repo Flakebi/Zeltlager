@@ -37,6 +37,11 @@ namespace Zeltlager.Settings
 			Navigation.PushAsync(new ManageLagerPage(lager, lager.ClientManager));
 		}
 
+		void OnCreditsClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new CreditsPage());
+		}
+
 		protected override async void OnDisappearing()
 		{
 			base.OnDisappearing();

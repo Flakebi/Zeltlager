@@ -241,7 +241,10 @@ namespace Zeltlager.UAM
 
 			if (Obj is ErwischtGame)
 			{
-				Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count-2]);
+				if (!(Navigation.NavigationStack[Navigation.NavigationStack.Count-2] is MainPage))
+				{
+					Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count-2]);
+				}
 				Navigation.InsertPageBefore(new ErwischtPage(lager.ErwischtHandler.GetNewestGame(), lager), this);
 			}
 
