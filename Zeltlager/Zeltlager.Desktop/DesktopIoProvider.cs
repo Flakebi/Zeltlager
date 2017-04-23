@@ -23,5 +23,7 @@ namespace Zeltlager
 		public Task<Stream> ReadFile(string path) => Task.FromResult((Stream)File.Open(path, FileMode.Open));
 		public Task<Stream> WriteFile(string path) => Task.FromResult((Stream)File.Open(path, FileMode.Create));
 		public Task<Stream> AppendFile(string path) => Task.FromResult((Stream)File.Open(path, FileMode.Append));
+		public Task DeleteFile(string path) { File.Delete(path); return Task.WhenAll(); }
+		public Task DeleteFolder(string path) { Directory.Delete(path); return Task.WhenAll(); }
 	}
 }

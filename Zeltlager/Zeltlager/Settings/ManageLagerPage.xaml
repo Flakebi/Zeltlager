@@ -15,6 +15,11 @@
 					Clicked="OnCreateLagerClicked"
 					Style="{StaticResource DarkButtonStyle}"
 					Image="{x:Static local:Icons.ADD}"/>
+			<Button x:Name="DeleteLagerButton"
+					Text="Aktuelles Lager löschen"
+					Clicked="OnDeleteLagerClicked"
+					Style="{StaticResource DarkButtonStyle}"
+					Image="{x:Static local:Icons.DELETE}"/>
 			<Button Text="Lager herunterladen"
 					Clicked="OnDownloadLagerClicked"
 					Style="{StaticResource DarkButtonStyle}"

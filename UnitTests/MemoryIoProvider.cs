@@ -112,5 +112,21 @@ namespace UnitTests
 					folder.files[parts.Last()] = folder.files[parts.Last()].Concat(mem.ToArray()).ToArray();
 			}));
 		}
+
+		public Task DeleteFile(string path)
+		{
+			var parts = IoProvider.GetParts(path);
+			var folder = GetFolder(parts.Take(parts.Length - 1));
+			folder.files.Remove(Path.GetFileName(path));
+			return Task.WhenAll();
+		}
+
+		public Task DeleteFolder(string path)
+		{
+			var parts = IoProvider.GetParts(path);
+			var folder = GetFolder(parts.Take(parts.Length - 1));
+			folder.folders.Remove(Path.GetFileName(path));
+			return Task.WhenAll();
+		}
 	}
 }

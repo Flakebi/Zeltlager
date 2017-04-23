@@ -19,17 +19,13 @@ namespace Zeltlager
 		}
 
 		public Task<Tuple<string, FileType>[]> ListContents(string path) => ioProvider.ListContents(Path.Combine(root, path));
-
 		public Task CreateFolder(string path) => ioProvider.CreateFolder(Path.Combine(root, path));
-
 		public Task<bool> ExistsFile(string path) => ioProvider.ExistsFile(Path.Combine(root, path));
-
 		public Task<bool> ExistsFolder(string path) => ioProvider.ExistsFolder(Path.Combine(root, path));
-
 		public Task<Stream> ReadFile(string path) => ioProvider.ReadFile(Path.Combine(root, path));
-
 		public Task<Stream> WriteFile(string path) => ioProvider.WriteFile(Path.Combine(root, path));
-
 		public Task<Stream> AppendFile(string path) => ioProvider.AppendFile(Path.Combine(root, path));
+		public Task DeleteFile(string path) => ioProvider.DeleteFile(Path.Combine(root, path));
+		public Task DeleteFolder(string path) => ioProvider.DeleteFolder(Path.Combine(root, path));
 	}
 }

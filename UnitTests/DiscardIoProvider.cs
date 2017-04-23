@@ -17,5 +17,7 @@ namespace UnitTests
 		public Task<Stream> ReadFile(string path) => Task.FromResult<Stream>(new MemoryStream());
 		public Task<Stream> WriteFile(string path) => Task.FromResult<Stream>(new MemoryStream());
 		public Task<Stream> AppendFile(string path) => Task.FromResult<Stream>(new MemoryStream());
+		public Task DeleteFile(string path) => nop;
+		public Task DeleteFolder(string path) => nop;
 	}
 }

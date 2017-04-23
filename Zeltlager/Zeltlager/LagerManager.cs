@@ -13,7 +13,7 @@ namespace Zeltlager
 	public class LagerManager
 	{
 		/// <summary>
-		/// 5, 7, 9
+		/// 5, 7, 9, a, d
 		/// </summary>
 		public const ushort PORT = 57914;
 
@@ -118,6 +118,16 @@ namespace Zeltlager
 			await lager.Save();
 			lagers.Add(lager.Id, lager);
 			return lager;
+		}
+
+		/// <summary>
+		/// Remove the files of the specified lager.
+		/// </summary>
+		/// <param name="lager">The lager that should be deleted.</param>
+		public async Task DeleteLager(LagerBase lager)
+		{
+			lagers.Remove(lager.Id);
+			await ioProvider.DeleteFolder(lager.Id.ToString());
 		}
 
 		/// <summary>

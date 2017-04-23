@@ -27,5 +27,7 @@ namespace Zeltlager
 		Task<Stream> WriteFile(string path);
 		Task<Stream> AppendFile(string path);
 		Task<Stream> ReadFile(string path);
+		Task DeleteFile(string path);
+		Task DeleteFolder(string path);
 	}
 }

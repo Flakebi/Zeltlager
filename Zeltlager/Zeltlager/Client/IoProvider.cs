@@ -110,5 +110,19 @@ namespace Zeltlager.Client
 			var stream = await file.OpenAsync(FileAccess.Read);
 			return stream;
 		}
+
+		public async Task DeleteFile(string path)
+		{
+			var folder = await GetParentFolder(path);
+			IFile f = await folder.GetFileAsync(Path.GetFileName(path));
+			await f.DeleteAsync();
+		}
+
+		public async Task DeleteFolder(string path)
+		{
+			var folder = await GetParentFolder(path);
+			IFolder f = await folder.GetFolderAsync(Path.GetFileName(path));
+			await f.DeleteAsync();
+		}
 	}
 }

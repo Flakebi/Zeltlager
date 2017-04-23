@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 
-using Xamarin.Forms;
-using Zeltlager.Client;
 using System.Linq;
+using Xamarin.Forms;
 
 namespace Zeltlager.Settings
 {
+	using Client;
+
 	public partial class ManageLagerPage : ContentPage
 	{
 		LagerClient lager;
@@ -31,6 +32,7 @@ namespace Zeltlager.Settings
 			if (lager == null)
 			{
 				UploadLagerButton.IsVisible = false;
+				DeleteLagerButton.IsVisible = false;
 			}
 			if (!manager.Lagers.Values.Where(lb => ((LagerClient)lb) != lager).Any())
 			{
@@ -41,6 +43,17 @@ namespace Zeltlager.Settings
 		void OnCreateLagerClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new CreateLagerPage(), true);
+		}
+
+		async void OnDeleteLagerClicked(object sender, EventArgs e)
+		{
+			if (await DisplayAlert("Lager löschen", "Bist du dir sicher, dass du das Lager löschen willst?", "Ja", "Doch nicht"))
+			{
+				await manager.DeleteLager(lager);
+				Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+				lager = null;
+				UpdateUI();
+			}
 		}
 
 		void OnDownloadLagerClicked(object sender, EventArgs e)
