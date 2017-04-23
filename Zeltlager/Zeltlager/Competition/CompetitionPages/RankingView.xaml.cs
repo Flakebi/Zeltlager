@@ -46,10 +46,10 @@ namespace Zeltlager.Competition
 			{
 				OnEdit = new Command(sender => onEdit((CompetitionResult)sender));
 				OnDelete = new Command(sender => onDelete((CompetitionResult)sender));
-				template.SetBinding(ParticipantResultCell.OnEditCommandParameterProperty, new Binding("."));
-				template.SetBinding(ParticipantResultCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
-				template.SetBinding(ParticipantResultCell.OnDeleteCommandParameterProperty, new Binding("."));
-				template.SetBinding(ParticipantResultCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
+				template.SetBinding(ActionCell.OnEditCommandParameterProperty, new Binding("."));
+				template.SetBinding(ActionCell.OnEditCommandProperty, new Binding(nameof(OnEdit), source: this));
+				template.SetBinding(ActionCell.OnDeleteCommandParameterProperty, new Binding("."));
+				template.SetBinding(ActionCell.OnDeleteCommandProperty, new Binding(nameof(OnDelete), source: this));
 			}
 			participantResults.ItemTemplate = template;
 			

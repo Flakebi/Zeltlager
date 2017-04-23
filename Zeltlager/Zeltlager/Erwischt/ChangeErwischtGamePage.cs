@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Xamarin.Forms;
-using Zeltlager.Client;
-using System.Linq;
 
 namespace Zeltlager.Erwischt
 {
+	using Client;
+
 	public class ChangeErwischtGamePage : ContentPage
 	{
 		LagerClient lager;

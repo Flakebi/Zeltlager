@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using Zeltlager.Client;
 using System.Linq;
-using Zeltlager.DataPackets;
+using System.Threading.Tasks;
+using System.Text;
 
 namespace Zeltlager.Erwischt
 {
-	using UAM;
+	using Client;
+	using DataPackets;
 	using Serialisation;
-	using System;
-	using System.Threading.Tasks;
+	using UAM;
 
 	/// <summary>
 	/// One instance of an Erwischt game.
@@ -30,7 +30,22 @@ namespace Zeltlager.Erwischt
 
 		public string SearchableText => Name;
 
-		public string SearchableDetail => ErwischtParticipants.Where(em => em.IsAlive).Count() + "/" + ErwischtParticipants.Count + " verbleibende Teilnehmer";
+		public string SearchableDetail
+		{
+			get
+			{
+				StringBuilder res = new StringBuilder();
+				res.Append(ErwischtParticipants.Where(em => em.IsAlive).Count());
+				res.Append("/");
+				res.Append(ErwischtParticipants.Count);
+				res.Append(" verbleibende Teilnehmer");
+
+				res.Append(" (");
+				res.Append(Id.Packet.Timestamp.ToString("dd.MM.yy HH:mm:ss"));
+				res.Append(")");
+				return res.ToString();
+			}
+		}
 
 		public bool IsVisible { get; set; } = true;
 

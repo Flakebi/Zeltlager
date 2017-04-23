@@ -50,7 +50,8 @@ namespace Zeltlager.Settings
 			if (await DisplayAlert("Lager löschen", "Bist du dir sicher, dass du das Lager löschen willst?", "Ja", "Doch nicht"))
 			{
 				await manager.DeleteLager(lager);
-				Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+				while (Navigation.NavigationStack.Count > 1)
+					Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
 				lager = null;
 				UpdateUI();
 			}

@@ -35,19 +35,19 @@ namespace Zeltlager.Network
 
 	public class TcpNetworkClient : INetworkClient
 	{
-		public const int TIMEOUT = 30;
+		public static readonly TimeSpan TIMEOUT = new TimeSpan(0, 0, 30);
 
 		public async Task<INetworkConnection> OpenConnection(string address, ushort port)
 		{
 			var client = new TcpSocketClient();
-			await client.ConnectAsync(address, port).TimeoutAfter(new TimeSpan(0, 0, TIMEOUT));
+			await client.ConnectAsync(address, port).TimeoutAfter(TIMEOUT);
 			return new TcpSocketNetworkConnection(client);
 		}
 	}
 
 	class TcpSocketNetworkConnection : INetworkConnection
 	{
-		const int TIMEOUT = TcpNetworkClient.TIMEOUT;
+		static readonly TimeSpan TIMEOUT = TcpNetworkClient.TIMEOUT;
 
 		readonly ITcpSocketClient socketClient;
 
@@ -56,14 +56,6 @@ namespace Zeltlager.Network
 		public TcpSocketNetworkConnection(ITcpSocketClient socketClient)
 		{
 			this.socketClient = socketClient;
-			try
-			{
-				socketClient.ReadStream.ReadTimeout = TIMEOUT;
-				socketClient.WriteStream.WriteTimeout = TIMEOUT;
-			}
-			catch(Exception)
-			{
-			}
 		}
 
 		public void Dispose()
@@ -83,8 +75,8 @@ namespace Zeltlager.Network
 
 		public async Task<CommunicationPacket> ReadPacket()
 		{
-			int length = (await socketClient.ReadStream.ReadAsyncSafe(sizeof(int))).ToInt(0);
-			return CommunicationPacket.ReadPacket(await socketClient.ReadStream.ReadAsyncSafe(length));
+			int length = (await socketClient.ReadStream.ReadAsyncSafe(sizeof(int)).TimeoutAfter(TIMEOUT)).ToInt(0);
+			return CommunicationPacket.ReadPacket(await socketClient.ReadStream.ReadAsyncSafe(length).TimeoutAfter(TIMEOUT));
 		}
 
 		public Task WritePacket(CommunicationPacket packet)
@@ -108,13 +100,13 @@ namespace Zeltlager.Network
 				}
 			}
 			byte[] result = mem.ToArray();
-			await socketClient.WriteStream.WriteAsync(result, 0, result.Length);
-			await socketClient.WriteStream.FlushAsync();
+			await socketClient.WriteStream.WriteAsync(result, 0, result.Length).TimeoutAfter(TIMEOUT);
+			await socketClient.WriteStream.FlushAsync().TimeoutAfter(TIMEOUT);
 		}
 
 		public Task Close()
 		{
-			return socketClient.DisconnectAsync();
+			return socketClient.DisconnectAsync().TimeoutAfter(TIMEOUT);
 		}
 	}
 }
