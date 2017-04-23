@@ -60,7 +60,6 @@ namespace Zeltlager
 		{
 			if (lager.ErwischtHandler.VisibleGames.Any())
 			{
-				lager.ErwischtHandler.CurrentGame = lager.ErwischtHandler.GetNewestGame();
 				Navigation.PushAsync(new ErwischtPage(lager.ErwischtHandler.GetNewestGame(), lager));
 			}
 			else

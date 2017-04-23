@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Xamarin.Forms;
-using Zeltlager.Client;
 
 namespace Zeltlager.Erwischt
 {
+	using Client;
+
 	public class ErwischtStatisticsPage : TabbedPage
 	{
 		public class ErwischtParticipantStatisticsWrapper : ISearchable
@@ -20,11 +21,13 @@ namespace Zeltlager.Erwischt
 		}
 
 		LagerClient lager;
+		ErwischtGame currentGame;
 
-		public ErwischtStatisticsPage(LagerClient lager)
+		public ErwischtStatisticsPage(LagerClient lager, ErwischtGame currentGame)
 		{
 			this.lager = lager;
-            UpdateUI();
+			this.currentGame = currentGame;
+			UpdateUI();
 			NavigationPage.SetBackButtonTitle(this, "");
 			Style = (Style)Application.Current.Resources["TabbedPageStyle"];
 			Title = "Statistiken";
@@ -35,7 +38,7 @@ namespace Zeltlager.Erwischt
 			Children.Clear(); 			Children.Add(new ContentPage()
 			{
 				Content = new SearchableListView<ErwischtParticipantStatisticsWrapper>
-					(lager.ErwischtHandler.CurrentGame.ErwischtParticipants.Select(ep => new ErwischtParticipantStatisticsWrapper(ep)
+					(currentGame.ErwischtParticipants.Select(ep => new ErwischtParticipantStatisticsWrapper(ep)
 					{
 						SearchableDetail = ep.Catches.ToString()
 					}).ToList(),

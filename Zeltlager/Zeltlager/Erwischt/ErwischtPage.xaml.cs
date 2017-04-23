@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-
-using Xamarin.Forms;
-using Zeltlager.Client;
 using System.Linq;
 using System.Threading.Tasks;
-using Zeltlager.UAM;
+
+using Xamarin.Forms;
 
 namespace Zeltlager.Erwischt
 {
+	using Client;
+	using UAM;
+
 	public partial class ErwischtPage : ContentPage
 	{
 		ErwischtGame game;
@@ -28,13 +28,15 @@ namespace Zeltlager.Erwischt
 		{
 			if (lager.ClientManager.Settings.HideDeadParticipants)
 			{
-				Content = new SearchableListView<ErwischtParticipant>(game.ErwischtParticipants.Where(ep => ep.IsAlive).ToList(),
-																 OnEditClicked, OnDeleteClicked, OnErwischtParticipantClicked);
+				Content = new SearchableListView<ErwischtParticipant>(
+					game.ErwischtParticipants.Where(ep => ep.IsAlive).ToList(),
+					null, null, OnErwischtParticipantClicked);
 			}
 			else
 			{
-				Content = new SearchableListView<ErwischtParticipant>(game.ErwischtParticipants,
-																 OnEditClicked, OnDeleteClicked, OnErwischtParticipantClicked);
+				Content = new SearchableListView<ErwischtParticipant>(
+					game.ErwischtParticipants,
+					null, null, OnErwischtParticipantClicked);
 			}
 		}
 
@@ -43,10 +45,6 @@ namespace Zeltlager.Erwischt
 			Navigation.PushAsync(new ErwischtParticipantDetailPage(member));
 		}
 
-		void OnEditClicked(ErwischtParticipant member) { }
-
-		Task OnDeleteClicked(ErwischtParticipant member) { return Task.WhenAll(); }
-
 		void OnAddButtonClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new UniversalAddModifyPage<ErwischtGame, ErwischtGame>(new ErwischtGame("", lager), true, lager));
@@ -54,12 +52,12 @@ namespace Zeltlager.Erwischt
 
 		void OnChangeGameButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new ChangeErwischtGamePage(lager));
+			Navigation.PushAsync(new ChangeErwischtGamePage(lager, game));
 		}
 
 		void OnStatisticsButtonClicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new ErwischtStatisticsPage(lager));
+			Navigation.PushAsync(new ErwischtStatisticsPage(lager, game));
 		}
 
 		protected override void OnAppearing()

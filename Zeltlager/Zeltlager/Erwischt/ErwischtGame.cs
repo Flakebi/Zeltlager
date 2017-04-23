@@ -14,7 +14,7 @@ namespace Zeltlager.Erwischt
 	/// One instance of an Erwischt game.
 	/// </summary>
 	[Editable("Erwischtspiel")]
-	public class ErwischtGame : Editable<ErwischtGame>, ISearchable, IDeletable
+	public class ErwischtGame : Editable<ErwischtGame>, ISearchable
 	{
 		LagerClient lager;
 
@@ -47,6 +47,7 @@ namespace Zeltlager.Erwischt
 			}
 		}
 
+		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		// For deserialisation

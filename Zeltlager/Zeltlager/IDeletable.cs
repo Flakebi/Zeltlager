@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Zeltlager.Client;
-using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
+﻿using System.Threading.Tasks;
 
 namespace Zeltlager
 {
+	using Client;
+	using DataPackets;
+	using Serialisation;
+
 	public interface IDeletable
 	{
 		[Serialisation]

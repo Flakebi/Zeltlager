@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Zeltlager.Client;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
 
 namespace Zeltlager.Erwischt
 {
+	using Client;
+	using DataPackets;
+
 	/// <summary>
 	/// Handles all different Erwischt games.
 	/// </summary>
@@ -15,13 +14,11 @@ namespace Zeltlager.Erwischt
 		LagerClient lager;
 		public List<ErwischtGame> Games { get; private set; }
 		public List<ErwischtGame> VisibleGames => Games.Where(g => g.IsVisible).ToList();
-		public ErwischtGame CurrentGame { get; set; }
 
 		public ErwischtHandler(LagerClient lager)
 		{
 			this.lager = lager;
 			Games = new List<ErwischtGame>();
-			CurrentGame = null;
 		}
 
 		public ErwischtParticipant GetFromIds(PacketId gameId, PacketId memberId)

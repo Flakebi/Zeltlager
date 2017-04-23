@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
-using Zeltlager.Serialisation;
-using Zeltlager.Erwischt;
 
 namespace Zeltlager.DataPackets
 {
+	using Erwischt;
+	using Serialisation;
+
 	public class ErwischtPacket : DataPacket
 	{
 		protected ErwischtPacket() { }

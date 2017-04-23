@@ -53,6 +53,7 @@
     <Compile Include="DataPackets\AddPacket.cs" />
     <Compile Include="DataPackets\DataPacketBundle.cs" />
     <Compile Include="DataPackets\DataPacket.cs" />
+    <Compile Include="DataPackets\DeleteErwischtPacket.cs" />
     <Compile Include="DataPackets\InvalidDataPacket.cs" />
     <Compile Include="DataPackets\PacketId.cs" />
     <Compile Include="Erwischt\ErwischtGame.cs" />
