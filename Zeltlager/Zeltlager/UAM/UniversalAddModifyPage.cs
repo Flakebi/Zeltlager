@@ -4,12 +4,12 @@ using System.Linq;
 using System.Reflection;
 
 using Xamarin.Forms;
-using Zeltlager.Competition;
-using Zeltlager.Erwischt;
 
 namespace Zeltlager.UAM
 {
 	using Client;
+	using Competition;
+	using Erwischt;
 
 	/// <summary>
 	/// A page to manipulate annotated properties from any given type.

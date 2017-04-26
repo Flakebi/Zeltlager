@@ -39,10 +39,7 @@ namespace Zeltlager.Calendar
 			}
 		}
 
-		public new string TimeString
-		{
-			get { return Date.ToString("HH:mm"); }
-		}
+		public new string TimeString => Date.ToString("HH:mm");
 
 		static Task<CalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{

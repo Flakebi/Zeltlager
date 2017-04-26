@@ -1,12 +1,13 @@
 using System;
-using Zeltlager.UAM;
-using Zeltlager.Serialisation;
-using Zeltlager.DataPackets;
-using Zeltlager.Client;
 using System.Threading.Tasks;
 
 namespace Zeltlager.Calendar
 {
+	using Client;
+	using DataPackets;
+	using Serialisation;
+	using UAM;
+
 	// events that occour on multiple days at the same time
 	[Editable("Regelmäßigen Termin")]
 	public class StandardCalendarEvent : PlannedCalendarEvent, IComparable<StandardCalendarEvent>, IEquatable<StandardCalendarEvent>, IDeletable
@@ -18,10 +19,7 @@ namespace Zeltlager.Calendar
 		[Serialisation]
 		public TimeSpan Time { get; set; }
 
-		public string TimeString
-		{
-			get { return Time.ToString("hh':'mm"); }
-		}
+		public string TimeString => Time.ToString("hh':'mm");
 
 		public StandardCalendarEvent() {}
 

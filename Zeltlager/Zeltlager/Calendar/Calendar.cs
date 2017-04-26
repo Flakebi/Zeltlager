@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Zeltlager.DataPackets;
-using System.Linq;
 using System.Collections.ObjectModel;
-using Zeltlager.Client;
+using System.Linq;
 
 namespace Zeltlager.Calendar
 {
+	using Client;
+	using DataPackets;
+
 	public class Calendar
 	{
 		LagerClient lager;
@@ -21,30 +22,6 @@ namespace Zeltlager.Calendar
 		public Calendar(LagerClient lager)
 		{
 			this.lager = lager;
-		}
-
-		public void InitCalendar(DateTime startDate, DateTime endDate)
-		{
-			if (endDate < startDate)
-			{
-				var temp = endDate;
-				endDate = startDate;
-				startDate = temp;
-			}
-			Days.Clear();
-			while (startDate.Date <= endDate.Date)
-			{
-				Days.Add(new Day(startDate));
-				startDate = startDate.AddDays(1);
-			}
-
-			// Add standard events
-			foreach (Day day in Days)
-			{
-				//day.Events.Add(new CalendarEvent(GetSpecificTime(day.Date, 8, 1), "Frühstück", ""));
-				//day.Events.Add(new CalendarEvent(GetSpecificTime(day.Date, 12, 30), "Mittagessen", "Maultaschen"));
-				//day.Events.Add(new CalendarEvent(GetSpecificTime(day.Date, 18, 30), "Abendessen", "Lagerburger"));
-			}
 		}
 
 		public static DateTime GetSpecificTime(DateTime day, int newHour, int newMin)
@@ -70,6 +47,7 @@ namespace Zeltlager.Calendar
 		}
 
 		#region CalendarEvents
+
 		public void InsertNewCalendarEvent(IListCalendarEvent calendarEvent)
 		{
 			// Find correct day
@@ -83,15 +61,14 @@ namespace Zeltlager.Calendar
 			Day d = FindCorrectDay(calendarEvent);
 			d.Events.Remove(calendarEvent);
 			if (!d.Events.Any())
-			{
 				Days.Remove(d);
-			}
 		}
 
 		public IListCalendarEvent GetEventFromPacketId(PacketId id)
 		{
 			return Days.SelectMany(day => day.Events).First(x => x.Id == id);
 		}
+
 		#endregion CalendarEvents
 
 		#region PlannedCEs
