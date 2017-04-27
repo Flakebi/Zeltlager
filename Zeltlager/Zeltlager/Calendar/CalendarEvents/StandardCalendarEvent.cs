@@ -7,23 +7,44 @@ namespace Zeltlager.Calendar
 	using DataPackets;
 	using Serialisation;
 	using UAM;
-
-	// events that occour on multiple days at the same time
+	
+	/// <summary>
+	/// events that occour on multiple days at the same time 
+	/// </summary>
 	[Editable("Regelmäßigen Termin")]
 	public class StandardCalendarEvent : PlannedCalendarEvent, IComparable<StandardCalendarEvent>, IEquatable<StandardCalendarEvent>, IDeletable
 	{
 		/// <summary>
-		/// The time of this event, used to edit only the time.
+		/// The date of this event.
+		/// The StandardCalendarEvent only uses the time of this date
+		/// but we save the whole DateTime here, because there is no date-only
+		/// class in C# and the CalendarEvent needs both.
+		/// </summary>
+		[Serialisation]
+		protected DateTime date;
+
+		/// <summary>
+		/// The time of this event.
 		/// </summary>
 		[Editable("Uhrzeit")]
-		[Serialisation]
-		public TimeSpan Time { get; set; }
+		public TimeSpan Time
+		{
+			get
+			{
+				return date.TimeOfDay;
+			}
 
-		public string TimeString => Time.ToString("hh':'mm");
+			set
+			{
+				date = date.Date.Add(value);
+			}
+		}
 
-		public StandardCalendarEvent() {}
+		public string TimeString => date.ToString("HH:mm");
 
-		public StandardCalendarEvent(LagerClientSerialisationContext context) : this() {}
+		public StandardCalendarEvent() { }
+
+		public StandardCalendarEvent(LagerClientSerialisationContext context) : this() { }
 
 		public StandardCalendarEvent(PacketId id, TimeSpan time, string title, string detail, LagerClient lager)
 			: base(id, title, detail, lager)

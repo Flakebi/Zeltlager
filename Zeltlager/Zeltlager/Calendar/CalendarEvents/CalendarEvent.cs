@@ -11,11 +11,6 @@ namespace Zeltlager.Calendar
 	[Editable("Termin")]
 	public class CalendarEvent : StandardCalendarEvent, IListCalendarEvent
 	{
-		/// <summary>
-		/// The date of this event.
-		/// </summary>
-		[Serialisation]
-		protected DateTime date;
 		[Editable("Tag")]
 		public DateTime Date
 		{
@@ -27,28 +22,14 @@ namespace Zeltlager.Calendar
 			}
 		}
 
-		/// A private attribute is needed, so binding Date to a DatePicker does not fuck up our time
-		/// (changes in the TimeOfDay in Date are not reflected in TimeSpan)
-		[Editable("Uhrzeit")]
-		public new TimeSpan Time
-		{
-			get { return date.TimeOfDay; }
-			set 
-			{ 
-				date = date.Date.Add(value);
-			}
-		}
-
-		public new string TimeString => Date.ToString("HH:mm");
-
 		static Task<CalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
 			return Task.FromResult((CalendarEvent)context.LagerClient.Calendar.GetEventFromPacketId(id));
 		}
 
-		public CalendarEvent() {}
+		public CalendarEvent() { }
 
-		public CalendarEvent(LagerClientSerialisationContext context) : this() {}
+		public CalendarEvent(LagerClientSerialisationContext context) : this() { }
 
 		public CalendarEvent(PacketId id, DateTime date, string title, string detail, LagerClient lager)
 			: base (id, date.TimeOfDay, title, detail, lager)
