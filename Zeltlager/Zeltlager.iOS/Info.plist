@@ -26,7 +26,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>Zeltlager</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.xamarin.Zeltlager</string>
+	<string>de.flakebi.Zeltlager</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleShortVersionString</key>
@@ -45,6 +45,5 @@
 	<string>UIStatusBarStyleLightContent</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
 </dict>
 </plist>
