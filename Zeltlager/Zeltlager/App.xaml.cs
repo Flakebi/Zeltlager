@@ -110,6 +110,7 @@ namespace Zeltlager
 				await MainPage.DisplayAlert("Achtung!", "Beim Anwenden der Datenpakete ist ein Fehler aufgetreten.", "Ok");
 			}
 			manager.Settings.LastLager = newlager.Id;
+			await manager.Settings.Save(manager.IoProvider);
 			MainPage = new NavigationPage(new MainPage(newlager));
 		}
 		
