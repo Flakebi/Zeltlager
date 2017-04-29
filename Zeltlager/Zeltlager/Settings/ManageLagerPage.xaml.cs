@@ -57,7 +57,7 @@ namespace Zeltlager.Settings
 
 		async void OnDeleteLagerClicked(object sender, EventArgs e)
 		{
-			if (await DisplayAlert("Lager löschen", "Bist du dir sicher, dass du das Lager löschen willst?", "Ja", "Doch nicht"))
+			if (await DisplayAlert("Lager lÃ¶schen", "Bist du dir sicher, dass du das Lager lÃ¶schen willst?", "Ja", "Doch nicht"))
 			{
 				await manager.DeleteLager(lager);
 				while (Navigation.NavigationStack.Count > 1)
