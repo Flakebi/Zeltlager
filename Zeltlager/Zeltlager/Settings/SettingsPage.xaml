@@ -10,16 +10,16 @@
 					 Orientation="Vertical"
 					 Spacing="15"
 					 Padding="10,10,10,0">
-			<Button Text="Log" Clicked="OnLogClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.LOG}"/>
-			<Button Text="Testdaten hinzufügen" Clicked="OnTestDataClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.ADD}"/>
-			<Button Text="Pakete" Clicked="OnPacketsClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.BRIEFCASE}"/>
-			<Button Text="Lagerverwaltung" Clicked="OnManageLagerClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.ROCKET}"/>
 			<StackLayout HorizontalOptions="FillAndExpand"
 					 Orientation="Horizontal"
 					 Spacing="15">
 				<Label Text="Erwischte Teilnehmer verstecken:"/>
 				<Switch IsToggled="{Binding HideDeadParticipants}" HorizontalOptions="FillAndExpand"/>
 			</StackLayout>
+			<Button Text="Lagerverwaltung" Clicked="OnManageLagerClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.ROCKET}"/>
+			<Button Text="Log" Clicked="OnLogClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.LOG}"/>
+			<Button Text="Pakete" Clicked="OnPacketsClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.BRIEFCASE}"/>
+			<Button Text="Testdaten hinzufügen" Clicked="OnTestDataClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.ADD}"/>
 			<Button Text="Über" Clicked="OnCreditsClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.HEART}"/>
 		</StackLayout>
 	</ContentPage.Content>

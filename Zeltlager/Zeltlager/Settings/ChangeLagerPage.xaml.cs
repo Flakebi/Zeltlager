@@ -16,6 +16,10 @@ namespace Zeltlager.Settings
 			InitializeComponent();
 			this.lager = lager;
 			NavigationPage.SetBackButtonTitle(this, "");
+			if (this.lager == null)
+			{
+				Title = "Lager auswählen";
+			}
 			Content = new SearchableListView<LagerClient>(manager.Lagers.Values.Cast<LagerClient>().ToList(),
 			                                              null, null, OnLagerClicked);
 		}

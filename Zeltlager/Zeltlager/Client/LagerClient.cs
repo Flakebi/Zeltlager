@@ -45,6 +45,8 @@ namespace Zeltlager.Client
 		public string SearchableText => Data.Name;
 		public string SearchableDetail => password;
 
+		public string Password => password;
+
 		public LagerClient(LagerClientManager manager, IIoProvider ioProvider, int id) :
 			base(manager, ioProvider, id)
 		{

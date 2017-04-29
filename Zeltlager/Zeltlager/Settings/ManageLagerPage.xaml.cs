@@ -33,10 +33,20 @@ namespace Zeltlager.Settings
 			{
 				UploadLagerButton.IsVisible = false;
 				DeleteLagerButton.IsVisible = false;
+				passwordLayout.IsVisible = false;
+			}
+			else
+			{
+				passwordLabel.Text = lager.Password;
 			}
 			if (!manager.Lagers.Values.Where(lb => ((LagerClient)lb) != lager).Any())
 			{
 				ChangeLagerButton.IsVisible = false;
+			}
+			else if (lager == null)
+			{
+				ChangeLagerButton.IsVisible = true;
+				ChangeLagerButton.Text = "Lager ausw?hlen";
 			}
 		}
 

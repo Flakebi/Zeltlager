@@ -11,6 +11,12 @@
 					 Orientation="Vertical"
 					 Spacing="15"
 					 Padding="10,10,10,0">
+			<StackLayout x:Name="passwordLayout" HorizontalOptions="FillAndExpand"
+					 Orientation="Horizontal"
+					 Spacing="15">
+				<Label Text="Lagerpasswort:"/>
+				<Label x:Name="passwordLabel" HorizontalOptions="FillAndExpand"/>
+			</StackLayout>
 			<Button Text="Lager erstellen"
 					Clicked="OnCreateLagerClicked"
 					Style="{StaticResource DarkButtonStyle}"
