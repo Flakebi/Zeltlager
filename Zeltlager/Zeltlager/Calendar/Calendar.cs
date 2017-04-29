@@ -7,6 +7,7 @@ namespace Zeltlager.Calendar
 {
 	using Client;
 	using DataPackets;
+	using Zeltlager.Serialisation;
 
 	public class Calendar
 	{
@@ -42,6 +43,16 @@ namespace Zeltlager.Calendar
 				d = new Day(ce.Date.Date);
 				Days.Add(d);
 				Days.Sort();
+			}
+			return d;
+		}
+
+		public Day FindClosestDayToNow()
+		{
+			Day d = Days.Find(day => day.Date.Date >= DateTime.Now.Date);
+			if (d == null)
+			{
+				d = Days.Last();
 			}
 			return d;
 		}
@@ -105,7 +116,7 @@ namespace Zeltlager.Calendar
 			return StandardEvents.First(x => x.Id == id);
 		}
 
-		public void IncludeStandardEvents()
+		async public void IncludeStandardEvents()
 		{
 			foreach (Day d in Days)
 			{
@@ -121,7 +132,9 @@ namespace Zeltlager.Calendar
 					{
 						continue;
 					}
-					d.Events.Add(new ReferenceCalendarEvent(null, sce));
+					LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
+					Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
+					await lager.AddPacket(await AddPacket.Create(serialiser, context, new ReferenceCalendarEvent(null, sce, d.Date)));
 				}
 			}
 		}

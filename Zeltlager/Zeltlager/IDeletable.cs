@@ -19,7 +19,7 @@ namespace Zeltlager
 			t.IsVisible = false;
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
-			await context.LagerClient.AddPacket(await EditPacket.Create(serialiser, context, t));
+			await lager.AddPacket(await EditPacket.Create(serialiser, context, t));
 		}
 	}
 }

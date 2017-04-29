@@ -8,7 +8,7 @@ using Zeltlager.UAM;
 namespace Zeltlager.Calendar
 {
 	// Editable, not serialisable
-	[Editable("(exref)Termin")]
+	[Editable("Termin  ")]
 	public class ExRefCalendarEvent : CalendarEvent
 	{
 		ReferenceCalendarEvent Reference { get; set; }

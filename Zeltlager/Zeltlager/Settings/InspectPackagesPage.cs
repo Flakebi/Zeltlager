@@ -18,20 +18,25 @@ namespace Zeltlager.Settings
 			this.lager = lager;
 			NavigationPage.SetBackButtonTitle(this, "");
 
-			Task<List<DataPacket>> packetsTask = lager.GetHistory();
-			packetsTask.Wait();
-			Content = new SearchableListView<DataPacket>(packetsTask.Result.Take(100).ToList(), null, null, OnErwischtGameClicked);
+			SetContent();
 
 			Title = "Datenpakete";
 			Style = (Style)Application.Current.Resources["BaseStyle"];
 			Padding = new Thickness(10);
 		}
 
+		async Task SetContent()
+		{
+			List<DataPacket> packetsList = await lager.GetHistory();
+			packetsList.Reverse();
+			Content = new SearchableListView<DataPacket>(packetsList.Take(100).ToList(), null, null, OnDataPacketClicked);
+		}
+
 		Task OnDeleteClicked(DataPacket packet) => Task.WhenAll();
 
 		void OnEditClicked(DataPacket packet) { }
 
-		async void OnErwischtGameClicked(DataPacket packet)
+		async void OnDataPacketClicked(DataPacket packet)
 		{
 			bool revert = await DisplayAlert("Paket reverten?", "Möchten sie das Paket '" + packet + "' reverten?", "Ja", "Nein");
 			if (revert)

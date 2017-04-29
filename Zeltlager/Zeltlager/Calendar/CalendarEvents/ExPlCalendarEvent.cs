@@ -6,7 +6,7 @@ using Zeltlager.Serialisation;
 using Zeltlager.UAM;
 namespace Zeltlager.Calendar
 {
-	[Editable("(expl)Termin")]
+	[Editable("Termin    ")]
 	public class ExPlCalendarEvent : CalendarEvent
 	{
 		PlannedCalendarEvent PlannedEvent { get; set; }

@@ -19,6 +19,12 @@ namespace Zeltlager.Calendar
 			this.lager = lager;
 			InitializeComponent();
 			NavigationPage.SetBackButtonTitle(this, "");
+			// show Day nearest to Today first
+			inUpdateUI = true;
+			DayPage dp = new DayPage(lager.Calendar.FindClosestDayToNow(), lager);
+			Children.Insert(0, dp);
+			CurrentPage = dp;
+			inUpdateUI = false;
 			UpdateUI();
 		}
 
@@ -27,6 +33,8 @@ namespace Zeltlager.Calendar
 			if (inUpdateUI)
 				return;
 			inUpdateUI = true;
+
+			// insert Day pages for days near the currently selected one
 			foreach (Day day in lager.Calendar.Days)
 			{
 				int index = Children.TakeWhile(dp => ((DayPage)dp).Day.Date < day.Date).Count();
@@ -37,7 +45,19 @@ namespace Zeltlager.Calendar
 				}
 				Children.Insert(index, new DayPage(day, lager));
 			}
+
 			lager.Calendar.IncludeStandardEvents();
+
+			// check wheter there is a day page which day is not in the calendar anymore
+			foreach(ContentPage p in Children)
+			{
+				DayPage dp = p as DayPage;
+				if (dp != null && !lager.Calendar.Days.Contains(dp.Day))
+				{
+					Children.Remove(p);
+				}
+			}
+
 			inUpdateUI = false;
 		}
 
@@ -75,8 +95,8 @@ namespace Zeltlager.Calendar
 		{
 			base.OnCurrentPageChanged();
 			UpdateUI();
-			((DayPage)CurrentPage).UpdateUI();
-			((DayPage)CurrentPage).RemoveNavButtons();
+			((DayPage)CurrentPage)?.UpdateUI();
+			((DayPage)CurrentPage)?.RemoveNavButtons();
 		}
 	}
 }

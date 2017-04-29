@@ -5,7 +5,10 @@ using Zeltlager.Serialisation;
 
 namespace Zeltlager.Calendar
 {
-	// not editable!, serialiseable
+	/// <summary>
+	/// References a StandardCalendarEvent in the actual Calendar (so it gets a Day, too).
+	/// Is serialized, but can not be edited! ExRefCalendarEvents are edited instead.
+	/// </summary>
 	public class ReferenceCalendarEvent : IListCalendarEvent
 	{
 		[Serialisation(Type = SerialisationType.Reference)]
@@ -30,17 +33,20 @@ namespace Zeltlager.Calendar
 		public string Detail => Reference.Detail;
 
 		[Serialisation]
-		public bool IsVisible { get; set; }  = true;
+		public bool IsVisible { get; set; } = true;
 
 		static Task<ReferenceCalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
 		{
 			return Task.FromResult((ReferenceCalendarEvent)context.LagerClient.Calendar.GetEventFromPacketId(id));
 		}
 
-		public ReferenceCalendarEvent(PacketId id, StandardCalendarEvent reference)
+		public ReferenceCalendarEvent(LagerClientSerialisationContext context) {}
+
+		public ReferenceCalendarEvent(PacketId id, StandardCalendarEvent reference, DateTime date)
 		{
 			Reference = reference;
 			Id = id;
+			Date = date;
 		}
 
 		public void Add(LagerClientSerialisationContext context)
