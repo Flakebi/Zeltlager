@@ -23,42 +23,52 @@ namespace Zeltlager.Erwischt
 		LagerClient lager;
 		ErwischtGame currentGame;
 
-		public ErwischtStatisticsPage(LagerClient lager, ErwischtGame currentGame)
+		ContentPage currentGameContent;
+		ContentPage allGamesContent;
+
+		public ErwischtStatisticsPage(LagerClient lager, ErwischtGame currentGame) : base()
 		{
 			this.lager = lager;
 			this.currentGame = currentGame;
-			UpdateUI();
 			NavigationPage.SetBackButtonTitle(this, "");
 			Style = (Style)Application.Current.Resources["TabbedPageStyle"];
 			Title = "Statistiken";
+
+			currentGameContent = new ContentPage()
+			{
+				Title = "aktuelles Spiel",
+				Icon = Icons.GAMEPAD,
+				Padding = new Thickness(8),
+				Style = (Style)Application.Current.Resources["BaseStyle"],
+			};
+			Children.Add(currentGameContent);
+			allGamesContent = new ContentPage()
+			{
+				Title = "alle Spiele",
+				Icon = Icons.PODIUM,
+				Padding = new Thickness(8),
+				Style = (Style)Application.Current.Resources["BaseStyle"],
+			};
+			Children.Add(allGamesContent);
+			UpdateUI();
 		}
 
 		void UpdateUI()
 		{
-			Children.Clear(); 			Children.Add(new ContentPage()
-			{
-				Content = new SearchableListView<ErwischtParticipantStatisticsWrapper>
-					(currentGame.ErwischtParticipants.Select(ep => new ErwischtParticipantStatisticsWrapper(ep)
-					{
-						SearchableDetail = ep.Catches.ToString()
-					}).ToList(),
-					 null, null, null),
-				Title = "aktuelles Spiel",
-				Icon = Icons.GAMEPAD,
-				Padding = new Thickness(8),
-				Style = (Style)Application.Current.Resources["BaseStyle"], 			}); 			Children.Add(new ContentPage()
-			{
-				Content = new SearchableListView<ErwischtParticipantStatisticsWrapper>
-					(lager.ErwischtHandler.Games.SelectMany(eg => eg.ErwischtParticipants).GroupBy(ep => ep.Member)
-					 .Select(grouping => new Tuple<ErwischtParticipant, int>(grouping.First(), grouping.Sum(ep => ep.Catches)))
-					 .Select(tuple => new ErwischtParticipantStatisticsWrapper(tuple.Item1)
-					 {
-						 SearchableDetail = tuple.Item2.ToString()
-					 }).ToList(), 					 null, null, null),
-				Title = "alle Spiele",
-				Icon = Icons.PODIUM,
-				Padding = new Thickness(8),
-				Style = (Style)Application.Current.Resources["BaseStyle"], 			});
+			currentGameContent.Content = new SearchableListView<ErwischtParticipantStatisticsWrapper>
+				(currentGame.ErwischtParticipants.Select(ep => new ErwischtParticipantStatisticsWrapper(ep)
+				{
+					SearchableDetail = ep.Catches.ToString()
+				}).ToList(),
+				null, null, null);
+			allGamesContent.Content = new SearchableListView<ErwischtParticipantStatisticsWrapper>
+				(lager.ErwischtHandler.Games.SelectMany(eg => eg.ErwischtParticipants).GroupBy(ep => ep.Member)
+				.Select(grouping => new Tuple<ErwischtParticipant, int>(grouping.First(), grouping.Sum(ep => ep.Catches)))
+				.Select(tuple => new ErwischtParticipantStatisticsWrapper(tuple.Item1)
+				{
+					SearchableDetail = tuple.Item2.ToString()
+				}).ToList(),
+				null, null, null);
 		}
 
 		protected override void OnAppearing()
@@ -68,4 +78,3 @@ namespace Zeltlager.Erwischt
 		}
 	}
 }
-

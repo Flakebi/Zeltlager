@@ -1,10 +1,11 @@
 ﻿using System;
-using Zeltlager.Serialisation;
-using Zeltlager.DataPackets;
 using System.Threading.Tasks;
 
 namespace Zeltlager.Erwischt
 {
+	using DataPackets;
+	using Serialisation;
+
 	/// <summary>
 	/// A participant for the Erwischt game.
 	/// </summary>
@@ -22,10 +23,26 @@ namespace Zeltlager.Erwischt
 		public Member Member { get; private set; }
 
 		/// <summary>
-		/// The first target of the ErwischtMember. Should not be changed if it gets catched!
+		/// The index of this participant in the list of the game.
 		/// </summary>
-		ErwischtParticipant target;
+		int index;
 
+		/// <summary>
+		/// The first target of this participant, this is not neccessarily the
+		/// next target that is alive.
+		/// </summary>
+		ErwischtParticipant target => Game.ErwischtParticipants[
+			(index + 1) % Game.ErwischtParticipants.Count];
+
+		/// <summary>
+		/// The participant before this one in the list.
+		/// </summary>
+		ErwischtParticipant catcher => Game.ErwischtParticipants[
+			(index + Game.ErwischtParticipants.Count - 1) % Game.ErwischtParticipants.Count];
+
+		/// <summary>
+		/// The participant that this participant needs to catch next.
+		/// </summary>
 		public ErwischtParticipant Target
 		{
 			get
@@ -40,13 +57,70 @@ namespace Zeltlager.Erwischt
 		}
 
 		/// <summary>
+		/// The participant that needs to catch this participant next.
+		/// </summary>
+		public ErwischtParticipant Catcher
+		{
+			get
+			{
+				ErwischtParticipant catcher = this.catcher;
+				while (!catcher.IsAlive && catcher != this)
+				{
+					catcher = catcher.catcher;
+				}
+				return catcher;
+			}
+		}
+
+		bool isAlive = true;
+
+		/// <summary>
 		/// Indicating whether this <see cref="T:Zeltlager.Erwischt.ErwischtMember"/> is still in the game.
 		/// </summary>
 		/// <value><c>true</c> if it is alive; if it was catched, <c>false</c>.</value>
 		[Serialisation]
-		public bool IsAlive { get; set; }
+		public bool IsAlive
+		{
+			get
+			{
+				return isAlive;
+			}
 
-		public int Catches { get; set; } = 5;
+			set
+			{
+				if (isAlive != value)
+				{
+					if (value)
+					{
+						// This participant gets revived so decrease the catched
+						// counter of our catcher
+						if (lastCatcher != null)
+						{
+							lastCatcher.Catches--;
+							lastCatcher = null;
+						}
+					}
+					else
+					{
+						lastCatcher = Catcher;
+						lastCatcher.Catches++;
+					}
+					isAlive = value;
+				}
+			}
+		}
+
+		/// <summary>
+		/// The amount of members that where catched by this participant.
+		/// </summary>
+		public int Catches { get; set; }
+
+		/// <summary>
+		/// The participant that catched the current participant most recently.
+		/// This is used if a participant is revived so the Catches count of the
+		/// catcher can be reduced.
+		/// </summary>
+		ErwischtParticipant lastCatcher;
 
 		public string SearchableText => Member.Display;
 		public string SearchableDetail
@@ -67,17 +141,16 @@ namespace Zeltlager.Erwischt
 
 		public ErwischtParticipant() { }
 
-		public ErwischtParticipant(Member member, ErwischtParticipant target, ErwischtGame game)
+		public ErwischtParticipant(Member member, int index, ErwischtGame game)
 		{
 			Game = game;
 			Member = member;
-			this.target = target;
-			IsAlive = true;
+			this.index = index;
 		}
 
-		public void SetInitialTarget(ErwischtParticipant target)
+		public void SetIndex(int index)
 		{
-			this.target = target;
+			this.index = index;
 		}
 
 		public async Task Catch()
