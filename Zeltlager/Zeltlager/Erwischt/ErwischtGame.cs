@@ -26,7 +26,7 @@ namespace Zeltlager.Erwischt
 		public string Name { get; set; }
 
 		[Serialisation]
-		public List<ErwischtParticipant> ErwischtParticipants { get; set; }
+		public List<ErwischtParticipant> ErwischtParticipants { get; private set; }
 
 		public string SearchableText => Name;
 
@@ -98,7 +98,7 @@ namespace Zeltlager.Erwischt
 			ErwischtParticipants = new List<ErwischtParticipant>();
 			foreach (Member m in lager.VisibleMembers)
 			{
-				ErwischtParticipants.Add(new ErwischtParticipant(m, null, this));
+				ErwischtParticipants.Add(new ErwischtParticipant(m, 0, this));
 			}
 		}
 
@@ -110,9 +110,7 @@ namespace Zeltlager.Erwischt
 		public void AssignTargetsToParticipants()
 		{
 			for (int i = 0; i < ErwischtParticipants.Count; i++)
-			{
-				ErwischtParticipants[i].SetInitialTarget(ErwischtParticipants[(i + 1) % ErwischtParticipants.Count]);
-			}
+				ErwischtParticipants[i].SetIndex(i);
 		}
 
 		public LagerClient GetLager()

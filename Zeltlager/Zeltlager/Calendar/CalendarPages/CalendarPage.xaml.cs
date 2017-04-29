@@ -1,7 +1,7 @@
 using System;
+using System.Linq;
 
 using Xamarin.Forms;
-using System.Linq;
 
 namespace Zeltlager.Calendar
 {
