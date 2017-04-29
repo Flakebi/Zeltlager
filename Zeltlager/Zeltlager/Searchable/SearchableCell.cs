@@ -39,11 +39,13 @@ namespace Zeltlager
 			TextLabel = new Label
 			{
 				TextColor = (Color)Application.Current.Resources["textColorStandard"],
+				LineBreakMode = LineBreakMode.HeadTruncation,
 			};
 			DetailLabel = new Label
 			{
 				FontSize = TextLabel.FontSize - 3,
 				TextColor = (Color) Application.Current.Resources["detailColor"],
+				LineBreakMode = LineBreakMode.HeadTruncation,
 			};
 
 			hsl.Children.Add(TextLabel);

@@ -128,14 +128,12 @@ namespace Zeltlager.Erwischt
 			get 
 			{
 				if (!IsAlive)
-				{
 					return "erwischt!";
-				}
 				if (this == Target)
-				{
 					return "Gewinner \ud83c\udf89";
-				}
-				return "→ " + Target.Member.Display;
+				if (Game.GetLager().ClientManager.Settings.ErwischtShowTarget)
+					return "→ " + Target.Member.Display;
+				return "";
 			}
 		}
 

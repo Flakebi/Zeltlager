@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Xamarin.Forms;
-using System.Threading.Tasks;
 
 namespace Zeltlager.Erwischt
 {
@@ -34,6 +32,8 @@ namespace Zeltlager.Erwischt
 		void UpdateUI()
 		{
 			targetName.Text = ErwischtParticipant.SearchableDetail;
+			if (string.IsNullOrEmpty(targetName.Text))
+				targetName.Text = "→ " + ErwischtParticipant.Target.Member.Display;
 			reviveButton.IsVisible = !ErwischtParticipant.IsAlive;
 
 			BindingContext = null;

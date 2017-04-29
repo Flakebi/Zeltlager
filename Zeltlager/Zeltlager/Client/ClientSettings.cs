@@ -24,6 +24,8 @@ namespace Zeltlager.Client
 
 		[Serialisation]
 		public bool HideDeadParticipants { get; set; }
+		[Serialisation]
+		public bool ErwischtShowTarget { get; set; }
 
 		/// <summary>
 		/// The address of the server for remote games.
@@ -40,6 +42,7 @@ namespace Zeltlager.Client
 			ShowErrorInLog = true;
 			ShowExceptionInLog = true;
 			HideDeadParticipants = false;
+			ErwischtShowTarget = false;
 
 			if (await io.ExistsFile(SETTINGS_FILE))
 			{

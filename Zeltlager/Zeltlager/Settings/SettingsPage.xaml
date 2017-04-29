@@ -14,7 +14,13 @@
 					 Orientation="Horizontal"
 					 Spacing="15">
 				<Label Text="Erwischte Teilnehmer verstecken:"/>
-				<Switch IsToggled="{Binding HideDeadParticipants}" HorizontalOptions="FillAndExpand"/>
+				<Switch IsToggled="{Binding HideDeadParticipants}" HorizontalOptions="EndAndExpand"/>
+			</StackLayout>
+			<StackLayout HorizontalOptions="FillAndExpand"
+					 Orientation="Horizontal"
+					 Spacing="15">
+				<Label Text="Erwischt - Ziel anzeigen:"/>
+				<Switch IsToggled="{Binding ErwischtShowTarget}" HorizontalOptions="EndAndExpand"/>
 			</StackLayout>
 			<Button Text="Lagerverwaltung" Clicked="OnManageLagerClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.ROCKET}"/>
 			<Button Text="Log" Clicked="OnLogClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.LOG}"/>

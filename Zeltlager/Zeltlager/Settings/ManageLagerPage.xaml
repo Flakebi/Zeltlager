@@ -15,7 +15,7 @@
 					 Orientation="Horizontal"
 					 Spacing="15">
 				<Label Text="Lagerpasswort:"/>
-				<Label x:Name="passwordLabel" HorizontalOptions="FillAndExpand"/>
+				<Label x:Name="passwordLabel" HorizontalOptions="EndAndExpand"/>
 			</StackLayout>
 			<Button Text="Lager erstellen"
 					Clicked="OnCreateLagerClicked"
