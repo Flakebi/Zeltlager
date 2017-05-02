@@ -208,6 +208,7 @@
       <DependentUpon>CreditsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Erwischt\ErwischtStatisticsPage.cs" />
+    <Compile Include="DataPackets\DishwasherPacket.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

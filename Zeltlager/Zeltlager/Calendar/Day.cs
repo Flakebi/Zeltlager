@@ -1,6 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Threading.Tasks;
+using Zeltlager.Client;
+using Zeltlager.DataPackets;
+using Zeltlager.Serialisation;
+using System.Net.Http.Headers;
 
 namespace Zeltlager.Calendar
 {
@@ -21,6 +25,14 @@ namespace Zeltlager.Calendar
 		public int CompareTo(Day other)
 		{
 			return Date.CompareTo(other.Date);
+		}
+
+		public async Task CreateDishwasherPacket(Tent dishwashers, LagerClient lager)
+		{
+			Serialiser<LagerClientSerialisationContext> serializer = lager.ClientSerialiser;
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
+			DataPacket packet = await DishwasherPacket.Create(serializer, context, Date, dishwashers);
+			await lager.AddPacket(packet);
 		}
 	}
 }

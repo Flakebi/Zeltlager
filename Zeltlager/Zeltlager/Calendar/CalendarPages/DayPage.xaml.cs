@@ -66,13 +66,15 @@ namespace Zeltlager.Calendar
 				}
 				// damit man auch wieder in den Startzustand ohne Spüldienst kommt
 				picker.Items.Add("kein Spüldienst");
-				picker.SelectedIndexChanged += (sendern, args) =>
+				picker.SelectedIndexChanged += async (sendern, args) =>
 				{
-					if (picker.SelectedIndex == picker.Items.Count - 1)
+					if (picker.Items[picker.SelectedIndex] == "kein Spüldienst")
 					{
 						Day.Dishwashers = null;
+						await Day.CreateDishwasherPacket(null, lager);
 					}
-					Day.Dishwashers = lager.GetTentFromDisplay(picker.Items[picker.SelectedIndex]);
+					Tent dishwasherTent = lager.GetTentFromDisplay(picker.Items[picker.SelectedIndex]);
+					await Day.CreateDishwasherPacket(dishwasherTent, lager);
 				};
 
 				if (Day.Dishwashers == null)
@@ -100,7 +102,7 @@ namespace Zeltlager.Calendar
 				}
 				else
 				{
-					label.Text = "Spüldienst: " + Day.Dishwashers.ToString();
+					label.Text = "Spüldienst: " + Day.Dishwashers;
 					label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 				}
 				editDishwasherButton.Image = Icons.EDIT;

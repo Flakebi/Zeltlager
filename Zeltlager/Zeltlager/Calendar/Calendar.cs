@@ -35,7 +35,7 @@ namespace Zeltlager.Calendar
 			return lager;
 		}
 
-		Day FindCorrectDay(IListCalendarEvent ce)
+		public Day FindCorrectDay(IListCalendarEvent ce)
 		{
 			Day d = Days.Find(x => x.Date.Date == ce.Date.Date);
 			if (d == null)
