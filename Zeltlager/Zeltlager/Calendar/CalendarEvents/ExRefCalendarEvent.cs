@@ -23,15 +23,16 @@ namespace Zeltlager.Calendar
 		{
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 			Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
-			Reference.IsVisible = false;
-			DataPacket packet;
-			if (oldObject == null)
+			if (Reference.IsVisible)
 			{
-				throw new Exception("a ReferenceCalendarEvent can not be added!!! Serialization will probably break from it..");
-				//packet = await EditPacket.Create(serialiser, context, new CalendarEvent(Id, Date, Title, Detail, lager));
+				Reference.IsVisible = false;
+				DataPacket editPacket = await EditPacket.Create(serialiser, context, Reference);
+				await context.LagerClient.AddPacket(editPacket);
 			}
-			else
-				packet = await AddPacket.Create(serialiser, context, new CalendarEvent(Id, Date, Title, Detail, lager));
+			if (oldObject == null)
+				throw new Exception("a ReferenceCalendarEvent can not be added!!! Serialization will probably break from it..");
+
+			DataPacket packet = await AddPacket.Create(serialiser, context, new CalendarEvent(Id, Date, Title, Detail, lager));
 			await context.LagerClient.AddPacket(packet);
 		}
 
