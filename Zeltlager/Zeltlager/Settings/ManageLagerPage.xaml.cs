@@ -46,7 +46,7 @@ namespace Zeltlager.Settings
 			else if (lager == null)
 			{
 				ChangeLagerButton.IsVisible = true;
-				ChangeLagerButton.Text = "Lager ausw?hlen";
+				ChangeLagerButton.Text = "Lager auswählen";
 			}
 		}
 

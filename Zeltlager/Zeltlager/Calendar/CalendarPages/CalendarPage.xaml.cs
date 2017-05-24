@@ -19,12 +19,15 @@ namespace Zeltlager.Calendar
 			this.lager = lager;
 			InitializeComponent();
 			NavigationPage.SetBackButtonTitle(this, "");
-			// show Day nearest to Today first
-			inUpdateUI = true;
-			DayPage dp = new DayPage(lager.Calendar.FindClosestDayToNow(), lager);
-			Children.Insert(0, dp);
-			CurrentPage = dp;
-			inUpdateUI = false;
+			if (lager.Calendar.Days.Any())
+			{
+				// show Day nearest to Today first
+				inUpdateUI = true;
+				DayPage dp = new DayPage(lager.Calendar.FindClosestDayToNow(), lager);
+				Children.Insert(0, dp);
+				CurrentPage = dp;
+				inUpdateUI = false;
+			}
 			UpdateUI();
 		}
 
