@@ -50,7 +50,7 @@ namespace Zeltlager.Calendar
 			OnAppearing();
 		}
 
-		public void OnEditDishwasherClicked(object sender, EventArgs e)
+		public async void OnEditDishwasherClicked(object sender, EventArgs e)
 		{
 			editingDishwashers = !editingDishwashers;
 			if (editingDishwashers)
@@ -66,15 +66,14 @@ namespace Zeltlager.Calendar
 				}
 				// damit man auch wieder in den Startzustand ohne Spüldienst kommt
 				picker.Items.Add("kein Spüldienst");
-				picker.SelectedIndexChanged += async (sendern, args) =>
+				picker.SelectedIndexChanged += (sendern, args) =>
 				{
 					if (picker.Items[picker.SelectedIndex] == "kein Spüldienst")
 					{
 						Day.Dishwashers = null;
-						await Day.CreateDishwasherPacket(null, lager);
 					}
 					Tent dishwasherTent = lager.GetTentFromDisplay(picker.Items[picker.SelectedIndex]);
-					await Day.CreateDishwasherPacket(dishwasherTent, lager);
+					Day.Dishwashers = dishwasherTent;
 				};
 
 				if (Day.Dishwashers == null)
@@ -94,14 +93,17 @@ namespace Zeltlager.Calendar
 			}
 			else
 			{
+				// display dishwasher state
 				var label = new Label();
 				if (Day.Dishwashers == null)
 				{
+					await Day.CreateDishwasherPacket(null, lager);
 					label.Text = "kein Spüldienst";
 					label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 				}
 				else
 				{
+					await Day.CreateDishwasherPacket(Day.Dishwashers, lager);
 					label.Text = "Spüldienst: " + Day.Dishwashers;
 					label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
 				}

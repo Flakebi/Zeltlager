@@ -23,6 +23,7 @@ namespace Zeltlager.DataPackets
 			typeof(RevertPacket),
 			typeof(ErwischtPacket),
 			typeof(DeleteErwischtPacket),
+			typeof(DishwasherPacket),
 		};
 
 		/// <summary>
