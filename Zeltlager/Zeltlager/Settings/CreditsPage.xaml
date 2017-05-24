@@ -10,19 +10,21 @@
 	<ContentPage.Content>
 		<Label>
 			<Label.Text>
-Entwickler: 
+Entwickler:
 Sebastian Neubauer und Carolin Brandt
 
-Lizenz:
+Code Lizenz:
 AGPL
 
 Icons:
 http://www.flaticon.com/packs/free-basic-ui-elements
-under CC 3.0 BY by http://www.flaticon.com/authors/lucy-g
+unter CC-BY 3.0 von http://www.flaticon.com/authors/lucy-g
 https://thenounproject.com/changhoon.baek.50/uploads/?i=147113
-under CC 3.0 BY by https://thenounproject.com/changhoon.baek.50/
+unter CC-BY 3.0 von https://thenounproject.com/changhoon.baek.50/
 http://www.flaticon.com/free-icon/switch_320306
-under Flaticon Basic License by http://www.flaticon.com/authors/madebyoliver
+unter Flaticon Basic License von http://www.flaticon.com/authors/madebyoliver
+Tent-Icon (leicht geändert): https://openclipart.org/detail/12920/cartoon-tipi-tent-with-red-flag
+unter Public Domain von https://openclipart.org/user-detail/qubodup
 			</Label.Text>
 		</Label>
 	</ContentPage.Content>
