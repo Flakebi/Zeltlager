@@ -15,24 +15,24 @@ namespace Zeltlager.DataPackets
 		/// <summary>
 		/// The list of types that can be serialised.
 		///
-		/// The method is an optional member method that will
-		/// be called on the edited object after it was read.
-		/// This method can also take a LagerClientSerialisationContext.
+		/// The methods are optional member methods that will
+		/// be called on the edited object before and after it was read/modified.
+		/// This methods can also take a LagerClientSerialisationContext.
 		/// </summary>
-		static readonly Tuple<Type, MethodInfo>[] types = {
-			new Tuple<Type, MethodInfo>(typeof(Member), null),
-			new Tuple<Type, MethodInfo>(typeof(Tent), null),
-			new Tuple<Type, MethodInfo>(typeof(CalendarEvent),
+		static readonly Tuple<Type, MethodInfo, MethodInfo>[] types = {
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(Member), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(Tent), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(CalendarEvent), null,
 			   typeof(CalendarEvent).GetRuntimeMethod("Edit", new Type[] { typeof(LagerClientSerialisationContext) })),
-			new Tuple<Type, MethodInfo>(typeof(Competition.Competition), null),
-			new Tuple<Type, MethodInfo>(typeof(Station), null),
-			new Tuple<Type, MethodInfo>(typeof(CompetitionResult), null),
-			new Tuple<Type, MethodInfo>(typeof(GroupParticipant), null),
-			new Tuple<Type, MethodInfo>(typeof(MemberParticipant), null),
-			new Tuple<Type, MethodInfo>(typeof(TentParticipant), null),
-			new Tuple<Type, MethodInfo>(typeof(PlannedCalendarEvent), null),
-			new Tuple<Type, MethodInfo>(typeof(StandardCalendarEvent), null),
-			new Tuple<Type, MethodInfo>(typeof(ReferenceCalendarEvent), null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(Competition.Competition), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(Station), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(CompetitionResult), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(GroupParticipant), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(MemberParticipant), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(TentParticipant), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(PlannedCalendarEvent), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(StandardCalendarEvent), null, null),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(ReferenceCalendarEvent), null, null),
 		};
 
 		public static int GetIdCount() { return types.Length; }
@@ -84,9 +84,7 @@ namespace Zeltlager.DataPackets
 				// Get the object by id
 				object obj = await serialiser.ReadFromId(input, context, type.Item1);
 
-				obj = await serialiser.Read(input, context, obj, type.Item1);
-
-				// Call the edit method
+				// Call the before edit method
 				if (type.Item2 != null)
 				{
 					object[] parameters;
@@ -98,6 +96,23 @@ namespace Zeltlager.DataPackets
 					object result = type.Item2.Invoke(obj, parameters);
 					// Wait if its a task
 					if (type.Item2.ReturnType == typeof(Task))
+						await (Task)result;
+				}
+
+				obj = await serialiser.Read(input, context, obj, type.Item1);
+
+				// Call the after edit method
+				if (type.Item3 != null)
+				{
+					object[] parameters;
+					if (type.Item3.GetParameters().Select(p => p.ParameterType)
+						.SequenceEqual(new Type[] { typeof(LagerClientSerialisationContext) }))
+						parameters = new object[] { context };
+					else
+						parameters = new object[0];
+					object result = type.Item3.Invoke(obj, parameters);
+					// Wait if its a task
+					if (type.Item3.ReturnType == typeof(Task))
 						await (Task)result;
 				}
 
