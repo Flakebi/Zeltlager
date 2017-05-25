@@ -115,18 +115,12 @@ namespace Zeltlager.Calendar
 			}
 		}
 
-		public void RemoveNavButtons()
+		public void UpdateNavButtons()
 		{
 			// Make nav buttons invisible at ends of calendar
 			CarouselPage p = (CarouselPage)Parent;
-			if (p.Children.First() == this)
-			{
-				leftArrow.Opacity = 0;
-			}
-			if (p.Children.Last() == this)
-			{
-				rightArrow.Opacity = 0;
-			}
+			leftArrow.Opacity = p.Children.First() == this ? 0 : 1;
+			rightArrow.Opacity = p.Children.Last() == this ? 0 : 1;
 		}
 
 		void OnLeftButtonClicked(object sender, EventArgs e)
@@ -245,7 +239,7 @@ namespace Zeltlager.Calendar
 		{
 			base.OnAppearing();
 			UpdateUI();
-			RemoveNavButtons();
+			UpdateNavButtons();
 		}
 
 		protected override void OnParentSet()

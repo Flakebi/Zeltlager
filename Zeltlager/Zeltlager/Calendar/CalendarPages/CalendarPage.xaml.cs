@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
@@ -31,8 +32,12 @@ namespace Zeltlager.Calendar
 			UpdateUI();
 		}
 
-		void UpdateUI()
+		public async Task UpdateUI()
 		{
+			// Asynchronity is needed to avoid a 'Java.Lang.IllegalStateException: Recursive entry to executePendingTransactions'
+			// when UpdateUI is called from OnAppearing.
+			if (Device.OS == TargetPlatform.Android)
+				await Task.Delay(1);
 			if (inUpdateUI)
 				return;
 			inUpdateUI = true;
@@ -47,17 +52,25 @@ namespace Zeltlager.Calendar
 					continue;
 				}
 				Children.Insert(index, new DayPage(day, lager));
+				if (index == 0)
+				{
+					if (Children.Count > 1)
+						((DayPage)Children[1]).UpdateNavButtons();
+				}
+				else if (index == Children.Count - 1)
+					((DayPage)Children[Children.Count - 2]).UpdateNavButtons();
 			}
 
 			lager.Calendar.IncludeStandardEvents();
 
 			// check wheter there is a day page which day is not in the calendar anymore
-			foreach(ContentPage p in Children)
+			for (int i = 0; i < Children.Count; i++)
 			{
-				DayPage dp = p as DayPage;
+				DayPage dp = Children[i] as DayPage;
 				if (dp != null && !lager.Calendar.Days.Contains(dp.Day))
 				{
-					Children.Remove(p);
+					Children.RemoveAt(i);
+					i--;
 				}
 			}
 
@@ -99,7 +112,7 @@ namespace Zeltlager.Calendar
 			base.OnCurrentPageChanged();
 			UpdateUI();
 			((DayPage)CurrentPage)?.UpdateUI();
-			((DayPage)CurrentPage)?.RemoveNavButtons();
+			((DayPage)CurrentPage)?.UpdateNavButtons();
 		}
 	}
 }
