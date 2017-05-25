@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 
 namespace Zeltlager.Calendar
 {
@@ -19,6 +20,8 @@ namespace Zeltlager.Calendar
 			= new ObservableCollection<StandardCalendarEvent>();
 		public ObservableCollection<PlannedCalendarEvent> PlannedEvents { get; } 
 			= new ObservableCollection<PlannedCalendarEvent>();
+
+		SemaphoreSlim includeStandardEventsSem = new SemaphoreSlim(1);
 
 		public Calendar(LagerClient lager)
 		{
@@ -118,24 +121,32 @@ namespace Zeltlager.Calendar
 
 		async public void IncludeStandardEvents()
 		{
-			foreach (Day d in Days)
+			await includeStandardEventsSem.WaitAsync();
+			try
 			{
-				foreach (StandardCalendarEvent sce in StandardEvents)
+				foreach (Day d in Days)
 				{
-					// check whether the event was added before that day+eventtime & ignore in that case
-					if (sce.Id.Packet.Timestamp > d.Date.Add(sce.Time))
+					foreach (StandardCalendarEvent sce in StandardEvents)
 					{
-						continue;
+						// check whether the event was added before that day+eventtime & ignore in that case
+						if (sce.Id.Packet.Timestamp > d.Date.Add(sce.Time))
+						{
+							continue;
+						}
+						// check whether there already is a reference event for that sce on that day
+						if (d.Events.Where(ilce => ilce is ReferenceCalendarEvent).Cast<ReferenceCalendarEvent>().Any(rce => rce.Reference.Equals(sce)))
+						{
+							continue;
+						}
+						LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
+						Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
+						await lager.AddPacket(await AddPacket.Create(serialiser, context, new ReferenceCalendarEvent(null, sce, d.Date)));
 					}
-					// check whether there already is a reference event for that sce on that day
-					if (d.Events.Where(ilce => ilce is ReferenceCalendarEvent).Cast<ReferenceCalendarEvent>().Any(rce => rce.Reference.Equals(sce)))
-					{
-						continue;
-					}
-					LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
-					Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
-					await lager.AddPacket(await AddPacket.Create(serialiser, context, new ReferenceCalendarEvent(null, sce, d.Date)));
 				}
+			}
+			finally
+			{
+				includeStandardEventsSem.Release(1);
 			}
 		}
 		#endregion

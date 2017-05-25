@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Zeltlager.Client
 {
@@ -59,6 +60,8 @@ namespace Zeltlager.Client
 		/// The password supplied by the user and used to generate the shared keys.
 		/// </summary>
 		string password;
+
+		SemaphoreSlim addPacketSem = new SemaphoreSlim(1);
 
 		/// <summary>
 		/// Creates a new lager.
@@ -326,8 +329,21 @@ namespace Zeltlager.Client
 			context.PacketId = id;
 			await bundle.AddPacket(context, packet);
 
-			// First, write the packet to disk
-			await SaveBundle(id);
+			await addPacketSem.WaitAsync();
+
+			try
+			{
+				// First, write the packet to disk
+				await SaveBundle(id);
+			}
+			catch (Exception ex)
+			{
+				await  LagerManager.Log.Exception("AddPacket", ex);
+			}
+			finally
+			{
+				addPacketSem.Release(1);
+			}
 
 			// Then deserialise it to apply it
 			// We need to apply the whole history again if the packet has a higher priority
