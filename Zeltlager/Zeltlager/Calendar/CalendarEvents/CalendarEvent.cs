@@ -44,10 +44,14 @@ namespace Zeltlager.Calendar
 			context.LagerClient.Calendar.InsertNewCalendarEvent(this);
 		}
 
-		public void Edit(LagerClientSerialisationContext context)
+		// remove and insert again so it is in the correct day
+		public void BeforeEdit(LagerClientSerialisationContext context)
 		{
-			// remove and insert again so it is in the correct day
 			context.LagerClient.Calendar.RemoveCalendarEvent(this);
+		}
+
+		public void AfterEdit(LagerClientSerialisationContext context)
+		{
 			context.LagerClient.Calendar.InsertNewCalendarEvent(this);
 		}
 

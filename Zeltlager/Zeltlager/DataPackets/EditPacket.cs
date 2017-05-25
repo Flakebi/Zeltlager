@@ -22,8 +22,9 @@ namespace Zeltlager.DataPackets
 		static readonly Tuple<Type, MethodInfo, MethodInfo>[] types = {
 			new Tuple<Type, MethodInfo, MethodInfo>(typeof(Member), null, null),
 			new Tuple<Type, MethodInfo, MethodInfo>(typeof(Tent), null, null),
-			new Tuple<Type, MethodInfo, MethodInfo>(typeof(CalendarEvent), null,
-			   typeof(CalendarEvent).GetRuntimeMethod("Edit", new Type[] { typeof(LagerClientSerialisationContext) })),
+			new Tuple<Type, MethodInfo, MethodInfo>(typeof(CalendarEvent), 
+			   typeof(CalendarEvent).GetRuntimeMethod("BeforeEdit", new Type[] { typeof(LagerClientSerialisationContext) }),
+			   typeof(CalendarEvent).GetRuntimeMethod("AfterEdit", new Type[] { typeof(LagerClientSerialisationContext) })),
 			new Tuple<Type, MethodInfo, MethodInfo>(typeof(Competition.Competition), null, null),
 			new Tuple<Type, MethodInfo, MethodInfo>(typeof(Station), null, null),
 			new Tuple<Type, MethodInfo, MethodInfo>(typeof(CompetitionResult), null, null),
