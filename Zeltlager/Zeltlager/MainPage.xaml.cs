@@ -74,14 +74,19 @@ namespace Zeltlager
 			Navigation.PushAsync(new Calendar.CalendarPage(lager));
 		}
 
-		void OnGeneralClicked(object sender, EventArgs e)
-		{
-			Navigation.PushAsync(new GeneralPage(lager));
-		}
-
 		void OnSettingsClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new Settings.SettingsPage(lager));
+		}
+
+		void OnMemberClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new MembersPage(lager));
+		}
+
+		void OnTentClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new TentsPage(lager));
 		}
 	}
 }

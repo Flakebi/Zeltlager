@@ -34,13 +34,12 @@
 			<Color x:Key="backgroundColor">#22262b</Color>
 			<Color x:Key="textColor">White</Color>
 <!--			<Color x:Key="buttonColor">#1a1a1a</Color>-->
-			<Color x:Key="textColorStandard">#07BADE</Color>
-			<Color x:Key="textColorButton">#2f82da</Color>
+			<Color x:Key="textColorStandard">#6ae3fb</Color>
+			<Color x:Key="textColorButton">#80bdff</Color>
 			<Color x:Key="darkButtonColor">#181832</Color>
 			<Color x:Key="separatorColor">#4b358d</Color>
-			<Color x:Key="whiteColor">#dddddd</Color>
-			<Color x:Key="textColorSecondary">#2f82da</Color>
-			<Color x:Key="detailColor">#98C5D4</Color>
+			<Color x:Key="whiteColor">#eeeeee</Color>
+			<Color x:Key="detailColor">#c9e1e8</Color>
 
 			<Style x:Key="BaseStyle" TargetType="VisualElement">
 				<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}" />
@@ -50,14 +49,14 @@
 			</Style>
 			<Style TargetType="Button" BasedOn="{StaticResource BaseStyle}">
 				<Setter Property="BackgroundColor" Value="{DynamicResource backgroundColor}"/>
-				<Setter Property="TextColor" Value="{DynamicResource textColorButton}" /><!--
-				<Setter Property="BorderColor" Value="{DynamicResource separatorColor}" />
-				<Setter Property="BorderWidth" Value="0.5" />
-				<Setter Property="BorderRadius" Value="3" />-->
+				<Setter Property="TextColor" Value="{DynamicResource textColorButton}" />
 			</Style>
 			<Style x:Key="DarkButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseStyle}">
 				<Setter Property="BackgroundColor" Value="{DynamicResource darkButtonColor}" />
 				<Setter Property="TextColor" Value="{DynamicResource textColorButton}" />
+				<Setter Property="BorderColor" Value="{DynamicResource textColorButton}" />
+				<Setter Property="BorderWidth" Value="0.6" />
+				<Setter Property="BorderRadius" Value="3" />
 			</Style>
 			<Style TargetType="DatePicker" BasedOn="{StaticResource BaseStyle}">
 				<Setter Property="TextColor" Value="{DynamicResource textColorStandard}" />

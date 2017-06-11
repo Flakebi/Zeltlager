@@ -19,7 +19,8 @@
 			<Button Text="Wettkämpfe" Clicked="OnCompetitionClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.GAMEPAD}"/>
 			<Button Text="Erwischt" Clicked="OnErwischtClicked" Style="{StaticResource DarkButtonStyle}" Image="target.png"/>
 			<Button Text="Kalender" Clicked="OnCalendarClicked" Style="{StaticResource DarkButtonStyle}" Image="calendar.png"/>
-			<Button Text="Allgemeines" Clicked="OnGeneralClicked" Style="{StaticResource DarkButtonStyle}" Image="{x:Static local:Icons.NOTEPAD}"/>
+			<Button Text="Teilnehmer" Clicked="OnMemberClicked" Style="{StaticResource DarkButtonStyle}" Image="profile.png"/>
+			<Button Text="Zelte" Clicked="OnTentClicked" Style="{StaticResource DarkButtonStyle}" Image="home.png"/>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

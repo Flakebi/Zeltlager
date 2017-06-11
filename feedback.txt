@@ -1,0 +1,69 @@
+......2ev- Zu dunkel um's im Sonnenlicht zu lesen
+  - Helles Theme einbauen
+  - unser Theme verbessern (Kontrast erhöhen)
+
+......2ev- Feedback nach "Testdaten hinzufügen"
+
+3hv- Kein/sehr wenig Klick-Effekt auf Android 4.2
+
+2ev- Platzierung mit eingegeben (explizit optional machen, oder nicht zulassen)
+  - Platzierung nicht mehr editable machen
+
+2mv- Punkte nicht in extra screen eingeben (so viele Klicks)
+  - In Wettkämpfen keine Edit-Page mehr, nur Textfelder für Punktzahlen
+
+1ev- Gleiche Punkte → Gleicher Platz
+
+3ev- Wettkampf, Teilnehmer-Tab → Keine Punkte?
+
+1ev- Teilnehmer-Rang: Richtig berechnen??
+  - nochmal nachprüfen
+
+1ev- Statistik: Nach Wert nicht nach Namen sortieren
+
+......3ev- Geplanten Termin hinzufügen, wird nicht aus geplanten Terminen gelöscht
+  - ExPlCalendarEvent
+
+4hv- Markieren (langer Klick) → schlechtes Highlighting
+  - Highlighting-Farbe änderbar?
+
+......1ev- Termin kurz klicken: bearbeiten; lange klicken: bearbeiten/löschen
+  - On click -> edit Page
+
+3mv- Suchen in Zeltliste + schnell auf ein Zelt klicken -> crasht in Android 4.2 manchmal
+  - Zu viele Leute pro Zelt (mehrere Zelte pro Teilnehmer??)
+  - Ursachensuche
+  - Objekte nicht so viel über strings identifizeren
+
+3ev- Wie viele Teilnehmer/Zelte?
+  - Irgendwo anzeigen, Stats unter Zelte/Teilnehmer-Button
+
+1mv- Einzelne/alle Teilnehmer öfters hinzufügen sollte nicht gehen
+  - Crashed wenn Teilnehmer öfters hinzufügt worden sind und man irgendwas macht
+  - Ladescreen einbauen
+  - mit "alle hinzufügen" nur welche hinzufügen, die noch nicht drin sind (Meldung anzeigen: "es wurden x Teilnehmer(zelte) hinzugefügt und x übersprungen)
+  - add packet für Teilnehmer der schon in einem Wettbewerb drin ist -> ignorieren
+
+3mv- Wettkampf: Teilnehmer durchsuchen, 
+  - Searchable machen
+
+1ev- sortieren nach Punkten/Platz
+
+1mv- Paketliste: Falsche Uhrzeit, nicht alle/nur ältere Pakete angezeigt?
+  - neuste 100 anzeigen
+  - Uhrzeit in falscher Zeitzone?
+
+1ev- Synchronisieren (Semaphore) von Paketen hinzufügen
+  - Semaphore in AddPacket Methode hinzufügen
+
+......2ev- Sachen schneller machen/weniger klicken
+  - Zelte/Teilnehmer Button -> Main Page
+  - OnClick in allen Tabellen belegen (z.B. mit Edit)
+
+0hv- Fehler beim Synchronisieren (2. John slow/holla), aber nicht beim Laden
+   Bei mehreren Nutzern
+
+?hv- Bundle-Fehler → Andere Sachen trotzdem synchronisieren
+
+2mv- ewig lange "fertig" angezeigt nach runterladen
+  - wenn man was anderes tut, loading screen text aktualisieren

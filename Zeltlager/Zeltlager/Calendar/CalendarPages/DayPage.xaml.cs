@@ -99,13 +99,13 @@ namespace Zeltlager.Calendar
 				{
 					await Day.CreateDishwasherPacket(null, lager);
 					label.Text = "kein Spüldienst";
-					label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
+					label.TextColor = (Color)Application.Current.Resources["textColorButton"];
 				}
 				else
 				{
 					await Day.CreateDishwasherPacket(Day.Dishwashers, lager);
 					label.Text = "Spüldienst: " + Day.Dishwashers;
-					label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
+					label.TextColor = (Color)Application.Current.Resources["textColorButton"];
 				}
 				editDishwasherButton.Image = Icons.EDIT;
 				dishwashers.Children.RemoveAt(0);
@@ -185,12 +185,12 @@ namespace Zeltlager.Calendar
 			if (Day.Dishwashers == null)
 			{
 				label.Text = "kein Spüldienst";
-				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
+				label.TextColor = (Color)Application.Current.Resources["textColorButton"];
 			}
 			else
 			{
 				label.Text = "Spüldienst: " + Day.Dishwashers;
-				label.TextColor = (Color)Application.Current.Resources["textColorSecondary"];
+				label.TextColor = (Color)Application.Current.Resources["textColorButton"];
 			}
 			Label dishwasherLabel = label;
 			dishwasherLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
@@ -228,7 +228,7 @@ namespace Zeltlager.Calendar
 			// disable selection
 			calendarList.ItemSelected += (sender, e) =>
 			{
-				((ListView)sender).SelectedItem = null;
+				OnEditClicked((IListCalendarEvent)((ListView)sender).SelectedItem);
 			};
 
 			header.HorizontalOptions = LayoutOptions.FillAndExpand;

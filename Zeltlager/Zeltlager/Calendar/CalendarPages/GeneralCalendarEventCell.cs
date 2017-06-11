@@ -92,7 +92,7 @@ namespace Zeltlager.Calendar
 			{
 				VerticalTextAlignment = TextAlignment.Center,
 				HorizontalTextAlignment = TextAlignment.End,
-				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+				TextColor = (Color)Application.Current.Resources["textColorButton"]
 			};
 
 			StackLayout horizontalLayout = new StackLayout();

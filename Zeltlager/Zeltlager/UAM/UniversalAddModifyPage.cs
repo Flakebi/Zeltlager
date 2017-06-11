@@ -81,7 +81,7 @@ namespace Zeltlager.UAM
 				Label label = new Label
 				{
 					Text = pi.GetCustomAttribute<EditableAttribute>().Name + ": ",
-					TextColor = (Color) Application.Current.Resources["textColorSecondary"]
+					TextColor = (Color) Application.Current.Resources["textColorButton"]
 				};
 				grid.Children.Add(label, 0, attributeNumber);
 

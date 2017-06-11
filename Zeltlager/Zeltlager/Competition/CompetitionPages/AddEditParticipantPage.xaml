@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -28,7 +28,7 @@
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 
-			<Label x:Name="typeLabel" Text="Typ:" TextColor="{StaticResource textColorSecondary}" Grid.Row="0" Grid.Column="0"/>
+			<Label x:Name="typeLabel" Text="Typ:" TextColor="{StaticResource textColorButton}" Grid.Row="0" Grid.Column="0"/>
 			<Picker x:Name="typePicker" Grid.Row="0" Grid.Column="1" SelectedIndexChanged="OnTypeChanged">
 				<Picker.Items>
 					<x:String x:Name="TENT">Zelt</x:String>
@@ -38,15 +38,15 @@
 				</Picker.Items>
 			</Picker>
 			
-			<Label x:Name="tentLabel" Text="Zelt wählen:" TextColor="{StaticResource textColorSecondary}"
+			<Label x:Name="tentLabel" Text="Zelt wählen:" TextColor="{StaticResource textColorButton}"
 				Grid.Row="1" Grid.Column="0" VerticalOptions="Center"/>
 			<Picker x:Name="tentPicker" Grid.Row="1" Grid.Column="1"/>
 
-			<Label x:Name="memberLabel" Text="Teilnehmer wählen:" TextColor="{StaticResource textColorSecondary}"
+			<Label x:Name="memberLabel" Text="Teilnehmer wählen:" TextColor="{StaticResource textColorButton}"
 				Grid.Row="2" Grid.Column="0" VerticalOptions="Center"/>
 			<Picker x:Name="memberPicker" Grid.Row="2" Grid.Column="1"/>
 
-			<Label x:Name="groupLabel" Text="Gruppenname:" TextColor="{StaticResource textColorSecondary}"
+			<Label x:Name="groupLabel" Text="Gruppenname:" TextColor="{StaticResource textColorButton}"
 				Grid.Row="3" Grid.Column="0" VerticalOptions="Center"/>
 			<Entry x:Name="groupEntry" Grid.Row="3" Grid.Column="1"/>
 

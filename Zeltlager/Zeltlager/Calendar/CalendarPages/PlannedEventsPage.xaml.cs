@@ -74,7 +74,7 @@ namespace Zeltlager.Calendar
 
 		void OnPlannedEventClicked(PlannedCalendarEvent pce)
 		{
-			Navigation.PushAsync(new UniversalAddModifyPage<CalendarEvent, PlannedCalendarEvent>
+			Navigation.PushAsync(new UniversalAddModifyPage<ExPlCalendarEvent, PlannedCalendarEvent>
 					   (new ExPlCalendarEvent(pce), true, lager));
 		}
 

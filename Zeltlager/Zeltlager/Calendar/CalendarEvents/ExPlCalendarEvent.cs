@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
+using Zeltlager.Client;
 using Zeltlager.DataPackets;
 using Zeltlager.Serialisation;
 using Zeltlager.UAM;
@@ -17,11 +18,17 @@ namespace Zeltlager.Calendar
 			PlannedEvent = plannedEvent;
 		}
 
-		public async Task OnSaveEditing(
-			Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, CalendarEvent oldObject)
+		public override async Task OnSaveEditing(LagerClient lager, PlannedCalendarEvent oldObject)
 		{
-			PlannedEvent.IsVisible = false;
+			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
+			Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
+			
+			if (PlannedEvent.IsVisible)
+			{
+				PlannedEvent.IsVisible = false;
+				DataPacket editPacket = await EditPacket.Create(serialiser, context, PlannedEvent);
+				await context.LagerClient.AddPacket(editPacket);
+			}
 			DataPacket packet;
 			if (oldObject != null)
 			{
@@ -31,6 +38,11 @@ namespace Zeltlager.Calendar
 			else
 				packet = await AddPacket.Create(serialiser, context, new CalendarEvent(Id, Date, Title, Detail, lager));
 			await context.LagerClient.AddPacket(packet);
+		}
+
+		public override PlannedCalendarEvent Clone()
+		{
+			return new ExPlCalendarEvent(PlannedEvent);
 		}
 	}
 }

@@ -25,6 +25,7 @@ namespace Zeltlager.Settings
 		async void OnTestDataClicked(object sender, EventArgs e)
 		{
 			await lager.CreateTestData();
+			await DisplayAlert("Testdaten", "Es wurden Testdaten eingefügt!", "Ok");
 		}
 
 		void OnPacketsClicked(object sender, EventArgs e)

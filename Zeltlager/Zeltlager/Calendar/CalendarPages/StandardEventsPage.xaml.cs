@@ -43,8 +43,10 @@ namespace Zeltlager.Calendar
 				ItemTemplate = dataTemplate,
 				BindingContext = lager.Calendar.StandardEvents,
 			};
-			calendarEventList.ItemSelected +=
-				((sender, e) => calendarEventList.SelectedItem = null);
+			calendarEventList.ItemSelected += (sender, e) =>
+			{
+				OnEditClicked((StandardCalendarEvent)((ListView)sender).SelectedItem);
+			};
 			Content = calendarEventList;
 		}
 

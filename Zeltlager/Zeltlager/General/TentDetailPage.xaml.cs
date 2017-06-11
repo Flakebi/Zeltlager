@@ -29,7 +29,7 @@ namespace Zeltlager.General
 			grid.Children.Add(new Label
 			{
 				Text = "Zeltname: ",
-				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+				TextColor = (Color)Application.Current.Resources["textColorButton"]
 			}, 0, 0);
 			grid.Children.Add(new Label { Text = tent.Name }, 1, 0);
 
@@ -37,7 +37,7 @@ namespace Zeltlager.General
 			grid.Children.Add(new Label
 			{
 				Text = "Zeltnummer: ",
-				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+				TextColor = (Color)Application.Current.Resources["textColorButton"]
 			}, 0, 1);
 			grid.Children.Add(new Label { Text = tent.Number.ToString() }, 1, 1);
 
@@ -45,7 +45,7 @@ namespace Zeltlager.General
 			grid.Children.Add(new Label
 			{
 				Text = "Geschlecht: ",
-				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+				TextColor = (Color)Application.Current.Resources["textColorButton"]
 			}, 0, 2);
 			grid.Children.Add(new Label { Text = tent.Girls ? "♀" : "♂" }, 1, 2);
 
@@ -54,7 +54,7 @@ namespace Zeltlager.General
 			grid.Children.Add(new Label
 			{
 				Text = "Zeltbetreuer: ",
-				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+				TextColor = (Color)Application.Current.Resources["textColorButton"]
 			}, 0, 2, 3, 4);
 
 			grid.RowDefinitions.Add(rdlist);
@@ -65,7 +65,7 @@ namespace Zeltlager.General
 			grid.Children.Add(new Label
 			{
 				Text = "Zeltbewohner: ",
-				TextColor = (Color)Application.Current.Resources["textColorSecondary"]
+				TextColor = (Color)Application.Current.Resources["textColorButton"]
 			}, 0, 2, 5, 6);
 
 			grid.RowDefinitions.Add(rdfill);
