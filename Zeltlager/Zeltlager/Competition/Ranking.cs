@@ -12,12 +12,12 @@ namespace Zeltlager.Competition
 		[Serialisation]
 		public List<CompetitionResult> Results { get; set; }
 
-		public Ranking() 
+		public Ranking()
 		{
 			Results = new List<CompetitionResult>();
 		}
 
-		public void AddResult(CompetitionResult cr) 
+		public void AddResult(CompetitionResult cr)
 		{
 			Results.Add(cr);
 		}
@@ -34,21 +34,36 @@ namespace Zeltlager.Competition
 			if (!increasing)
 				x = results.OrderByDescending(r => r.Points);
 			else
-				x = results.OrderBy(r => r.Points);
+				x = results.OrderBy(r => r.Points); // vorne die kleinen Werte hinten die großen
+
+			// same points should get the same place
+			int currentPoints = increasing ? 0 : int.MaxValue;
+			int currentPlace = 1;
 
 			CompetitionResult[] crs = x.ToArray();
-			for (int i = 0; i < crs.Length; i++)
+			foreach (CompetitionResult cr in crs)
 			{
-				var cr = crs[i];
-				if (cr.Place != i + 1)
+				bool changedSomething = false;
+				if (cr.Points == currentPoints && cr.Place != currentPlace)
 				{
-					cr.Place = i + 1;
+					cr.Place = currentPlace;
+					changedSomething = true;
+				}
+				else if ((cr.Points < currentPoints ^ increasing) && cr.Place != currentPlace + 1)
+				{
+					currentPoints = (int) cr.Points;
+					cr.Place = ++currentPlace;
+					changedSomething = true;
+				}
+
+				if (changedSomething)
+				{
 					LagerClient lager = cr.Participant.GetLagerClient();
 					LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
 					context.PacketId = cr.Id;
-					await lager.AddPacket(await DataPackets.EditPacket.Create(lager.ClientSerialiser, context, cr));
+					await lager.AddPacket(await DataPackets.EditPacket.Create(lager.ClientSerialiser, context, cr));	
 				}
 			}
 		}
+		}
 	}
-}
