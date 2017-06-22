@@ -6,15 +6,6 @@
 1ev- Synchronisieren (Semaphore) von Paketen hinzufügen
   - Semaphore in AddPacket Methode hinzufügen
 
-1ev- Gleiche Punkte → Gleicher Platz
-
-1ev- Teilnehmer-Rang: Richtig berechnen??
-  - nochmal nachprüfen
-
-1ev- sortieren nach Punkten/Platz
-
-1ev- Statistik: Nach Wert nicht nach Namen sortieren
-
 1mv- Paketliste: Falsche Uhrzeit, nicht alle/nur ältere Pakete angezeigt?
   - neuste 100 anzeigen
   - Uhrzeit in falscher Zeitzone?
@@ -24,9 +15,6 @@
   - Ladescreen einbauen
   - mit "alle hinzufügen" nur welche hinzufügen, die noch nicht drin sind (Meldung anzeigen: "es wurden x Teilnehmer(zelte) hinzugefügt und x übersprungen)
   - add packet für Teilnehmer der schon in einem Wettbewerb drin ist -> ignorieren
-
-2ev- Platzierung mit eingegeben (explizit optional machen, oder nicht zulassen)
-  - Platzierung nicht mehr editable machen
 
 2mv- Punkte nicht in extra screen eingeben (so viele Klicks)
   - In Wettkämpfen keine Edit-Page mehr, nur Textfelder für Punktzahlen
@@ -51,22 +39,3 @@
 
 4hv- Markieren (langer Klick) → schlechtes Highlighting
   - Highlighting-Farbe änderbar?
-
-
-
-
-
-Done:
-
-......2ev- Sachen schneller machen/weniger klicken
-  - Zelte/Teilnehmer Button -> Main Page
-  - OnClick in allen Tabellen belegen (z.B. mit Edit)
-......1ev- Termin kurz klicken: bearbeiten; lange klicken: bearbeiten/löschen
-  - On click -> edit Page
-......3ev- Geplanten Termin hinzufügen, wird nicht aus geplanten Terminen gelöscht
-  - ExPlCalendarEvent
-  ......2ev- Zu dunkel um's im Sonnenlicht zu lesen
-  - Helles Theme einbauen
-  - unser Theme verbessern (Kontrast erhöhen)
-
-......2ev- Feedback nach "Testdaten hinzufügen"
