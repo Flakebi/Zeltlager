@@ -183,7 +183,8 @@ namespace Zeltlager.Client
 				// Wait for the answers
 				foreach (var key in missingCollaborators)
 				{
-					var collaboratorDataResponse = await connection.ReadPacket() as Responses.CollaboratorData;
+					var packet = await connection.ReadPacket();
+					var collaboratorDataResponse = packet as Responses.CollaboratorData;
 					if (collaboratorDataResponse == null)
 						throw new LagerException("Got no collaborator data as response");
 					var collaborator = await collaboratorDataResponse.GetCollaborator(this);
