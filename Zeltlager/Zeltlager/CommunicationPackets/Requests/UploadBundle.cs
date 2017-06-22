@@ -54,6 +54,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 					await data.Lager.Serialiser.Read(input,
 						new LagerSerialisationContext(data.Lager),
 						bundle);
+					await bundle.Verify(data.Collaborator);
 					await data.Lager.AddBundle(data.Collaborator, bundle);
 				}
 				await connection.WritePacket(new Responses.Status(true));

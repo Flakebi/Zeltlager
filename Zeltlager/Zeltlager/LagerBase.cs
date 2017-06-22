@@ -165,6 +165,7 @@ namespace Zeltlager
 					for (int i = 0; i < bundleCount.Item2; i++)
 					{
 						var bundle = await LoadBundle(collaborator, i);
+						await bundle.Verify(collaborator);
 						collaborator.AddBundle(bundle);
 					}
 				} catch (Exception e)
