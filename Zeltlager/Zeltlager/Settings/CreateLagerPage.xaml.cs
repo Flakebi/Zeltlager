@@ -21,13 +21,13 @@ namespace Zeltlager
 		{
 			if (string.IsNullOrEmpty(Name))
 			{
-				await DisplayAlert(Title, "Bitte gebe einen Namen ein", "Ok");
+				await DisplayAlert(Title, "Bitte gib einen Namen ein", "Ok");
 				return;
 			}
 
 			if (string.IsNullOrEmpty(Password))
 			{
-				await DisplayAlert(Title, "Bitte gebe ein Passwort ein", "Ok");
+				await DisplayAlert(Title, "Bitte gib ein Passwort ein", "Ok");
 				return;
 			}
 
