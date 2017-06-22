@@ -37,6 +37,7 @@ namespace Zeltlager.Competition
 			InitializeComponent();
 			BindingContext = this;
 			View paddingView = new ContentView();
+			paddingView.Style = (Style)Application.Current.Resources["BaseStyle"];
 			if (Device.OS == TargetPlatform.Android)
 				paddingView.WidthRequest = 15;
 			headerStack.Children.Add(paddingView);

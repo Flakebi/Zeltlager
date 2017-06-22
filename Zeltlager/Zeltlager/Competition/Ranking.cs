@@ -30,6 +30,9 @@ namespace Zeltlager.Competition
 		public async Task Rank(bool increasing)
 		{
 			var results = Results.Where(r => r.Points.HasValue);
+			if (!results.Any())
+				return;
+			
 			IEnumerable<CompetitionResult> x;
 			if (!increasing)
 				x = results.OrderByDescending(r => r.Points);
@@ -37,23 +40,30 @@ namespace Zeltlager.Competition
 				x = results.OrderBy(r => r.Points); // vorne die kleinen Werte hinten die großen
 
 			// same points should get the same place
-			int currentPoints = increasing ? 0 : int.MaxValue;
+			CompetitionResult[] crs = x.ToArray();
+			int currentPoints = (int) crs[0].Points;
 			int currentPlace = 1;
 
-			CompetitionResult[] crs = x.ToArray();
 			foreach (CompetitionResult cr in crs)
 			{
 				bool changedSomething = false;
-				if (cr.Points == currentPoints && cr.Place != currentPlace)
+				if (cr.Points == currentPoints)
 				{
-					cr.Place = currentPlace;
-					changedSomething = true;
+					if (cr.Place != currentPlace)
+					{
+						cr.Place = currentPlace;
+						changedSomething = true;
+					}
 				}
-				else if ((cr.Points < currentPoints ^ increasing) && cr.Place != currentPlace + 1)
+				else
 				{
+					++currentPlace;
 					currentPoints = (int) cr.Points;
-					cr.Place = ++currentPlace;
-					changedSomething = true;
+					if (cr.Place != currentPlace)
+					{
+						cr.Place = currentPlace;
+						changedSomething = true;
+					}
 				}
 
 				if (changedSomething)

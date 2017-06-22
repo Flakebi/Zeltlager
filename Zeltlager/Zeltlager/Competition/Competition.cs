@@ -78,6 +78,9 @@ namespace Zeltlager.Competition
 
 		public void UpdateRanking()
 		{
+			if (!Participants.Any())
+				return;
+
 			// Create a summed up ranking
 			ranking.Results.Clear();
 			foreach (var p in Participants)
@@ -95,26 +98,37 @@ namespace Zeltlager.Competition
 				}
 				if (!hasPoints)
 					placePoints = null;
-				ranking.AddResult(new CompetitionResult(null, this, p, null, placePoints));
+				ranking.AddResult(new CompetitionResult(null, this, p, placePoints, null));
 			}
 			// Sort and change the place to a better number
 
-			// same points sld get the same place
-			int currentPoints = 0;
+			// same points get the same place
+			ranking.Results = ranking.Results.Where(r => r.Points != null).ToList();
+			if (!ranking.Results.Any())
+				return;
+			
+			ranking.Results.Sort();
+
+			int currentPoints = (int) ranking.Results.First().Points;
 			int currentPlace = 1;
 
-			ranking.Results.Sort();
 			foreach (CompetitionResult cr in ranking.Results)
 			{
+				if (cr.Points == null)
+					continue;
+				
 				if (cr.Points == currentPoints)
 				{
 					cr.Place = currentPlace;
 				}
-				else if (cr.Points != null)
+				else
 				{
 					cr.Place = ++currentPlace;
-					currentPoints = (int) cr.Points;
+					currentPoints = (int)cr.Points;
 				}
+
+				// reset points again for this cr (we only used them for determining the place)
+				cr.Points = null;
 			}
 		}
 
