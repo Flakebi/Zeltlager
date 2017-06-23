@@ -339,7 +339,7 @@ namespace Zeltlager.Client
 			}
 			catch (Exception ex)
 			{
-				await  LagerManager.Log.Exception("AddPacket", ex);
+				await  LagerManager.Log.Exception("AddPacket, save bundle " + id, ex);
 			}
 			finally
 			{

@@ -91,7 +91,7 @@ namespace Zeltlager.Client
 					catch (Exception e)
 					{
 						// Log the exception
-						await LagerManager.Log.Exception("Load bundle", e);
+						await LagerManager.Log.Exception("Load bundle " + b.Id + " of " + col, e);
 					}
 				}
 			}

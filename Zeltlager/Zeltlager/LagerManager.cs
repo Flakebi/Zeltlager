@@ -84,7 +84,7 @@ namespace Zeltlager
 						await Log.Info("Loading lagers", "Added lager " + i);
 					} catch (Exception e)
 					{
-						await Log.Exception("Loading lagers", e);
+						await Log.Exception("Loading lager " + i, e);
 					}
 				}
 			}

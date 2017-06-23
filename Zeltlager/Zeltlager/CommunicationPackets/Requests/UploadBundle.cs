@@ -39,13 +39,16 @@ namespace Zeltlager.CommunicationPackets.Requests
 		public override async Task Apply(INetworkConnection connection, LagerManager manager)
 		{
 			// Verify the signatures
+			int bundleId = -1;
+			Collaborator col = null;
 			try
 			{
 				CommunicationLagerData data = await GetData(manager);
+				col = data.Collaborator;
 				MemoryStream mem = new MemoryStream(data.Unencrypted);
 				using (BinaryReader input = new BinaryReader(mem))
 				{
-					int bundleId = input.ReadInt32();
+					bundleId = input.ReadInt32();
 					// Check if the requested bundle already exists
 					if (bundleId < data.Collaborator.Bundles.Count)
 						throw new LagerException("The bundle already exists");
@@ -58,10 +61,11 @@ namespace Zeltlager.CommunicationPackets.Requests
 					await data.Lager.AddBundle(data.Collaborator, bundle);
 				}
 				await connection.WritePacket(new Responses.Status(true));
+				await LagerManager.Log.Info("Upload bundle for lager " + data.Lager.Id, "Uploaded " + bundleId + " for " + data.Collaborator);
 			}
 			catch (Exception e)
 			{
-				await LagerManager.Log.Exception("BundlesRequest", e);
+				await LagerManager.Log.Exception("BundlesRequest for bundle " + bundleId + " from " + (col.ToString() ?? "unknown"), e);
 				await connection.WritePacket(new Responses.Status(false));
 			}
 		}

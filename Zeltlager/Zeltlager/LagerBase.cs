@@ -160,9 +160,10 @@ namespace Zeltlager
 				Collaborator collaborator = Collaborators[bundleCount.Item1];
 				// Be sure that no bundles are loaded for the collaborator
 				collaborator.Unload();
+				int i = 0;
 				try
 				{
-					for (int i = 0; i < bundleCount.Item2; i++)
+					for (; i < bundleCount.Item2; i++)
 					{
 						var bundle = await LoadBundle(collaborator, i);
 						await bundle.Verify(collaborator);
@@ -170,7 +171,7 @@ namespace Zeltlager
 					}
 				} catch (Exception e)
 				{
-					await LagerManager.Log.Exception("Bundle loading", e);
+					await LagerManager.Log.Exception("Loading bundle " + i + " for collaborator " + collaborator, e);
 					success = false;
 				}
 			}

@@ -57,6 +57,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 							collaborator = lager.Collaborators[collaborator.Key];
 						await connection.WritePacket(new Responses.Register(lager.Status.GetCollaboratorId(collaborator)));
 						success = true;
+						await LagerManager.Log.Info("Register collaborator for lager " + lager.Id, "Registered " + collaborator);
 					}
 					catch (Exception e)
 					{

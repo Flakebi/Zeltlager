@@ -36,6 +36,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 					// Send the created lager id back
 					await connection.WritePacket(new Responses.AddLager(lager.Id));
 					success = true;
+					await LagerManager.Log.Info("Add lager", "Added lager " + lager.Id);
 				}
 				catch (Exception e)
 				{
