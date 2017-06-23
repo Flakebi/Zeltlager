@@ -150,6 +150,15 @@ namespace Zeltlager.DataPackets
 			// Verify signature
 			if (!await LagerManager.CryptoProvider.Verify(creator.Key, signature, encryptedData))
 				throw new LagerException("The bundle has an invalid signature.");
+
+			// Check the id
+			using (BinaryReader input = new BinaryReader(new MemoryStream(encryptedData)))
+			{
+				// Check if the bundle has the right id
+				int readId = input.ReadInt32();
+				if (readId != Id)
+					throw new LagerException("The bundle has an invalid id.");
+			}
 		}
 
 		/// <summary>
@@ -170,7 +179,8 @@ namespace Zeltlager.DataPackets
 			using (BinaryReader input = new BinaryReader(mem))
 			{
 				// Check if the bundle has the right id
-				if (input.ReadInt32() != Id)
+				int readId = input.ReadInt32();
+				if (readId != Id)
 					throw new LagerException("The bundle has an invalid id.");
 				byte[] iv = input.ReadBytes(CryptoConstants.IV_LENGTH);
 				return new Tuple<byte[], byte[]>(iv,

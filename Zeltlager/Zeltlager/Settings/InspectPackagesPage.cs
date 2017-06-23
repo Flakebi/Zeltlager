@@ -28,8 +28,7 @@ namespace Zeltlager.Settings
 		async Task SetContent()
 		{
 			List<DataPacket> packetsList = await lager.GetHistory();
-			packetsList.Reverse();
-			Content = new SearchableListView<DataPacket>(packetsList.Take(100).ToList(), null, null, OnDataPacketClicked);
+			Content = new SearchableListView<DataPacket>(packetsList.OrderByDescending(p => p.Timestamp).Take(100).ToList(), null, null, OnDataPacketClicked);
 		}
 
 		Task OnDeleteClicked(DataPacket packet) => Task.WhenAll();
@@ -38,7 +37,7 @@ namespace Zeltlager.Settings
 
 		async void OnDataPacketClicked(DataPacket packet)
 		{
-			bool revert = await DisplayAlert("Paket reverten?", "Möchten sie das Paket '" + packet + "' reverten?", "Ja", "Nein");
+			bool revert = await DisplayAlert("Paket rückgängig machen?", "Möchten sie das Paket '" + packet + "' rückgängig machen?", "Ja", "Lieber nicht");
 			if (revert)
 			{
 				try
@@ -47,7 +46,7 @@ namespace Zeltlager.Settings
 				} catch (LagerException e)
 				{
 					await DisplayAlert("Achtung!", "Beim Anwenden der Datenpakete ist ein Fehler aufgetreten. " +
-					                   "Du möchtest ihr neu erstelltes Revert-Package eventuell wieder reverten.\n" + e.Message, "Ok");
+					                   "Du möchtest dein neu erstelltes Revert-Packet eventuell wieder rückgangig machen.\n" + e.Message, "Ok");
 				}
 			}
 		}

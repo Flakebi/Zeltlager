@@ -155,8 +155,9 @@ namespace Zeltlager
 		{
 			// Read all packets
 			bool success = true;
-			foreach (var bundleCount in Status.BundleCount)
+			for (int b = 0; b < Status.BundleCount.Count; b++)
 			{
+				var bundleCount = Status.BundleCount[b];
 				Collaborator collaborator = Collaborators[bundleCount.Item1];
 				// Be sure that no bundles are loaded for the collaborator
 				collaborator.Unload();
@@ -171,9 +172,10 @@ namespace Zeltlager
 					}
 				} catch (Exception e)
 				{
-					await LagerManager.Log.Exception("Loading bundle " + i + " for collaborator " + collaborator, e);
+					await LagerManager.Log.Exception("Loading bundle " + i + " for collaborator " + collaborator + " in lager " + Id, e);
 					success = false;
 				}
+				Status.UpdateBundleCount(collaborator);
 			}
 			return success;
 		}

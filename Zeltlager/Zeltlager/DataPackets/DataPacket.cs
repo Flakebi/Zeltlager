@@ -143,7 +143,7 @@ namespace Zeltlager.DataPackets
 
 		public override string ToString()
 		{
-			return string.Format("{0} Id {1} {2}({3})", Timestamp.ToString("yyyy-MM-dd HH:mm:ss"), Id, GetType().Name, contentString ?? "null");
+			return string.Format("{0} Id {1} {2}({3})", Timestamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"), Id, GetType().Name, contentString ?? "null");
 		}
 
 		/// <summary>

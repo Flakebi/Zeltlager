@@ -8,7 +8,7 @@ namespace Zeltlager.Erwischt
 
 	public class ErwischtStatisticsPage : TabbedPage
 	{
-		public class ErwischtParticipantStatisticsWrapper : ISearchable
+		public class ErwischtParticipantStatisticsWrapper : IComparable<ErwischtParticipantStatisticsWrapper>, ISearchable
 		{
 			ErwischtParticipant participant;
 			public string SearchableDetail { get; set; }
@@ -17,6 +17,14 @@ namespace Zeltlager.Erwischt
 			public ErwischtParticipantStatisticsWrapper(ErwischtParticipant participant)
 			{
 				this.participant = participant;
+			}
+
+			public int CompareTo(ErwischtParticipantStatisticsWrapper other)
+			{
+				int res = SearchableDetail.CompareTo(other.SearchableDetail);
+				if (res != 0)
+					return -res;
+				return SearchableText.CompareTo(other.SearchableText);
 			}
 		}
 

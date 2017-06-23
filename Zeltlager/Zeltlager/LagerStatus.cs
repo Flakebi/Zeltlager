@@ -39,7 +39,11 @@ namespace Zeltlager
 		/// <param name="c">The creator of the bundles.</param>
 		public int GetBundleCount(Collaborator c)
 		{
-			return bundleCount.Find(t => t.Item1 == c.Key).Item2;
+			var col = bundleCount.Find(t => t.Item1 == c.Key);
+			if (col == null)
+				return 0;
+			else
+				return col.Item2;
 		}
 
 		/// <summary>

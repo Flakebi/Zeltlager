@@ -199,21 +199,24 @@ namespace Zeltlager.Client
 				statusUpdate?.Invoke(NetworkStatus.BundlesRequest);
 				int requestedBundles = 0;
 				var packets = new List<CommunicationPackets.CommunicationPacket>();
-				// Request 100 packets at once
+				// Request 100 bundles at once
 				var currentPacketRequest = new List<Tuple<Collaborator, int>>();
-				for (int i = 0; i < Status.BundleCount.Count; i++)
+				foreach (var collaborator in Collaborators.Values)
 				{
-					var collaborator = Collaborators[Status.BundleCount[i].Item1];
-					for (int bundleId = Status.GetBundleCount(collaborator);
-						 bundleId < Remote.Status.GetBundleCount(collaborator);
-						 bundleId++)
+					// Ignore collaborators that are not known to the server
+					if (Remote.Status.BundleCount.Any(c => c.Item1 == collaborator.Key))
 					{
-						requestedBundles++;
-						currentPacketRequest.Add(new Tuple<Collaborator, int>(collaborator, bundleId));
-						if (currentPacketRequest.Count == 100)
+						for (int bundleId = collaborator.Bundles.Count;
+							 bundleId < Remote.Status.GetBundleCount(collaborator);
+							 bundleId++)
 						{
-							packets.Add(await Requests.Bundles.Create(this, currentPacketRequest));
-							currentPacketRequest.Clear();
+							requestedBundles++;
+							currentPacketRequest.Add(new Tuple<Collaborator, int>(collaborator, bundleId));
+							if (currentPacketRequest.Count == 100)
+							{
+								packets.Add(await Requests.Bundles.Create(this, currentPacketRequest));
+								currentPacketRequest.Clear();
+							}
 						}
 					}
 				}
@@ -224,7 +227,8 @@ namespace Zeltlager.Client
 				statusUpdate?.Invoke(NetworkStatus.DownloadBundles);
 				for (int i = 0; i < requestedBundles; i++)
 				{
-					var bundleResponse = await connection.ReadPacket() as Responses.Bundle;
+					var response = await connection.ReadPacket();
+					var bundleResponse = response as Responses.Bundle;
 					if (bundleResponse == null)
 						throw new LagerException("Got no bundle as response");
 					await bundleResponse.ReadBundle(this);
@@ -233,17 +237,16 @@ namespace Zeltlager.Client
 				// Upload new bundles
 				statusUpdate?.Invoke(NetworkStatus.UploadBundles);
 				packets.Clear();
-				for (int bundleId = Remote.Status.GetBundleCount(OwnCollaborator);
-					 bundleId < Status.GetBundleCount(OwnCollaborator);
-					 bundleId++)
+				foreach (var bundle in OwnCollaborator.Bundles.Skip(Remote.Status.GetBundleCount(OwnCollaborator)))
 				{
-					packets.Add(await Requests.UploadBundle.Create(this, OwnCollaborator.Bundles[bundleId]));
+					packets.Add(await Requests.UploadBundle.Create(this, bundle));
 				}
 				await connection.WritePackets(packets);
 				// Check the response
 				for (int i = 0; i < packets.Count; i++)
 				{
-					var uploadResponse = await connection.ReadPacket() as Responses.Status;
+					var response = await connection.ReadPacket();
+					var uploadResponse = response as Responses.Status;
 					if (uploadResponse == null)
 						throw new LagerException("Got no status as response");
 					if (!uploadResponse.GetSuccess())
