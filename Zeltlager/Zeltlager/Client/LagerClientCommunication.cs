@@ -168,7 +168,8 @@ namespace Zeltlager.Client
 				// Request the lager status
 				statusUpdate?.Invoke(NetworkStatus.LagerStatusRequest);
 				await connection.WritePacket(await Requests.LagerStatus.Create(this));
-				var lagerStatusResponse = await connection.ReadPacket() as Responses.LagerStatus;
+				var packet = await connection.ReadPacket();
+				var lagerStatusResponse = packet as Responses.LagerStatus;
 				if (lagerStatusResponse == null)
 					throw new LagerException("Got no lager status as response");
 				await lagerStatusResponse.ReadRemoteStatus(this);
@@ -183,7 +184,7 @@ namespace Zeltlager.Client
 				// Wait for the answers
 				foreach (var key in missingCollaborators)
 				{
-					var packet = await connection.ReadPacket();
+					packet = await connection.ReadPacket();
 					var collaboratorDataResponse = packet as Responses.CollaboratorData;
 					if (collaboratorDataResponse == null)
 						throw new LagerException("Got no collaborator data as response");
