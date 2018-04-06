@@ -274,7 +274,7 @@ namespace Zeltlager.Client
 			}
 			try
 			{
-				await lager.Upload(status => Status = "Upload lager: " + status);
+				await lager.Synchronise(status => Status = "Upload lager: " + status);
 			}
 			catch (Exception e)
 			{

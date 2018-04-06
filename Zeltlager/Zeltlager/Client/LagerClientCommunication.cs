@@ -56,6 +56,8 @@ namespace Zeltlager.Client
 		/// </summary>
 		public Collaborator OwnCollaborator { get; private set; }
 
+		public bool CreateNewBundle { get; set; }
+
 		/// <summary>
 		/// The password supplied by the user and used to generate the shared keys.
 		/// </summary>
@@ -236,6 +238,8 @@ namespace Zeltlager.Client
 				}
 
 				// Upload new bundles
+				CreateNewBundle = true;
+				await Save();
 				statusUpdate?.Invoke(NetworkStatus.UploadBundles);
 				packets.Clear();
 				foreach (var bundle in OwnCollaborator.Bundles.Skip(Remote.Status.GetBundleCount(OwnCollaborator)))
@@ -306,7 +310,6 @@ namespace Zeltlager.Client
 					await connection.Close();
 			}
 			await Save();
-			await Synchronise(statusUpdate);
 		}
 
 		/// <summary>
@@ -319,7 +322,8 @@ namespace Zeltlager.Client
 			// A bundle is usable if it was not already synchronised with the server
 			// and if it contains free space.
 			int maxBundleId = OwnCollaborator.Bundles.Count - 1;
-			if (OwnCollaborator.Bundles.Any() &&
+			if (!CreateNewBundle &&
+			    OwnCollaborator.Bundles.Any() &&
 				(Remote == null || Remote.Status.BundleCount.First(c => c.Item1 == OwnCollaborator.Key).Item2 < maxBundleId) &&
 				OwnCollaborator.Bundles[maxBundleId].Size < DataPacketBundle.MAX_PACKET_SIZE)
 				bundle = OwnCollaborator.Bundles[maxBundleId];
@@ -386,6 +390,7 @@ namespace Zeltlager.Client
 		{
 			output.Write(password);
 			output.WritePrivateKey(OwnCollaborator.Key);
+			output.Write(CreateNewBundle);
 			return Task.WhenAll();
 		}
 
@@ -399,6 +404,7 @@ namespace Zeltlager.Client
 			password = input.ReadString();
 			KeyPair ownCollaboratorPrivateKey = input.ReadPrivateKey();
 			OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);
+			CreateNewBundle = input.ReadBoolean();
 			return Task.WhenAll();
 		}
 
