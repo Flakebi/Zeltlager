@@ -329,6 +329,7 @@ namespace Zeltlager.Client
 				bundle = OwnCollaborator.Bundles[maxBundleId];
 			else
 			{
+				CreateNewBundle = false;
 				bundle = new DataPacketBundle();
 				OwnCollaborator.AddBundle(bundle);
 				Status.UpdateBundleCount(OwnCollaborator);

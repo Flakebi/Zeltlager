@@ -29,6 +29,8 @@ namespace Zeltlager.Settings
 				}
 				else
 				{
+					// Be sure that the lager exists on the remote server
+					await lager.Upload(status => ls.Status = status.GetMessage());
 					await lager.Synchronise(status => ls.Status = status.GetMessage());
 					await DisplayAlert("Hochladen erfolgreich", "Das aktuelle Lager wurde erfolgreich hochgeladen.", "Ok");
 				}
