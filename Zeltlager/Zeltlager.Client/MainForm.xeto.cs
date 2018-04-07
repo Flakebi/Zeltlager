@@ -254,6 +254,7 @@ namespace Zeltlager.Client
 				Status = "Error while loading the lager files";
 				success = false;
 			}
+			lager.Reset();
 			if (!await lager.ApplyHistory())
 			{
 				Status = "Error while loading the lager";

@@ -105,6 +105,7 @@ namespace Zeltlager
 			{
 				await MainPage.DisplayAlert("Achtung!", "Beim Laden der Datenblöcke ist ein Fehler aufgetreten.", "Ok");
 			}
+			newlager.Reset();
 			if (!await newlager.ApplyHistory())
 			{
 				await MainPage.DisplayAlert("Achtung!", "Beim Anwenden der Datenpakete ist ein Fehler aufgetreten.", "Ok");
