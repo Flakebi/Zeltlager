@@ -1,6 +1,6 @@
 # Die Zeltlager App
 
-Diese App haben wir entwickelt, um die Verwaltung unseres [Zeltlagers](http://www.zeltlager.kibelino.de/ "Kibelino Zeltlager") zu vereinfachen.
+Diese App haben wir entwickelt, um die Verwaltung unseres [Zeltlagers](https://meinzeltlager.com/ "Zeltlager") zu vereinfachen.
 
 ## Features
 In der Zeltlager App gibt es die folgenden Features:
