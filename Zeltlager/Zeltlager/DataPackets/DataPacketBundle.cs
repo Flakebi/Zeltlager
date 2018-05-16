@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Zeltlager.DataPackets
 {
 	using Cryptography;
-	using Serialisation;
 
 	/// <summary>
 	/// Represents a bundle of encrypted packets.
@@ -15,7 +14,7 @@ namespace Zeltlager.DataPackets
 	/// Serialising a DataPacketBundle will write its data.
 	/// Only serialise a DataPacketBundle with a LagerSerialisationContext.
 	/// </summary>
-	public class DataPacketBundle : ISerialisable<LagerSerialisationContext>
+	public class DataPacketBundle
 	{
 		/// <summary>
 		/// The maximum number of bytes in one bundle
@@ -78,7 +77,7 @@ namespace Zeltlager.DataPackets
 		/// Unpacks and decompresses packets from an unencrypted byte array.
 		/// </summary>
 		/// <param name="unencryptedData">The byte array that contains the packets.</param>
-		void Unpack(LagerClientSerialisationContext context, byte[] unencryptedData)
+		void Unpack(byte[] unencryptedData)
 		{
 			PacketId id = context.PacketId.Clone(this);
 			context.PacketId = id.Clone();
@@ -100,7 +99,7 @@ namespace Zeltlager.DataPackets
 		/// <summary>
 		/// Encrypts and writes all packets into the data array.
 		/// </summary>
-		public async Task Serialise(LagerClientSerialisationContext context)
+		public async Task Serialise()
 		{
 			// Get the unencrypted data
 			byte[] packed = Pack();
@@ -166,7 +165,7 @@ namespace Zeltlager.DataPackets
 		/// </summary>
 		/// <param name="context">The context for the verification.</param>
 		/// <returns>The packet iv und encrypted data.</returns>
-		public async Task<Tuple<byte[], byte[]>> VerifyAndGetEncryptedData(LagerSerialisationContext context)
+		public async Task<Tuple<byte[], byte[]>> VerifyAndGetEncryptedData()
 		{
 			await Verify(context.PacketId.Creator);
 			
@@ -188,7 +187,7 @@ namespace Zeltlager.DataPackets
 			}
 		}
 
-		async Task Deserialise(LagerClientSerialisationContext context)
+		async Task Deserialise()
 		{
 			var verificationResult = await VerifyAndGetEncryptedData(context);
 			byte[] unencryptedData = await LagerManager.CryptoProvider.DecryptSymetric(
@@ -196,14 +195,14 @@ namespace Zeltlager.DataPackets
 			Unpack(context, unencryptedData);
 		}
 
-		public async Task<IReadOnlyList<DataPacket>> GetPackets(LagerClientSerialisationContext context)
+		public async Task<IReadOnlyList<DataPacket>> GetPackets()
 		{
 			if (packets == null)
 				await Deserialise(context);
 			return packets;
 		}
 
-		public async Task AddPacket(LagerClientSerialisationContext context, DataPacket packet)
+		public async Task AddPacket(DataPacket packet)
 		{
 			if (packets == null)
 				packets = new List<DataPacket>();
@@ -214,33 +213,6 @@ namespace Zeltlager.DataPackets
 			packet.Id = id.Clone(packets.Count);
 			packets.Add(packet);
 			await Serialise(context);
-		}
-
-		// Serialisation with a LagerSerialisationContext
-		public async Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			await serialiser.Write(output, context, data);
-		}
-
-		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			output.Write(Id);
-			return Task.WhenAll();
-		}
-
-		public async Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			data = await serialiser.Read<byte[]>(input, context, null);
-			packets = null;
-		}
-
-		public static Task<DataPacketBundle> ReadFromId(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			int id = input.ReadInt32();
-			DataPacketBundle bundle = context.PacketId.Creator.Bundles[id];
-			// Update the context
-			context.PacketId = context.PacketId.Clone(bundle);
-			return Task.FromResult(bundle);
 		}
 	}
 }

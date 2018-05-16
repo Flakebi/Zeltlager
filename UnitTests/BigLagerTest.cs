@@ -8,7 +8,6 @@ using NUnit.Framework;
 using Zeltlager;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
 using Zeltlager.Calendar;
 
 namespace UnitTests

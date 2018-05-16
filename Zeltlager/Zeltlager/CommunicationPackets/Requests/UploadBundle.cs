@@ -7,8 +7,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 	using Client;
 	using DataPackets;
 	using Network;
-	using Serialisation;
-
+	
 	/// <summary>
 	/// Request the LagerStatus of a lager.
 	/// </summary>

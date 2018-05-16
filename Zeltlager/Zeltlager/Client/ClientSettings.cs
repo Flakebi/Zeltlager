@@ -3,34 +3,25 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.Client
 {
-	using Serialisation;
-
+	
 	public class ClientSettings
 	{
 		const string SETTINGS_FILE = "settings.conf";
 		const int VERSION = 0;
 
-		[Serialisation]
 		public int LastLager { get; set; }
 
-		[Serialisation]
 		public bool ShowInfoInLog { get; set; }
-		[Serialisation]
 		public bool ShowWarningInLog { get; set; }
-		[Serialisation]
 		public bool ShowErrorInLog { get; set; }
-		[Serialisation]
 		public bool ShowExceptionInLog { get; set; }
 
-		[Serialisation]
 		public bool HideDeadParticipants { get; set; }
-		[Serialisation]
 		public bool ErwischtShowTarget { get; set; }
 
 		/// <summary>
 		/// The address of the server for remote games.
 		/// </summary>
-		[Serialisation(Optional = true)]
 		public string ServerAddress { get; set; }
 
 		public async Task Load(IIoProvider io)

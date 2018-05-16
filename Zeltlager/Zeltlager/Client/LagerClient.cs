@@ -7,8 +7,7 @@ namespace Zeltlager.Client
 {
 	using Competition;
 	using DataPackets;
-	using Serialisation;
-
+	
 	// This is the logic part of the LagerClient, the saving/network/etc. part
 	// can be found in LagerClientCommunication.cs.
 	/// <summary>
@@ -20,7 +19,7 @@ namespace Zeltlager.Client
 	/// the lager status of the server.
 	/// Reading with a LagerClientSerialisationContext will also create the collaborator list.
 	/// </summary>
-	public partial class LagerClient : LagerBase, ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>, ISearchable
+	public partial class LagerClient : LagerBase, ISearchable
 	{
 		public IReadOnlyList<Member> Members => members;
 		public IReadOnlyList<Tent> Tents => tents;

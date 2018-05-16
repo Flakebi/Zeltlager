@@ -1,11 +1,11 @@
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Zeltlager.CommunicationPackets.Responses
 {
 	using DataPackets;
-	using Serialisation;
-	
+		
 	public class Bundle : CommunicationResponse
 	{
 		public static async Task<Bundle> Create(LagerBase lager, Collaborator collaborator, DataPacketBundle bundle)
@@ -42,10 +42,8 @@ namespace Zeltlager.CommunicationPackets.Responses
 					throw new LagerException("Received bundle for unknown collaborator");
 				Collaborator collaborator = lager.Collaborators[lager.Remote.Status.BundleCount[collaboratorId].Item1];
 				int bundleId = input.ReadInt32();
-				DataPacketBundle bundle = new DataPacketBundle();
-				await lager.Serialiser.Read(input,
-					new LagerSerialisationContext(lager),
-					bundle);
+				DataPacketBundle bundle = JsonConvert.DeserializeObject<DataPacketBundle>(input);
+					new DataPacketBundle();
 				bundle.Id = bundleId;
 
 				// Check if the bundle does already exist

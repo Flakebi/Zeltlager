@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
 using Zeltlager.UAM;
 
 namespace Zeltlager.Calendar
@@ -18,7 +17,7 @@ namespace Zeltlager.Calendar
 		{
 			Reference = reference;
 		}
-		
+
 		public override async Task OnSaveEditing(LagerClient lager, PlannedCalendarEvent oldObject)
 		{
 			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);

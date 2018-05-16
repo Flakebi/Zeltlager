@@ -8,8 +8,7 @@ namespace Zeltlager.Calendar
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-
+	
 	public class Calendar
 	{
 		LagerClient lager;

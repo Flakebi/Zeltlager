@@ -5,8 +5,8 @@ namespace Zeltlager.Calendar
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-	using UAM;
+	using Newtonsoft.Json;
+		using UAM;
 
 	/// <summary>
 	/// Events that do not yet have a day or time assigned.
@@ -16,23 +16,18 @@ namespace Zeltlager.Calendar
 	{
 		protected LagerClient lager;
 
-		[Serialisation(Type = SerialisationType.Id)]
+		[JsonIgnore]
 		public PacketId Id { get; set; }
 
 		[Editable("Titel")]
-		[Serialisation]
 		public string Title { get; set; }
 
 		[Editable("Beschreibung", true)]
-		[Serialisation]
 		public string Detail { get; set; }
 
-		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		public PlannedCalendarEvent() {}
-
-		public PlannedCalendarEvent(LagerClientSerialisationContext context) : this() {}
 
 		public PlannedCalendarEvent(PacketId id, string title, string detail, LagerClient lager)
 		{
@@ -40,18 +35,6 @@ namespace Zeltlager.Calendar
 			Title = title;
 			Detail = detail;
 			this.lager = lager;
-		}
-
-		static Task<PlannedCalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult(context.LagerClient.Calendar.GetPlannedEventFromPacketId(id));
-		}
-
-		public void Add(LagerClientSerialisationContext context)
-		{
-			Id = context.PacketId;
-			lager = context.LagerClient;
-			context.LagerClient.Calendar.InsertNewPlannedCalendarEvent(this);
 		}
 
 		public override PlannedCalendarEvent Clone()

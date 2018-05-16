@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Zeltlager
 {
 	using Cryptography;
-	using Serialisation;
 
 	/// <summary>
 	/// Stores the status of a lager: How many packets were created by each collaborator.
 	/// </summary>
-	public class LagerStatus : ISerialisable<LagerSerialisationContext>
+	public class LagerStatus
 	{
 		readonly List<Tuple<KeyPair, int>> bundleCount = new List<Tuple<KeyPair, int>>();
 		
@@ -69,38 +66,6 @@ namespace Zeltlager
 		public void AddBundleCount(Tuple<KeyPair, int> count)
 		{
 			bundleCount.Add(count);
-		}
-
-		// Serialisation with a LagerSerialisationContext
-		public Task Write(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			output.Write(BundleCount.Count);
-			foreach (var c in BundleCount)
-			{
-				// Write the collaborator order from the point of view of this object
-				output.WritePublicKey(c.Item1);
-				output.Write(c.Item2);
-			}
-			return Task.WhenAll();
-		}
-
-		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			throw new InvalidOperationException("You can't write the id of a lager status");
-		}
-
-		public Task Read(BinaryReader input, Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			int count = input.ReadInt32();
-			bundleCount.Clear();
-			bundleCount.Capacity = count;
-			for (int i = 0; i < count; i++)
-			{
-				KeyPair key = input.ReadPublicKey();
-				int packets = input.ReadInt32();
-				bundleCount.Add(new Tuple<KeyPair, int>(key, packets));
-			}
-			return Task.WhenAll();
 		}
 	}
 }

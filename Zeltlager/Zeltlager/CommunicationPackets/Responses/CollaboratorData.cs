@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.CommunicationPackets.Responses
 {
-	using Serialisation;
-	
+		
 	public class CollaboratorData : CommunicationResponse
 	{
 		public static async Task<CollaboratorData> Create(LagerBase lager, Collaborator collaborator)

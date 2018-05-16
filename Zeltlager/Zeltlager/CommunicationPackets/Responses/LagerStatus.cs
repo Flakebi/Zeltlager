@@ -1,10 +1,10 @@
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Zeltlager.CommunicationPackets.Responses
 {
-	using Serialisation;
-	
+		
 	public class LagerStatus : CommunicationResponse
 	{
 		public static async Task<LagerStatus> Create(LagerBase lager)
@@ -18,21 +18,12 @@ namespace Zeltlager.CommunicationPackets.Responses
 
 		async Task Init(LagerBase lager)
 		{
-			MemoryStream mem = new MemoryStream();
-			using (BinaryWriter output = new BinaryWriter(mem))
-				await lager.Serialiser.Write(output,
-					new LagerSerialisationContext(lager),
-					lager.Status);
-			Data = mem.ToArray();
+			Data = JsonConvert.SerializeObject(lager.Status);
 		}
 
 		public async Task ReadRemoteStatus(LagerBase lager)
 		{
-			MemoryStream mem = new MemoryStream(Data);
-			using (BinaryReader input = new BinaryReader(mem))
-				await lager.Serialiser.Read(input,
-					new LagerSerialisationContext(lager),
-					lager.Remote.Status);
+			lager.Remote.Status = JsonConvert.DeserializeObject<Zeltlager.LagerStatus>(Data);
 		}
 	}
 }

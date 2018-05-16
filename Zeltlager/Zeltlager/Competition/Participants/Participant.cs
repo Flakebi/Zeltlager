@@ -5,47 +5,36 @@ namespace Zeltlager.Competition
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-
+	using Newtonsoft.Json;
+	
 	/// <summary>
 	/// represents a participant in a comptetion, could be a tent, a mixed group or a single person
 	/// </summary>
 	public abstract class Participant : Editable<Participant>, ISearchable, IEquatable<Participant>, IDeletable
 	{
-		[Serialisation(Type = SerialisationType.Id)]
+
+		[JsonIgnore]
 		public PacketId Id { get; set; }
 
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json reference
 		protected Competition competition;
 
 		public virtual string Name { get; set; }
 
+		[JsonIgnore]
 		public string SearchableText => Name;
 
+		[JsonIgnore]
 		public string SearchableDetail => "";
 
-		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
-		static Task<Participant> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult(context.LagerClient.CompetitionHandler.GetParticipantFromId(id));
-		}
-
 		public Participant() {}
-
-		public Participant(LagerClientSerialisationContext context) : this() {}
 
 		public Participant(PacketId id, Competition competition)
 		{
 			this.competition = competition;
 			Id = id;
-		}
-
-		public void Add(LagerClientSerialisationContext context) 
-		{
-			Id = context.PacketId;
-			competition.AddParticipant(this);
 		}
 
 		public LagerClient GetLagerClient()

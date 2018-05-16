@@ -7,38 +7,39 @@ namespace Zeltlager
 	using System;
 	using Client;
 	using DataPackets;
-	using Serialisation;
-	using UAM;
+	using Newtonsoft.Json;
+		using UAM;
 
 	[Editable("Zelt")]
 	public class Tent : Editable<Tent>, ISearchable, IDeletable
 	{
 		LagerClient lager;
 
-		[Serialisation(Type = SerialisationType.Id)]
+		[JsonIgnore]
 		public PacketId Id { get; set; }
 
 		[Editable("Zeltnummer")]
-		[Serialisation]
 		public int Number { get; set; }
 
 		[Editable("Zeltname")]
-		[Serialisation]
 		public string Name { get; set; }
 
-		[Serialisation(Type = SerialisationType.Reference)]
 		List<Member> supervisors;
 
 		[Editable("Mädchenzelt")]
-		[Serialisation]
 		public bool Girls { get; set; }
 
 		[Editable("Zeltbetreuer")]
+		// todo json reference
 		public List<Member> Supervisors => supervisors;
 
+		[JsonIgnore]
 		public IReadOnlyList<Member> SupervisorsList => lager.VisibleSupervisors;
+
+		[JsonIgnore]
 		public string Display => Number + " " + Name + " " + (Girls ? "♀" : "♂");
 
+		[JsonIgnore]
 		public string DisplayDetail 
 		{
 			get
@@ -50,13 +51,6 @@ namespace Zeltlager
 				return GetMembers().Count + " Teilnehmer";
 			}
 		}
-
-		// For deserialisation
-		protected static Task<Tent> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult(context.LagerClient.Tents.First(t => t.Id == id));
-		}
-
 		public Tent()
 		{
 			Id = new PacketId(null);
@@ -65,9 +59,6 @@ namespace Zeltlager
 			Girls = false;
 			supervisors = new List<Member>();
 		}
-
-		// For deserialisation
-		public Tent(LagerClientSerialisationContext context) : this() { }
 
 		public Tent(PacketId id, int number, string name, bool girls, List<Member> supervisors, LagerClient lager)
 		{
@@ -101,15 +92,6 @@ namespace Zeltlager
 			return new List<Member>(lager.VisibleMembers.Where((arg) => arg.Tent.Equals(this)));
 		}
 
-		// Add the member to a lager after deserialising it
-		public void Add(LagerClientSerialisationContext context)
-		{
-			Id = context.PacketId;
-			this.lager = context.LagerClient;
-			context.LagerClient.AddTent(this);
-		}
-
-
 		#region Interface implementations
 
 		public override Tent Clone()
@@ -117,11 +99,12 @@ namespace Zeltlager
 			return new Tent(Id?.Clone(), Number, Name, Girls, new List<Member>(supervisors), lager);
 		}
 
+		[JsonIgnore]
 		public string SearchableText => Display;
 
+		[JsonIgnore]
 		public string SearchableDetail => DisplayDetail;
 
-		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		#endregion

@@ -3,8 +3,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
-using System.Net.Http.Headers;
 
 namespace Zeltlager.Calendar
 {

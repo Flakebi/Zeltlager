@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	using Serialisation;
-
 	/// <summary>
 	/// A PacketId idenfifies a packet written by a collaborator and
 	/// stored in a packet bundle.
@@ -16,11 +14,11 @@ namespace Zeltlager.DataPackets
 	/// Serialising a reference to this PacketId will write only the
 	/// bundle and packet id.
 	/// </summary>
-	public class PacketId : IEquatable<PacketId>, ISerialisable<LagerClientSerialisationContext>
+	public class PacketId : IEquatable<PacketId>
 	{
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json ref
 		public Collaborator Creator { get; private set; }
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json ref
 		public DataPacketBundle Bundle { get; private set; }
 		public int? PacketIndex { get; private set; }
 		public DataPacket Packet => Bundle.Packets[PacketIndex.Value];
@@ -94,41 +92,6 @@ namespace Zeltlager.DataPackets
 		public static bool operator !=(PacketId p1, PacketId p2)
 		{
 			return !(p1 == p2);
-		}
-
-		// Serialisation
-		public async Task Write(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			await serialiser.WriteId(output, context, Creator);
-			await serialiser.WriteId(output, context, this);
-		}
-
-		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			output.Write(Bundle.Id);
-			output.Write(PacketIndex.Value);
-			return Task.WhenAll();
-		}
-
-		public async Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			Creator = await serialiser.ReadFromId<Collaborator>(input, context);
-			// Update the context temporary with the collaborator
-			PacketId old = context.PacketId;
-			context.PacketId = old.Clone(Creator);
-			var id = await serialiser.ReadFromId<PacketId>(input, context);
-			context.PacketId = old;
-			Bundle = id.Bundle;
-			PacketIndex = id.PacketIndex;
-		}
-
-		public static Task<PacketId> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			PacketId id = new PacketId(context.PacketId.Creator);
-			int bundleId = input.ReadInt32();
-			id.Bundle = context.PacketId.Creator.Bundles[bundleId];
-			id.PacketIndex = input.ReadInt32();
-			return Task.FromResult(id);
 		}
 	}
 }

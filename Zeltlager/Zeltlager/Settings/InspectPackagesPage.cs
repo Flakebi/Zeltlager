@@ -1,8 +1,7 @@
-﻿using Xamarin.Forms;
+using Xamarin.Forms;
 using System.Threading.Tasks;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
 using System.Collections.Generic;
 using System.Linq;
 using System;

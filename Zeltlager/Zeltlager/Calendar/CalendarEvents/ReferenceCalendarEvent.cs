@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
-
 namespace Zeltlager.Calendar
 {
 	/// <summary>
@@ -11,13 +10,12 @@ namespace Zeltlager.Calendar
 	/// </summary>
 	public class ReferenceCalendarEvent : IListCalendarEvent
 	{
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json ref
 		public StandardCalendarEvent Reference { get; set; }
 
-		[Serialisation(Type = SerialisationType.Id)]
+		[JsonIgnore]
 		public PacketId Id { get; set; }
 
-		[Serialisation]
 		DateTime date;
 		public DateTime Date
 		{
@@ -28,31 +26,22 @@ namespace Zeltlager.Calendar
 			}
 		}
 
+		[JsonIgnore] 
 		public string TimeString => Reference.TimeString;
+
+		[JsonIgnore] 
 		public string Title => Reference.Title;
+
+		[JsonIgnore] 
 		public string Detail => Reference.Detail;
 
-		[Serialisation]
 		public bool IsVisible { get; set; } = true;
-
-		static Task<ReferenceCalendarEvent> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult((ReferenceCalendarEvent)context.LagerClient.Calendar.GetEventFromPacketId(id));
-		}
-
-		public ReferenceCalendarEvent(LagerClientSerialisationContext context) {}
 
 		public ReferenceCalendarEvent(PacketId id, StandardCalendarEvent reference, DateTime date)
 		{
 			Reference = reference;
 			Id = id;
 			Date = date;
-		}
-
-		public void Add(LagerClientSerialisationContext context)
-		{
-			Id = context.PacketId;
-			context.LagerClient.Calendar.InsertNewCalendarEvent(this);
 		}
 
 		public CalendarEvent GetEditableCalendarEvent()

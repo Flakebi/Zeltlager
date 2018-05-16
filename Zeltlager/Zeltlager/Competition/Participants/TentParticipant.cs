@@ -3,23 +3,17 @@ using System.Threading.Tasks;
 namespace Zeltlager.Competition
 {
 	using DataPackets;
-	using Serialisation;
-
+	using Newtonsoft.Json;
+	
 	public class TentParticipant : Participant
 	{
+		[JsonIgnore]
 		public override string Name => Tent.Display;
 
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json reference
 		public Tent Tent { get; set; }
 
-		static Task<TentParticipant> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult((TentParticipant)context.LagerClient.CompetitionHandler.GetParticipantFromId(id));
-		}
-
 		public TentParticipant() { }
-
-		public TentParticipant(LagerClientSerialisationContext context) : base(context) { }
 
 		public TentParticipant(PacketId id, Tent tent, Competition competition) : base(id, competition)
 		{

@@ -6,8 +6,7 @@ namespace Zeltlager.CommunicationPackets.Requests
 {
 	using Client;
 	using Network;
-	using Serialisation;
-
+	
 	public class Register : CommunicationRequest
 	{
 		public static async Task<Register> Create(LagerClient lager)

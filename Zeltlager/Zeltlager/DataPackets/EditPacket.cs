@@ -8,8 +8,7 @@ using Zeltlager.Competition;
 
 namespace Zeltlager.DataPackets
 {
-	using Serialisation;
-
+	
 	public class EditPacket : DataPacket
 	{
 		/// <summary>
@@ -40,16 +39,14 @@ namespace Zeltlager.DataPackets
 
 		protected EditPacket() { }
 
-		public static async Task<EditPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, object obj)
+		public static async Task<EditPacket> Create(object obj)
 		{
 			var packet = new EditPacket();
-			await packet.Init(serialiser, context, obj);
+			await packet.Init(obj);
 			return packet;
 		}
 
-		async Task Init(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, object obj)
+		async Task Init(object obj)
 		{
 			var mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
@@ -76,8 +73,7 @@ namespace Zeltlager.DataPackets
 			Data = mem.ToArray();
 		}
 
-		public override async Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context)
+		public override async Task Deserialise()
 		{
 			var type = types[subId];
 			using (BinaryReader input = new BinaryReader(new MemoryStream(Data)))

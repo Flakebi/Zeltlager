@@ -2,8 +2,7 @@ using System.Threading.Tasks;
 
 namespace Zeltlager.DataPackets
 {
-	using Serialisation;
-
+	
 	/// <summary>
 	/// Represents an invalid packet. It contains only the raw data.
 	/// </summary>
@@ -14,9 +13,7 @@ namespace Zeltlager.DataPackets
 			Data = data;
 		}
 
-		public override Task Deserialise(
-			Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context)
+		public override Task Deserialise()
 		{
 			// Just do nothing here
 			return Task.WhenAll();

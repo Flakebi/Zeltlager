@@ -1,10 +1,10 @@
 using System.IO;
 using System.Threading.Tasks;
+using Zeltlager.Client;
 
 namespace Zeltlager.DataPackets
 {
-	using Serialisation;
-
+	
 	/// <summary>
 	/// Ignore a specific packet.
 	/// </summary>
@@ -13,29 +13,23 @@ namespace Zeltlager.DataPackets
 		// Apply RevertPackets before normal packets.
 		public override int Priority => -1;
 
+		public PacketId PacketId { get; set; }
+
 		protected RevertPacket() { }
 
 		/// <summary>
 		/// Creates a new RevertPacket.
 		/// </summary>
 		/// <param name="packet">The packet that should be reverted.</param>
-		public RevertPacket(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, PacketId packet)
+		public RevertPacket(PacketId packet)
 		{
-			var mem = new MemoryStream();
-			using (BinaryWriter output = new BinaryWriter(mem))
-				serialiser.Write(output, context, packet);
-			Data = mem.ToArray();
+			PacketId = packet;
 		}
 
-		public override async Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context)
+		public override async Task Deserialise(LagerClient lager)
 		{
-			using (BinaryReader input = new BinaryReader(new MemoryStream(Data)))
-			{
-				PacketId packet = await serialiser.Read(input, context, new PacketId(context.PacketId.Creator));
-				contentString = packet.ToString();
-				for (int i = 0; i < context.Packets.Count; i++)
+			contentString = "Revert for " + PacketId;
+			for (int i = 0; i < lager.Collaborators.Packets.Count; i++)
 				{
 					if (context.Packets[i].Id == packet)
 					{
@@ -43,7 +37,7 @@ namespace Zeltlager.DataPackets
 						break;
 					}
 				}
-			}
+
 		}
 
 		public override int CompareTo(DataPacket other)

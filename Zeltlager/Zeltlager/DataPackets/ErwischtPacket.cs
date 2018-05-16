@@ -1,49 +1,39 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Zeltlager.DataPackets
 {
 	using Erwischt;
-	using Serialisation;
+	using Zeltlager.Client;
 
 	public class ErwischtPacket : DataPacket
 	{
+		public PacketId GameId { get; private set; }
+		public PacketId MemberId { get; private set; }
+		public bool IsAlive { get; private set; }
+
 		protected ErwischtPacket() { }
 
-		public static async Task<ErwischtPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
-		                    LagerClientSerialisationContext context, ErwischtParticipant erwischtMember, bool isAlive)
+		public static async Task<ErwischtPacket> Create(ErwischtParticipant erwischtMember, bool isAlive)
 		{
-			var packet = new ErwischtPacket();
-			await packet.Init(serialiser, context, erwischtMember, isAlive);
+			var packet = new ErwischtPacket()
+			{
+				GameId = erwischtMember.Game.Id,
+				MemberId = erwischtMember.Member.Id,
+				IsAlive = isAlive,
+			};
 			return packet;
 		}
 
-		async Task Init(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, ErwischtParticipant erwischtMember, bool isAlive)
+		public override async Task Deserialise(LagerClient lager)
 		{
-			var mem = new MemoryStream();
-			using (BinaryWriter output = new BinaryWriter(mem))
-			{
-				await serialiser.WriteId(output, context, erwischtMember.Game);
-				await serialiser.WriteId(output, context, erwischtMember.Member);
-				output.Write(isAlive);
-			}
-			Data = mem.ToArray();
-		}
+			ErwischtGame game = lager.ErwischtHandler.Games.Find(eg => eg.Id == GameId);
+			Member member = lager.Members.First(m => m.Id == MemberId);
+			ErwischtParticipant p = lager.ErwischtHandler.GetFromIds(game.Id, member.Id);
+			p.IsAlive = IsAlive;
 
-		public override async Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context)
-		{
-			using (BinaryReader input = new BinaryReader(new MemoryStream(Data)))
-			{
-				ErwischtGame game = await serialiser.ReadFromId<ErwischtGame>(input, context);
-				Member member = await serialiser.ReadFromId<Member>(input, context);
-				ErwischtParticipant p = context.LagerClient.ErwischtHandler.GetFromIds(game.Id, member.Id);
-				bool isAlive = input.ReadBoolean();
-				p.IsAlive = isAlive;
-
-				contentString = p.ToString();
-			}
+			contentString = p.ToString();
 		}
 	}
 }

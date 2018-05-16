@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 namespace Zeltlager.Competition
 {
 	using Client;
-	using Serialisation;
-
+	
 	public class Ranking
 	{
-		[Serialisation]
 		public List<CompetitionResult> Results { get; set; }
 
 		public Ranking()

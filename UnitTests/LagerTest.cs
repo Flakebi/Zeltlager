@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Zeltlager;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
 
 namespace UnitTests
 {

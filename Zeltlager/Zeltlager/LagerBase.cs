@@ -8,13 +8,12 @@ namespace Zeltlager
 {
 	using Cryptography;
 	using DataPackets;
-	using Serialisation;
-
+	
 	/// <summary>
 	/// Serialising a LagerBase with a LagerSerialisationContext will write
 	/// the data of a lager.
 	/// </summary>
-	public class LagerBase : ISerialisable<LagerSerialisationContext>
+	public class LagerBase
 	{
 		/// <summary>
 		/// The version of the data packet protocol.
@@ -30,8 +29,6 @@ namespace Zeltlager
 		protected IIoProvider ioProvider;
 
 		public LagerData Data { get; set; }
-
-		public Serialiser<LagerSerialisationContext> Serialiser { get; private set; }
 
 		protected Dictionary<KeyPair, Collaborator> collaborators = new Dictionary<KeyPair, Collaborator>();
 		public IReadOnlyDictionary<KeyPair, Collaborator> Collaborators => collaborators;
@@ -50,7 +47,6 @@ namespace Zeltlager
 		public LagerBase(LagerManager manager, IIoProvider io, int id)
 		{
 			Manager = manager;
-			Serialiser = new Serialiser<LagerSerialisationContext>();
 			ioProvider = io;
 			Id = id;
 			Status = new LagerStatus();
@@ -61,7 +57,6 @@ namespace Zeltlager
 		/// </summary>
 		public virtual async Task Load()
 		{
-			LagerSerialisationContext context = new LagerSerialisationContext(this);
 			// Load the lager data
 			using (BinaryReader input = new BinaryReader(await ioProvider.ReadFile(LAGER_FILE)))
 				await Serialiser.Read(input, context, this);
@@ -71,7 +66,6 @@ namespace Zeltlager
 
 		public virtual async Task Save()
 		{
-			LagerSerialisationContext context = new LagerSerialisationContext(this);
 			// Create the folder if it doesn't exist
 			await ioProvider.CreateFolder("");
 			// Write the lager data
@@ -99,7 +93,6 @@ namespace Zeltlager
 					// Read the collaborator if possible
 					IIoProvider rootedIo = new RootedIoProvider(ioProvider, collaboratorId.ToString());
 					Collaborator collaborator = new Collaborator();
-					LagerSerialisationContext context = new LagerSerialisationContext(this);
 					context.PacketId = new PacketId(collaborator);
 
 					using (BinaryReader input = new BinaryReader(await rootedIo.ReadFile(COLLABORATOR_FILE)))
@@ -232,42 +225,9 @@ namespace Zeltlager
 				await Serialiser.Write(output, new LagerSerialisationContext(this), collaborator);
 		}
 
-		// Serialisation with a LagerSerialisationContext
-		public virtual async Task Write(BinaryWriter output,
-			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
+		public async Task RemovePacket(PacketId id)
 		{
-			output.Write(Data);
-			// Write server related data only if this lager is connected to a server
-			output.Write(Remote != null);
-			if (Remote != null)
-				await serialiser.Write(output, context, Remote);
-		}
-
-		public Task WriteId(BinaryWriter output, Serialiser<LagerSerialisationContext> serialiser,
-			LagerSerialisationContext context)
-		{
-			output.Write(Id);
-			return Task.WhenAll();
-		}
-
-		public virtual async Task Read(BinaryReader input,
-			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			Data = input.ReadLagerData();
-			// Read server related data only if this lager is connected to a server
-			if (input.ReadBoolean())
-			{
-				Remote = new LagerRemote();
-				await serialiser.Read(input, context, Remote);
-			}
-			await Verify();
-		}
-
-		public static Task<LagerBase> ReadFromId(BinaryReader input,
-			Serialiser<LagerSerialisationContext> serialiser, LagerSerialisationContext context)
-		{
-			int id = input.ReadInt32();
-			return Task.FromResult(context.Manager.Lagers[id]);
+			
 		}
 	}
 }

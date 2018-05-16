@@ -7,8 +7,8 @@ namespace Zeltlager.Erwischt
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-	using UAM;
+	using Newtonsoft.Json;
+		using UAM;
 
 	/// <summary>
 	/// One instance of an Erwischt game.
@@ -18,18 +18,18 @@ namespace Zeltlager.Erwischt
 	{
 		LagerClient lager;
 
-		[Serialisation(Type = SerialisationType.Id)]
+		[JsonIgnore]
 		public PacketId Id { get; set; }
 
-		[Serialisation]
 		[Editable("Name")]
 		public string Name { get; set; }
 
-		[Serialisation]
 		public List<ErwischtParticipant> ErwischtParticipants { get; private set; }
 
+		[JsonIgnore]
 		public string SearchableText => Name;
 
+		[JsonIgnore]
 		public string SearchableDetail
 		{
 			get
@@ -47,14 +47,7 @@ namespace Zeltlager.Erwischt
 			}
 		}
 
-		[Serialisation]
 		public bool IsVisible { get; set; } = true;
-
-		// For deserialisation
-		protected static Task<ErwischtGame> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult(context.LagerClient.ErwischtHandler.Games.First(g => g.Id == id));
-		}
 
 		public ErwischtGame(string name, LagerClient lager)
 		{
@@ -68,17 +61,6 @@ namespace Zeltlager.Erwischt
 		{
 			ErwischtParticipants = participants;
 			AssignTargetsToParticipants();
-		}
-
-		// For deserialisation
-		public ErwischtGame(LagerClientSerialisationContext context) : this(null, context.LagerClient) { }
-
-		public void Add(LagerClientSerialisationContext context)
-		{
-			Id = context.PacketId;
-			lager = context.LagerClient;
-			AssignTargetsToParticipants();
-			context.LagerClient.ErwischtHandler.Games.Add(this);
 		}
 
 		public override ErwischtGame Clone()

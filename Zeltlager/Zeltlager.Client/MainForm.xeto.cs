@@ -12,8 +12,7 @@ namespace Zeltlager.Client
 {
 	using DataPackets;
 	using Network;
-	using Serialisation;
-
+	
 	class WrapTextBinding<T> : IIndirectBinding<string>
 	{
 		Func<T, string> wrapper;

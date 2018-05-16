@@ -3,23 +3,15 @@ using System.Threading.Tasks;
 namespace Zeltlager.Competition
 {
 	using DataPackets;
-	using Serialisation;
-
+	
 	public class MemberParticipant : Participant
 	{
 		public override string Name => Member.Display;
 
-		[Serialisation(Type = SerialisationType.Reference)]
+		// TODO json reference
 		public Member Member { get; set; }
 
-		static Task<MemberParticipant> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult((MemberParticipant)context.LagerClient.CompetitionHandler.GetParticipantFromId(id));
-		}
-
 		public MemberParticipant() { }
-
-		public MemberParticipant(LagerClientSerialisationContext context) : base(context) { }
 
 		public MemberParticipant(PacketId id, Member mem, Competition competition) : base(id, competition)
 		{

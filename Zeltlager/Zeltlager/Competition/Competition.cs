@@ -7,8 +7,7 @@ namespace Zeltlager.Competition
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-	using UAM;
+		using UAM;
 
 	[Editable("Wettkampf")]
 	public class Competition : Rankable, ISearchable, IDeletable
@@ -16,10 +15,8 @@ namespace Zeltlager.Competition
 		LagerClient lager;
 
 		[Editable("Name")]
-		[Serialisation]
 		public string Name { get; set; }
 
-		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
 		public List<Participant> Participants { get; set; }
@@ -45,18 +42,11 @@ namespace Zeltlager.Competition
 			}
 		}
 
-		protected static Task<Competition> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult(context.LagerClient.CompetitionHandler.GetCompetitionFromPacketId(id));
-		}
-
 		public Competition() 
 		{
 			Participants = new List<Participant>();
 			Stations = new List<Station>();
 		}
-
-		public Competition(LagerClientSerialisationContext context) : this() {}
 
 		public Competition(PacketId id, string name, LagerClient lager)
 		{
@@ -130,13 +120,6 @@ namespace Zeltlager.Competition
 				// reset points again for this cr (we only used them for determining the place)
 				cr.Points = null;
 			}
-		}
-
-		public override void Add(LagerClientSerialisationContext context)
-		{
-			Id = context.PacketId;
-			lager = context.LagerClient;
-			context.LagerClient.CompetitionHandler.AddCompetition(this);
 		}
 
 		public override void AddResult(CompetitionResult cr)

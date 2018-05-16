@@ -12,7 +12,6 @@ namespace Zeltlager.Client
 	using Network;
 	using Requests = CommunicationPackets.Requests;
 	using Responses = CommunicationPackets.Responses;
-	using Serialisation;
 
 	public static class InitStatusHelper
 	{
@@ -36,7 +35,7 @@ namespace Zeltlager.Client
 
 	// This is the saving/network part of the LagerClient, the logic part can be
 	// found in LagerClient.cs.
-	public partial class LagerClient : LagerBase, ISerialisable<LagerSerialisationContext>, ISerialisable<LagerClientSerialisationContext>, ISearchable
+	public partial class LagerClient : LagerBase, ISearchable
 	{
 		public enum InitStatus
 		{
@@ -47,9 +46,6 @@ namespace Zeltlager.Client
 		}
 
 		const string CLIENT_LAGER_FILE = "client.data";
-
-		public Serialiser<LagerClientSerialisationContext> ClientSerialiser { get; private set; }
-			= new Serialiser<LagerClientSerialisationContext>();
 
 		/// <summary>
 		/// The collaborator that we are.
@@ -365,53 +361,6 @@ namespace Zeltlager.Client
 			}
 			else
 				await packet.Deserialise(ClientSerialiser, context);
-		}
-
-		// Serialisation with a LagerSerialisationContext
-		public override async Task Write(BinaryWriter output,
-			Serialiser<LagerSerialisationContext> serialiser,
-			LagerSerialisationContext context)
-		{
-			await Data.Serialise();
-			await base.Write(output, serialiser, context);
-		}
-
-		public override async Task Read(BinaryReader input,
-			Serialiser<LagerSerialisationContext> serialiser,
-			LagerSerialisationContext context)
-		{
-			await base.Read(input, serialiser, context);
-			await Data.Decrypt(password);
-		}
-
-		// Serialisation with a LagerClientSerialisationContext
-		public Task Write(BinaryWriter output,
-			Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context)
-		{
-			output.Write(password);
-			output.WritePrivateKey(OwnCollaborator.Key);
-			output.Write(CreateNewBundle);
-			return Task.WhenAll();
-		}
-
-		public Task WriteId(BinaryWriter output, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			throw new InvalidOperationException("Use a LagerSerialisationContext to write the id");
-		}
-
-		public Task Read(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			password = input.ReadString();
-			KeyPair ownCollaboratorPrivateKey = input.ReadPrivateKey();
-			OwnCollaborator = new Collaborator(ownCollaboratorPrivateKey);
-			CreateNewBundle = input.ReadBoolean();
-			return Task.WhenAll();
-		}
-
-		public static Task<LagerClient> ReadFromId(BinaryReader input, Serialiser<LagerClientSerialisationContext> serialiser, LagerClientSerialisationContext context)
-		{
-			throw new InvalidOperationException("Use a LagerSerialisationContext to write from an id");
 		}
 	}
 }

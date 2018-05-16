@@ -8,8 +8,7 @@ namespace Zeltlager.Competition
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-
+	
 	public partial class AddEditParticipantPage : ContentPage
 	{
 		Participant participant;

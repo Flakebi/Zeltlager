@@ -1,14 +1,12 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace Zeltlager
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-
+	
 	public interface IDeletable
 	{
-		[Serialisation]
 		bool IsVisible { get; set; }
 	}
 
@@ -17,9 +15,7 @@ namespace Zeltlager
 		public static async Task Delete(this IDeletable t, LagerClient lager)
 		{
 			t.IsVisible = false;
-			LagerClientSerialisationContext context = new LagerClientSerialisationContext(lager);
-			Serialiser<LagerClientSerialisationContext> serialiser = lager.ClientSerialiser;
-			await lager.AddPacket(await EditPacket.Create(serialiser, context, t));
+			await lager.AddPacket(await EditPacket.Create(t));
 		}
 	}
 }

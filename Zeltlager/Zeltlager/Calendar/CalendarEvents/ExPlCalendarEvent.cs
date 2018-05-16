@@ -1,9 +1,7 @@
 using System;
-using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using Zeltlager.Client;
 using Zeltlager.DataPackets;
-using Zeltlager.Serialisation;
 using Zeltlager.UAM;
 namespace Zeltlager.Calendar
 {

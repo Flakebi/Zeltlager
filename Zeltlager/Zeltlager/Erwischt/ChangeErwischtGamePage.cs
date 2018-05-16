@@ -5,8 +5,7 @@ namespace Zeltlager.Erwischt
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-
+	
 	public class ChangeErwischtGamePage : ContentPage
 	{
 		LagerClient lager;

@@ -4,41 +4,35 @@ using System.Threading.Tasks;
 namespace Zeltlager.Competition
 {
 	using DataPackets;
-	using Serialisation;
-	using UAM;
+	using Newtonsoft.Json;
+		using UAM;
 
 	[Editable("Ergebnis", NameProperty = nameof(ParticipantName))]
 	public class CompetitionResult : Editable<CompetitionResult>, IComparable<CompetitionResult>
 	{
-		[Serialisation(Type = SerialisationType.Id)]
+		[JsonIgnore]
 		public PacketId Id { get; set; }
 
 		[Editable("Punkte")]
-		[Serialisation]
 		public int? Points { get; set; }
 
 		[Editable("Platzierung")]
-		[Serialisation]
 		public int? Place { get; set; }
 		
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json ref
 		public Participant Participant { get; set; }
 
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json ref
 		public Rankable Owner { get; set; }
 
+		[JsonIgnore]
 		public string PointsString => Points?.ToString() ?? "-";
+		[JsonIgnore]
 		public string PlaceString => Place?.ToString() ?? "-";
+		[JsonIgnore]
 		public string ParticipantName => Participant.Name;
 
-		protected static Task<CompetitionResult> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult(context.LagerClient.CompetitionHandler.GetCompetitionResultFromPacketId(id));
-		}
-
 		public CompetitionResult() {}
-
-		public CompetitionResult(LagerClientSerialisationContext context) : this() {}
 
 		public CompetitionResult(PacketId id, Rankable owner, Participant p, int? points = null, int? place = null)
 		{
@@ -47,12 +41,6 @@ namespace Zeltlager.Competition
 			Place = place;
 			Participant = p;
 			Owner = owner;
-		}
-
-		public void Add(LagerClientSerialisationContext context)
-		{
-			Id = context.PacketId;
-			context.LagerClient.CompetitionHandler.AddCompetitionResult(this);
 		}
 
 		public override CompetitionResult Clone()

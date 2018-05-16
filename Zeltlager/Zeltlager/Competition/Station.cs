@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 
 namespace Zeltlager.Competition
 {
 	using Client;
 	using DataPackets;
-	using Serialisation;
-	using UAM;
+	using Newtonsoft.Json;
+		using UAM;
 
 	/// <summary>
 	/// Represents one station in the competition and the results achieved there.
@@ -14,37 +15,31 @@ namespace Zeltlager.Competition
 	[Editable("Station")]
 	public class Station : Rankable, ISearchable, IDeletable
 	{
-		[Serialisation(Type = SerialisationType.Reference)]
+		[JsonProperty]
 		Competition competition;
 
 		[Editable("Name")]
-		[Serialisation]
 		public string Name { get; set; }
 
 		[Editable("Betreuer")]
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json reference
 		public Member Supervisor { get; set; }
 
-		[Serialisation]
 		public bool IsVisible { get; set; } = true;
 
+		[JsonIgnore]
 		public IReadOnlyList<Member> SupervisorList => competition.GetLagerClient().VisibleSupervisors;
 
+		[JsonIgnore]
 		public string SearchableText => Name;
 
+		[JsonIgnore]
 		public string SearchableDetail => "Betreuer: " + Supervisor.Name;
-
-		protected static Task<Station> GetFromId(LagerClientSerialisationContext context, PacketId id)
-		{
-			return Task.FromResult(context.LagerClient.CompetitionHandler.GetStationFromPacketId(id));
-		}
 
 		public Station() 
 		{
 			Ranking = new Ranking();
 		}
-
-		public Station(LagerClientSerialisationContext context) : this() {}
 
 		public Station(PacketId id, string name, Competition competition) :
             this(id, name, competition, new Ranking())
@@ -62,12 +57,6 @@ namespace Zeltlager.Competition
 			Name = name;
 			this.competition = competition;
 			Ranking = ranking;
-		}
-
-		public override void Add(LagerClientSerialisationContext context)
-		{
-			Id = context.PacketId;
-			competition.AddStation(this);
 		}
 
 		public override void AddResult(CompetitionResult cr)

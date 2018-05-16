@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 namespace Zeltlager.Erwischt
 {
 	using DataPackets;
-	using Serialisation;
-
+	using Newtonsoft.Json;
+	
 	/// <summary>
 	/// A participant for the Erwischt game.
 	/// </summary>
@@ -19,7 +19,7 @@ namespace Zeltlager.Erwischt
 		/// <summary>
 		/// The member this ErwischtMember is representing.
 		/// </summary>
-		[Serialisation(Type = SerialisationType.Reference)]
+		// todo json ref
 		public Member Member { get; private set; }
 
 		/// <summary>
@@ -43,6 +43,8 @@ namespace Zeltlager.Erwischt
 		/// <summary>
 		/// The participant that this participant needs to catch next.
 		/// </summary>
+
+		[JsonIgnore] 
 		public ErwischtParticipant Target
 		{
 			get
@@ -59,6 +61,8 @@ namespace Zeltlager.Erwischt
 		/// <summary>
 		/// The participant that needs to catch this participant next.
 		/// </summary>
+
+		[JsonIgnore] 
 		public ErwischtParticipant Catcher
 		{
 			get
@@ -78,7 +82,7 @@ namespace Zeltlager.Erwischt
 		/// Indicating whether this <see cref="T:Zeltlager.Erwischt.ErwischtMember"/> is still in the game.
 		/// </summary>
 		/// <value><c>true</c> if it is alive; if it was catched, <c>false</c>.</value>
-		[Serialisation]
+
 		public bool IsAlive
 		{
 			get
@@ -113,6 +117,8 @@ namespace Zeltlager.Erwischt
 		/// <summary>
 		/// The amount of members that where catched by this participant.
 		/// </summary>
+
+		[JsonIgnore] 
 		public int Catches { get; set; }
 
 		/// <summary>
@@ -122,7 +128,11 @@ namespace Zeltlager.Erwischt
 		/// </summary>
 		ErwischtParticipant lastCatcher;
 
+
+		[JsonIgnore] 
 		public string SearchableText => Member.Display;
+
+		[JsonIgnore] 
 		public string SearchableDetail
 		{
 			get 

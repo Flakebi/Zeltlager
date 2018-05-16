@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Zeltlager.Client;
 
 namespace Zeltlager.DataPackets
 {
-	using Serialisation;
-
+	
 	/// <summary>
 	/// A subclass of this type must have a default constructor and
 	/// can optionally have the static method IdCount which says how many
@@ -77,7 +77,7 @@ namespace Zeltlager.DataPackets
 		/// The timestamp in UTC.
 		/// </summary>
 		public DateTime Timestamp { get; private set; }
-		protected byte[] Data { get; set; }
+
 		/// <summary>
 		/// The sub-id of this packet.
 		/// </summary>
@@ -138,8 +138,7 @@ namespace Zeltlager.DataPackets
 		/// Applies the content of this packet to a lager.
 		/// The packet has to deserialise itself from Data.
 		/// </summary>
-		public abstract Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context);
+		public abstract Task Deserialise(LagerClient lager);
 
 		public override string ToString()
 		{

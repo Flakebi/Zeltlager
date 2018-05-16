@@ -57,7 +57,7 @@ namespace Zeltlager.CommunicationPackets
 			}
 		}
 
-		protected byte[] Data { get; set; }
+		protected string Data { get; set; }
 
 		public void WritePacket(BinaryWriter output)
 		{

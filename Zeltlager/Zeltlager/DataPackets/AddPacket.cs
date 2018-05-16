@@ -9,8 +9,7 @@ using Zeltlager.Erwischt;
 
 namespace Zeltlager.DataPackets
 {
-	using Serialisation;
-
+	
 	public class AddPacket : DataPacket
 	{
 		/// <summary>
@@ -56,16 +55,14 @@ namespace Zeltlager.DataPackets
 
 		protected AddPacket() { }
 
-		public static async Task<AddPacket> Create(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, object obj)
+		public static async Task<AddPacket> Create(object obj)
 		{
 			var packet = new AddPacket();
 			await packet.Init(serialiser, context, obj);
 			return packet;
 		}
 
-		async Task Init(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context, object obj)
+		async Task Init(object obj)
 		{
 			var mem = new MemoryStream();
 			using (BinaryWriter output = new BinaryWriter(mem))
@@ -91,8 +88,7 @@ namespace Zeltlager.DataPackets
 			Data = mem.ToArray();
 		}
 
-		public override async Task Deserialise(Serialiser<LagerClientSerialisationContext> serialiser,
-			LagerClientSerialisationContext context)
+		public override async Task Deserialise()
 		{
 			var type = types[subId];
 			using (BinaryReader input = new BinaryReader(new MemoryStream(Data)))
