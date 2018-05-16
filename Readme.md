@@ -24,140 +24,116 @@ Open Software License 3.0
 
 
 # Einblicke
-<div class="row"></div>
-<div class="col"> 		<img src="/img/StartNewLager.png" alt="Landing Page"> Starten der App	</div>
+![Landing Page](/img/StartNewLager.png)
 
+Starten der App
 
+![Lager erstellen](/img/CreateLager.png)
 
-<div class="col"> 		<img src="/img/CreateLager.png" alt="Lager erstellen"> Ein neues Lager erstellen	</div>
+Ein neues Lager erstellen
 
+![Home Page](/img/HomeScreen.png)
 
-
-<div class="col"> 		<img src="/img/HomeScreen.png" alt="Home Page"> Hauptseite	</div>
-
-
-</div>
+Hauptseite
 
 ## Wettkämpfe
-<div class="row"></div>
-<div class="col"> 		<img src="/img/Competitions.png" alt="Wettkampfübersicht"> Übersicht der Wettkämpfe	</div>
+![Wettkampfübersicht](/img/Competitions.png)
 
+Übersicht der Wettkämpfe
 
+![Stationenübersicht](/img/StationOverview.png)
 
-<div class="col"> 		<img src="/img/StationOverview.png" alt="Stationenübersicht"> Alle Stationen eines Wettkampfs	</div>
+Alle Stationen eines Wettkampfs
 
+![Stationendetails](/img/StationDetails.png)
 
+Details zu einer bestimmten Station
 
-<div class="col"> 		<img src="/img/StationDetails.png" alt="Stationendetails"> Details zu einer bestimmten Station	</div>
+![Ergebnisbearbeitung](/img/AddResult.png)
 
+Ein Ergebnis zu einer Station hinzufügen
 
-</div>
+![Station hinzufügen](/img/AddStation.png)
 
-<div class="row"></div>
-<div class="col"> 		<img src="/img/AddResult.png" alt="Ergebnisbearbeitung"> Ein Ergebnis zu einer Station hinzufügen	</div>
-
-
-
-<div class="col"> 		<img src="/img/AddStation.png" alt="Station hinzufügen"> Neue Station zu einem Wettkampf hinzufügen	</div>
-
-
-</div>
+Neue Station zu einem Wettkampf hinzufügen
 
 ## Erwischt
-<div class="row"></div>
-<div class="col"> 		<img src="/img/AddErwischtGame.png" alt="Erwischt-Spiel hinzufügen"> Ein Erwischt-Spiel erstellen
-	</div>
+![Erwischt-Spiel hinzufügen](/img/AddErwischtGame.png)
 
+Ein Erwischt-Spiel erstellen
 
-<div class="col"> 		<img src="/img/ErwischtWithCatched.png" alt="Erwischt Übersicht"> Übersicht über ein Erwischt-Spiel	</div>
+![Erwischt Übersicht](/img/ErwischtWithCatched.png)
 
+Übersicht über ein Erwischt-Spiel
 
+![Erwischt-Teilnehmerdetails](/img/Competitions.png)
 
-<div class="col"> 		<img src="/img/Competitions.png" alt="Erwischt-Teilnehmerdetails"> Detailansicht zu einem Mitspieler	</div>
+Detailansicht zu einem Mitspieler
 
+![Erwischt-Spiel wechseln](/img/ErwischtChangeGame.png)
 
-</div>
+Zu einem anderen Erwischt-Spiel wechseln
 
-<div class="row"></div>
-<div class="col"> 		<img src="/img/ErwischtChangeGame.png" alt="Erwischt-Spiel wechseln"> 
-Zu einem anderen Erwischt-Spiel wechseln	</div>
+![Erwischt Statistiken](/img/ErwischtStats.png)
 
-
-<div class="col"> 		<img src="/img/ErwischtStats.png" alt="Erwischt Statistiken"> Statistiken über alle Erwischt-Spiele	</div>
-
-
-</div>
+Statistiken über alle Erwischt-Spiele
 
 ## Kalender
-<div class="row"></div>
-<div class="col"> 		<img src="/img/CalendarDishwashers.png" alt="Kalender"> Kalendertag	</div>
+![Kalender](/img/CalendarDishwashers.png)
 
+Kalendertag
 
+![Geplante Termine](/img/PlannedEvents.png)
 
-<div class="col"> 		<img src="/img/PlannedEvents.png" alt="Geplante Termine"> 
-Termine vorplanen	</div>
+Termine vorplanen
 
+![Regelmäßige Termine](/img/ReoccuringEvents.png)
 
-<div class="col"> 		<img src="/img/ReoccuringEvents.png" alt="Regelmäßige Termine"> Anlegen von wiederkehrenden Terminen	</div>
+Anlegen von wiederkehrenden Terminen
 
+![Regelmäßigen Termin bearbeiten](/img/EditReoccuringEvent.png)
 
-</div>
+Bearbeiten eines wiederkehrenden Termins
 
-<div class="row"></div>
-<div class="col"> 		<img src="/img/EditReoccuringEvent.png" alt="Regelmäßigen Termin bearbeiten"> 
-Bearbeiten eines wiederkehrenden Termins	</div>
+![Normalen Termin bearbeiten](/img/EditEvent.png)
 
-
-<div class="col"> 		<img src="/img/EditEvent.png" alt="Normalen Termin bearbeiten"> Erstellen von Terminen	</div>
-
-
-</div>
+Erstellen von Terminen
 
 ## Teilnehmer
-<div class="row"></div>
-<div class="col"> 		<img src="/img/Member.png" alt="Teilnehmerübersicht"> 
-Übersicht über alle Teilnehmer	</div>
+![Teilnehmerübersicht](/img/Member.png)
 
-</div>
+Übersicht über alle Teilnehmer
 
 ## Zelte
-<div class="row"></div>
-<div class="col"> 		<img src="/img/Tents.png" alt="Zeltübersicht"> Übersicht über alle Zelte	</div>
+![Zeltübersicht](/img/Tents.png)
 
+Übersicht über alle Zelte
 
+![Details zu einem Zelt](/img/TentDetail.png)
 
-<div class="col"> 		<img src="/img/TentDetail.png" alt="Details zu einem Zelt"> Details zu einem Zelt	</div>
+Details zu einem Zelt
 
+![Zelt hinzufügen](/img/AddTent.png)
 
-</div>
+Ein neues Zelt hinzufügen
 
-<div class="row"></div>
-<div class="col"> 		<img src="/img/AddTent.png" alt="Zelt hinzufügen"> Ein neues Zelt hinzufügen	</div>
+![Kalender](/img/AddZeltbetreuer.png)
 
-
-
-<div class="col"> 		<img src="/img/AddZeltbetreuer.png" alt="Kalender"> 
-Für ein Zelt verantwortliche Betreuer festlegen	</div>
-
-</div>
+Für ein Zelt verantwortliche Betreuer festlegen
 
 ## Einstellungen
-<div class="row"></div>
-<div class="col"> 		<img src="/img/Settings.png" alt="Einstellungen"> 
-Übersicht der Einstellungen	</div>
+![Einstellungen](/img/Settings.png)
 
+Übersicht der Einstellungen
 
-<div class="col"> 		<img src="/img/LagerVerwaltung.png" alt="Lagerverwaltung"> Verwaltung der verschiedenen Lager und Synchronisation	</div>
+![Lagerverwaltung](/img/LagerVerwaltung.png)
 
+Verwaltung der verschiedenen Lager und Synchronisation
 
-</div>
+![Log](/img/Logs.png)
 
-<div class="row"></div>
-<div class="col"> 		<img src="/img/Logs.png" alt="Log"> 
-Log von Fehlern	</div>
+Log von Fehlern
 
+![Paketübersicht](/img/Packets.png)
 
-<div class="col"> 		<img src="/img/Packets.png" alt="Paketübersicht"> 
-Liste der erstellten Datenpakete	</div>
-
-</div>
+Liste der erstellten Datenpakete
